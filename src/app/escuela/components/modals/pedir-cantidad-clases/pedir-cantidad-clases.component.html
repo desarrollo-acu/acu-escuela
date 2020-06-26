@@ -1,0 +1,11 @@
+<h1 mat-dialog-title>Cantidad de clases Adicionales</h1>
+<div mat-dialog-content>
+    <mat-form-field class="example-full-width">
+        <mat-label>Cantidad</mat-label>
+        <input matInput maxlength="3" placeholder="Ex. 94105" formControlName="cantidad">
+    </mat-form-field>
+</div>
+<div mat-dialog-actions>
+    <button mat-button [mat-dialog-close]="cantidadField.value" cdkFocusInitial>Confirmar</button>
+    <button mat-button (click)="onNoClick()">Cancelar</button>
+</div>

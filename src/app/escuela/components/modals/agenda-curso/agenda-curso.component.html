@@ -1,0 +1,88 @@
+<form [formGroup]="form" (ngSubmit)="guardarClase($event)">
+
+    <mat-toolbar color="primary">
+        <h2 mat-dialog-title>Agenda de Instructor</h2>
+    </mat-toolbar>
+
+    <mat-dialog-content class="mat-typography">
+
+        <div class="contenedor">
+
+            <div class="row">
+                <div class="col">
+                    <mat-form-field class="full-width">
+
+                        <input matInput [matDatepicker]="picker" placeholder="Fecha" [value]="fechaClase"
+                            formControlName="fechaClase" disabled>
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+
+                </div>
+                <div class="col">
+                    <mat-form-field class="full-width">
+                        <input matInput type="time" placeholder="Hora" [value]="hora | date:'HH:mm'" disabled>
+                    </mat-form-field>
+                </div>
+                <div class="col">
+                    <mat-form-field class="full-width">
+                        <input matInput placeholder="Código de instructor" [value]="instructor" disabled>
+                        <!-- formControlName="movil" -->
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-4">
+                    <mat-form-field class="full-width">
+                        <input matInput placeholder="Curso" [(ngModel)]="agendaCurso.TipCurId" formControlName="cursoId"
+                            [errorStateMatcher]="matcher" (blur)='obtenerCurso(agendaCurso.TipCurId)'>
+                        <button mat-icon-button matSuffix [attr.aria-label]="'Hide password'"
+                            (click)='seleccionarCurso()'>
+                            <mat-icon> search </mat-icon>
+                        </button>
+
+                        <!-- <mat-error
+                            *ngIf="alumnoNumeroField.hasError('required') && alumnoNumeroField.dirty && alumnoNumeroField.errors">
+                            El código del curso <strong>es requerido.</strong>
+                        </mat-error>
+                        <mat-error
+                            *ngIf="alumnoNumeroField.hasError('existeAlumno')  && alumnoNumeroField.dirty && alumnoNumeroField.errors">
+                            El código del curso <strong>no existe.</strong>
+                        </mat-error> -->
+
+                    </mat-form-field>
+                </div>
+                <div class="col">
+                    <mat-form-field class="full-width">
+                        <input matInput placeholder="Nombre del Curso" [value]="cursoNombre" disabled>
+                        <!--[(ngModel)] formControlName="cursoNombre" [errorStateMatcher]="matcher" disabled> -->
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <mat-form-field class="full-width">
+
+                        <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1"
+                            cdkAutosizeMaxRows="5" placeholder="Observaciones"
+                            [(ngModel)]="agendaCurso.EscAgeInsObservaciones" formControlName="observaciones"></textarea>
+                    </mat-form-field>
+                </div>
+            </div>
+
+        </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+        <button [disabled]="form.invalid" mat-raised-button type="submit" [mat-dialog-close]="agendaCurso"
+            cdkFocusInitial>Guardar Cambios</button>
+        <button mat-button mat-dialog-close (click)="onNoClick()">Cancelar</button>
+    </mat-dialog-actions>
+
+</form>
+
+<!-- Copyright 2019 Google LLC. All Rights Reserved.
+    Use of this source code is governed by an MIT-style license that
+    can be found in the LICENSE file at http://angular.io/license -->

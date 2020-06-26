@@ -1,0 +1,266 @@
+<div class="contenedor">
+
+    <div class="row">
+        <div class="col">
+            <mat-button-toggle-group #group="matButtonToggleGroup">
+                <mat-button-toggle value="left" aria-label="Text align left" (click)="inscripcion()">
+                    Inscripción
+                </mat-button-toggle>
+                <mat-button-toggle value="left" aria-label="Text align left" (click)="test()">
+                    Test
+                </mat-button-toggle>
+                <mat-button-toggle value="left" aria-label="Text align left" (click)="duplicarDia()">
+                    Duplicar Día
+                </mat-button-toggle>
+                <mat-button-toggle value="center" aria-label="Text align center" (click)="liberarDia()">
+                    Liberar Día
+                </mat-button-toggle>
+                <mat-button-toggle value="right" aria-label="Text align right" (click)="moverDia()">
+                    Mover Día
+                </mat-button-toggle>
+                <mat-button-toggle mat-button [matMenuTriggerFor]="reportes" value="right"
+                    aria-label="Text align right">
+                    <mat-icon>more_vert</mat-icon>Reportes
+                </mat-button-toggle>
+                <mat-menu #reportes="matMenu">
+                    <button mat-menu-item value="justify" aria-label="Text align justify">Imprimir Planilla</button>
+                    <button mat-menu-item value="justify" aria-label="Text align justify">Agenda Alumno</button>
+                    <button mat-menu-item value="justify" aria-label="Text align justify">genda Instructor</button>
+                </mat-menu>
+            </mat-button-toggle-group>
+        </div>
+        <div class="col ">
+
+            <mat-toolbar>
+                <mat-toolbar-row>
+
+                    <mat-form-field style="margin-left: auto;" class="width-fixed">
+                        <!-- <input type="date" matInput [(value)]="fecha"> -->
+                        <input matInput [matDatepicker]="picker" [(ngModel)]="fecha" (dateChange)="getAgenda(fecha)">
+                        <mat-datepicker-toggle matSuffix [for]="picker">
+                        </mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                </mat-toolbar-row>
+                <mat-toolbar-row>
+                    <div style="margin-left: auto;" class="width-fixed" align="center">
+                        <span [ngStyle]="{'color':(sabadoODomingo === 0 || sabadoODomingo === 6 ) ? 'red' : 'blue' }">
+                            {{fecha | date:'EEEE' | daySpanish | uppercase }} </span>
+                        <div class="example-button-row" align="center">
+                            <button mat-stroked-button (click)="diaAnterior()" color="warn"
+                                aria-label="Example icon-button with a heart icon">
+                                <mat-icon>arrow_back</mat-icon>
+                            </button>
+                            <button mat-stroked-button (click)="diaSiguiente()" color="warn"
+                                aria-label="Example icon-button with a heart icon">
+                                <mat-icon>arrow_forward</mat-icon>
+                            </button>
+                        </div>
+                    </div>
+                </mat-toolbar-row>
+            </mat-toolbar>
+        </div>
+    </div>
+
+    <div class="row" *ngIf="!verAgenda" style="margin-top: 20px;">
+        <div class="col" align="center">
+
+            <mat-card>
+                <mat-card-content>
+                    <h2 class="example-h2">Cargando Agenda...</h2>
+
+                    <mat-progress-spinner style="margin: 0 10px;" color="primary" mode="indeterminate">
+                    </mat-progress-spinner>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+    <table mat-table [(dataSource)]="agendaDataSource" class="mat-elevation-z8" *ngIf="verAgenda">
+
+
+        <ng-container matColumnDef="Movil">
+            <th mat-header-cell *matHeaderCellDef> Movil </th>
+            <td mat-cell class="cell" *matCellDef="let element"> {{element.Movil}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="0">
+            <th mat-header-cell *matHeaderCellDef> 0 </th>
+            <td mat-cell *matCellDef="let element" [class]="element.class0 ==='' ? 'cell' : 'cell ' + element.class0 "
+                (click)="showAlert(element.Movil, 0, element.existe0)" [id]="element.Movil +'0'">
+                {{element.Hora0}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="1">
+            <th mat-header-cell *matHeaderCellDef> 1 </th>
+            <td mat-cell *matCellDef="let element" [class]="element.class1 ==='' ? 'cell' : 'cell ' + element.class1 "
+                (click)="showAlert(element.Movil, 1, element.existe1)" [id]="element.Movil +'1'"> {{element.Hora1}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="2">
+            <th mat-header-cell *matHeaderCellDef> 2 </th>
+            <td mat-cell *matCellDef="let element" [class]="element.class2 ==='' ? 'cell' : 'cell ' + element.class2 "
+                (click)="showAlert(element.Movil, 2, element.existe2)" [id]="element.Movil +'2'">
+                {{element.Hora2}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef=" 3">
+            <th mat-header-cell *matHeaderCellDef> 3 </th>
+            <td mat-cell *matCellDef="let element" [class]="element.class3 ==='' ? 'cell' : 'cell ' + element.class3 "
+                (click)="showAlert(element.Movil, 3, element.existe3)" [id]="element.Movil +'3'"> {{element.Hora3}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="4">
+            <th mat-header-cell *matHeaderCellDef> 4 </th>
+            <td mat-cell *matCellDef="let element" [class]="element.class4 ==='' ? 'cell' : 'cell ' + element.class4 "
+                (click)="showAlert(element.Movil, 4, element.existe4)" [id]="element.Movil +'4'"> {{element.Hora4}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="5">
+            <th mat-header-cell *matHeaderCellDef> 5 </th>
+            <td mat-cell *matCellDef="let element" [class]="element.class5 ==='' ? 'cell' : 'cell ' + element.class5 "
+                (click)="showAlert(element.Movil, 5, element.existe5)" [id]="element.Movil +'5'"> {{element.Hora5}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="6">
+            <th mat-header-cell *matHeaderCellDef> 6 </th>
+            <td mat-cell *matCellDef="let element" [class]="element.class6 ==='' ? 'cell' : 'cell ' + element.class6 "
+                (click)="showAlert(element.Movil, 6, element.existe6)" [id]="element.Movil +'6'"> {{element.Hora6}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="7">
+            <th mat-header-cell *matHeaderCellDef> 7 </th>
+            <td mat-cell *matCellDef="let element" [class]="element.class7 ==='' ? 'cell' : 'cell ' + element.class7 "
+                (click)="showAlert(element.Movil, 7, element.existe7)" [id]="element.Movil +'7'"> {{element.Hora7}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="8">
+            <th mat-header-cell *matHeaderCellDef> 8 </th>
+            <td mat-cell *matCellDef="let element" [class]="element.class8 ==='' ? 'cell' : 'cell ' + element.class8 "
+                (click)="showAlert(element.Movil, 8, element.existe8)" [id]="element.Movil +'8'"> {{element.Hora8}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="9">
+            <th mat-header-cell *matHeaderCellDef> 9 </th>
+            <td mat-cell *matCellDef="let element" [class]="element.class9 ==='' ? 'cell' : 'cell ' + element.class9 "
+                (click)="showAlert(element.Movil, 9, element.existe9)" [id]="element.Movil +'9'"> {{element.Hora9}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="10">
+            <th mat-header-cell *matHeaderCellDef> 10 </th>
+            <td mat-cell *matCellDef="let element" [class]="element.class10 ==='' ? 'cell' : 'cell ' + element.class10 "
+                (click)="showAlert(element.Movil, 10, element.existe10)" [id]="element.Movil +'10'">
+                {{element.Hora10}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="11">
+            <th mat-header-cell *matHeaderCellDef> 11 </th>
+            <td mat-cell *matCellDef="let element" [class]="element.class11 ==='' ? 'cell' : 'cell ' + element.class11 "
+                (click)="showAlert(element.Movil, 11, element.existe11)" [id]="element.Movil +'11'">
+                {{element.Hora11}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="12">
+            <th mat-header-cell *matHeaderCellDef> 12 </th>
+            <td mat-cell *matCellDef="let element" [class]="element.class12 ==='' ? 'cell' : 'cell ' + element.class12 "
+                (click)="showAlert(element.Movil, 12, element.existe12)" [id]="element.Movil +'12'"> {{element.Hora12}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="13">
+            <th mat-header-cell *matHeaderCellDef> 13 </th>
+            <td mat-cell *matCellDef="let element" [class]="element.class13 ==='' ? 'cell' : 'cell ' + element.class13 "
+                (click)="showAlert(element.Movil, 13, element.existe13)" [id]="element.Movil +'13'"> {{element.Hora13}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="14">
+            <th mat-header-cell *matHeaderCellDef> 14 </th>
+            <td mat-cell *matCellDef="let element" [class]="element.class14 ==='' ? 'cell' : 'cell ' + element.class14 "
+                (click)="showAlert(element.Movil, 14, element.existe14)" [id]="element.Movil +'14'"> {{element.Hora14}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="15">
+            <th mat-header-cell *matHeaderCellDef> 15 </th>
+            <td mat-cell *matCellDef="let element" [class]="element.class15 ==='' ? 'cell' : 'cell ' + element.class15 "
+                (click)="showAlert(element.Movil, 15, element.existe15)" [id]="element.Movil +'15'"> {{element.Hora15}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="16">
+            <th mat-header-cell *matHeaderCellDef> 16 </th>
+            <td mat-cell *matCellDef="let element" [class]="element.class16 ==='' ? 'cell' : 'cell ' + element.class16 "
+                (click)="showAlert(element.Movil, 16, element.existe16)" [id]="element.Movil +'16'"> {{element.Hora16}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="17">
+            <th mat-header-cell *matHeaderCellDef> 17 </th>
+            <td mat-cell *matCellDef="let element" [class]="element.class17 ==='' ? 'cell' : 'cell ' + element.class17 "
+                (click)="showAlert(element.Movil, 17, element.existe17)" [id]="element.Movil +'17'"> {{element.Hora17}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="18">
+            <th mat-header-cell *matHeaderCellDef> 18 </th>
+            <td mat-cell *matCellDef="let element" [class]="element.class18 ==='' ? 'cell' : 'cell ' + element.class18 "
+                (click)="showAlert(element.Movil, 18, element.existe18)" [id]="element.Movil +'18'"> {{element.Hora18}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="19">
+            <th mat-header-cell *matHeaderCellDef> 19 </th>
+            <td mat-cell *matCellDef="let element" [class]="element.class19 ==='' ? 'cell' : 'cell ' + element.class19 "
+                (click)="showAlert(element.Movil, 19, element.existe19)" [id]="element.Movil +'19'"> {{element.Hora19}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="20">
+            <th mat-header-cell *matHeaderCellDef> 20 </th>
+            <td mat-cell *matCellDef="let element" [class]="element.class20 ==='' ? 'cell' : 'cell ' + element.class20 "
+                (click)="showAlert(element.Movil, 20, element.existe20)" [id]="element.Movil +'20'"> {{element.Hora20}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="21">
+            <th mat-header-cell *matHeaderCellDef> 21 </th>
+            <td mat-cell *matCellDef="let element" [class]="element.class21 ==='' ? 'cell' : 'cell ' + element.class21 "
+                (click)="showAlert(element.Movil, 21, element.existe21)" [id]="element.Movil +'21'"> {{element.Hora21}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="22">
+            <th mat-header-cell *matHeaderCellDef> 22 </th>
+            <td mat-cell *matCellDef="let element" [class]="element.class22 ==='' ? 'cell' : 'cell ' + element.class22 "
+                (click)="showAlert(element.Movil, 22, element.existe22)" [id]="element.Movil +'22'"> {{element.Hora22}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="23">
+            <th mat-header-cell *matHeaderCellDef> 23 </th>
+            <td mat-cell *matCellDef="let element" [class]="element.class23 ==='' ? 'cell' : 'cell ' + element.class23 "
+                (click)="showAlert(element.Movil, 23, element.existe23)" [id]="element.Movil +'23'"> {{element.Hora23}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="24">
+            <th mat-header-cell *matHeaderCellDef> 24 </th>
+            <td mat-cell *matCellDef="let element" [class]="element.class24 ==='' ? 'cell' : 'cell ' + element.class24 "
+                (click)="showAlert(element.Movil, 24, element.existe24)" [id]="element.Movil +'24'"> {{element.Hora24}}
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="agendaDisplayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: agendaDisplayedColumns;"></tr>
+
+    </table>
+</div>

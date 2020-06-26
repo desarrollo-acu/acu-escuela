@@ -1,0 +1,63 @@
+<mat-toolbar color="primary">
+    <h2 mat-dialog-title>Seleccionar Curso</h2>
+</mat-toolbar>
+
+
+
+<mat-dialog-content class="mat-typography">
+
+
+    <mat-form-field class="full-width">
+        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Buscar...">
+    </mat-form-field>
+
+    <div class="mat-elevation-z8">
+        <table mat-table [dataSource]="dataSource" matSort>
+
+            <!-- Actions Column -->
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef> </th>
+                <td mat-cell *matCellDef="let row">
+                    <button mat-mini-fab color="primary" [mat-dialog-close]="row">
+                        <mat-icon> check</mat-icon>
+                    </button>
+                </td>
+            </ng-container>
+
+
+            <!-- Id Column -->
+            <ng-container matColumnDef="TipCurId">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Curso </th>
+                <td mat-cell *matCellDef="let row"> {{row.TipCurId}} </td>
+            </ng-container>
+
+
+            <!-- Nombre Column -->
+            <ng-container matColumnDef="TipCurNom">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
+                <td mat-cell *matCellDef="let row"> {{row.TipCurNom}} </td>
+            </ng-container>
+
+
+            <!-- Estado Column -->
+            <ng-container matColumnDef="TipCurEst">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
+                <td mat-cell *matCellDef="let row"> {{getEstado(row.TipCurEst)}} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+            </tr>
+        </table>
+
+        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+
+
+
+    </div>
+
+
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close (click)="onNoClick()">Cancelar</button>
+</mat-dialog-actions>

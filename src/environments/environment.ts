@@ -3,8 +3,25 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  url_ws: 'http://192.1.0.86/ACU_WS.NetEnvironment/rest',
 };
+
+/*
+
+Url api local desarrollo SQLServer:
+  url_ws: 'http://localhost/ACU_web/rest',
+  url_soap: 'http://localhost/ACU_web/',
+
+Url api desarrollo SQLServer:
+  url_ws: 'http://192.1.0.86/ACU_WS.NetEnvironment/rest',
+  url_soap: 'http://192.1.0.86/ACU_WS.NetEnvironment/',
+URL api prod Oracle:
+
+  url_ws: 'http://192.1.0.71/ACU_Web.NetEnvironment/rest',
+  url_soap: 'http://192.1.0.71/ACU_Web.NetEnvironment/',
+
+*/
 
 /*
  * For easier debugging in development mode, you can import the following file

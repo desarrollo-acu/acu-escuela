@@ -1,0 +1,223 @@
+<form [formGroup]="form" (ngSubmit)="guardarClase($event)">
+
+
+    <mat-toolbar color="primary">
+        <h2 mat-dialog-title>Agenda de Clase</h2>
+    </mat-toolbar>
+
+    <mat-dialog-content class="mat-typography">
+
+        <div class="contenedor">
+
+            <div class="row">
+                <div class="col">
+                    <mat-form-field class="full-width">
+
+                        <input matInput [matDatepicker]="picker" placeholder="Fecha" [value]="fechaClase"
+                            formControlName="fechaClase" disabled>
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+
+                </div>
+                <div class="col">
+                    <mat-form-field class="full-width">
+                        <input matInput type="time" placeholder="Hora" [value]="hora | date:'HH:mm'" disabled>
+                    </mat-form-field>
+                </div>
+                <div class="col">
+                    <mat-form-field class="full-width">
+                        <input matInput placeholder="Número de Movil" [value]="movil" disabled>
+                        <!-- formControlName="movil" -->
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-4">
+                    <mat-form-field class="full-width">
+                        <input matInput placeholder="Alumno" [(ngModel)]="agendaClase.AluNro"
+                            formControlName="alumnoNumero" [errorStateMatcher]="matcher">
+                        <button mat-icon-button matSuffix [attr.aria-label]="'Hide password'"
+                            (click)='seleccionarAlumno()'>
+                            <mat-icon> search </mat-icon>
+                        </button>
+
+                        <mat-error
+                            *ngIf="alumnoNumeroField.hasError('required') && alumnoNumeroField.dirty && alumnoNumeroField.errors">
+                            El número del alumno <strong>es requerido.</strong>
+                        </mat-error>
+                        <mat-error
+                            *ngIf="alumnoNumeroField.hasError('existeAlumno')  && alumnoNumeroField.dirty && alumnoNumeroField.errors">
+                            El número del alumno <strong>no existe.</strong>
+                        </mat-error>
+                        <mat-error
+                            *ngIf="alumnoNumeroField.hasError('alumnoYaAsignado')  && alumnoNumeroField.dirty && alumnoNumeroField.errors">
+                            El alumno ya se encuentra <strong> asignado </strong> en otro movil.
+                        </mat-error>
+                        <mat-error
+                            *ngIf="alumnoNumeroField.hasError('alumnoTieneExcepcion')  && (alumnoNumeroField.dirty || alumnoNumeroField.errors)">
+                            El alumno tiene cargada una <strong>excepción </strong> para este día y hora.
+                        </mat-error>
+
+                        <!-- </div> -->
+                    </mat-form-field>
+                </div>
+                <div class="col">
+                    <mat-form-field class="full-width">
+                        <input matInput placeholder="   " [(ngModel)]="agendaClase.AluNomApe"
+                            formControlName="alumnoNombre" [errorStateMatcher]="matcher">
+                        <mat-error *ngIf="alumnoNombreField.hasError('required')">
+                            Alumno es <strong>requerido</strong>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <mat-form-field class="full-width">
+
+                        <input matInput placeholder="Curso" [(ngModel)]="agendaClase.Cursos[0]"
+                            *ngIf="agendaClase.Cursos.length === 1" formControlName="curso"
+                            [errorStateMatcher]="matcher">
+
+
+                        <mat-select placeholder="Es clase adicional?" *ngIf="agendaClase.Cursos.length > 1"
+                            [errorStateMatcher]="matcher" formControlName="curso">
+                            <mat-option [value]="curso" *ngFor="let curso of agendaClase.Cursos">{{ curso }}
+                            </mat-option>
+                        </mat-select>
+
+                        <input matInput placeholder="Curso" [(value)]="curso" *ngIf="agendaClase.Cursos.length < 1"
+                            [errorStateMatcher]="matcher" formControlName="curso">
+
+                        <mat-error *ngIf="cursoField.hasError('required')">
+                            Debe <strong>seleccionar</strong> un curso.
+                        </mat-error>
+
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <mat-form-field class="full-width">
+                        <mat-select placeholder="Tipo Clase" [(ngModel)]="agendaClase.EsAgCuTipCla"
+                            formControlName="tipoClase">
+                            <mat-option></mat-option>
+                            <mat-option value="P"> Práctica </mat-option>
+                            <mat-option value="E">Examen</mat-option>
+                            <mat-option value="T">Teórico</mat-option>
+                            <mat-option value="S">Simulador</mat-option>
+                            <mat-option value="V">Evaluación</mat-option>
+                            <mat-option value="I">Teórico Instr.</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col">
+                    <mat-form-field class="full-width">
+                        <input matInput placeholder="Nº de Clase Práctica" [value]="agendaClase.EsAgCuNroCla"
+                            formControlName="numeroClase">
+                    </mat-form-field>
+                </div>
+                <div class="col">
+                    <mat-form-field class="full-width">
+                        <mat-select [(value)]="agendaClase.EsAgCuClaAdiSN" placeholder="Es clase adicional?"
+                            formControlName="claseAdicional">
+                            <mat-option value="S">Si</mat-option>
+                            <mat-option value="N">No</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <mat-form-field class="full-width">
+                        <input matInput placeholder="Instructor asignado al curso" [value]="agendaClase.AvisoInstructor"
+                            formControlName="avisoInstructor">
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-4">
+                    <mat-form-field class="full-width">
+                        <input matInput placeholder="Instructor" [(ngModel)]="agendaClase.EsAgCuInsId"
+                            formControlName="instructor">
+                        <button mat-icon-button matSuffix [attr.aria-label]="'Hide password'"
+                            (click)='seleccionarInstructor()'>
+                            <mat-icon> search </mat-icon>
+                        </button>
+                        <mat-error
+                            *ngIf="instructorField.hasError('licenciaInstructor') && instructorField.dirty && instructorField.errors">
+                            El instructor se encuentra <strong> de licencia.</strong>
+                        </mat-error>
+                        <mat-error
+                            *ngIf="instructorField.hasError('instructorYaAsignado') && instructorField.dirty && instructorField.errors">
+                            El instructor se encuentra <strong> ya asignado</strong> para esta hora en otro movil.
+                        </mat-error>
+                    </mat-form-field>
+
+                </div>
+                <div class="col">
+                    <mat-form-field class="full-width">
+                        <input matInput placeholder="Instructor" [(ngModel)]="instructorAsignado"
+                            formControlName="instructorAsignado">
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <mat-form-field class="full-width">
+                        <input matInput placeholder="Detalle" [(ngModel)]="agendaClase.EsAgCuDet"
+                            formControlName="detalle">
+                    </mat-form-field>
+                </div>
+                <div class="col">
+                    <mat-form-field class="full-width">
+                        <mat-select placeholder="Estado de la Clase" [(ngModel)]="agendaClase.EsAgCuEst"
+                            formControlName="estadoClase">
+                            <mat-option>-</mat-option>
+                            <mat-option value="A">Asignada</mat-option>
+                            <mat-option value="S">Suspendida Con Cobro</mat-option>
+                            <mat-option value="U">Suspendida Sin Cobro</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <mat-form-field class="full-width">
+
+                        <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1"
+                            cdkAutosizeMaxRows="5" placeholder="Observaciones" [(ngModel)]="agendaClase.EsAgCuObs"
+                            formControlName="observaciones"></textarea>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-2 btns-agendar" align="center">
+                    <button [disabled]="agendaClase.EsAgCuAviso === 0 || agendaClase.EsAgCuAviso === 2"
+                        mat-raised-button cdkFocusInitial>Avisar</button>
+                </div>
+                <div class="col">
+                    <mat-form-field class="full-width">
+
+                        <textarea matInput placeholder="Observaciones" [value]="agendaClase.EsAgCuDetAviso"
+                            formControlName="aviso"></textarea>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+        <button [disabled]="form.invalid" mat-raised-button type="submit" [mat-dialog-close]="agendaClase"
+            cdkFocusInitial>Guardar Cambios</button>
+        <button mat-button [mat-dialog-close]="data.animal" cdkFocusInitial>Disponibilidad</button>
+        <button mat-button [mat-dialog-close]="data.animal" cdkFocusInitial>Historial Eventos</button>
+        <button mat-button mat-dialog-close (click)="onNoClick()">Cancelar</button>
+    </mat-dialog-actions>
+
+</form>
+
+<!-- Copyright 2019 Google LLC. All Rights Reserved.
+    Use of this source code is governed by an MIT-style license that
+    can be found in the LICENSE file at http://angular.io/license -->

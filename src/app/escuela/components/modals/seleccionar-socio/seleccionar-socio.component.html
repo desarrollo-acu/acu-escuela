@@ -1,0 +1,77 @@
+<mat-toolbar color="primary">
+    <h2 mat-dialog-title>Seleccionar Socio</h2>
+</mat-toolbar>
+
+
+
+<mat-dialog-content class="mat-typography">
+
+
+    <mat-form-field class="full-width">
+        <input matInput id="search" [(ngModel)]="filtro" placeholder="Buscar...">
+    </mat-form-field>
+
+    <div class="mat-elevation-z8">
+        <table mat-table [dataSource]="dataSource" matSort>
+
+            <!-- Actions Column -->
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef> </th>
+                <td mat-cell *matCellDef="let row">
+                    <button mat-mini-fab color="primary" [mat-dialog-close]="row">
+                        <mat-icon> check</mat-icon>
+                    </button>
+                </td>
+            </ng-container>
+
+
+            <!-- Socio Column -->
+            <ng-container matColumnDef="SocId">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Socio </th>
+                <td mat-cell *matCellDef="let row"> {{row.SocId}} </td>
+            </ng-container>
+
+            <!-- Nombre Column -->
+            <ng-container matColumnDef="Nombre">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
+                <td mat-cell *matCellDef="let row"> {{row.Nombre}} </td>
+            </ng-container>
+
+            <!-- Último Pago Column -->
+            <ng-container matColumnDef="SocMes">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Últ. Pago </th>
+                <td mat-cell *matCellDef="let row"> {{row.SocMes}} </td>
+            </ng-container>
+
+            <!-- CI Column -->
+            <ng-container matColumnDef="SocNroCI">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Cédula </th>
+                <td mat-cell *matCellDef="let row"> {{row.SocNroCI}} </td>
+            </ng-container>
+
+            <!-- Matrícula Column -->
+            <ng-container matColumnDef="SocNroMat">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Matrícula </th>
+                <td mat-cell *matCellDef="let row"> {{row.SocNroMat}} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+            </tr>
+        </table>
+
+        <!--  -->
+
+        <mat-paginator [length]="cantidad" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+            (page)="updateEvent($event)">
+        </mat-paginator>
+
+
+
+    </div>
+
+
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close (click)="onNoClick()">Cancelar</button>
+</mat-dialog-actions>

@@ -1,0 +1,78 @@
+<mat-card class="example-card">
+
+    <mat-card-header class="header" color="primary">
+        <mat-card-title>
+
+            <mat-toolbar>
+                <h1 mat-dialog-title> Seleccionar fecha</h1>
+            </mat-toolbar>
+
+        </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+
+        <div mat-dialog-content>
+
+            <mat-toolbar>
+                <mat-toolbar-row>
+                    <div class="row" style="width: 225px;">
+                        <div class="col-xs-12 ">
+                            <div class="box">
+                                <mat-form-field
+                                    [class.text-danger]="fecha < hoy && !(fecha.toLocaleDateString() === hoy.toLocaleDateString())"
+                                    [class.text-primary]="fecha.toLocaleDateString() === hoy.toLocaleDateString()"
+                                    [class.text-success]="fecha > hoy">
+                                    <mat-label>Mover a la fecha?</mat-label>
+                                    <input matInput [matDatepicker]="picker" [(ngModel)]="fecha"
+                                        (dateChange)="validarFecha()">
+
+
+                                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker></mat-datepicker>
+
+                                </mat-form-field>
+                            </div>
+
+                        </div>
+
+                        <div class="col-xs-12 ">
+                            <div class="box">
+                                <mat-hint [hidden]="!invalidFecha"> ATENCIÓN: la fecha seleccionada no puede ser menor a
+                                    la
+                                    actual.
+                                </mat-hint>
+                            </div>
+                        </div>
+                    </div>
+
+                </mat-toolbar-row>
+                <mat-toolbar-row>
+                    <div id="fecha" style="
+                    margin-left: auto;
+                    margin-right: auto;" align="center">
+                        <span [ngStyle]="{'color':(sabadoODomingo === 0 || sabadoODomingo === 6 ) ? 'red' : 'blue' }">
+                            {{fecha | date:'EEEE' | daySpanish | uppercase }} </span>
+                        <div class="example-button-row" align="center">
+                            <button mat-stroked-button (click)="diaAnterior()" color="warn"
+                                aria-label="Example icon-button with a heart icon">
+                                <mat-icon>arrow_back</mat-icon>
+                            </button>
+                            <button mat-stroked-button (click)="diaSiguiente()" color="warn"
+                                aria-label="Example icon-button with a heart icon">
+                                <mat-icon>arrow_forward</mat-icon>
+                            </button>
+                        </div>
+                    </div>
+
+                </mat-toolbar-row>
+            </mat-toolbar>
+        </div>
+
+    </mat-card-content>
+    <mat-card-actions align="center">
+        <button mat-raised-button [mat-dialog-close]="fecha" cdkFocusInitial color="primary"
+            [disabled]="invalidFecha">Seleccionar</button>
+        <button mat-raised-button (click)="onNoClick()">Cancelar</button>
+    </mat-card-actions>
+</mat-card>
