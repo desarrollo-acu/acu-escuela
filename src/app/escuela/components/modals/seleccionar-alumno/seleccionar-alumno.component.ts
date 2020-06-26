@@ -75,11 +75,11 @@ export class SeleccionarAlumnoComponent implements OnInit { // , AfterViewInit, 
     @Inject(MAT_DIALOG_DATA) public data: any) {
 
     // this.alumnos = this.data.alumnos;
-    console.log('this.data: ', this.data);
-    console.log('cantidad: ', this.data.cantidad);
+    console.log('1) this.data: ', this.data);
+    console.log('2) cantidad: ', this.data.cantidad);
 
     this.dataSource = this.data.alumnos;
-
+    this.pageSize = 5;
     this.filtro = this.data.filtro;
     this.cantidad = this.data.cantidad;
 
@@ -128,25 +128,20 @@ export class SeleccionarAlumnoComponent implements OnInit { // , AfterViewInit, 
       // Make a new timeout set to go off in 1000ms (1 second)
       timeout = setTimeout(() => {
 
-        console.log('Input Value:', this.filtro);
-        this.getAlumnos(1000, 1, this.filtro);
+        console.log('3) Input Value:', this.filtro);
+        console.log('3) Input this.pageSize:', this.pageSize);
+
+        this.getAlumnos(this.pageSize, 1, this.filtro);
       }, 500);
     });
   }
 
 
 
-  applyFilter(filterValue: string) {
-
-
-    // const filter = (filterValue) ? filterValue : '';
-
-    // this.getAlumnos(1000, 1, filter);
-
-  }
-
   getAlumnos(pageSize, pageNumber, filtro) {
-    console.log('filtro: ', filtro);
+    console.log('4) filtro: ', filtro);
+    console.log('4) pageSize: ', pageSize);
+
 
     if (pageNumber === 0) {
       pageNumber = 1;
@@ -155,7 +150,9 @@ export class SeleccionarAlumnoComponent implements OnInit { // , AfterViewInit, 
     this.acuService.obtenerAlumnos(pageSize, pageNumber, filtro)
       .subscribe((res: any) => {
         console.log('res: ', res);
-        this.pageEvent.length = res.Cantidad;
+        console.log('5) filtro: ', filtro);
+        // this.pageEvent.length = res.Cantidad;
+
         this.length = res.Cantidad;
         this.actualizarDatasource(res, pageSize, pageNumber - 1);
 
@@ -170,6 +167,7 @@ export class SeleccionarAlumnoComponent implements OnInit { // , AfterViewInit, 
     console.log('ejecutoEvent, pageEvento: ', pageEvento);
     if (pageEvento) {
       let index = pageEvento.pageIndex;
+      this.pageSize = pageEvento.pageSize;
       index += 1;
       // Si estoy retrocediendo saco 1 del index
       if (pageEvento.previousPageIndex > pageEvento.pageIndex) {
@@ -178,8 +176,8 @@ export class SeleccionarAlumnoComponent implements OnInit { // , AfterViewInit, 
       console.log('index: ', index);
 
       this.getAlumnos(pageEvento.pageSize, index, filter);
-    } else {
-      this.getAlumnos(1000, 1, this.filtro);
+      // } else {
+      //   this.getAlumnos(1000, 1, this.filtro);
 
     }
     return pageEvento;
@@ -190,7 +188,9 @@ export class SeleccionarAlumnoComponent implements OnInit { // , AfterViewInit, 
 
     this.dataSource = data.Alumnos;
     // this.pageIndex =  pageIndex;
-    this.pageSize = size;
+    if (size) {
+      this.pageSize = size;
+    }
     console.log('cantidad: ', data.Cantidad);
 
     this.length = data.Cantidad;

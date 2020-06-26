@@ -235,30 +235,30 @@ export class InscripcionCursoComponent {
 
 
   seleccionarAlumno() {
-    let alumnos = JSON.parse(localStorage.getItem('Alumnos'));
+    // let alumnos = JSON.parse(localStorage.getItem('Alumnos'));
 
-    let cantidad = localStorage.getItem('Cantidad');
+    // let cantidad = localStorage.getItem('Cantidad');
 
 
 
-    if (!alumnos) {
+    // if (!alumnos) {
 
-      this.acuService.obtenerAlumnos(20, 1, '')
-        .subscribe((res: any) => {
-          console.log('res: ', res);
-          console.log('res.Cantidad: ', res.Cantidad);
-          console.log('res.Alumnos: ', res.Alumnos);
-          alumnos = res.Alumnos;
-          cantidad = res.Cantidad;
-          localStorage.setItem('Alumnos', JSON.stringify(alumnos));
-          localStorage.setItem('Cantidad', cantidad);
+    this.acuService.obtenerAlumnos(5, 1, '')
+      .subscribe((res: any) => {
+        console.log('res: ', res);
+        console.log('res.Cantidad: ', res.Cantidad);
+        console.log('res.Alumnos: ', res.Alumnos);
+        // alumnos = res.Alumnos;
+        // cantidad = res.Cantidad;
+        // localStorage.setItem('Alumnos', JSON.stringify(alumnos));
+        // localStorage.setItem('Cantidad', cantidad);
 
-          this.openDialogAlumnos(alumnos, cantidad);
-        });
+        this.openDialogAlumnos(res.Alumnos, res.Cantidad);
+      });
 
-    } else {
-      this.openDialogAlumnos(alumnos, cantidad);
-    }
+    // } else {
+    //   this.openDialogAlumnos(alumnos, cantidad);
+    // }
   }
 
 
@@ -296,8 +296,9 @@ export class InscripcionCursoComponent {
       // this.alumno = result;
       console.log('1.alumno: ' + result);
       console.log('2.alumno: ' + JSON.stringify(result));
-
-      this.addInfoAlumnoAlForm(result);
+      if (result) {
+        this.addInfoAlumnoAlForm(result);
+      }
     });
 
   }
