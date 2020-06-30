@@ -5,7 +5,7 @@ import { SeleccionarCursoComponent } from '../seleccionar-curso/seleccionar-curs
 
 import { MyErrorStateMatcher } from '../agendar-clase/agendar-clase.component';
 import { SeleccionarAlumnoComponent } from '../seleccionar-alumno/seleccionar-alumno.component';
-import { AltaAlumnoComponent, Alumno } from '../alta-alumno/alta-alumno.component';
+import { AltaAlumnoComponent } from '../alta-alumno/alta-alumno.component';
 import Swal from 'sweetalert2';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { FacturaRutComponent } from '../factura-rut/factura-rut.component';
@@ -19,6 +19,7 @@ import { InscripcionCurso } from '@core/model/inscripcion-curso.model';
 import { ClasesEstimadasComponent } from '../clases-estimadas/clases-estimadas.component';
 import { mensajeConfirmacion } from '@utils/sweet-alert';
 
+import { Alumno } from '@core/model/alumno.model';
 
 
 @Component({

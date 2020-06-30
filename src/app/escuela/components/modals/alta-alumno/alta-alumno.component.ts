@@ -1,10 +1,18 @@
 import { Component } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { AgendarClaseComponent } from '../agendar-clase/agendar-clase.component';
 import Swal from 'sweetalert2';
 import { AcuService } from 'src/app/core/services/acu.service';
 import { SeleccionarSocioComponent } from '../seleccionar-socio/seleccionar-socio.component';
+
+import { Localidad } from '@core/model/localidad.model';
+import { Departamento } from '@core/model/departamento.model';
+import { Alumno } from '@core/model/alumno.model';
+
+
+import { validarCIConDV } from 'src/app/utils/custom-validator';
+
 @Component({
   selector: 'app-alta-alumno',
   templateUrl: './alta-alumno.component.html',
@@ -18,33 +26,7 @@ export class AltaAlumnoComponent {
   depId: number;
   locId: number;
 
-  alumnoForm = this.fb.group({
-    aluNro: null,
-    aluNom: [null, Validators.required],
-    aluApe1: [null, Validators.required],
-    aluCi: [null, Validators.required],
-    aluDV: [null, Validators.required],
-    aluFchNac: [null, Validators.required],
-    aluTel1: [null, Validators.required],
-    aluTel2: [null, Validators.required],
-    aluDepId: [null, Validators.required],
-    aluLocId: [null, Validators.required],
-    aluDir: [null],
-    aluMail: [null, [
-      Validators.required,
-      Validators.email,
-    ]],
-    aluConNom: [null],
-    aluConTel: [null],
-    aluConPar: [null],
-    socId: [null],
-    socNom1: [null],
-    socApe1: [null],
-    socApe2: [null],
-    socUltimoPago: [null],
-    cantPres: [null],
-    aluPar: [null],
-  });
+  alumnoForm: FormGroup;
 
   parentescos = [
     { value: 'HIJO', description: 'HIJO' },
@@ -62,6 +44,37 @@ export class AltaAlumnoComponent {
     public dialog: MatDialog,
     private acuService: AcuService,
     private fb: FormBuilder) {
+
+    this.alumnoForm = this.fb.group({
+      aluNro: [''],
+      aluNom: ['', Validators.required],
+      aluApe1: ['', Validators.required],
+      aluCi: ['', Validators.required],
+      aluDV: ['', Validators.required],
+      aluFchNac: ['', Validators.required],
+      aluTel1: ['', Validators.required],
+      aluTel2: ['', Validators.required],
+      aluDepId: ['', Validators.required],
+      aluLocId: ['', Validators.required],
+      aluDir: [''],
+      aluMail: ['', [
+        Validators.required,
+        Validators.email,
+      ]],
+      aluConNom: [''],
+      aluConTel: [''],
+      aluConPar: [''],
+      socId: [''],
+      socNom1: [''],
+      socApe1: [''],
+      socApe2: [''],
+      socUltimoPago: [''],
+      cantPres: [''],
+      aluPar: [''],
+    }, {
+      validator: [
+        validarCIConDV('aluCi', 'aluDV')]
+    });
 
     acuService.getDepartamentos()
       .subscribe((res: any) => {
@@ -84,26 +97,28 @@ export class AltaAlumnoComponent {
       console.log('alumnoForm.value: ', this.alumnoForm.value);
       const alumno: Alumno = {
         AluId: 0,
-        AluNro: this.alumnoForm.value.aluNro,
-        AluNom: this.alumnoForm.value.aluNom,
-        AluApe1: this.alumnoForm.value.aluApe1,
-        AluFchNac: this.alumnoForm.value.aluFchNac,
-        AluCI: this.alumnoForm.value.aluCI,
-        AluDV: this.alumnoForm.value.aluDV,
-        AluDir: this.alumnoForm.value.aluDir,
-        AluTel1: this.alumnoForm.value.aluTel1,
-        AluTel2: this.alumnoForm.value.aluTel2,
-        AluMail: this.alumnoForm.value.aluMail,
-        AluPar: this.alumnoForm.value.aluPar,
-        SOCID: this.alumnoForm.value.socId,
-        AluConTel: this.alumnoForm.value.aluConTel,
-        AluConNom: this.alumnoForm.value.aluConNom,
-        AluConPar: this.alumnoForm.value.aluConPar,
-        AluDepId: this.alumnoForm.value.aluDepId,
-        AluLocId: this.alumnoForm.value.aluLocId,
-        AluEstMotBaj: this.alumnoForm.value.aluEstMotBaj,
-        AluEst: this.alumnoForm.value.aluEst
+        AluNro: this.aluNroField.value,
+        AluNom: this.aluNomField.value,
+        AluApe1: this.aluApe1Field.value,
+        AluFchNac: this.aluFchNacField.value,
+        AluCI: this.aluCiField.value,
+        AluDV: this.aluDVField.value,
+        AluDir: this.aluDirField.value,
+        AluTel1: this.aluTel1Field.value,
+        AluTel2: this.aluTel2Field.value,
+        AluMail: this.aluMailField.value,
+        AluPar: this.aluParField.value,
+        SOCID: this.socIdField.value,
+        AluConTel: this.aluConTelField.value,
+        AluConNom: this.aluConNomField.value,
+        AluConPar: this.aluConParField.value,
+        AluDepId: this.aluDepIdField.value,
+        AluLocId: this.aluLocIdField.value,
       };
+
+      console.log('alumno: ', alumno);
+      const log = JSON.stringify(alumno);
+      console.log('alumno og: ', log);
       this.acuService.gestionAlumno('INS', alumno) // guardarAgendaInstructor(this.inscripcionCurso)
         .subscribe((res: any) => {
           console.log('res: ', res);
@@ -114,7 +129,7 @@ export class AltaAlumnoComponent {
                 console.log('Cierro  con el timer');
               }
 
-              this.dialogRef.close();
+              this.dialogRef.close(res.Alumno);
             });
 
 
@@ -225,49 +240,96 @@ export class AltaAlumnoComponent {
 
   }
 
+
   get aluDVField() {
     return this.alumnoForm.get('aluDV');
   }
+
+  get aluNroField() {
+    return this.alumnoForm.get('aluNro');
+  }
+
+  get aluNomField() {
+    return this.alumnoForm.get('aluNom');
+  }
+
+  get aluApe1Field() {
+    return this.alumnoForm.get('aluApe1');
+  }
+
+  get aluCiField() {
+    return this.alumnoForm.get('aluCi');
+  }
+
+  get aluFchNacField() {
+    return this.alumnoForm.get('aluFchNac');
+  }
+
+  get aluTel1Field() {
+    return this.alumnoForm.get('aluTel1');
+  }
+
+  get aluTel2Field() {
+    return this.alumnoForm.get('aluTel2');
+  }
+
+  get aluDepIdField() {
+    return this.alumnoForm.get('aluDepId');
+  }
+
+  get aluLocIdField() {
+    return this.alumnoForm.get('aluLocId');
+  }
+
+  get aluDirField() {
+    return this.alumnoForm.get('aluDir');
+  }
+
+  get aluMailField() {
+    return this.alumnoForm.get('aluMail');
+  }
+
+  get aluConNomField() {
+    return this.alumnoForm.get('aluConNom');
+  }
+
+  get aluConTelField() {
+    return this.alumnoForm.get('aluConTel');
+  }
+
+  get aluConParField() {
+    return this.alumnoForm.get('aluConPar');
+  }
+
+  get socIdField() {
+    return this.alumnoForm.get('socId');
+  }
+
+  get socNom1Field() {
+    return this.alumnoForm.get('socNom1');
+  }
+
+  get socApe1Field() {
+    return this.alumnoForm.get('socApe1');
+  }
+
+  get socApe2Field() {
+    return this.alumnoForm.get('socApe2');
+  }
+
+  get socUltimoPagoField() {
+    return this.alumnoForm.get('socUltimoPago');
+  }
+
+  get cantPresField() {
+    return this.alumnoForm.get('cantPres');
+  }
+
+  get aluParField() {
+    return this.alumnoForm.get('aluPar');
+  }
+
+
+
 }
 
-
-export interface Departamento {
-  DepId: number;
-  DepNom: string;
-  Localidades: Localidad[];
-
-
-}
-
-export interface Localidad {
-  LocId: number;
-  LocNom: string;
-  LocOri: string;
-}
-
-
-export interface Alumno {
-  AluId: number;
-  AluNro: number;
-  AluNom: string;
-  AluNomComp?: string;
-  AluApe1: string;
-  AluFchNac: Date;
-  AluCI: number;
-  AluDV: number;
-  AluDir: string;
-  AluTel1: string;
-  AluTel2: string;
-  AluMail: string;
-  AluPar: string;
-  SOCID: number;
-  AluConTel: string;
-  AluConNom: string;
-  AluConPar: string;
-  AluDepId: number;
-  AluLocId: number;
-  AluEstMotBaj: string;
-  AluEst: string;
-  AluFiltro?: string;
-
-}

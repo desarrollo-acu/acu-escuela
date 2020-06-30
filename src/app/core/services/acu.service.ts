@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { CopiarMoverParameters } from '../model/copiarMoverParameters.model';
-import { Alumno } from 'src/app/escuela/components/modals/alta-alumno/alta-alumno.component';
 import { AgendaCurso } from 'src/app/escuela/components/modals/agenda-curso/agenda-curso.component';
 import { CuotaSocial } from '../model/cuotaSocial.model';
 import { InscripcionCurso } from '@core/model/inscripcion-curso.model';
+import { Alumno } from '@core/model/alumno.model';
 
 
 export interface LiberarParameters {

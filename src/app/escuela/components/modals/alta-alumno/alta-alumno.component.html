@@ -11,7 +11,8 @@
             <div class="row">
                 <div class="col">
                     <mat-form-field class="full-width">
-                        <input matInput placeholder="Número" formControlName="aluNro">
+                        <input matInput #numeroAlumno placeholder="Número" formControlName="aluNro" maxlength="7">
+                        <mat-hint align="end">Cantidad de carácteres: {{numeroAlumno.value.length}} / 7</mat-hint>
                     </mat-form-field>
                 </div>
             </div>
@@ -21,7 +22,7 @@
                 <div class="col">
                     <mat-form-field class="full-width">
                         <input matInput placeholder="Nombre" formControlName="aluNom">
-                        <mat-error *ngIf="alumnoForm.controls['aluNom'].hasError('required')">
+                        <mat-error *ngIf="aluNomField.hasError('required')">
                             Nombre es <strong>requerido</strong>.
                         </mat-error>
                     </mat-form-field>
@@ -30,7 +31,7 @@
                 <div class="col">
                     <mat-form-field class="full-width">
                         <input matInput placeholder="Apellido" formControlName="aluApe1">
-                        <mat-error *ngIf="alumnoForm.controls['aluApe1'].hasError('required')">
+                        <mat-error *ngIf="aluApe1Field.hasError('required')">
                             Apellido es <strong>requerido</strong>.
                         </mat-error>
                     </mat-form-field>
@@ -45,10 +46,13 @@
 
                         <div class="col-xs-6">
                             <mat-form-field>
-                                <input matInput placeholder="Cédula de Identidad" formControlName="aluCi">
-                                <mat-error *ngIf="alumnoForm.controls['aluCi'].hasError('required')">
+                                <input matInput #CIAlumno placeholder="Cédula de Identidad" formControlName="aluCi"
+                                    maxlength="7">
+                                <mat-hint align="end">Cantidad de carácteres: {{CIAlumno.value.length}} / 7</mat-hint>
+                                <mat-error *ngIf="aluCiField.hasError('required')">
                                     Cédula de Identidad es <strong>requerida</strong>.
                                 </mat-error>
+
 
                             </mat-form-field>
 
@@ -56,10 +60,18 @@
 
                         <div class="col-xs-2">
                             <mat-form-field>
-                                <input matInput placeholder="Dígito Verificador" formControlName="aluDV">
+                                <input matInput #DVAlumno placeholder="Dígito Verificador" formControlName="aluDV"
+                                    maxlength="1">
+                                <mat-hint align="end">Cantidad de carácteres: {{DVAlumno.value.length}} / 1</mat-hint>
 
-                                <mat-error *ngIf="alumnoForm.controls['aluDV'].hasError('required')">
+                                <mat-error *ngIf="aluDVField.hasError('required')">
                                     Dígito Verificador es <strong>requerido</strong>.
+                                </mat-error>
+
+
+                                <mat-error
+                                    *ngIf="aluDVField.hasError('digitoVerificadorInvalid')  && aluDVField.dirty && aluDVField.errors">
+                                    El dígito verificador es <strong>incorrecto</strong>, verifique.
                                 </mat-error>
                             </mat-form-field>
                         </div>
@@ -78,8 +90,9 @@
 
                 <div class="col">
                     <mat-form-field class="full-width">
-                        <input matInput placeholder="Télefono" formControlName="aluTel1">
-                        <mat-error *ngIf="alumnoForm.controls['aluTel1'].hasError('required')">
+                        <input matInput #telefonoAlumno placeholder="Télefono" formControlName="aluTel1" maxlength="15">
+                        <mat-hint align="end">Cantidad de carácteres: {{telefonoAlumno.value.length}} / 15</mat-hint>
+                        <mat-error *ngIf="aluTel1Field.hasError('required')">
                             Télefono es <strong>requerido</strong>.
                         </mat-error>
                     </mat-form-field>
@@ -87,8 +100,9 @@
 
                 <div class="col">
                     <mat-form-field class="full-width">
-                        <input matInput placeholder="Celular" formControlName="aluTel2">
-                        <mat-error *ngIf="alumnoForm.controls['aluTel2'].hasError('required')">
+                        <input matInput #celularAlumno placeholder="Celular" formControlName="aluTel2" maxlength="15">
+                        <mat-hint align="end">Cantidad de carácteres: {{celularAlumno.value.length}} / 15</mat-hint>
+                        <mat-error *ngIf="aluTel2Field.hasError('required')">
                             Celular es <strong>requerido</strong>.
                         </mat-error>
                     </mat-form-field>
@@ -99,25 +113,27 @@
             <div class="row">
                 <div class="col">
                     <mat-form-field class="full-width">
-                        <mat-select placeholder="Departamento" (blur)="getLocalidades(depId)" [(ngModel)]="depId"
+                        <!--  -->
+                        <mat-select placeholder="Departamento" [(ngModel)]="depId" (blur)="getLocalidades(depId)"
                             formControlName="aluDepId">
                             <mat-option *ngFor="let departamento of departamentos" [value]="departamento.DepId">
                                 {{ departamento.DepNom }}
                             </mat-option>
                         </mat-select>
-                        <mat-error *ngIf="alumnoForm.controls['aluDepId'].hasError('required')">
+                        <mat-error *ngIf="aluDepIdField.hasError('required')">
                             Departamento es <strong>requerido</strong>.
                         </mat-error>
                     </mat-form-field>
                 </div>
                 <div class="col">
                     <mat-form-field class="full-width">
+                        <!--  -->
                         <mat-select placeholder="Localidad/Barrio" [(ngModel)]="locId" formControlName="aluLocId">
                             <mat-option *ngFor="let localidad of localidades" [value]="localidad.LocId">
                                 {{ localidad.LocNom }}
                             </mat-option>
                         </mat-select>
-                        <mat-error *ngIf="alumnoForm.controls['aluLocId'].hasError('required')">
+                        <mat-error *ngIf="aluLocIdField.hasError('required')">
                             Localidad es <strong>requerido</strong>.
                         </mat-error>
                     </mat-form-field>
@@ -128,7 +144,9 @@
             <div class="row">
                 <div class="col">
                     <mat-form-field class="full-width">
-                        <input matInput placeholder="Dirección" formControlName="aluDir">
+                        <input matInput #direccionAlumno placeholder="Dirección" formControlName="aluDir"
+                            maxlength="60">
+                        <mat-hint align="end">Cantidad de carácteres: {{direccionAlumno.value.length}} / 60</mat-hint>
                     </mat-form-field>
                 </div>
             </div>
@@ -140,11 +158,10 @@
                     <mat-form-field class="full-width">
                         <mat-label>Correo Electronico</mat-label>
                         <input matInput placeholder="Ej. juan.perez@gmail.com" formControlName="aluMail">
-                        <mat-error
-                            *ngIf="alumnoForm.controls['aluMail'].hasError('email') && !alumnoForm.controls['aluMail'].hasError('required')">
+                        <mat-error *ngIf="aluMailField.hasError('email') && !aluMailField.hasError('required')">
                             El correo electrónico ingresado es <strong>incorrecto</strong>.
                         </mat-error>
-                        <mat-error *ngIf="alumnoForm.controls['aluMail'].hasError('required')">
+                        <mat-error *ngIf="aluMailField.hasError('required')">
                             Correo Electrónico es <strong>requerido</strong>.
                         </mat-error>
                     </mat-form-field>
@@ -168,20 +185,29 @@
 
                                 <div class="col-xs-4">
                                     <mat-form-field>
-                                        <input matInput placeholder="Nombres" formControlName="aluConNom">
+                                        <input matInput #contactoNombreAlumno placeholder="Nombres"
+                                            formControlName="aluConNom" maxlength="35">
+                                        <mat-hint align="end">Cantidad de carácteres:
+                                            {{contactoNombreAlumno.value.length}} / 35</mat-hint>
                                     </mat-form-field>
                                 </div>
 
                                 <div class="col-xs-4">
                                     <mat-form-field>
-                                        <input matInput placeholder="Télefono" formControlName="aluConTel">
+                                        <input matInput #contactoTelefonoAlumno placeholder="Télefono"
+                                            formControlName="aluConTel" maxlength="15">
+                                        <mat-hint align="end">Cantidad de carácteres:
+                                            {{contactoTelefonoAlumno.value.length}} / 15</mat-hint>
                                     </mat-form-field>
 
                                 </div>
 
                                 <div class="col-xs-4">
                                     <mat-form-field>
-                                        <input matInput placeholder="Parentesco" formControlName="aluConPar">
+                                        <input matInput #contactoParentescoAlumno placeholder="Parentesco"
+                                            formControlName="aluConPar" maxlength="15">
+                                        <mat-hint align="end">Cantidad de carácteres:
+                                            {{contactoParentescoAlumno.value.length}} / 15</mat-hint>
                                     </mat-form-field>
                                 </div>
 
@@ -197,7 +223,8 @@
                 <div class="col">
 
                     <mat-form-field>
-                        <input matInput placeholder="Socio" [(ngModel)]="socId" (blur)='obtenerSocio(socId)'
+                        <!--  -->
+                        <input matInput placeholder="Socio" (blur)='obtenerSocio(socId)' [(ngModel)]="socId"
                             formControlName="socId">
 
                         <button mat-icon-button matSuffix [attr.aria-label]="'Hide password'"
@@ -260,6 +287,6 @@
         </div>
     </mat-dialog-content>
     <mat-dialog-actions align="end">
-        <button mat-raised-button color="primary" type="submit" [mat-dialog-close]="alumnoForm">Guardar Alumno</button>
+        <button mat-raised-button color="primary" type="button" (click)="guardarAlumno($event)">Guardar Alumno</button>
         <button mat-button mat-dialog-close (click)="onNoClick()">Cancelar</button>
     </mat-dialog-actions>

@@ -31,20 +31,23 @@ export function validarCIConDV(ciControlName: string, dvControlName: string) {
         const dvControl = formGroup.controls[dvControlName];
 
         const ci = ciControl.value;
-        const dv = dvControl.value;
+        // tslint:disable-next-line: one-variable-per-declaration
+        const dv: number = dvControl.value;
 
         if (dvControl.errors && !dvControl.errors.digitoVerificadorInvalid) {
             // return if another validator has already found an error on the matchingControl
             return;
         }
 
-        console.log('digito Verificador ingresado: ', dv);
+        console.log('digito Verificador ingresa do: ', dv);
         const auxDV = validarDigitoVerificador(ci);
         console.log('digito Verificador real: ', auxDV);
         // set error on matchingControl if validation fails
-        if (dv !== auxDV) {
+        if (dv != auxDV) {
+            console.log('1) disntinto: ', dv);
             dvControl.setErrors({ digitoVerificadorInvalid: true });
         } else {
+            console.log('1) igula: ', dv);
             dvControl.setErrors(null);
         }
     };
@@ -117,48 +120,51 @@ export function MustMatch(controlName: string, matchingControlName: string) {
         } else {
             matchingControl.setErrors(null);
         }
-    }
+    };
 }
 
 
 
 function validarDigitoVerificador(CI: number): number {
-    const clave = [0, 2, 9, 8, 7, 6, 3, 4];
 
-    const vNumero = [];
-    for (let i = 1; i <= 8; i++) {
-        vNumero[i] = 0;
+    return validation_digit(CI);
 
-    }
-
-    let strNumero: string = CI.toString();
-
-    strNumero = strNumero.trim();
-    const largo = strNumero.length;
-
-    let j = 1;
-    const posIni = 8 - largo + 1;
-
-    for (let i = posIni; i <= 8; i++) {
-        vNumero[i] = Number.parseInt(strNumero.substring(j, 1), 0);
-        j++;
-
-    }
-
-    let T = 0;
-    let R = 0;
-    for (let i = 2; i <= 8; i++) {
-
-        R = vNumero[i] * clave[i];
-        T += (R - ((R / 10) * 10));
-
-    }
-
-    const xxDig = 10 - (T - ((T / 10) * 10));
-
-    if (xxDig === 10) {
-
-        return 0;
-    }
-    return xxDig;
 }
+
+
+function validation_digit(ci): number {
+    let a = 0;
+    let i = 0;
+    if (ci.length <= 6) {
+        for (i = ci.length; i < 7; i++) {
+            ci = '0' + ci;
+        }
+    }
+    for (i = 0; i < 7; i++) {
+        // tslint:disable-next-line: radix
+        a += (parseInt('2987634'[i]) * parseInt(ci[i])) % 10;
+    }
+    if (a % 10 === 0) {
+        return 0;
+    } else {
+        return 10 - a % 10;
+    }
+}
+
+function validate_ci(ci): boolean {
+    ci = clean_ci(ci);
+    const dig = ci[ci.length - 1];
+    ci = ci.replace(/[0-9]$/, '');
+    return (dig === validation_digit(ci));
+}
+
+function random_ci() {
+    let ci = Math.floor(Math.random() * 10000000).toString();
+    ci = ci.substring(0, 7) + validation_digit(ci);
+    return ci;
+}
+
+function clean_ci(ci) {
+    return ci.replace(/\D/g, '');
+}
+
