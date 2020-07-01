@@ -19,7 +19,7 @@ export interface InstructorData {
 })
 export class SeleccionarInstructorComponent implements OnInit {
 
-  displayedColumns: string[] = ['actions', 'EscInsNom', 'EscInsId', 'EscInsTel'];
+  displayedColumns: string[] = ['actions', 'EscInsId', 'EscInsNom', 'EscInsTel'];
   dataSource: MatTableDataSource<InstructorData>;
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;

@@ -37,7 +37,7 @@ export interface ClaseEstimadaData {
 })
 export class ClasesEstimadasComponent implements OnInit {
 
-  displayedColumns: string[] = ['actions', 'EscInsNom', 'EscInsId', 'FechaInicio', 'FechaFin', 'detalle'];
+  displayedColumns: string[] = ['actions', 'EscInsId', 'EscInsNom', 'FechaInicio', 'FechaFin', 'detalle'];
   dataSource: MatTableDataSource<ClaseEstimadaData>;
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;

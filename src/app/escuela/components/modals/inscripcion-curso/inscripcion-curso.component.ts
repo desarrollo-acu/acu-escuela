@@ -44,6 +44,7 @@ export class InscripcionCursoComponent {
   toppings = new FormControl();
   toppingList: string[] = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
   horasLibres = [];
+  sedes = [];
 
   alumno: Alumno;
 
@@ -74,6 +75,7 @@ export class InscripcionCursoComponent {
     this.fechaClase.setMonth(month - 1);
     this.fechaClase.setFullYear(year);
     this.generateHorasLibres();
+    this.generateSedes();
     this.buildForm();
   }
 
@@ -117,6 +119,8 @@ export class InscripcionCursoComponent {
       alumnoCI: [''],
       alumnoTelefono: [''],
       alumnoCelular: [''],
+      sede: [''],
+      irABuscarAlAlumno: [false],
       disponibilidadLunes: [''],
       disponibilidadMartes: [''],
       disponibilidadMiercoles: [''],
@@ -331,6 +335,8 @@ export class InscripcionCursoComponent {
       this.inscripcionCurso.escCurTe2 = this.escCurTe2Field.value;
       this.inscripcionCurso.escCurTe3 = this.escCurTe3Field.value;
       this.inscripcionCurso.fechaClaseEstimada = this.fechaInicioEstimadaField.value;
+      this.inscripcionCurso.sede = this.sedeField.value;
+      this.inscripcionCurso.irABuscarAlAlumno = this.irABuscarAlAlumnoField.value;
       console.log('this.inscripcionCurso: ', this.inscripcionCurso);
     }
 
@@ -501,11 +507,19 @@ export class InscripcionCursoComponent {
         console.log('mensaje: ', res.errorMensaje);
         this.inscripcionCurso.mensaje = res.errorMensaje;
         mensajeConfirmacion('Excelente!', res.errorMensaje);
+        this.dialogRef.close(this.inscripcionCurso);
       });
   }
 
+  get sedeField() {
+    return this.form.get('sede');
+  }
   get fechaInicioEstimadaField() {
     return this.form.get('fechaInicioEstimada');
+  }
+
+  get irABuscarAlAlumnoField() {
+    return this.form.get('irABuscarAlAlumno');
   }
   get alumnoNumeroField() {
     return this.form.get('alumnoNumero');
@@ -607,6 +621,26 @@ export class InscripcionCursoComponent {
     console.log('result: ', result);
 
     return result + digitoVerificador;
+  }
+
+  generateSedes() {
+    const sede1 = {
+      id: 1,
+      value: 'CYY',
+      description: 'Colonia y Yi'
+    };
+    this.sedes.push(sede1);
+
+    const sede2 = {
+      id: 2,
+      value: 'AV.It',
+      description: 'Avenida Italia'
+    };
+    this.sedes.push(sede2);
+
+
+
+    console.log('sedes: ', this.sedes);
   }
 
   generateHorasLibres() {

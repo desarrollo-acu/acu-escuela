@@ -19,15 +19,6 @@
                         <mat-datepicker #picker></mat-datepicker>
                     </mat-form-field>
                 </div>
-                <div class="col">
-                    <mat-form-field class="full-width">
-
-                        <input matInput [matDatepicker]="pickerEstimada" placeholder="Fecha De Inicio Estimada"
-                            formControlName="fechaInicioEstimada">
-                        <mat-datepicker-toggle matSuffix [for]="pickerEstimada"></mat-datepicker-toggle>
-                        <mat-datepicker #pickerEstimada></mat-datepicker>
-                    </mat-form-field>
-                </div>
                 <!-- <div class="col">
                     <mat-form-field class="full-width">
                         <input matInput type="time" placeholder="Hora" [value]="hora | date:'HH:mm'" disabled>
@@ -101,31 +92,12 @@
                     </mat-form-field>
                 </div>
 
-                <div class="col-xs-4">
+                <div class="col-xs-8">
                     <mat-form-field class="full-width">
                         <input matInput placeholder="Nombre del Curso" formControlName="cursoNombre" disabled>
                     </mat-form-field>
                 </div>
 
-                <div class="col-xs-4">
-                    <mat-form-field class="full-width">
-
-
-                        <input matInput [matDatepicker]="pickerCurso" placeholder="Inicio del Curso"
-                            formControlName="escCurIni">
-                        <mat-datepicker-toggle matSuffix [for]="pickerCurso"></mat-datepicker-toggle>
-                        <mat-datepicker #pickerCurso></mat-datepicker>
-                        <mat-error
-                            *ngIf="escCurIniField.hasError('required') && escCurIniField.dirty && escCurIniField.errors">
-                            La fecha de inicio del curso <strong>es requerido.</strong>
-                        </mat-error>
-                        <mat-error
-                            *ngIf="escCurIniField.hasError('fecha_invalid')  && escCurIniField.dirty && escCurIniField.errors">
-                            ATENCIÓN: La fecha de inicio del curso <strong>es anterior</strong> a la fecha de hoy.
-                        </mat-error>
-
-                    </mat-form-field>
-                </div>
             </div>
 
             <div class="row">
@@ -160,6 +132,61 @@
                     </div>
 
                 </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-6">
+                    <mat-form-field class="full-width">
+
+
+                        <input matInput [matDatepicker]="pickerCurso" placeholder="Inicio del Curso"
+                            formControlName="escCurIni">
+                        <mat-datepicker-toggle matSuffix [for]="pickerCurso"></mat-datepicker-toggle>
+                        <mat-datepicker #pickerCurso></mat-datepicker>
+                        <mat-error
+                            *ngIf="escCurIniField.hasError('required') && escCurIniField.dirty && escCurIniField.errors">
+                            La fecha de inicio del curso <strong>es requerido.</strong>
+                        </mat-error>
+                        <mat-error
+                            *ngIf="escCurIniField.hasError('fecha_invalid')  && escCurIniField.dirty && escCurIniField.errors">
+                            ATENCIÓN: La fecha de inicio del curso <strong>es anterior</strong> a la fecha de hoy.
+                        </mat-error>
+
+                    </mat-form-field>
+                </div>
+                <div class="col-xs-6">
+                    <mat-form-field class="full-width">
+
+                        <input matInput [matDatepicker]="pickerEstimada" placeholder="Fecha De Inicio Estimada"
+                            formControlName="fechaInicioEstimada">
+                        <mat-datepicker-toggle matSuffix [for]="pickerEstimada"></mat-datepicker-toggle>
+                        <mat-datepicker #pickerEstimada></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+
+                <div class="col-xs-6">
+                    <mat-form-field class="full-width">
+
+                        <mat-label>Sede</mat-label>
+                        <mat-select formControlName="sede">
+                            <mat-option *ngFor="let sede of sedes" [value]="sede.value">{{sede.description}}
+                            </mat-option>
+                        </mat-select>
+
+                    </mat-form-field>
+                </div>
+                <div class="col-xs-6">
+
+                    <div id="irABuscarAlAlumno" style=" margin-top: 20px;">
+                        <mat-checkbox formControlName="irABuscarAlAlumno" color="primary">
+                            <!-- (ngModelChange)="updateAllComplete()" -->
+                            Recoger al alumno en su domicilio?
+                        </mat-checkbox>
+                    </div>
+                </div>
+
             </div>
             <mat-divider></mat-divider>
             <h3>Clases Teóricas</h3>
@@ -323,8 +350,8 @@
 
     <mat-dialog-actions align="end">
 
-        <button mat-raised-button type="button" (click)="guardarClase($event)" cdkFocusInitial [disabled]="form.invalid"
-            [mat-dialog-close]="form.value">Guardar Cambios</button>
+        <button mat-raised-button type="button" (click)="guardarClase($event)" cdkFocusInitial
+            [disabled]="form.invalid">Guardar Cambios</button>
         <button mat-button mat-dialog-close (click)="onNoClick()">Cancelar</button>
     </mat-dialog-actions>
 

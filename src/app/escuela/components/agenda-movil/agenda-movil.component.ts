@@ -101,7 +101,6 @@ export class AgendaMovilComponent implements OnInit, AfterViewInit {
   ) { }
 
   ngOnInit() {
-    console.log('Fuciona?');
     this.fecha = new Date();
     this.getAgenda(this.fecha);
   }
@@ -247,7 +246,7 @@ export class AgendaMovilComponent implements OnInit, AfterViewInit {
 
 
   ngAfterViewInit() {
-    this.getAgenda(this.fecha);
+    // this.getAgenda(this.fecha);
 
   }
 
@@ -357,7 +356,10 @@ export class AgendaMovilComponent implements OnInit, AfterViewInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
+      console.log('cierro y recargo la agenda, result: ', result);
+
       this.animal = result;
+      this.getAgenda(this.fecha);
     });
 
   }
@@ -519,7 +521,7 @@ export class AgendaMovilComponent implements OnInit, AfterViewInit {
     const strFecha = this.formatDateToString(fecha);
     this.acuService.getAgendaPorFecha(strFecha, 'movil')
       .subscribe((res: any) => {
-        console.log('Agenda: ', res);
+        console.log('Agendaa: ', res);
 
         this.agenda = res.TablaAgenda;
         this.moviles = res.TablaAgenda.Moviles;
