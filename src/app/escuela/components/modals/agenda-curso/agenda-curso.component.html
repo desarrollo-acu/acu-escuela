@@ -36,9 +36,8 @@
                 <div class="col-xs-4">
                     <mat-form-field class="full-width">
                         <input matInput placeholder="Curso" formControlName="cursoId" [errorStateMatcher]="matcher"
-                            (change)='obtenerCurso(agendaCurso.TipCurId)'>
-                        <button mat-icon-button matSuffix [attr.aria-label]="'Hide password'"
-                            (click)='seleccionarCurso()'>
+                            (keyup.enter)='obtenerCurso()' (blur)='obtenerCurso()'>
+                        <button mat-icon-button matSuffix (click)='seleccionarCurso()'>
                             <mat-icon> search </mat-icon>
                         </button>
 
@@ -76,8 +75,10 @@
     </mat-dialog-content>
 
     <mat-dialog-actions align="end">
-        <button [disabled]="form.invalid" mat-raised-button type="submit" [mat-dialog-close]="agendaCurso"
-            cdkFocusInitial>Guardar Cambios</button>
+        <!-- [mat-dialog-close]="agendaCurso" -->
+        <button [disabled]="form.invalid" mat-raised-button (click)="guardarClase($event)" cdkFocusInitial
+            color="primary">Guardar
+            Cambios</button>
         <button mat-button mat-dialog-close (click)="onNoClick()">Cancelar</button>
     </mat-dialog-actions>
 

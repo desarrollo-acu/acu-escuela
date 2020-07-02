@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl, FormGroupDirective, NgForm } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { ErrorStateMatcher } from '@angular/material/core';
@@ -28,7 +28,7 @@ export interface AgendaCurso {
   templateUrl: './agenda-curso.component.html',
   styleUrls: ['./agenda-curso.component.scss']
 })
-export class AgendaCursoComponent implements OnInit {
+export class AgendaCursoComponent implements OnInit, OnDestroy {
 
 
 
@@ -80,6 +80,13 @@ export class AgendaCursoComponent implements OnInit {
 
   }
 
+
+  ngOnDestroy(): void {
+    this.acuService.cleanStorageAgenda();
+    //throw new Error('Method not implemented.');
+  }
+
+
   onNoClick(): void {
     this.dialogRef.close();
   }
@@ -116,7 +123,7 @@ export class AgendaCursoComponent implements OnInit {
             // alumnoTieneExcepcionValidator(this.acuService)
           ] // async validators
         ],
-        cursoNombre: ['', [Validators.required]],
+        cursoNombre: [''],
         observaciones: ['']
       });
     }
@@ -166,15 +173,21 @@ export class AgendaCursoComponent implements OnInit {
     return this.form.get('observaciones');
   }
 
-  obtenerCurso(cursoId) {
+  obtenerCurso() {
 
-    if (cursoId !== 0) {
+    console.log('cursoId: ', this.cursoIdField.value);
+    if (this.cursoIdField.value !== 0) {
 
-      this.acuService.getCurso(cursoId)
+      this.acuService.getCurso(this.cursoIdField.value)
         .subscribe((res: any) => {
           console.log('res: ', res);
-          this.agendaCurso.TipCurId = res.Curso.TipCurId;
-          this.cursoNombre = this.agendaCurso.TipCurNom = res.Curso.TipCurNom;
+          this.agendaCurso.TipCurId = res.TipCurId;
+          this.cursoNombre = this.agendaCurso.TipCurNom = res.TipCurNom;
+
+          this.form.patchValue({
+            cursoId: res.TipCurId,
+            cursoNombre: res.TipCurNom,
+          });
         });
 
     }
@@ -186,6 +199,10 @@ export class AgendaCursoComponent implements OnInit {
     console.log('Submit, form value: ', this.form.value);
     console.log('Submit, form value.cursoId: ', this.form.value.cursoId);
 
+    if (this.form.invalid) {
+      return;
+    }
+
     const existe: boolean = JSON.parse(localStorage.getItem('existe'));
 
     if (this.form.valid) {
@@ -196,6 +213,7 @@ export class AgendaCursoComponent implements OnInit {
           console.log('res: ', res);
           console.log('mensaje: ', res.mensaje);
           this.agendaCurso.mensaje = res.mensaje;
+          this.dialogRef.close(res);
         });
 
 

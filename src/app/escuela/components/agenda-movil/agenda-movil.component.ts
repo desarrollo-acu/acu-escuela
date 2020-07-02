@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
 import Swal from 'sweetalert2';
@@ -73,7 +73,7 @@ export interface Cell {
   templateUrl: './agenda-movil.component.html',
   styleUrls: ['./agenda-movil.component.scss']
 })
-export class AgendaMovilComponent implements OnInit, AfterViewInit {
+export class AgendaMovilComponent implements OnInit, AfterViewInit, OnDestroy {
 
   animal: string;
   name: string;
@@ -99,6 +99,11 @@ export class AgendaMovilComponent implements OnInit, AfterViewInit {
     // tslint:disable-next-line: variable-name
     private _bottomSheet: MatBottomSheet
   ) { }
+
+  ngOnDestroy(): void {
+    this.acuService.cleanStorageAgenda();
+    //throw new Error('Method not implemented.');
+  }
 
   ngOnInit() {
     this.fecha = new Date();

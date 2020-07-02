@@ -357,6 +357,14 @@ export class AcuService {
 
   }
 
+  cleanStorageAgenda() {
+    localStorage.removeItem('copiarMoverParameters');
+    localStorage.removeItem('mainParameters');
+    localStorage.removeItem('limpiarCeldaOld');
+
+
+  }
+
 }
 
 
