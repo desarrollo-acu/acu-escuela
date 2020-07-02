@@ -5,6 +5,7 @@ import { ErrorStateMatcher } from '@angular/material/core';
 import { SeleccionarAlumnoComponent } from '../seleccionar-alumno/seleccionar-alumno.component';
 import { SeleccionarCursoComponent } from '../seleccionar-curso/seleccionar-curso.component';
 import { AcuService } from 'src/app/core/services/acu.service';
+import { Curso } from '@core/model/curso.model';
 
 
 
@@ -122,23 +123,18 @@ export class AgendaCursoComponent implements OnInit {
   }
 
   seleccionarCurso() {
-    let cursos = JSON.parse(localStorage.getItem('Cursos'));
 
-    if (!cursos) {
-      this.acuService.getCursos()
-        .subscribe((res: any) => {
-          console.log('Cursos: ', res);
+    this.acuService.getCursos()
+      .subscribe((cursos: Curso[]) => {
+        console.log('Cursos: ', cursos);
 
-          cursos = res.Cursos;
-          localStorage.setItem('cursos', JSON.stringify(cursos));
-          this.openDialogCursos(cursos);
-        });
-    } else {
-      this.openDialogCursos(cursos);
-    }
+        this.openDialogCursos(cursos);
+      });
+
   }
 
-  private openDialogCursos(cursos) {
+  private openDialogCursos(cursos: Curso[]) {
+    console.log('2 Cursos: ', cursos);
     const cursosDialogRef = this.dialog.open(SeleccionarCursoComponent, {
       height: 'auto',
       width: '700px',
@@ -171,12 +167,17 @@ export class AgendaCursoComponent implements OnInit {
   }
 
   obtenerCurso(cursoId) {
-    this.acuService.getCurso(cursoId)
-      .subscribe((res: any) => {
-        console.log('res: ', res);
-        this.agendaCurso.TipCurId = res.Curso.TipCurId;
-        this.cursoNombre = this.agendaCurso.TipCurNom = res.Curso.TipCurNom;
-      });
+
+    if (cursoId !== 0) {
+
+      this.acuService.getCurso(cursoId)
+        .subscribe((res: any) => {
+          console.log('res: ', res);
+          this.agendaCurso.TipCurId = res.Curso.TipCurId;
+          this.cursoNombre = this.agendaCurso.TipCurNom = res.Curso.TipCurNom;
+        });
+
+    }
   }
 
   guardarClase(event: Event) {
