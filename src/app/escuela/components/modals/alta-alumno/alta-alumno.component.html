@@ -11,7 +11,8 @@
             <div class="row">
                 <div class="col">
                     <mat-form-field class="full-width">
-                        <input matInput #numeroAlumno placeholder="Número" formControlName="aluNro" maxlength="7">
+                        <input matInput #numeroAlumno placeholder="Número" formControlName="aluNro" maxlength="7"
+                            disabled>
                         <mat-hint align="end">Cantidad de carácteres: {{numeroAlumno.value.length}} / 7</mat-hint>
                     </mat-form-field>
                 </div>

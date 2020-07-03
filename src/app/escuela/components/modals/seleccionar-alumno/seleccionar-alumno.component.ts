@@ -3,8 +3,6 @@ import {
   OnInit,
   ViewChild,
   Inject,
-  AfterViewInit,
-  AfterViewChecked,
 } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -12,30 +10,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { AgendarClaseComponent } from '../agendar-clase/agendar-clase.component';
 import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AcuService } from 'src/app/core/services/acu.service';
+import { Alumno } from '@core/model/alumno.model';
 
-export interface AlumnoData {
-  AluId: string;
-  AluNro: string;
-  AluNom: string;
-  AluApe1: string;
-  AluNomComp: string;
-  AluCI: string;
-  AluConNom: string;
-  AluConPar: string;
-  AluConTel: string;
-  AluDV: number;
-  AluDepId: number;
-  AluDir: string;
-  AluEst: string;
-  AluEstMotBaj: string;
-  AluFchNac: string;
-  AluLocId: number;
-  AluMail: string;
-  AluPar: string;
-  AluTel1: string;
-  AluTel2: string;
-  SocId: string;
-}
 @Component({
   selector: 'app-seleccionar-alumno',
   templateUrl: './seleccionar-alumno.component.html',
@@ -61,7 +37,7 @@ export class SeleccionarAlumnoComponent implements OnInit { // , AfterViewInit, 
 
   // Test paginator
   pageEvent: PageEvent;
-  dataSource: MatTableDataSource<AlumnoData>;
+  dataSource: MatTableDataSource<Alumno>;
   pageIndex: number;
   pageSize: number;
   length: number;

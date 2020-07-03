@@ -20,6 +20,7 @@ import { ClasesEstimadasComponent } from '../clases-estimadas/clases-estimadas.c
 import { mensajeConfirmacion } from '@utils/sweet-alert';
 
 import { Alumno } from '@core/model/alumno.model';
+import { AlumnoYaAsignadoValidatorDirective } from '@utils/validators/alumno-ya-asignado.directive';
 
 
 @Component({
@@ -77,6 +78,7 @@ export class InscripcionCursoComponent {
     this.generateHorasLibres();
     this.generateSedes();
     this.buildForm();
+    this.deshabilitarCampos();
   }
 
   onNoClick(): void {
@@ -86,7 +88,7 @@ export class InscripcionCursoComponent {
 
   private buildForm() {
     this.form = this.formBuilder.group({
-      fechaClase: [this.fechaClase, [Validators.required, MyValidators.fechaPosteriorAHoy]],
+      fechaClase: [this.fechaClase, [MyValidators.fechaPosteriorAHoy]],
       cursoId: [
         '',
         [Validators.required], // sync validators
@@ -133,10 +135,32 @@ export class InscripcionCursoComponent {
         ValidateFechaPosterior('escCurIni', 'escCurTe1'),
         ValidateFechaPosterior('escCurTe1', 'escCurTe2'),
         ValidateFechaPosterior('escCurTe2', 'escCurTe3')]
-    }
-    );
+    });
+
   }
 
+  deshabilitarCampos() {
+    // Deshabilitar fecha de inscripicón
+    this.fechaClaseFiled.disable();
+
+    // Campos deshabilitados del alumno
+    this.alumnoCIField.disable();
+    this.alumnoTelefonoField.disable();
+    this.alumnoNombreField.disable();
+    this.alumnoCelularField.disable();
+
+    // Campos deshabilitados del curso
+
+    this.cursoNombreField.disable();
+    this.cursoClasesPracticasField.disable();
+    this.cursoClasesTeoricasField.disable();
+    this.cursoExamenPracticoField.disable();
+    this.cursoExamenTeoricoField.disable();
+
+
+
+
+  }
 
   seleccionarCurso() {
     let cursos = JSON.parse(localStorage.getItem('Cursos'));
@@ -272,17 +296,26 @@ export class InscripcionCursoComponent {
   }
 
   private openDialogAltaAlumnos() {
-    const alumnosDialogRef = this.dialog.open(AltaAlumnoComponent, {
-      height: 'auto',
-      width: '700px',
-    });
+    this.acuService.getAlumnoNumero().subscribe((alumno: { numero: number }) => {
+      console.log('alumno: ', alumno);
 
-    alumnosDialogRef.afterClosed().subscribe(result => {
-      // this.alumno = result;
-      console.log('1.alumno: ' + result);
-      console.log('2.alumno: ' + JSON.stringify(result));
+      const alumnosDialogRef = this.dialog.open(AltaAlumnoComponent, {
+        height: 'auto',
+        width: '700px',
+        data: {
+          alumnoNumero: alumno.numero
+        }
+      });
 
-      this.addInfoAlumnoAlForm(result);
+      alumnosDialogRef.afterClosed().subscribe(result => {
+        // this.alumno = result;
+        console.log('1.alumno: ' + result);
+        console.log('2.alumno: ' + JSON.stringify(result));
+
+        this.addInfoAlumnoAlForm(result.Alumno);
+      });
+
+
     });
 
   }
@@ -484,14 +517,21 @@ export class InscripcionCursoComponent {
 
   }
 
-  addInfoAlumnoAlForm(result) {
+  addInfoAlumnoAlForm(result: Alumno) {
 
     this.inscripcionCurso.AluId = result.AluId;
+
+    console.log('result: ', result);
+    console.log('CI tipo: ', typeof result.AluCI);
+    console.log('DV tipo: ', typeof result.AluDV);
+
+    const ci = (typeof result.AluCI === 'string') ? result.AluCI : result.AluCI.toString();
+    const dv = (typeof result.AluDV === 'string') ? result.AluDV : result.AluDV.toString();
 
     this.form.patchValue({
       alumnoNumero: result.AluNro,
       alumnoNombre: result.AluNomComp,
-      alumnoCI: this.formatCI(result.AluCI, result.AluDV),
+      alumnoCI: this.formatCI(ci, dv),
       alumnoTelefono: result.AluTel1,
       alumnoCelular: result.AluTel2,
     });
@@ -509,6 +549,10 @@ export class InscripcionCursoComponent {
         mensajeConfirmacion('Excelente!', res.errorMensaje);
         this.dialogRef.close(this.inscripcionCurso);
       });
+  }
+
+  get fechaClaseFiled() {
+    return this.form.get('fechaClase');
   }
 
   get sedeField() {
@@ -540,18 +584,42 @@ export class InscripcionCursoComponent {
   get alumnoCelularField() {
     return this.form.get('alumnoCelular');
   }
-
-  get cursoNombreField() {
-    return this.form.get('cursoNombre');
-  }
+  /*
+  
+        cursoClasesPracticas
+        cursoClasesTeoricas
+        cursoExamenPractico
+        cursoExamenTeorico
+        */
 
   get cursoIdField() {
     return this.form.get('cursoId');
   }
+  get cursoNombreField() {
+    return this.form.get('cursoNombre');
+  }
+  get cursoClasesPracticasField() {
+    return this.form.get('cursoClasesPracticas');
+  }
+  get cursoClasesTeoricasField() {
+    return this.form.get('cursoClasesTeoricas');
+  }
+
+  get cursoExamenPracticoField() {
+    return this.form.get('cursoExamenPractico');
+  }
+
+
+  get cursoExamenTeoricoField() {
+    return this.form.get('cursoExamenTeorico');
+  }
+
 
   get escCurTe1Field() {
     return this.form.get('escCurTe1');
   }
+
+
 
   get escCurTe2Field() {
     return this.form.get('escCurTe2');

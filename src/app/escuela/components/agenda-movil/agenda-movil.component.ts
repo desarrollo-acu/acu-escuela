@@ -101,6 +101,8 @@ export class AgendaMovilComponent implements OnInit, AfterViewInit, OnDestroy {
   ) { }
 
   ngOnDestroy(): void {
+
+    console.log('Agenda-movil ngOnDestroy');
     this.acuService.cleanStorageAgenda();
     //throw new Error('Method not implemented.');
   }
@@ -144,7 +146,7 @@ export class AgendaMovilComponent implements OnInit, AfterViewInit, OnDestroy {
     };
     for (const h of this.horaMovilPlano) {
       if (h.Hora === hora.Hora && h.MovCod === movil.MovCod) {
-        cell.value = `${h.EsAgCuInsId} ${h.AluApe1.substring(0, 10)}`;
+        cell.value = `${h.EsAgCuInsId} ${h.AluNro} ${h.AluApe1.substring(0, 10)}`;
         cell.class = h.claseCelda;
         cell.existe = true;
       }

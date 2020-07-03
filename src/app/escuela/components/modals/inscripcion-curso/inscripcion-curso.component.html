@@ -14,22 +14,12 @@
                     <mat-form-field class="full-width">
 
                         <input matInput [matDatepicker]="picker" placeholder="Fecha De Ingreso" [value]="fechaClase"
-                            formControlName="fechaClase" disabled>
+                            formControlName="fechaClase">
                         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                         <mat-datepicker #picker></mat-datepicker>
                     </mat-form-field>
                 </div>
-                <!-- <div class="col">
-                    <mat-form-field class="full-width">
-                        <input matInput type="time" placeholder="Hora" [value]="hora | date:'HH:mm'" disabled>
-                    </mat-form-field>
-                </div>
-                <div class="col">
-                    <mat-form-field class="full-width">
-                        <input matInput placeholder="Código de instructor" [value]="instructor" disabled> 
-                        
-                    </mat-form-field>
-                </div> -->
+
             </div>
 
             <div class="row">
@@ -94,7 +84,7 @@
 
                 <div class="col-xs-8">
                     <mat-form-field class="full-width">
-                        <input matInput placeholder="Nombre del Curso" formControlName="cursoNombre" disabled>
+                        <input matInput placeholder="Nombre del Curso" formControlName="cursoNombre">
                     </mat-form-field>
                 </div>
 
@@ -116,7 +106,7 @@
                         </div>
                         <div class="col-xs-3">
                             <div id="cursoExamenPractico" style=" margin-top: 20px;">
-                                <mat-checkbox formControlName="cursoExamenPractico">Exámen
+                                <mat-checkbox formControlName="cursoExamenPractico"> Exámen
                                     Prácticas</mat-checkbox>
 
                             </div>
@@ -350,8 +340,8 @@
 
     <mat-dialog-actions align="end">
 
-        <button mat-raised-button type="button" (click)="guardarClase($event)" cdkFocusInitial
-            [disabled]="form.invalid">Guardar Cambios</button>
+        <button mat-raised-button type="button" (click)="guardarClase($event)" cdkFocusInitial [disabled]="form.invalid"
+            color="primary">Guardar Cambios</button>
         <button mat-button mat-dialog-close (click)="onNoClick()">Cancelar</button>
     </mat-dialog-actions>
 

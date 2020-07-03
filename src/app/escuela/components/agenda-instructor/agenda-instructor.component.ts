@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
 import Swal from 'sweetalert2';
@@ -74,7 +74,7 @@ export interface Cell {
   templateUrl: './agenda-instructor.component.html',
   styleUrls: ['./agenda-instructor.component.scss']
 })
-export class AgendaInstructorComponent implements OnInit {
+export class AgendaInstructorComponent implements OnInit, OnDestroy {
 
   animal: string;
   name: string;
@@ -101,11 +101,19 @@ export class AgendaInstructorComponent implements OnInit {
     private _bottomSheet: MatBottomSheet
   ) { }
 
+  ngOnDestroy(): void {
+
+    console.log('Agenda-instructor ngOnDestroy');
+    this.acuService.cleanStorageAgenda();
+    //throw new Error("Method not implemented.");
+  }
+
   ngOnInit() {
     console.log('Fuciona?');
     this.fecha = new Date();
     this.getAgenda(this.fecha);
   }
+
 
   makeDataSource(
     horas: any[],

@@ -82,6 +82,7 @@ export class AgendaCursoComponent implements OnInit, OnDestroy {
 
 
   ngOnDestroy(): void {
+
     this.acuService.cleanStorageAgenda();
     //throw new Error('Method not implemented.');
   }

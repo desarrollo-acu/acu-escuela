@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AgendarClaseComponent } from '../agendar-clase/agendar-clase.component';
 import Swal from 'sweetalert2';
 import { AcuService } from 'src/app/core/services/acu.service';
@@ -43,10 +43,11 @@ export class AltaAlumnoComponent {
     public dialogRef: MatDialogRef<AgendarClaseComponent>,
     public dialog: MatDialog,
     private acuService: AcuService,
-    private fb: FormBuilder) {
+    private fb: FormBuilder,
+    @Inject(MAT_DIALOG_DATA) public data: any) {
 
     this.alumnoForm = this.fb.group({
-      aluNro: [''],
+      aluNro: [this.data.alumnoNumero],
       aluNom: ['', Validators.required],
       aluApe1: ['', Validators.required],
       aluCi: ['', Validators.required],
@@ -100,6 +101,7 @@ export class AltaAlumnoComponent {
         AluNro: this.aluNroField.value,
         AluNom: this.aluNomField.value,
         AluApe1: this.aluApe1Field.value,
+        AluNomComp: `${this.aluNomField.value} ${this.aluApe1Field.value}`,
         AluFchNac: this.aluFchNacField.value,
         AluCI: this.aluCiField.value,
         AluDV: this.aluDVField.value,
@@ -164,6 +166,7 @@ export class AltaAlumnoComponent {
       }
     });
   }
+
   seleccionarSocio(parametro) {
     console.log('1)tipo: FREE');
     console.log('2)parametro: ', parametro);

@@ -349,6 +349,10 @@ export class AcuService {
     return this.http.post(`${environment.url_ws}/wsObtenerInstructores`, {});
   }
 
+  getAlumnoNumero() {
+    return this.http.get(`${environment.url_ws}/wsGetUltimoNumeroAlumno`);
+  }
+
 
   facturarCuotasSociales(cuotasSociales: CuotaSocial) {
     return this.http.post(`${environment.url_ws}/wsFacturarCuotasSociales`, {
@@ -361,6 +365,16 @@ export class AcuService {
     localStorage.removeItem('copiarMoverParameters');
     localStorage.removeItem('mainParameters');
     localStorage.removeItem('limpiarCeldaOld');
+    localStorage.removeItem('pegar-clase');
+
+
+    localStorage.removeItem('fechaClase');
+    localStorage.removeItem('fecha');
+    localStorage.removeItem('instructor');
+    localStorage.removeItem('movil');
+    localStorage.removeItem('hora');
+    localStorage.removeItem('existe');
+    localStorage.removeItem('tipoAgenda');
 
 
   }
