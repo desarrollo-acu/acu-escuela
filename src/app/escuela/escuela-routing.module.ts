@@ -5,6 +5,9 @@ import { AgendaInstructorComponent } from './components/agenda-instructor/agenda
 import { SeleccionarAlumnoComponent } from './components/modals/seleccionar-alumno/seleccionar-alumno.component';
 import { AgendaMovilComponent } from './components/agenda-movil/agenda-movil.component';
 import { AgendarClaseComponent } from './components/modals/agendar-clase/agendar-clase.component';
+import { GestionCursoComponent } from './components/gestion-curso/gestion-curso.component';
+import { GestionInstructorComponent } from './components/gestion-instructor/gestion-instructor.component';
+import { GestionAlumnoComponent } from './components/gestion-alumno/gestion-alumno.component';
 
 
 
@@ -20,6 +23,18 @@ const routes: Routes = [
       {
         path: 'agenda-instructor',
         component: AgendaInstructorComponent
+      },
+      {
+        path: 'gestion-curso',
+        component: GestionCursoComponent
+      },
+      {
+        path: 'gestion-alumno',
+        component: GestionAlumnoComponent
+      },
+      {
+        path: 'gestion-instructor',
+        component: GestionInstructorComponent
       },
       {
         path: 'agendaclase',

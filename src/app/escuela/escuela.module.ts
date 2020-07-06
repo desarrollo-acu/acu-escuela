@@ -28,6 +28,12 @@ import { AgendarClaseComponent } from './components/modals/agendar-clase/agendar
 import { SeleccionarSocioComponent } from './components/modals/seleccionar-socio/seleccionar-socio.component';
 import { ClasesEstimadasComponent } from './components/modals/clases-estimadas/clases-estimadas.component';
 import { ClasesEstimadasDetalleComponent } from './components/modals/clases-estimadas-detalle/clases-estimadas-detalle.component';
+import { GestionCursoComponent } from './components/gestion-curso/gestion-curso.component';
+import { GestionInstructorComponent } from './components/gestion-instructor/gestion-instructor.component';
+import { GestionAlumnoComponent } from './components/gestion-alumno/gestion-alumno.component';
+import { AbmAlumnoComponent } from './components/abm-alumno/abm-alumno.component';
+import { AbmInstructorComponent } from './components/abm-instructor/abm-instructor.component';
+import { AbmCursoComponent } from './components/abm-curso/abm-curso.component';
 
 @NgModule({
   declarations: [
@@ -48,7 +54,13 @@ import { ClasesEstimadasDetalleComponent } from './components/modals/clases-esti
     AgendarClaseComponent,
     SeleccionarSocioComponent,
     ClasesEstimadasComponent,
-    ClasesEstimadasDetalleComponent
+    ClasesEstimadasDetalleComponent,
+    GestionCursoComponent,
+    GestionInstructorComponent,
+    GestionAlumnoComponent,
+    AbmAlumnoComponent,
+    AbmInstructorComponent,
+    AbmCursoComponent
   ],
   imports: [
     CommonModule,
