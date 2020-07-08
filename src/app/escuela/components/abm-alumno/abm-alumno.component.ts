@@ -10,7 +10,8 @@ import { SeleccionarSocioComponent } from '../modals/seleccionar-socio/seleccion
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
-import { startWith, map } from 'rxjs/operators';
+import { mensajeConfirmacion } from '@utils/sweet-alert';
+
 
 @Component({
   selector: 'app-abm-alumno',
@@ -55,8 +56,8 @@ export class AbmAlumnoComponent implements OnInit, OnDestroy {
 
   constructor(
     private acuService: AcuService,
-    public dialog: MatDialog,
     private fb: FormBuilder,
+    private dialog: MatDialog,
     private router: Router) {
 
     this.buildForm();
@@ -64,7 +65,6 @@ export class AbmAlumnoComponent implements OnInit, OnDestroy {
   }
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
-    // this.acuService.alumnoCurrentData = null;
   }
 
   ngOnInit(): void {
@@ -86,9 +86,6 @@ export class AbmAlumnoComponent implements OnInit, OnDestroy {
         console.log('SDTDepartamento: ', res);
         console.log('alumno: ', alumno);
         this.departamentos = res.Departamentos;
-
-
-
 
         if (modo === 'INS') {
           this.titulo = 'Agregar';
@@ -243,7 +240,7 @@ export class AbmAlumnoComponent implements OnInit, OnDestroy {
           console.log('res: ', res);
 
           if (res.Alumno.ErrorCode === 0) {
-            this.mensajeConfirmacion('Confirmado!', res.Alumno.ErrorMessage).then((res2) => {
+            mensajeConfirmacion('Confirmado!', res.Alumno.ErrorMessage).then((res2) => {
               if (res2.dismiss === Swal.DismissReason.timer) {
                 console.log('Cierro  con el timer');
               }
@@ -271,19 +268,6 @@ export class AbmAlumnoComponent implements OnInit, OnDestroy {
   onNoClick(): void {
     // Me voy a la pantalla de gestión y elimino del Servicio
     this.router.navigate(['/escuela/gestion-alumno']);
-  }
-
-  mensajeConfirmacion(title, text) {
-    return Swal.fire({
-      title,
-      text,
-      icon: 'success',
-      timer: 5000,
-      showConfirmButton: false,
-      onClose: () => {
-        console.log('Cieerro antes de timer');
-      }
-    });
   }
 
   seleccionarSocio(parametro) {

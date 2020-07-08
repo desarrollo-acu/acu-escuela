@@ -7,6 +7,8 @@ import { CuotaSocial } from '../model/cuotaSocial.model';
 import { InscripcionCurso } from '@core/model/inscripcion-curso.model';
 import { Alumno } from '@core/model/alumno.model';
 import { BehaviorSubject } from 'rxjs';
+import { Curso } from '@core/model/curso.model';
+import { Instructor } from '@core/model/instructor.model';
 
 
 export interface LiberarParameters {
@@ -39,9 +41,13 @@ export class AcuService {
     })
   };
 
-
+  // esto va al alumnoService
   private alumnoDataSource = new BehaviorSubject({ modo: 'INS', alumno: {}, numero: 0 });
   alumnoCurrentData = this.alumnoDataSource.asObservable();
+
+  // esto va al cursoService
+  private cursoDataSource = new BehaviorSubject({ modo: 'INS', curso: {}, id: 0 });
+  cursoCurrentData = this.cursoDataSource.asObservable();
 
   constructor(
     private http: HttpClient) {
@@ -304,6 +310,24 @@ export class AcuService {
       Alumno: {
         Mode: mode,
         Alumno: alumno
+      }
+    });
+  }
+
+  gestionCurso(mode: string, curso: Curso) {
+    return this.http.post(`${environment.url_ws}/wsGestionCurso`, {
+      Curso: {
+        Mode: mode,
+        Curso: curso
+      }
+    });
+  }
+
+  gestionInstructor(mode: string, instructor: Instructor) {
+    return this.http.post(`${environment.url_ws}/wsGestionInstructor`, {
+      Instructor: {
+        Mode: mode,
+        Instructor: instructor
       }
     });
   }
