@@ -6,6 +6,7 @@ import { AgendaCurso } from 'src/app/escuela/components/modals/agenda-curso/agen
 import { CuotaSocial } from '../model/cuotaSocial.model';
 import { InscripcionCurso } from '@core/model/inscripcion-curso.model';
 import { Alumno } from '@core/model/alumno.model';
+import { BehaviorSubject } from 'rxjs';
 
 
 export interface LiberarParameters {
@@ -37,6 +38,10 @@ export class AcuService {
       'Content-Type': 'application/soap+xml'
     })
   };
+
+
+  private alumnoDataSource = new BehaviorSubject({ modo: 'INS', alumno: {}, numero: 0 });
+  alumnoCurrentData = this.alumnoDataSource.asObservable();
 
   constructor(
     private http: HttpClient) {
@@ -289,6 +294,7 @@ export class AcuService {
       }
     });
   }
+
   obtenerAlumnos(pageSize: number, pageNumber: number, filtro: string) {
     return this.http.get(`${environment.url_ws}/wsGetAlumnos?PageSize=${pageSize}&PageNumber=${pageNumber}&Filtro=${filtro}`);
   }
@@ -376,6 +382,15 @@ export class AcuService {
     localStorage.removeItem('existe');
     localStorage.removeItem('tipoAgenda');
 
+
+  }
+
+  // Test send parameters
+
+  sendDataAlumno(modo: string, alumno: Alumno, numero?: number) {
+
+    const data: { modo: string, alumno: Alumno, numero: number } = (numero) ? { modo, alumno, numero } : { modo, alumno, numero: 0 };
+    this.alumnoDataSource.next(data);
 
   }
 

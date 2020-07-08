@@ -35,6 +35,10 @@ import { AbmAlumnoComponent } from './components/abm-alumno/abm-alumno.component
 import { AbmInstructorComponent } from './components/abm-instructor/abm-instructor.component';
 import { AbmCursoComponent } from './components/abm-curso/abm-curso.component';
 
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+
 @NgModule({
   declarations: [
     AgendaMovilComponent,
@@ -70,6 +74,9 @@ import { AbmCursoComponent } from './components/abm-curso/abm-curso.component';
     SharedModule,
     FormsModule,
     SweetAlert2Module,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
   ],
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: 'es-UY' }

@@ -8,6 +8,10 @@ import { AgendarClaseComponent } from './components/modals/agendar-clase/agendar
 import { GestionCursoComponent } from './components/gestion-curso/gestion-curso.component';
 import { GestionInstructorComponent } from './components/gestion-instructor/gestion-instructor.component';
 import { GestionAlumnoComponent } from './components/gestion-alumno/gestion-alumno.component';
+import { AbmCursoComponent } from './components/abm-curso/abm-curso.component';
+import { AbmAlumnoComponent } from './components/abm-alumno/abm-alumno.component';
+import { AbmInstructorComponent } from './components/abm-instructor/abm-instructor.component';
+
 
 
 
@@ -27,6 +31,7 @@ const routes: Routes = [
       {
         path: 'gestion-curso',
         component: GestionCursoComponent
+        //GestionCursoComponent
       },
       {
         path: 'gestion-alumno',
@@ -35,6 +40,19 @@ const routes: Routes = [
       {
         path: 'gestion-instructor',
         component: GestionInstructorComponent
+      },
+      {
+        path: 'abm-curso',
+        component: AbmCursoComponent
+
+      },
+      {
+        path: 'abm-alumno',
+        component: AbmAlumnoComponent
+      },
+      {
+        path: 'abm-instructor',
+        component: AbmInstructorComponent
       },
       {
         path: 'agendaclase',

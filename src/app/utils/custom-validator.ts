@@ -1,7 +1,6 @@
 import { FormGroup } from '@angular/forms';
 
 export function ValidateFechaPosterior(controlName: string, matchingControlName: string) {
-    console.log('validateFechaPosterior');
     return (formGroup: FormGroup) => {
         const fecha1 = formGroup.controls[controlName];
         const fecha2 = formGroup.controls[matchingControlName];
@@ -25,7 +24,6 @@ export function ValidateFechaPosterior(controlName: string, matchingControlName:
     };
 }
 export function validarCIConDV(ciControlName: string, dvControlName: string) {
-    console.log('validarCIConDV');
     return (formGroup: FormGroup) => {
         const ciControl = formGroup.controls[ciControlName];
         const dvControl = formGroup.controls[dvControlName];
@@ -39,15 +37,11 @@ export function validarCIConDV(ciControlName: string, dvControlName: string) {
             return;
         }
 
-        console.log('digito Verificador ingresa do: ', dv);
         const auxDV = validarDigitoVerificador(ci);
-        console.log('digito Verificador real: ', auxDV);
         // set error on matchingControl if validation fails
         if (dv != auxDV) {
-            console.log('1) disntinto: ', dv);
             dvControl.setErrors({ digitoVerificadorInvalid: true });
         } else {
-            console.log('1) igula: ', dv);
             dvControl.setErrors(null);
         }
     };
@@ -58,7 +52,6 @@ export function validarCIConDV(ciControlName: string, dvControlName: string) {
 
 // Valida que un campo de tipo checkbox anterior sea true para evaluar si es requerido o no
 export function RequiredAfterFieldChecked(controlName: string, matchingControlName: string) {
-    console.log('RequiredAfterField');
     return (formGroup: FormGroup) => {
         const firstField = formGroup.controls[controlName];
         const secondField = formGroup.controls[matchingControlName];
@@ -80,20 +73,15 @@ export function RequiredAfterFieldChecked(controlName: string, matchingControlNa
 
 // Valida que un campo de tipo checkbox anterior sea true para evaluar si es requerido o no
 export function RequiredAfterFieldNoChecked(controlName: string, matchingControlName: string) {
-    console.log('RequiredAfterFieldNoChecked');
     return (formGroup: FormGroup) => {
         const firstField = formGroup.controls[controlName];
         const secondField = formGroup.controls[matchingControlName];
 
-        console.log('firstField: ', firstField);
-        console.log('secondField: ', secondField);
         if (secondField.errors && !secondField.errors.requiredAfterFieldNoChecked) {
             // return if another validator has already found an error on the matchingControl
             return;
         }
 
-        console.log('firstField.value: ', firstField.value);
-        console.log('secondField.value: ', secondField.value);
         // set error on matchingControl if validation fails
         if (!firstField.value && secondField.value === '') {
             secondField.setErrors({ requiredAfterFieldNoChecked: true });
@@ -104,7 +92,6 @@ export function RequiredAfterFieldNoChecked(controlName: string, matchingControl
 }
 // custom validator to check that two fields match
 export function MustMatch(controlName: string, matchingControlName: string) {
-    console.log('MustMatch');
     return (formGroup: FormGroup) => {
         const control = formGroup.controls[controlName];
         const matchingControl = formGroup.controls[matchingControlName];

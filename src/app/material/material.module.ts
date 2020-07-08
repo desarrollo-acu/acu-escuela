@@ -48,34 +48,15 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 
 @NgModule({
   declarations: [],
   imports: [
     CommonModule,
-    MatButtonModule,
-    MatToolbarModule,
-    MatIconModule,
-    MatBadgeModule,
-    MatCardModule,
-    MatInputModule,
-    MatSelectModule,
-    MatRadioModule,
-    MatTableModule,
-    MatSidenavModule,
-    MatListModule,
-    MatPaginatorModule,
-    MatSortModule,
-    MatGridListModule,
-    MatMenuModule,
-    MatTreeModule,
     LayoutModule,
-    DragDropModule,
     MatFormFieldModule,
-    MatButtonToggleModule,
-    MatStepperModule,
-    MatDialogModule,
-
+    ClipboardModule,
     A11yModule,
     CdkStepperModule,
     CdkTableModule,
@@ -112,6 +93,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatSnackBarModule,
     MatSortModule,
     MatTableModule,
+    MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,
     MatTreeModule,
@@ -121,29 +103,11 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 
   ],
   exports: [
-    MatButtonModule,
-    MatToolbarModule,
-    MatIconModule,
-    MatBadgeModule,
-    MatCardModule,
-    MatInputModule,
-    MatSelectModule,
-    MatRadioModule,
-    MatTableModule,
-    MatSidenavModule,
-    MatListModule,
-    MatPaginatorModule,
-    MatSortModule,
-    MatGridListModule,
-    MatMenuModule,
-    MatTreeModule,
+    CommonModule,
     LayoutModule,
-    DragDropModule,
     MatFormFieldModule,
-    MatButtonToggleModule,
-    MatStepperModule,
-    MatDialogModule,
 
+    ClipboardModule,
     A11yModule,
     CdkStepperModule,
     CdkTableModule,
@@ -180,13 +144,13 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatSnackBarModule,
     MatSortModule,
     MatTableModule,
+    MatTabsModule,
     MatToolbarModule,
+    MatTooltipModule,
     MatTreeModule,
     PortalModule,
     ScrollingModule,
 
-    MatTabsModule,
-    MatTooltipModule,
   ]
 })
 export class MaterialModule { }
