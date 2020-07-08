@@ -5,6 +5,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { AcuService } from '@core/services/acu.service';
 import { Alumno } from '@core/model/alumno.model';
 import { Router } from '@angular/router';
+import { confirmacionUsuario, mensajeConfirmacion } from '@utils/sweet-alert';
+
 
 @Component({
   selector: 'app-gestion-alumno',
@@ -23,21 +25,24 @@ export class GestionAlumnoComponent implements OnInit {
   // Test paginator
   pageEvent: PageEvent;
   pageIndex: number;
-  pageSize: number;
+  pageSize = 5;
   length: number;
   cantidad = 60000;
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
-  constructor(private acuService: AcuService,
+  constructor(
+    private acuService: AcuService,
     private router: Router) {
+    console.log('constructor gestion-alumno');
+
 
   }
 
   ngOnInit() {
+    console.log('ngoninit gestion-alumno');
     const event = this.ejecutoEvent(null);
-
 
 
     // Get the input box
@@ -56,9 +61,6 @@ export class GestionAlumnoComponent implements OnInit {
       // Make a new timeout set to go off in 1000ms (1 second)
       timeout = setTimeout(() => {
 
-        console.log('3) Input Value:', this.filtro);
-        console.log('3) Input this.pageSize:', this.pageSize);
-
         this.getAlumnos(this.pageSize, 1, this.filtro);
       }, 500);
     });
@@ -66,32 +68,47 @@ export class GestionAlumnoComponent implements OnInit {
   }
 
   abmAlumno(modo: string, alumno: Alumno) {
-    if (modo === 'INS') {
+    switch (modo) {
+      case 'INS':
+        this.acuService.getAlumnoNumero().subscribe((res: { numero: number }) => {
+          console.log('res: ', res);
 
-      this.acuService.getAlumnoNumero().subscribe((res: { numero: number }) => {
-        console.log('res: ', res);
 
+          this.acuService.sendDataAlumno(modo, alumno, res.numero);
+          this.router.navigate(['/escuela/abm-alumno']);
+        });
+        break;
+      case 'UPD':
 
-        this.acuService.sendDataAlumno(modo, alumno, res.numero);
+        this.acuService.sendDataAlumno(modo, alumno);
         this.router.navigate(['/escuela/abm-alumno']);
+        break;
+      case 'DLT':
+        confirmacionUsuario('Confirmación de Usuario', `Está seguro que desea eliminar el alumno: ${alumno.AluNomComp}`).then((res) => {
+          if (res.isConfirmed) {
+            this.acuService.gestionAlumno(modo, alumno).subscribe((res: any) => {
+              console.log('res eli:', res);
 
+              mensajeConfirmacion('Ok', res.Alumno.ErrorMessage).then((res2) => {
 
+                this.getAlumnos(this.pageSize, 1, '');
 
-      });
+              });
 
-    } else {
+            });
+          }
+        });
 
-      this.acuService.sendDataAlumno(modo, alumno);
-      this.router.navigate(['/escuela/abm-alumno']);
+        break;
 
+      default:
+        break;
     }
 
 
   }
 
   getAlumnos(pageSize, pageNumber, filtro) {
-    console.log('4) filtro: ', filtro);
-    console.log('4) pageSize: ', pageSize);
 
 
     if (pageNumber === 0) {
@@ -100,10 +117,8 @@ export class GestionAlumnoComponent implements OnInit {
     this.verAlumnos = false;
     this.acuService.obtenerAlumnos(pageSize, pageNumber, filtro)
       .subscribe((res: any) => {
-        console.log('res: ', res);
-        console.log('5) filtro: ', filtro);
-        // this.pageEvent.length = res.Cantidad;
 
+        console.log('getAlumnos : ', res);
         this.length = res.Cantidad;
         this.actualizarDatasource(res, pageSize, pageNumber - 1);
 
@@ -114,9 +129,10 @@ export class GestionAlumnoComponent implements OnInit {
   ejecutoEvent(pageEvento: PageEvent) {
     this.pageEvent = pageEvento;
     const filter = (this.filtro) ? this.filtro : '';
+    console.log(`ejecuto Event: ${pageEvento}`);
 
-    console.log('ejecutoEvent, pageEvento: ', pageEvento);
     if (pageEvento) {
+      console.log(` 1) ejecuto Event: ${pageEvento}`);
       let index = pageEvento.pageIndex;
       this.pageSize = pageEvento.pageSize;
       index += 1;
@@ -124,14 +140,12 @@ export class GestionAlumnoComponent implements OnInit {
       if (pageEvento.previousPageIndex > pageEvento.pageIndex) {
         index -= 1;
       }
-      console.log('index: ', index);
 
       this.getAlumnos(pageEvento.pageSize, index, filter);
-      // } else {
-      //   this.getAlumnos(1000, 1, this.filtro);
 
     } else {
-      this.getAlumnos(5, 1, '');
+      console.log(` 2) ejecuto Event: ${pageEvento}`);
+      this.getAlumnos(this.pageSize, 1, '');
 
     }
     return pageEvento;
@@ -142,26 +156,21 @@ export class GestionAlumnoComponent implements OnInit {
 
     this.dataSource = data.Alumnos;
     this.verAlumnos = true;
-    // this.pageIndex =  pageIndex;
+
     if (size) {
       this.pageSize = size;
     }
-    console.log('cantidad: ', data.Cantidad);
 
     this.length = data.Cantidad;
-    console.log('this.length: ', this.length);
 
     if (index) {
       this.pageIndex = index;
     }
+
     this.dataSource.paginator = this.paginator;
-    // this.dataSource.paginator.length = cantidad;
     this.dataSource.sort = this.sort;
 
 
-    // this.dataSource.paginator = this.paginator;
-    // this.dataSource.paginator.length = this.cantidad;
-    // this.dataSource.sort = this.sort;
   }
 
 }
