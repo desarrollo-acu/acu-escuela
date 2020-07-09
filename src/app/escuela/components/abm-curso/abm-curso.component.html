@@ -243,14 +243,17 @@
 
                                                             <ng-container
                                                                 *ngIf="row.EscItemCod !== 0 && row.modo !== 'UPD' ; else elseTemplate">
-                                                                {{row.EscCurIteClaAdi}}
+                                                                {{ (row.EscCurIteClaAdi === 'S') ? 'SI' : 'No'  }}
                                                             </ng-container>
                                                             <ng-template #elseTemplate>
 
+
                                                                 <mat-form-field appearance="legacy"
                                                                     style="padding-right: 10px;">
-                                                                    <input type="text" matInput
-                                                                        formControlName="escCurIteClaAdi">
+                                                                    <mat-select formControlName="escCurIteClaAdi">
+                                                                        <mat-option value="S">Si</mat-option>
+                                                                        <mat-option value="N">No</mat-option>
+                                                                    </mat-select>
                                                                 </mat-form-field>
                                                             </ng-template>
 
