@@ -479,6 +479,8 @@ export class InscripcionCursoComponent {
       data: {
         TipCurId: this.cursoIdField.value,
         items,
+        titulo: 'Seleccionar Items a Facturar',
+        esFactura: true,
       }
     });
 

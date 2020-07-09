@@ -38,6 +38,7 @@ import { AbmCursoComponent } from './components/abm-curso/abm-curso.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
+import { SeleccionarItemCursoComponent } from './components/modals/seleccionar-item-curso/seleccionar-item-curso.component';
 
 @NgModule({
   declarations: [
@@ -64,7 +65,8 @@ import { MatSortModule } from '@angular/material/sort';
     GestionAlumnoComponent,
     AbmAlumnoComponent,
     AbmInstructorComponent,
-    AbmCursoComponent
+    AbmCursoComponent,
+    SeleccionarItemCursoComponent
   ],
   imports: [
     CommonModule,

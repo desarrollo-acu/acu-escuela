@@ -7,26 +7,22 @@ import {
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { AgendarClaseComponent } from '../agendar-clase/agendar-clase.component';
+
 import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-import { InscripcionCursoComponent } from '../inscripcion-curso/inscripcion-curso.component';
-import { confirmacionUsuario } from '@utils/sweet-alert';
+import { ItemCurso } from '@core/model/item-curso.model';
+import { AbmCursoComponent } from '@escuela/components/abm-curso/abm-curso.component';
 
-export interface FacturaItemData {
-  TipCurId: number;
-  EscItemCod: number;
-  EscItemDesc: string;
-  EscCurIteClaAdi: string;
-}
+
+
 @Component({
-  selector: 'app-seleccionar-items-facturar',
-  templateUrl: './seleccionar-items-facturar.component.html',
-  styleUrls: ['./seleccionar-items-facturar.component.scss']
+  selector: 'app-seleccionar-item-curso',
+  templateUrl: './seleccionar-item-curso.component.html',
+  styleUrls: ['./seleccionar-item-curso.component.scss']
 })
-export class SeleccionarItemsFacturarComponent implements OnInit {
+export class SeleccionarItemCursoComponent implements OnInit {
   displayedColumns: string[] = ['actions', 'EscItemCod', 'EscItemDesc'];
-  dataSource: MatTableDataSource<FacturaItemData>;
+  dataSource: MatTableDataSource<ItemCurso>;
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -42,11 +38,8 @@ export class SeleccionarItemsFacturarComponent implements OnInit {
 
   filtro: string;
 
-  titulo: string;
-  esFactura: boolean;
-
   constructor(
-    public dialogRef: MatDialogRef<InscripcionCursoComponent>,
+    public dialogRef: MatDialogRef<AbmCursoComponent>,
     public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: any) {
 
@@ -54,9 +47,6 @@ export class SeleccionarItemsFacturarComponent implements OnInit {
 
 
     this.filtro = this.data.filtro;
-
-    this.titulo = this.data.titulo;
-    this.esFactura = this.data.esFactura;
 
     // Assign the data to the data source for the table to render
     this.dataSource = new MatTableDataSource(this.data.items);
@@ -82,17 +72,8 @@ export class SeleccionarItemsFacturarComponent implements OnInit {
 
   onNoClick(): void {
 
-    if (this.esFactura) {
-      confirmacionUsuario('Cancelar factura', 'Se cancelará el proceso de facturación. ¿Confirma continuar?').then(confirma => {
-        console.log('confirma selectr item: ', confirma);
+    this.dialogRef.close();
 
-        if (confirma.isConfirmed) {
-          this.dialogRef.close();
-        }
-      });
-    } else {
-      this.dialogRef.close();
-    }
   }
 
 

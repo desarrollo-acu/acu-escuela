@@ -18,5 +18,9 @@ export interface CursoItem {
     EscItemDesc?: string;
     EscCurItemCur?: string;
     EscCurIteClaAdi?: string;
+    modo?: string;
+    isInsert?: boolean;
+    isUpdate?: boolean;
+    isDelete?: boolean;
 }
 

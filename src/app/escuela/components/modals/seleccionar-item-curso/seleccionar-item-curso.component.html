@@ -1,6 +1,6 @@
 <mat-toolbar color="primary">
     <!-- Seleccionar Items a Facturar -->
-    <h2 mat-dialog-title>{{ titulo }}</h2>
+    <h2 mat-dialog-title>Items de Escuela de Conducción</h2>
 </mat-toolbar>
 
 
@@ -31,14 +31,14 @@
             <!-- Código Column -->
             <ng-container matColumnDef="EscItemCod">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Código </th>
-                <td mat-cell *matCellDef="let row"> {{row.EscItemCod}} </td>
+                <td mat-cell *matCellDef="let row"> {{row.ItemCod}} </td>
             </ng-container>
 
 
             <!-- Descripción Column -->
             <ng-container matColumnDef="EscItemDesc">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Descripción </th>
-                <td mat-cell *matCellDef="let row"> {{row.EscItemDesc}} </td>
+                <td mat-cell *matCellDef="let row"> {{row.ItemDes}} </td>
             </ng-container>
 
 

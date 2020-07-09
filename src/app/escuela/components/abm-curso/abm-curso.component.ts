@@ -1,11 +1,16 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AcuService } from '@core/services/acu.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Curso, CursoItem } from '@core/model/curso.model';
-import { mensajeConfirmacion } from '@utils/sweet-alert';
+import { mensajeConfirmacion, confirmacionUsuario } from '@utils/sweet-alert';
 import Swal from 'sweetalert2';
+import { MatTableDataSource } from '@angular/material/table';
+
+import { SeleccionarItemCursoComponent } from '../modals/seleccionar-item-curso/seleccionar-item-curso.component';
+import { MatDialog } from '@angular/material/dialog';
+import { ItemCurso } from '@core/model/item-curso.model';
 
 @Component({
   selector: 'app-abm-curso',
@@ -16,10 +21,16 @@ import Swal from 'sweetalert2';
 export class AbmCursoComponent implements OnInit, OnDestroy {
 
   private subscription: Subscription;
+
   cursoForm: FormGroup;
+  rows: FormArray;
+  itemForm: FormGroup;
 
   items: CursoItem[] = [];
-  displayedColumns: string[] = ['actions-abm', 'EscItemCod', 'EscItemDesc', 'EscCurItemCur', 'EscCurIteClaAdi', 'confirmar-cancelar'];
+  // 'EscCurItemCur', 
+  displayedColumns: string[] = ['actions-abm', 'EscItemCod', 'EscItemDesc', 'EscCurIteClaAdi', 'confirmar-cancelar'];
+
+  dataSource: MatTableDataSource<CursoItem>; // = new MatTableDataSource(this.items);
 
   mode: string;
   primeraVez = false;
@@ -28,6 +39,7 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
   constructor(
     private acuService: AcuService,
     private fb: FormBuilder,
+    private dialog: MatDialog,
     private router: Router) {
 
     this.buildForm();
@@ -38,6 +50,7 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+
     if (!this.primeraVez) {
 
       this.subscription = this.acuService.cursoCurrentData.subscribe((data) => {
@@ -45,10 +58,14 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
         this.primeraVez = true;
         this.mode = data.modo;
 
+
+
         this.changeForm(data.modo, data.curso);
 
       }); /// .currentMessage.subscribe(message => this.message = message)
     }
+
+
   }
 
 
@@ -71,12 +88,70 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
       tipCurEst: ['', Validators.required],
       tipCuItemIdValCur: ['', Validators.required],
       tipCuItemDescValCur: [''],
+
+      // Test  add row sublevel
+      escItemCod: [0, Validators.required],
+      escItemDesc: [''],
+      escCurIteClaAdi: [''],
+      // escCurItemCur: [''],
+
+      items: [null, Validators.required],
+      items_value: ['no', Validators.required]
+
     });
+
+
+    this.rows = this.fb.array([]);
 
     this.tipCuItemDescValCur.disable();
 
   }
 
+  seleccionarItem(esCabezal: boolean) {
+
+
+    this.acuService.getItems().subscribe((itemsCurso: any) => {
+      console.log('itemsCurso: ', itemsCurso);
+
+
+      const seleccionarItemsFactura = this.dialog.open(SeleccionarItemCursoComponent, {
+        height: 'auto',
+        width: '700px',
+        data: {
+          items: itemsCurso
+        }
+      });
+
+      seleccionarItemsFactura.afterClosed().subscribe((item: ItemCurso) => {
+        // this.alumno = item;
+        console.log('1.response: ', item);
+        console.log('2.response: ', JSON.stringify(item));
+
+        if (item) {
+          if (esCabezal) {
+
+            this.cursoForm.patchValue({
+              // socId: result.SocId,
+              tipCuItemIdValCur: item.ItemCod,
+              tipCuItemDescValCur: item.ItemDes
+            });
+          } else {
+            this.cursoForm.patchValue({
+              // socId: result.SocId,
+              escItemCod: item.ItemCod,
+              escItemDesc: item.ItemDes
+            });
+
+          }
+
+        }
+
+      });
+
+    });
+
+
+  }
 
   private changeForm(modo: string, curso: Curso) {
 
@@ -92,6 +167,9 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
 
 
       this.titulo = 'Editar';
+      console.log('datasource curso: ', curso);
+      console.log('datasource Items: ', curso.Items);
+      this.dataSource = new MatTableDataSource(curso.Items);
       this.items = curso.Items;
       this.setValuesForm(curso);
 
@@ -101,9 +179,138 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
   }
 
 
+  addRow() {
+    const item: CursoItem = { EscItemCod: 0, EscItemDesc: '', EscCurIteClaAdi: '', isInsert: true, modo: 'INS', isDelete: false };
+    this.items.unshift(item);
+    const aux: any = this.items;
+    this.dataSource = aux;
+    // this.rows.push(this.createItemFormGroup());
+  }
+
+  onRemoveRow(rowIndex: number) {
+    this.dataSource.data.splice(rowIndex, 1);
+    // this.rows.removeAt(rowIndex);
+  }
+
+  createItemFormGroup(): FormGroup {
+    return this.fb.group({
+      name: null,
+      description: null,
+      qty: null
+    });
+  }
+
+  confirmar(confirma: boolean, item: CursoItem) {
+    console.log('confirma: ', confirma);
+    console.log('item: ', item);
+
+    if (confirma) {
+      switch (item.modo) {
+        case 'INS':
+          this.items = this.items.map(i => {
+            if (i.EscItemCod === 0) {
+              i.EscItemCod = this.escItemCod.value;
+              i.EscItemDesc = this.escItemDesc.value;
+              i.EscCurIteClaAdi = this.escCurIteClaAdi.value;
+              // i.isUpdate = false;
+              // i.isInsert = false;
+              i.isDelete = false;
+              i.modo = null;
+              this.escItemCod.setValue(0);
+              this.escItemDesc.setValue('');
+              this.escCurIteClaAdi.setValue('');
+            }
+
+            return i;
+          });
+          // Vemos
+          break;
+        case 'UPD':
+          this.items = this.items.map(i => {
+            if (i.EscItemCod === item.EscItemCod) {
+              i.EscItemCod = this.escItemCod.value;
+              i.EscItemDesc = this.escItemDesc.value;
+              i.EscCurIteClaAdi = this.escCurIteClaAdi.value;
+              // i.isUpdate = false;
+              // i.isInsert = false;
+              i.isDelete = false;
+              i.modo = null;
+            }
+
+            return i;
+          });
+          break;
+
+        case 'DLT':
+
+          confirmacionUsuario(
+            'Confirmación de Usuario',
+            `Está seguro que desea eliminar el item: ${item.EscItemDesc} del curso.`).then((confirm) => {
+              if (confirm.isConfirmed) {
+
+                this.items = this.items.map(i => {
+                  if (i.EscItemCod !== item.EscItemCod) {
+                    return i;
+                  }
+
+                });
+
+              }
+            });
+
+          break;
+      }
+    }
+
+  }
+
+  abmItem(modo: string, item: CursoItem) {
+
+    switch (modo) {
+      case 'INS':
+        this.addRow();
+        break;
+      case 'UPD':
+
+        this.items = this.items.map(i => {
+          if (i.EscItemCod === item.EscItemCod) {
+            // i.isUpdate = true;
+            // i.isInsert = false;
+            i.isDelete = false;
+            i.modo = modo;
+          }
+
+          return i;
+        });
+
+        this.cursoForm.patchValue({
+          // socId: result.SocId,
+          escItemCod: item.EscItemCod,
+          escItemDesc: item.EscItemDesc,
+          escCurIteClaAdi: item.EscCurIteClaAdi
+        });
+        break;
+
+      case 'DLT':
+        this.items = this.items.map(i => {
+          if (i.EscItemCod === item.EscItemCod) {
+            // i.isUpdate = true;
+            // i.isInsert = false;
+            i.isDelete = true;
+            i.modo = modo;
+          }
+
+          return i;
+        });
+        break;
+    }
+
+  }
+
   guardarCurso(event: Event) {
     event.preventDefault();
 
+    console.log('Submit, event: ', event);
     console.log('Submit, form valid: ', this.cursoForm.valid);
     console.log('Submit, form value: ', this.cursoForm.value);
 
@@ -212,6 +419,21 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
   get tipCuItemDescValCur() {
     return this.cursoForm.get('tipCuItemDescValCur');
   }
+
+
+  get escItemCod() {
+    return this.cursoForm.get('escItemCod');
+  }
+  get escItemDesc() {
+    return this.cursoForm.get('escItemDesc');
+  }
+  get escCurIteClaAdi() {
+    return this.cursoForm.get('escCurIteClaAdi');
+  }
+  // get escCurItemCur() {
+  //   return this.cursoForm.get('escCurItemCur');
+  // }
+
 
 
 }

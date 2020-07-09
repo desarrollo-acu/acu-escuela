@@ -49,6 +49,11 @@ export class AcuService {
   private cursoDataSource = new BehaviorSubject({ modo: 'INS', curso: {}, id: 0 });
   cursoCurrentData = this.cursoDataSource.asObservable();
 
+  // esto va al instructorService
+  private instructorDataSource = new BehaviorSubject({ modo: 'INS', instructor: {}, id: 0 });
+  instructorCurrentData = this.instructorDataSource.asObservable();
+
+
   constructor(
     private http: HttpClient) {
   }
@@ -279,6 +284,10 @@ export class AcuService {
     return this.http.get(`${environment.url_ws}/wsGetItemsPorCurso?TipCurId=${cursoId}`);
   }
 
+  getItems() {
+    return this.http.get(`${environment.url_ws}/wsGetItems`);
+  }
+
   generarInscripcion(inscripcion: InscripcionCurso) {
     console.log('inscripción: ', inscripcion);
     return this.http.post(`${environment.url_ws}/wsGenerarInscripcion`, {
@@ -415,6 +424,20 @@ export class AcuService {
 
     const data: { modo: string, alumno: Alumno, numero: number } = (numero) ? { modo, alumno, numero } : { modo, alumno, numero: 0 };
     this.alumnoDataSource.next(data);
+
+  }
+
+  sendDataCurso(modo: string, curso: Curso, id?: number) {
+
+    const data: { modo: string, curso: Curso, id: number } = (id) ? { modo, curso, id } : { modo, curso, id: 0 };
+    this.cursoDataSource.next(data);
+
+  }
+
+  sendDataInstructor(modo: string, instructor: Instructor, id?: number) {
+
+    const data: { modo: string, instructor: Instructor, id: number } = (id) ? { modo, instructor, id } : { modo, instructor, id: 0 };
+    this.instructorDataSource.next(data);
 
   }
 
