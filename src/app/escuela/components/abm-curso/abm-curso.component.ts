@@ -209,7 +209,6 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
   confirmar(confirma: boolean, item: CursoItem) {
     console.log('confirma: ', confirma);
     console.log('item: ', item);
-
     if (confirma) {
       switch (item.modo) {
         case 'INS':
@@ -232,6 +231,8 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
 
             return i;
           });
+
+          this.dataSource = new MatTableDataSource(this.items);
           break;
 
         case 'UPD':
@@ -249,6 +250,7 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
 
             return i;
           });
+          this.dataSource = new MatTableDataSource(this.items);
           break;
 
         case 'DLT':
@@ -257,22 +259,67 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
             'Confirmación de Usuario',
             `Está seguro que desea eliminar el item: ${item.EscItemDesc} del curso.`).then((confirm) => {
               if (confirm.isConfirmed) {
+                const index = this.items.indexOf(this.items.find(i => i.EscItemCod === item.EscItemCod));
+                if (index > -1) {
+                  this.items.splice(index, 1);
+                }
 
-                this.items = this.items.map(i => {
-                  if (i.EscItemCod !== item.EscItemCod) {
-                    return i;
-                  }
+                // this.items = this.items.map(i => {
+                //   if (i.EscItemCod !== item.EscItemCod) {
+                //     return i;
+                //   }
 
-                });
+                // });
 
+                console.log('items: ', this.items);
+                this.dataSource = new MatTableDataSource(this.items);
               }
             });
 
           break;
       }
 
-      const aux = new MatTableDataSource(this.items);
-      this.dataSource = aux;
+    } else {
+      switch (item.modo) {
+        case 'INS':
+          const index = this.items.indexOf(this.items.find(i => i.EscItemCod === item.EscItemCod));
+          if (index > -1) {
+            this.items.splice(index, 1);
+          }
+
+          // this.items = this.items.map(i => {
+          //   if (i.EscItemCod !== item.EscItemCod) {
+          //     return i;
+          //   }
+
+          // });
+
+          console.log('items: ', this.items);
+          this.dataSource = new MatTableDataSource(this.items);
+          break;
+        default:
+
+
+          this.escItemCod.setValue(0);
+          this.escItemDesc.setValue('');
+          this.escCurIteClaAdi.setValue('');
+
+          this.items = this.items.map(i => {
+            if (i.EscItemCod === item.EscItemCod) {
+              i.modo = false;
+            }
+
+            return i;
+          });
+
+          this.dataSource = new MatTableDataSource(this.items);
+          break;
+
+
+
+      }
+
+
     }
 
 
