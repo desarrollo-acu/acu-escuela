@@ -180,10 +180,16 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
 
 
   addRow() {
-    const item: CursoItem = { EscItemCod: 0, EscItemDesc: '', EscCurIteClaAdi: '', isInsert: true, modo: 'INS', isDelete: false };
-    this.items.unshift(item);
-    const aux: any = this.items;
-    this.dataSource = aux;
+    const existe = this.items.find(i => i.EscItemCod === 0);
+    console.log(`existe : ${existe} `);
+    if (!existe) {
+      console.log(`no existe `);
+      const item: CursoItem = { EscItemCod: 0, EscItemDesc: '', EscCurIteClaAdi: '', isInsert: true, modo: 'INS', isDelete: false };
+
+      this.items.unshift(item);
+      const aux = new MatTableDataSource(this.items);
+      this.dataSource = aux;
+    }
     // this.rows.push(this.createItemFormGroup());
   }
 
@@ -208,33 +214,37 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
       switch (item.modo) {
         case 'INS':
           this.items = this.items.map(i => {
+            // let aux: CursoItem = i;
             if (i.EscItemCod === 0) {
               i.EscItemCod = this.escItemCod.value;
               i.EscItemDesc = this.escItemDesc.value;
               i.EscCurIteClaAdi = this.escCurIteClaAdi.value;
               // i.isUpdate = false;
               // i.isInsert = false;
-              i.isDelete = false;
-              i.modo = null;
+              // i.isDelete = undefined;
+              // i.modo = false;
               this.escItemCod.setValue(0);
               this.escItemDesc.setValue('');
               this.escCurIteClaAdi.setValue('');
+              i.modo = false;
+
             }
 
             return i;
           });
-          // Vemos
           break;
+
         case 'UPD':
           this.items = this.items.map(i => {
             if (i.EscItemCod === item.EscItemCod) {
-              i.EscItemCod = this.escItemCod.value;
-              i.EscItemDesc = this.escItemDesc.value;
-              i.EscCurIteClaAdi = this.escCurIteClaAdi.value;
-              // i.isUpdate = false;
-              // i.isInsert = false;
-              i.isDelete = false;
-              i.modo = null;
+              const aux: CursoItem = {
+                EscItemCod: this.escItemCod.value,
+                EscItemDesc: this.escItemDesc.value,
+                EscCurIteClaAdi: this.escCurIteClaAdi.value,
+
+              };
+
+              return aux;
             }
 
             return i;
@@ -260,7 +270,13 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
 
           break;
       }
+
+      const aux = new MatTableDataSource(this.items);
+      this.dataSource = aux;
     }
+
+
+    console.log('items: ', this.items);
 
   }
 
@@ -268,6 +284,8 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
 
     switch (modo) {
       case 'INS':
+        console.log(`insert,  modo: ${modo}, item: ${item} `);
+
         this.addRow();
         break;
       case 'UPD':
