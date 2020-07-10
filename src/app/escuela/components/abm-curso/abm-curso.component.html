@@ -149,6 +149,9 @@
                                             <div class="box">
                                                 <!-- Magia para tabla dinamica -->
 
+                                                <!-- <button mat-raised-button style="margin-bottom: 10px;"
+                                                    (click)="abmItem('INS', null)">Agregar Item</button> -->
+
                                                 <mat-button-toggle-group style="margin-bottom: 10px;">
                                                     <mat-button-toggle (click)="abmItem('INS', null)">
                                                         Agregar Item</mat-button-toggle>
@@ -243,7 +246,7 @@
 
                                                             <ng-container
                                                                 *ngIf="row.EscItemCod !== 0 && row.modo !== 'UPD' ; else elseTemplate">
-                                                                {{ (row.EscCurIteClaAdi === 'S') ? 'SI' : 'No'  }}
+                                                                {{ (row.EscCurIteClaAdi === 'S') ? 'Si' : 'No'  }}
                                                             </ng-container>
                                                             <ng-template #elseTemplate>
 

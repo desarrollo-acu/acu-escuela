@@ -1,3 +1,5 @@
+import { EscuelaEstado } from './escuela-estado.model';
+
 export interface Instructor {
     EscInsId?: string;
     EscInsNom?: string;
@@ -14,8 +16,14 @@ export interface Instructor {
 export interface InstructorItem {
     InsLicIni?: Date;
     InsLicFin?: Date;
+    EscuelaEstado?: EscuelaEstado;
     EscEstId?: number;
     EscEstDsc?: string;
     InsLicObs?: string;
+
+    modo?: string | boolean;
+    isInsert?: boolean;
+    isUpdate?: boolean;
+    isDelete?: boolean;
 }
 

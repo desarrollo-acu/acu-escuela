@@ -172,19 +172,19 @@ export class AgendarClaseComponent implements OnInit {
   }
 
   seleccionarInstructor() {
-    let instructores = JSON.parse(localStorage.getItem('Instructores'));
+    // let instructores = JSON.parse(localStorage.getItem('Instructores'));
 
-    if (!instructores) {
-      this.acuService.getInstructores()
-        .subscribe((res: any) => {
+    // if (!instructores) {
+    this.acuService.getInstructores()
+      .subscribe((res: any) => {
 
-          instructores = res.Instructores;
-          localStorage.setItem('Instructores', JSON.stringify(instructores));
-          this.openDialogInstructores(instructores);
-        });
-    } else {
-      this.openDialogInstructores(instructores);
-    }
+        // instructores = res.Instructores;
+        // localStorage.setItem('Instructores', JSON.stringify(instructores));
+        this.openDialogInstructores(res.Instructores);
+      });
+    // } else {
+    //   this.openDialogInstructores(instructores);
+    // }
   }
 
   private openDialogInstructores(instructores) {

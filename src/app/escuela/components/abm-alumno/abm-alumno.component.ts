@@ -11,8 +11,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { mensajeConfirmacion } from '@utils/sweet-alert';
-
-
 @Component({
   selector: 'app-abm-alumno',
   templateUrl: './abm-alumno.component.html',

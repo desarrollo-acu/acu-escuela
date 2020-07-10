@@ -13,7 +13,7 @@ table {
 
 td,
 th {
-  width: 25%;
+  width: 20%;
 }
 
 .tooltip-red {
@@ -32,4 +32,8 @@ th {
 .button-editar {
   background-color: #1976d2;
   color: white;
+}
+
+mat-divider {
+  margin: 10px 0;
 }

@@ -341,6 +341,11 @@ export class AcuService {
     });
   }
 
+  getEscuelaEstados() {
+    return this.http.get(`${environment.url_ws}/wsGetEscuelaEstados`);
+    // return this.http.post(`${environment.url_ws}/wsObtenerCursos`, {});
+  }
+
   getCursos() {
     return this.http.get(`${environment.url_ws}/wsGetCursos`);
     // return this.http.post(`${environment.url_ws}/wsObtenerCursos`, {});
@@ -385,7 +390,8 @@ export class AcuService {
   }
 
   getInstructores() {
-    return this.http.post(`${environment.url_ws}/wsObtenerInstructores`, {});
+    // return this.http.post(`${environment.url_ws}/wsObtenerInstructores`, {});
+    return this.http.get(`${environment.url_ws}/wsGetInstructores`);
   }
 
   getAlumnoNumero() {
