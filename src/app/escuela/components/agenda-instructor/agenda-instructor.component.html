@@ -77,6 +77,7 @@
         <ng-container matColumnDef="Instructor">
             <th mat-header-cell *matHeaderCellDef> Instructor </th>
             <td mat-cell class="cell" *matCellDef="let element"> {{element.Instructor}} </td>
+            <td mat-footer-cell *matFooterCellDef> Porcentaje </td>
         </ng-container>
 
         <ng-container matColumnDef="0">
@@ -84,6 +85,7 @@
             <td mat-cell *matCellDef="let element" [class]="element.class0 ==='' ? 'cell' : 'cell ' + element.class0 "
                 (click)="showAlert(element.Instructor, 0, element.existe0)" [id]="element.Instructor +'0'">
                 {{element.Hora0}} </td>
+            <td mat-footer-cell *matFooterCellDef> {{ getPorcentaje(0)  }} %</td>>
         </ng-container>
 
         <ng-container matColumnDef="1">
@@ -92,6 +94,7 @@
                 (click)="showAlert(element.Instructor, 1, element.existe1)" [id]="element.Instructor +'1'">
                 {{element.Hora1}}
             </td>
+            <td mat-footer-cell *matFooterCellDef> {{ getPorcentaje(1)  }} %</td> >
         </ng-container>
 
         <ng-container matColumnDef="2">
@@ -99,6 +102,7 @@
             <td mat-cell *matCellDef="let element" [class]="element.class2 ==='' ? 'cell' : 'cell ' + element.class2 "
                 (click)="showAlert(element.Instructor, 2, element.existe2)" [id]="element.Instructor +'2'">
                 {{element.Hora2}} </td>
+            <td mat-footer-cell *matFooterCellDef> {{ getPorcentaje(2)  }} %</td>>
         </ng-container>
 
         <ng-container matColumnDef=" 3">
@@ -107,6 +111,7 @@
                 (click)="showAlert(element.Instructor, 3, element.existe3)" [id]="element.Instructor +'3'">
                 {{element.Hora3}}
             </td>
+            <td mat-footer-cell *matFooterCellDef> {{ getPorcentaje(3)  }} %</td>>
         </ng-container>
 
         <ng-container matColumnDef="4">
@@ -115,6 +120,7 @@
                 (click)="showAlert(element.Instructor, 4, element.existe4)" [id]="element.Instructor +'4'">
                 {{element.Hora4}}
             </td>
+            <td mat-footer-cell *matFooterCellDef> {{ getPorcentaje(4)  }} %</td>>
         </ng-container>
 
         <ng-container matColumnDef="5">
@@ -123,6 +129,7 @@
                 (click)="showAlert(element.Instructor, 5, element.existe5)" [id]="element.Instructor +'5'">
                 {{element.Hora5}}
             </td>
+            <td mat-footer-cell *matFooterCellDef> {{ getPorcentaje(5)  }} %</td>>
         </ng-container>
 
         <ng-container matColumnDef="6">
@@ -131,6 +138,7 @@
                 (click)="showAlert(element.Instructor, 6, element.existe6)" [id]="element.Instructor +'6'">
                 {{element.Hora6}}
             </td>
+            <td mat-footer-cell *matFooterCellDef> {{ getPorcentaje(6)  }} %</td>>
         </ng-container>
 
         <ng-container matColumnDef="7">
@@ -139,6 +147,7 @@
                 (click)="showAlert(element.Instructor, 7, element.existe7)" [id]="element.Instructor +'7'">
                 {{element.Hora7}}
             </td>
+            <td mat-footer-cell *matFooterCellDef>{{ getPorcentaje(7) }} %</td>>
         </ng-container>
 
         <ng-container matColumnDef="8">
@@ -147,6 +156,7 @@
                 (click)="showAlert(element.Instructor, 8, element.existe8)" [id]="element.Instructor +'8'">
                 {{element.Hora8}}
             </td>
+            <td mat-footer-cell *matFooterCellDef> {{ getPorcentaje(8)  }} %</td>>
         </ng-container>
 
         <ng-container matColumnDef="9">
@@ -155,6 +165,7 @@
                 (click)="showAlert(element.Instructor, 9, element.existe9)" [id]="element.Instructor +'9'">
                 {{element.Hora9}}
             </td>
+            <td mat-footer-cell *matFooterCellDef> {{ getPorcentaje(9)  }} %</td>>
         </ng-container>
 
         <ng-container matColumnDef="10">
@@ -163,6 +174,7 @@
                 (click)="showAlert(element.Instructor, 10, element.existe10)" [id]="element.Instructor +'10'">
                 {{element.Hora10}}
             </td>
+            <td mat-footer-cell *matFooterCellDef> {{ getPorcentaje(10)  }} % </td>
         </ng-container>
 
         <ng-container matColumnDef="11">
@@ -170,6 +182,7 @@
             <td mat-cell *matCellDef="let element" [class]="element.class11 ==='' ? 'cell' : 'cell ' + element.class11 "
                 (click)="showAlert(element.Instructor, 11, element.existe11)" [id]="element.Instructor +'11'">
                 {{element.Hora11}} </td>
+            <td mat-footer-cell *matFooterCellDef> {{ getPorcentaje(11)  }} % </td>
         </ng-container>
 
         <ng-container matColumnDef="12">
@@ -178,6 +191,7 @@
                 (click)="showAlert(element.Instructor, 12, element.existe12)" [id]="element.Instructor +'12'">
                 {{element.Hora12}}
             </td>
+            <td mat-footer-cell *matFooterCellDef> {{ getPorcentaje(12)  }} % </td>
         </ng-container>
 
         <ng-container matColumnDef="13">
@@ -186,6 +200,7 @@
                 (click)="showAlert(element.Instructor, 13, element.existe13)" [id]="element.Instructor +'13'">
                 {{element.Hora13}}
             </td>
+            <td mat-footer-cell *matFooterCellDef> {{ getPorcentaje(13)  }} % </td>
         </ng-container>
 
         <ng-container matColumnDef="14">
@@ -194,6 +209,7 @@
                 (click)="showAlert(element.Instructor, 14, element.existe14)" [id]="element.Instructor +'14'">
                 {{element.Hora14}}
             </td>
+            <td mat-footer-cell *matFooterCellDef> {{ getPorcentaje(14)  }} % </td>
         </ng-container>
 
         <ng-container matColumnDef="15">
@@ -202,6 +218,7 @@
                 (click)="showAlert(element.Instructor, 15, element.existe15)" [id]="element.Instructor +'15'">
                 {{element.Hora15}}
             </td>
+            <td mat-footer-cell *matFooterCellDef> {{ getPorcentaje(15)  }} % </td>
         </ng-container>
 
         <ng-container matColumnDef="16">
@@ -210,6 +227,7 @@
                 (click)="showAlert(element.Instructor, 16, element.existe16)" [id]="element.Instructor +'16'">
                 {{element.Hora16}}
             </td>
+            <td mat-footer-cell *matFooterCellDef> {{ getPorcentaje(16)  }} % </td>
         </ng-container>
 
         <ng-container matColumnDef="17">
@@ -218,6 +236,7 @@
                 (click)="showAlert(element.Instructor, 17, element.existe17)" [id]="element.Instructor +'17'">
                 {{element.Hora17}}
             </td>
+            <td mat-footer-cell *matFooterCellDef> {{ getPorcentaje(17)  }} % </td>
         </ng-container>
 
         <ng-container matColumnDef="18">
@@ -226,6 +245,7 @@
                 (click)="showAlert(element.Instructor, 18, element.existe18)" [id]="element.Instructor +'18'">
                 {{element.Hora18}}
             </td>
+            <td mat-footer-cell *matFooterCellDef> {{ getPorcentaje(18)  }} % </td>
         </ng-container>
 
         <ng-container matColumnDef="19">
@@ -234,6 +254,7 @@
                 (click)="showAlert(element.Instructor, 19, element.existe19)" [id]="element.Instructor +'19'">
                 {{element.Hora19}}
             </td>
+            <td mat-footer-cell *matFooterCellDef> {{ getPorcentaje(19)  }} % </td>
         </ng-container>
 
         <ng-container matColumnDef="20">
@@ -242,6 +263,7 @@
                 (click)="showAlert(element.Instructor, 20, element.existe20)" [id]="element.Instructor +'20'">
                 {{element.Hora20}}
             </td>
+            <td mat-footer-cell *matFooterCellDef> {{ getPorcentaje(20)  }} % </td>
         </ng-container>
 
         <ng-container matColumnDef="21">
@@ -250,6 +272,7 @@
                 (click)="showAlert(element.Instructor, 21, element.existe21)" [id]="element.Instructor +'21'">
                 {{element.Hora21}}
             </td>
+            <td mat-footer-cell *matFooterCellDef> {{ getPorcentaje(21)  }} % </td>
         </ng-container>
 
         <ng-container matColumnDef="22">
@@ -258,6 +281,7 @@
                 (click)="showAlert(element.Instructor, 22, element.existe22)" [id]="element.Instructor +'22'">
                 {{element.Hora22}}
             </td>
+            <td mat-footer-cell *matFooterCellDef> {{ getPorcentaje(22)  }} % </td>
         </ng-container>
 
         <ng-container matColumnDef="23">
@@ -266,6 +290,7 @@
                 (click)="showAlert(element.Instructor, 23, element.existe23)" [id]="element.Instructor +'23'">
                 {{element.Hora23}}
             </td>
+            <td mat-footer-cell *matFooterCellDef> {{ getPorcentaje(23)  }} % </td>
         </ng-container>
 
         <ng-container matColumnDef="24">
@@ -274,10 +299,12 @@
                 (click)="showAlert(element.Instructor, 24, element.existe24)" [id]="element.Instructor +'24'">
                 {{element.Hora24}}
             </td>
+            <td mat-footer-cell *matFooterCellDef> {{ getPorcentaje(24)  }} % </td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="agendaDisplayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: agendaDisplayedColumns;"></tr>
+        <tr mat-footer-row *matFooterRowDef="agendaDisplayedColumns"></tr>
 
     </table>
 </div>

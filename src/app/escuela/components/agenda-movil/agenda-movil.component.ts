@@ -257,6 +257,17 @@ export class AgendaMovilComponent implements OnInit, AfterViewInit, OnDestroy {
 
   }
 
+  getPorcentaje(hora: number) {
+    console.log('hora: ', hora);
+    console.log('this.horas.find(h => h.Hora === hora): ', this.horas.find(h => h.Hora === hora));
+    const item = this.horas.find(h => h.Hora === hora);
+    console.log('this.horas.find(h => h.Hora === hora). porcentaje: ', this.horas.find(h => h.Hora === hora).HoraPorcentaje);
+    console.log('porcentaje: ', item.HoraPorcentaje);
+
+
+    return item.HoraPorcentaje; // .map(t => t.cost).reduce((acc, value) => acc + value, 0);
+  }
+
   liberarDia() {
 
     this.confirmacionUsuario(
