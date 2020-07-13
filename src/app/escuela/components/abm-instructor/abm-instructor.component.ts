@@ -6,7 +6,7 @@ import { AcuService } from '@core/services/acu.service';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { mensajeConfirmacion, confirmacionUsuario } from '@utils/sweet-alert';
+import { mensajeConfirmacion, confirmacionUsuario, errorMensaje } from '@utils/sweet-alert';
 import Swal from 'sweetalert2';
 import { MatTableDataSource } from '@angular/material/table';
 
@@ -24,6 +24,7 @@ import {
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 
 
 @Component({
@@ -204,6 +205,7 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
         isDelete: false
       };
 
+
       console.log('no existe; item:  ', item);
       this.items.unshift(item);
       console.log('no existe; this.items:  ', this.items);
@@ -211,6 +213,9 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
       this.dataSource = aux;
 
       this.dataSource.paginator = this.paginator;
+
+      this.insLicIni.setValue(null);
+      this.insLicFin.setValue(null);
       // this.dataSource.sort = this.sort;
     }
     // this.rows.push(this.createItemFormGroup());
@@ -223,91 +228,129 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
     this.dataSource.sort = this.sort;
     // this.rows.removeAt(rowIndex);
   }
+
+  validarFechaInicial(type: string, event: MatDatepickerInputEvent<Date>) {
+    // this.events.push(``);
+    console.log(`${type}: ${event.value}`);
+    this.existeFecha(event.value);
+  }
+
+  existeFecha(fecha: Date): boolean {
+    console.log(`fecha :: ${fecha}`);
+
+    const auxDate = new Date(fecha);
+    console.log(`auxDate :: ${auxDate}`);
+    const month = (auxDate.getMonth() + 1 < 10) ? `0${auxDate.getMonth() + 1}` : `${auxDate.getMonth() + 1}`;
+    const day = (auxDate.getDate() < 10) ? `0${auxDate.getDate()}` : `${auxDate.getDate()}`;
+    const auxString = `${auxDate.getFullYear()}-${month}-${day}`;
+    console.log(`auxString :: ${auxString}`);
+
+    const auxItem = this.items.find(i => {
+      console.log(`i.InsLicIni :: ${i.InsLicIni}`);
+
+
+      if (auxString === i.InsLicIni) {
+        this.insLicIni.setValue('');
+        return i;
+      }
+    });
+
+    if (auxItem) {
+      errorMensaje('Error', 'La fecha ingresada ya existe. Elija otra.').then();
+      return true;
+    }
+    return false;
+  }
+
   confirmar(confirma: boolean, item: InstructorItem) {
     console.log('confirma: ', confirma);
     console.log('item: ', item);
     if (confirma) {
-      switch (item.modo) {
-        case 'INS':
-          const aux: EscuelaEstado = this.escEstId.value;
-          this.items = this.items.map(i => {
 
-            if (i.InsLicIni === null) {
-              i.InsLicIni = this.insLicIni.value;
-              i.InsLicFin = this.insLicFin.value;
-              i.EscEstId = aux.ESCESTID;
-              i.InsLicObs = this.insLicObs.value;
-              i.EscEstDsc = this.estado.EscEstDsc;
-              i.EscuelaEstado = this.estado;
+      if (!this.existeFecha(item.InsLicIni)) {
 
-              // i.isUpdate = false;
-              // i.isInsert = false;
-              // i.isDelete = undefined;
-              // i.modo = false;
+        switch (item.modo) {
+          case 'INS':
+            const aux: EscuelaEstado = this.escEstId.value;
+            this.items = this.items.map(i => {
 
-              this.insLicIni.setValue(null);
-              this.insLicFin.setValue(null);
-              this.escEstId.setValue(0);
-              this.insLicObs.setValue('');
-              this.estado = null;
+              if (i.InsLicIni === null) {
+                i.InsLicIni = this.insLicIni.value;
+                i.InsLicFin = this.insLicFin.value;
+                i.EscEstId = aux.ESCESTID;
+                i.InsLicObs = this.insLicObs.value;
+                i.EscEstDsc = this.estado.EscEstDsc;
+                i.EscuelaEstado = this.estado;
 
-              i.modo = false;
+                // i.isUpdate = false;
+                // i.isInsert = false;
+                // i.isDelete = undefined;
+                // i.modo = false;
 
-            }
+                this.insLicIni.setValue(null);
+                this.insLicFin.setValue(null);
+                this.escEstId.setValue(0);
+                this.insLicObs.setValue('');
+                this.estado = null;
 
-            return i;
-          });
+                i.modo = false;
 
-          this.dataSource = new MatTableDataSource(this.items);
-
-          this.dataSource.paginator = this.paginator;
-          this.dataSource.sort = this.sort;
-          break;
-
-        case 'UPD':
-          this.items = this.items.map(i => {
-            if (i.InsLicIni === item.InsLicIni) {
-              const aux: InstructorItem = {
-                InsLicIni: this.insLicIni.value,
-                InsLicFin: this.insLicFin.value,
-                EscEstId: this.escEstId.value.ESCESTID,
-                InsLicObs: this.insLicObs.value,
-                EscEstDsc: this.estado.EscEstDsc,
-                EscuelaEstado: this.estado
-
-              };
-              this.estado = null;
-              return aux;
-            }
-
-            return i;
-          });
-          this.dataSource = new MatTableDataSource(this.items);
-
-          this.dataSource.paginator = this.paginator;
-          this.dataSource.sort = this.sort;
-          break;
-
-        case 'DLT':
-
-          confirmacionUsuario(
-            'Confirmación de Usuario',
-            `Está seguro que desea eliminar el ausentismo con fecha de inicio: ${item.InsLicIni} del Instructor?`).then((confirm) => {
-              if (confirm.isConfirmed) {
-                const index = this.items.indexOf(this.items.find(i => i.InsLicIni === item.InsLicIni));
-                if (index > -1) {
-                  this.items.splice(index, 1);
-                }
-
-                console.log('items: ', this.items);
-                this.dataSource = new MatTableDataSource(this.items);
-
-                this.dataSource.paginator = this.paginator;
-                this.dataSource.sort = this.sort;
               }
+
+              return i;
             });
 
-          break;
+            this.dataSource = new MatTableDataSource(this.items);
+
+            this.dataSource.paginator = this.paginator;
+            this.dataSource.sort = this.sort;
+            break;
+
+          case 'UPD':
+            this.items = this.items.map(i => {
+              if (i.InsLicIni === item.InsLicIni) {
+                const aux: InstructorItem = {
+                  InsLicIni: this.insLicIni.value,
+                  InsLicFin: this.insLicFin.value,
+                  EscEstId: this.escEstId.value.ESCESTID,
+                  InsLicObs: this.insLicObs.value,
+                  EscEstDsc: this.estado.EscEstDsc,
+                  EscuelaEstado: this.estado
+
+                };
+                this.estado = null;
+                return aux;
+              }
+
+              return i;
+            });
+            this.dataSource = new MatTableDataSource(this.items);
+
+            this.dataSource.paginator = this.paginator;
+            this.dataSource.sort = this.sort;
+            break;
+
+          case 'DLT':
+
+            confirmacionUsuario(
+              'Confirmación de Usuario',
+              `Está seguro que desea eliminar el ausentismo con fecha de inicio: ${item.InsLicIni} del Instructor?`).then((confirm) => {
+                if (confirm.isConfirmed) {
+                  const index = this.items.indexOf(this.items.find(i => i.InsLicIni === item.InsLicIni));
+                  if (index > -1) {
+                    this.items.splice(index, 1);
+                  }
+
+                  console.log('items: ', this.items);
+                  this.dataSource = new MatTableDataSource(this.items);
+
+                  this.dataSource.paginator = this.paginator;
+                  this.dataSource.sort = this.sort;
+                }
+              });
+
+            break;
+        }
       }
 
     } else {

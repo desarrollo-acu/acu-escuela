@@ -207,7 +207,8 @@
                                                                     <mat-form-field appearance="legacy"
                                                                         style="padding-right: 10px;">
                                                                         <input matInput [matDatepicker]="dpDesde"
-                                                                            formControlName="insLicIni">
+                                                                            formControlName="insLicIni"
+                                                                            (dateChange)="validarFechaInicial('change', $event)">
                                                                         <mat-datepicker-toggle matSuffix
                                                                             [for]="dpDesde">
                                                                         </mat-datepicker-toggle>

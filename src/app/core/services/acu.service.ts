@@ -288,6 +288,10 @@ export class AcuService {
     return this.http.get(`${environment.url_ws}/wsGetItems`);
   }
 
+  getItem(itemCod: number) {
+    return this.http.get(`${environment.url_ws}/wsGetItems?ItemCod=${itemCod}`);
+  }
+
   generarInscripcion(inscripcion: InscripcionCurso) {
     console.log('inscripción: ', inscripcion);
     return this.http.post(`${environment.url_ws}/wsGenerarInscripcion`, {

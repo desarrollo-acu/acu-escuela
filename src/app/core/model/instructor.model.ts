@@ -14,8 +14,8 @@ export interface Instructor {
 }
 
 export interface InstructorItem {
-    InsLicIni?: Date;
-    InsLicFin?: Date;
+    InsLicIni?: any; // Date | string;
+    InsLicFin?: Date | string;
     EscuelaEstado?: EscuelaEstado;
     EscEstId?: number;
     EscEstDsc?: string;
