@@ -302,6 +302,14 @@
             <td mat-footer-cell *matFooterCellDef> {{ getPorcentaje(24)  }} % </td>
         </ng-container>
 
+
+
+        <ng-container matColumnDef="InstructorPorcentaje">
+            <th mat-header-cell *matHeaderCellDef> Porcentaje </th>
+            <td mat-cell class="cell cell-bold" *matCellDef="let element"> {{element.InstructorPorcentaje}} % </td>
+            <td mat-footer-cell *matFooterCellDef> ## </td>
+        </ng-container>
+
         <tr mat-header-row *matHeaderRowDef="agendaDisplayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: agendaDisplayedColumns;"></tr>
         <tr mat-footer-row *matFooterRowDef="agendaDisplayedColumns"></tr>

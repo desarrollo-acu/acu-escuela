@@ -132,7 +132,8 @@ export class AgendaMovilComponent implements OnInit, AfterViewInit, OnDestroy {
         o['existe' + h.Hora] = cell.existe;
         o['Hora' + h.Hora] = cell.value;
       }
-
+      // PorcentajeMovil
+      o['MovilPorcentaje'] = m.MovilPorcentaje;
       col.push(o);
     }
     return col;
@@ -551,6 +552,7 @@ export class AgendaMovilComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.agendaDisplayedColumns = ['Movil'];
         this.agendaDisplayedColumns = this.agendaDisplayedColumns.concat(this.columns);
+        this.agendaDisplayedColumns = this.agendaDisplayedColumns.concat(['MovilPorcentaje']);
         this.verAgenda = true;
 
       });

@@ -136,8 +136,12 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
         o['Hora' + h.Hora] = cell.value;
       }
 
+      // tslint:disable-next-line: no-string-literal
+      o['InstructorPorcentaje'] = i.InstructorPorcentaje;
       col.push(o);
     }
+    console.log('coleccion: ', col);
+
     return col;
   }
 
@@ -488,6 +492,7 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
 
         this.agendaDisplayedColumns = ['Instructor'];
         this.agendaDisplayedColumns = this.agendaDisplayedColumns.concat(this.columns);
+        this.agendaDisplayedColumns = this.agendaDisplayedColumns.concat(['InstructorPorcentaje']);
         this.verAgenda = true;
 
       });
