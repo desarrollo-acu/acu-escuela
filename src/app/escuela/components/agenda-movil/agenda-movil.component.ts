@@ -207,6 +207,7 @@ export class AgendaMovilComponent implements OnInit, AfterViewInit, OnDestroy {
         case 'suspender-movil':
           this.acuService.getClaseAgenda(this.fechaClase, hora, movil)
             .subscribe((res: any) => {
+              console.log('resp suspender: ', res);
 
               const dialogRef = this.dialog.open(SuspenderClaseComponent, {
                 data: {

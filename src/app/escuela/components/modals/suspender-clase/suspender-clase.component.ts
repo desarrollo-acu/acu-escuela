@@ -23,6 +23,7 @@ export class SuspenderClaseComponent implements OnInit {
     public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: any) {
 
+    console.log('data: ', this.data);
     this.generateHorasLibres();
     this.buildForm();
   }
@@ -31,7 +32,7 @@ export class SuspenderClaseComponent implements OnInit {
   }
 
   private buildForm() {
-    const dispLunes = ['900-1000', '1000-1100', '1100-1200'];
+
     this.form = this.formBuilder.group({
       // fechaClase: [this.fechaClase, [MyValidators.fechaPosteriorAHoy]],
       // cursoId: [
@@ -68,12 +69,12 @@ export class SuspenderClaseComponent implements OnInit {
       // alumnoCelular: [''],
       // sede: [''],
       // irABuscarAlAlumno: [false],
-      disponibilidadLunes: [''],
-      disponibilidadMartes: [''],
-      disponibilidadMiercoles: [''],
-      disponibilidadJueves: [''],
-      disponibilidadViernes: [''],
-      disponibilidadSabado: [''],
+      disponibilidadLunes: [this.data.agendaClase.disponibilidadLunes],
+      disponibilidadMartes: [this.data.agendaClase.disponibilidadMartes],
+      disponibilidadMiercoles: [this.data.agendaClase.disponibilidadMiercoles],
+      disponibilidadJueves: [this.data.agendaClase.disponibilidadJueves],
+      disponibilidadViernes: [this.data.agendaClase.disponibilidadViernes],
+      disponibilidadSabado: [this.data.agendaClase.disponibilidadSabado],
       observaciones: ['']
     },
       //  {
