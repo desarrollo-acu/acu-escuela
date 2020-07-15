@@ -1,0 +1,99 @@
+<form [formGroup]="form" (ngSubmit)="suspenderClase($event)">
+
+    <mat-toolbar color="primary">
+        <h2 mat-dialog-title>Suspender Clase</h2>
+    </mat-toolbar>
+
+
+    <mat-dialog-content class="mat-typography">
+        <mat-divider></mat-divider>
+
+        <h3>Horarios Clases Prácticas</h3>
+        <div class="row">
+            <div class="col">
+                <!-- <div class="row"> -->
+                <h4>Lunes</h4>
+                <mat-form-field>
+                    <mat-label>Turnos libres</mat-label>
+                    <mat-select multiple formControlName="disponibilidadLunes">
+                        <mat-option *ngFor="let hora of horasLibres" [value]="hora.value">{{hora.description}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <!-- </div> -->
+            </div>
+            <div class="col">
+                <!-- <div class="row"> -->
+                <h4>Martes</h4>
+                <mat-form-field>
+                    <mat-label>Turnos libres</mat-label>
+                    <mat-select multiple formControlName="disponibilidadMartes">
+                        <mat-option *ngFor="let hora of horasLibres" [value]="hora.value">{{hora.description}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <!-- </div> -->
+            </div>
+            <div class="col">
+                <!-- <div class="row"> -->
+                <h4>Miercoles</h4>
+                <mat-form-field>
+                    <mat-label>Turnos libres</mat-label>
+                    <mat-select multiple formControlName="disponibilidadMiercoles">
+                        <mat-option *ngFor="let hora of horasLibres" [value]="hora.value">{{hora.description}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <!-- </div> -->
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col">
+                <!-- <div class="row"> -->
+                <h4>Jueves</h4>
+                <mat-form-field>
+                    <mat-label>Turnos libres</mat-label>
+                    <mat-select multiple formControlName="disponibilidadJueves">
+                        <mat-option *ngFor="let hora of horasLibres" [value]="hora.value">{{hora.description}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <!-- </div> -->
+            </div>
+            <div class="col">
+                <!-- <div class="row"> -->
+                <h4>Viernes</h4>
+                <mat-form-field>
+                    <mat-label>Turnos libres</mat-label>
+                    <mat-select multiple formControlName="disponibilidadViernes">
+                        <mat-option *ngFor="let hora of horasLibres" [value]="hora.value">{{hora.description}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <!-- </div> -->
+            </div>
+            <div class="col">
+                <!-- <div class="row"> -->
+                <h4>Sabado</h4>
+                <mat-form-field>
+                    <mat-label>Turnos libres</mat-label>
+                    <mat-select multiple formControlName="disponibilidadSabado">
+                        <mat-option *ngFor="let hora of horasLibres" [value]="hora.value">{{hora.description}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <!-- </div> -->
+            </div>
+
+        </div>
+
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+
+        <button mat-raised-button type="button" (click)="suspenderClase($event)" cdkFocusInitial
+            [disabled]="form.invalid" color="primary">Guardar Cambios</button>
+        <button mat-button mat-dialog-close (click)="onNoClick()">Cancelar</button>
+    </mat-dialog-actions>
+</form>

@@ -9,6 +9,7 @@ export interface Curso {
     TipCurSoc?: string;
     TipCuItemIdValCur?: number;
     TipCuItemDescValCur?: string;
+    TipCurClaseAdicional?: boolean;
     Items?: CursoItem[];
 
 }

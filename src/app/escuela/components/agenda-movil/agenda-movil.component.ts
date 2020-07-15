@@ -10,6 +10,7 @@ import { InscripcionCursoComponent } from '../modals/inscripcion-curso/inscripci
 import { SeleccionarFechaComponent } from '../modals/seleccionar-fecha/seleccionar-fecha.component';
 import { InscripcionCurso } from '@core/model/inscripcion-curso.model';
 import { ClasesEstimadasComponent } from '../modals/clases-estimadas/clases-estimadas.component';
+import { SuspenderClaseComponent } from '../modals/suspender-clase/suspender-clase.component';
 
 export interface AgendaElement {
   Movil: string;
@@ -203,6 +204,22 @@ export class AgendaMovilComponent implements OnInit, AfterViewInit, OnDestroy {
 
             });
           break;
+        case 'suspender-movil':
+          this.acuService.getClaseAgenda(this.fechaClase, hora, movil)
+            .subscribe((res: any) => {
+
+              const dialogRef = this.dialog.open(SuspenderClaseComponent, {
+                data: {
+                  agendaClase: res.AgendaClase,
+                }
+              });
+
+              dialogRef.afterClosed().subscribe(result => {
+                this.animal = result;
+              });
+
+            });
+          break;
 
         default:
           const refreshAgenda = localStorage.getItem('refreshAgenda');
@@ -259,11 +276,7 @@ export class AgendaMovilComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getPorcentaje(hora: number) {
-    console.log('hora: ', hora);
-    console.log('this.horas.find(h => h.Hora === hora): ', this.horas.find(h => h.Hora === hora));
     const item = this.horas.find(h => h.Hora === hora);
-    console.log('this.horas.find(h => h.Hora === hora). porcentaje: ', this.horas.find(h => h.Hora === hora).HoraPorcentaje);
-    console.log('porcentaje: ', item.HoraPorcentaje);
 
 
     return item.HoraPorcentaje; // .map(t => t.cost).reduce((acc, value) => acc + value, 0);

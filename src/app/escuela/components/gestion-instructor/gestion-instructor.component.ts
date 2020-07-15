@@ -6,6 +6,8 @@ import { AcuService } from '@core/services/acu.service';
 import { Router } from '@angular/router';
 import { confirmacionUsuario, mensajeConfirmacion } from '@utils/sweet-alert';
 import { Instructor } from '@core/model/instructor.model';
+import { filter } from 'rxjs/operators';
+import { MatSelectChange } from '@angular/material/select';
 
 @Component({
   selector: 'app-gestion-instructor',
@@ -18,6 +20,8 @@ export class GestionInstructorComponent implements OnInit {
   dataSource: MatTableDataSource<Instructor>;
   verInstructor: boolean;
   filtro: string;
+  estados = [];
+  instructores: Instructor[];
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -33,7 +37,30 @@ export class GestionInstructorComponent implements OnInit {
 
 
     this.getInstructores();
+    this.generateEstados();
 
+  }
+
+  verActivos(event: MatSelectChange) {
+    console.log('event: ', event);
+
+    const filterValue = event.value;
+    console.log('filterValue: ', filterValue);
+    const instructores = (filterValue === '-')
+      ? this.instructores
+      : this.instructores.filter(instructor => instructor.EscInsAct === filterValue);
+    /* .map(instructor => {
+      if (instructor.EscInsAct === filterValue) {
+        return instructor;
+      }
+    });
+    */
+
+    console.log('instructores: ', instructores);
+    this.dataSource = new MatTableDataSource(instructores);
+
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   applyFilter(event: Event) {
@@ -85,6 +112,34 @@ export class GestionInstructorComponent implements OnInit {
 
   }
 
+  generateEstados() {
+    const estado0 = {
+      id: 0,
+      value: '-',
+      description: 'Todos'
+    };
+
+    this.estados.push(estado0);
+
+    const estado1 = {
+      id: 1,
+      value: 'S',
+      description: 'Si'
+    };
+    this.estados.push(estado1);
+
+    const estado2 = {
+      id: 2,
+      value: 'N',
+      description: 'No'
+    };
+    this.estados.push(estado2);
+
+
+
+    console.log('estados: ', this.estados);
+  }
+
   getInstructores() {
 
     this.verInstructor = false;
@@ -95,6 +150,7 @@ export class GestionInstructorComponent implements OnInit {
 
         this.verInstructor = true;
         // Assign the data to the data source for the table to render
+        this.instructores = instructores;
         this.dataSource = new MatTableDataSource(instructores);
 
         this.dataSource.paginator = this.paginator;

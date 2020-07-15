@@ -19,7 +19,7 @@ export class SeleccionarAccionAgendaComponent {
     // tslint:disable-next-line: variable-name
     private _bottomSheetRef: MatBottomSheetRef<SeleccionarAccionAgendaComponent>,
     private acuService: AcuService,
-    public dialog: MatDialog, ) {
+    public dialog: MatDialog,) {
     this.pegar = JSON.parse(localStorage.getItem('pegar-clase'));
   }
 
@@ -38,6 +38,10 @@ export class SeleccionarAccionAgendaComponent {
 
       case 'abrir-clase':
         localStorage.setItem('abrirAgenda', tipoAgenda);
+        break;
+
+      case 'suspender-clase':
+        localStorage.setItem('abrirAgenda', `suspender-${tipoAgenda}`);
         break;
 
       case 'mover-clase':
@@ -133,6 +137,7 @@ export class SeleccionarAccionAgendaComponent {
       default:
         break;
     }
+
     if (continuar) {
       this._bottomSheetRef.dismiss();
       event.preventDefault();

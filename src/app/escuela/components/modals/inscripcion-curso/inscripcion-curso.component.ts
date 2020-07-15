@@ -353,8 +353,6 @@ export class InscripcionCursoComponent {
     }
 
 
-    const existe: boolean = JSON.parse(localStorage.getItem('existe'));
-
     if (this.form.valid) {
       console.log('form.value: ', this.form.value);
       this.inscripcionCurso.disponibilidadLunes = this.disponibilidadLunesField.value;
@@ -586,13 +584,6 @@ export class InscripcionCursoComponent {
   get alumnoCelularField() {
     return this.form.get('alumnoCelular');
   }
-  /*
-  
-        cursoClasesPracticas
-        cursoClasesTeoricas
-        cursoExamenPractico
-        cursoExamenTeorico
-        */
 
   get cursoIdField() {
     return this.form.get('cursoId');

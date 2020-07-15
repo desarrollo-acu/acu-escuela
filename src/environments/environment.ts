@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  url_ws: 'http://192.1.0.86/ACU_WS.NetEnvironment/rest',
+  url_ws: 'http://192.1.0.86/ACU_WSACUTesting/rest',
 };
 
 /*
@@ -16,6 +16,11 @@ Url api local desarrollo SQLServer:
 Url api desarrollo SQLServer:
   url_ws: 'http://192.1.0.86/ACU_WS.NetEnvironment/rest',
   url_soap: 'http://192.1.0.86/ACU_WS.NetEnvironment/',
+
+Url api TESTING SQLServer:
+  url_ws: 'http://192.1.0.86/ACU_WSACUTesting/rest',
+  url_soap: 'http://192.1.0.86/ACU_WSACUTesting/',
+
 URL api prod Oracle:
 
   url_ws: 'http://192.1.0.71/ACU_Web.NetEnvironment/rest',

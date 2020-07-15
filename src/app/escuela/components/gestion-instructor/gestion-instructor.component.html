@@ -15,10 +15,33 @@
 <div class="row">
     <div class="col-xs-12" style="padding: 0px 30px;">
         <div class="box">
-            <mat-form-field>
-                <mat-label>Buscar Instructor...</mat-label>
-                <input matInput (keyup)="applyFilter($event)" placeholder="Ej.: Juan Perez" #input>
-            </mat-form-field>
+
+
+            <div class="row">
+                <div class="col-xs-11">
+                    <div class="box">
+
+                        <mat-form-field class="full-width" appearance="fill">
+                            <mat-label>Buscar Instructor...</mat-label>
+                            <input matInput (keyup)="applyFilter($event)" placeholder="Ej.: Juan Perez" #input>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-xs-1">
+                    <div class="box">
+                        <mat-form-field class="full-width" appearance="fill">
+
+                            <mat-label>Activo? </mat-label>
+                            <mat-select (selectionChange)="verActivos($event)">
+                                <mat-option *ngFor="let estado of estados" [value]="estado.value">{{estado.description}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+
+            <!--  -->
 
             <div class="mat-elevation-z8">
 
