@@ -302,7 +302,10 @@ export class AcuService {
   }
 
   generarInscripcion(inscripcion: InscripcionCurso) {
-    console.log('inscripción: ', inscripcion);
+    console.log('::::: inscripción: ', inscripcion);
+    console.log('::::: sede: ', inscripcion.sede);
+    console.log('::::: escCurFchIns: ', inscripcion.escCurFchIns);
+
     return this.http.post(`${environment.url_ws}/wsGenerarInscripcion`, {
       GenerarInscripcion: {
         FacturaRUT: inscripcion.FacturaRut,
@@ -319,6 +322,18 @@ export class AcuService {
         disponibilidadSabado: inscripcion.disponibilidadSabado,
         facturaEstadoPendiente: inscripcion.facturaEstadoPendiente,
         ClasesEstimadas: inscripcion.ClasesEstimadas,
+        escCurTe1: inscripcion.escCurTe1,
+        escCurTe2: inscripcion.escCurTe2,
+        escCurTe3: inscripcion.escCurTe3,
+        escCurIni: inscripcion.escCurIni,
+        escCurFchIns: inscripcion.escCurFchIns,
+        sede: inscripcion.sede,
+        irABuscarAlAlumno: inscripcion.irABuscarAlAlumno,
+        condicionesCurso: inscripcion.condicionesCurso,
+        reglamentoEscuela: inscripcion.reglamentoEscuela,
+        documentosEntregadosYFirmados: inscripcion.documentosEntregadosYFirmados,
+        eLearning: inscripcion.eLearning,
+        fechaClaseEstimada: inscripcion.fechaClaseEstimada,
       }
     });
   }
@@ -348,6 +363,9 @@ export class AcuService {
 
   }
 
+  obtenerInscripciones(pageSize: number, pageNumber: number, filtro: string) {
+    return this.http.get(`${environment.url_ws}/wsGetInscripciones?PageSize=${pageSize}&PageNumber=${pageNumber}&Filtro=${filtro}`);
+  }
   obtenerAlumnos(pageSize: number, pageNumber: number, filtro: string) {
     return this.http.get(`${environment.url_ws}/wsGetAlumnos?PageSize=${pageSize}&PageNumber=${pageNumber}&Filtro=${filtro}`);
   }

@@ -41,6 +41,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { SeleccionarItemCursoComponent } from './components/modals/seleccionar-item-curso/seleccionar-item-curso.component';
 import { SuspenderClaseComponent } from './components/modals/suspender-clase/suspender-clase.component';
 import { InstructorHorasLibresComponent } from './components/modals/instructor-horas-libres/instructor-horas-libres.component';
+import { GestionInscripcionComponent } from './components/gestion-inscripcion/gestion-inscripcion.component';
 
 @NgModule({
   declarations: [
@@ -70,7 +71,8 @@ import { InstructorHorasLibresComponent } from './components/modals/instructor-h
     AbmCursoComponent,
     SeleccionarItemCursoComponent,
     SuspenderClaseComponent,
-    InstructorHorasLibresComponent
+    InstructorHorasLibresComponent,
+    GestionInscripcionComponent
   ],
   imports: [
     CommonModule,

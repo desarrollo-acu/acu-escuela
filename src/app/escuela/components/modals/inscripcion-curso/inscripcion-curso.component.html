@@ -106,15 +106,14 @@
                         </div>
                         <div class="col-xs-3">
                             <div id="cursoExamenPractico" style=" margin-top: 20px;">
-                                <mat-checkbox formControlName="cursoExamenPractico"> Exámen
-                                    Prácticas</mat-checkbox>
+                                <mat-checkbox formControlName="cursoExamenPractico"> Examen Práctico</mat-checkbox>
 
                             </div>
 
                         </div>
                         <div class="col-xs-3">
                             <div id="cursoExamenTeorico" style=" margin-top: 20px;">
-                                <mat-checkbox formControlName="cursoExamenTeorico">Exámen Teorico
+                                <mat-checkbox formControlName="cursoExamenTeorico">Examen Teórico
                                 </mat-checkbox>
                             </div>
 
@@ -230,7 +229,53 @@
                     </mat-form-field>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-xs">
+                    <div class="box">
+                        <div id="documentosEntregadosYFirmados" style=" margin-top: 20px;">
+                            <mat-checkbox formControlName="documentosEntregadosYFirmados" color="primary">
+                                <!-- (ngModelChange)="updateAllComplete()" -->
+                                Documentos entregados y firmados
 
+                            </mat-checkbox>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-xs">
+                    <div class="box">
+                        <div id="reglamentoEscuela" style=" margin-top: 20px;">
+                            <mat-checkbox formControlName="reglamentoEscuela" color="primary">
+                                <!-- (ngModelChange)="updateAllComplete()" -->
+                                Reglamento Escuela
+                            </mat-checkbox>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-xs">
+                    <div class="box">
+
+                        <div id="condicionesCurso" style=" margin-top: 20px;">
+                            <mat-checkbox formControlName="condicionesCurso" color="primary">
+                                <!-- (ngModelChange)="updateAllComplete()" -->
+                                Condiciones Curso
+                            </mat-checkbox>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs">
+                    <div class="box">
+                        <div id="eLearning" style=" margin-top: 20px;">
+                            <mat-checkbox formControlName="eLearning" color="primary">
+                                <!-- (ngModelChange)="updateAllComplete()" -->
+                                E-Learning
+                            </mat-checkbox>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
             <mat-divider></mat-divider>
 
             <h3>Disponibilidad del alumno</h3>

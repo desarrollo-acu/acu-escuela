@@ -40,6 +40,16 @@ export interface InscripcionCurso {
     };
     facturaEstadoPendiente?: boolean;
     ClasesEstimadas?: any; // Luego se debe agregar la estructura
+
     sede?: string;
     irABuscarAlAlumno?: boolean;
+    escCurIni?: Date;
+    escCurFchIns?: Date;
+
+    documentosEntregadosYFirmados?: boolean;
+    reglamentoEscuela?: boolean;
+    condicionesCurso?: boolean;
+    eLearning?: boolean;
+
+
 }

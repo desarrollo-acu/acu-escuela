@@ -7,6 +7,7 @@ import { MediaMatcher } from '@angular/cdk/layout';
 import { Router } from '@angular/router';
 import { InscripcionCursoComponent } from '../modals/inscripcion-curso/inscripcion-curso.component';
 import { MatDialog } from '@angular/material/dialog';
+import { formatDateToString } from '@utils/utils-functions';
 
 @Component({
   selector: 'app-nav',
@@ -53,12 +54,13 @@ export class NavComponent implements OnDestroy {
   }
 
   inscripcion() {
-
+    const fecha = new Date();
+    const fechaClase = formatDateToString(fecha);
     const dialogRef = this.dialog.open(InscripcionCursoComponent, {
       data: {
         inscripcionCurso: {
           TrnMode: '',
-          FechaClase: new Date(),
+          FechaClase: fechaClase,
           Hora: 0,
           EscInsId: '',
           EscInsNom: '',
@@ -74,6 +76,8 @@ export class NavComponent implements OnDestroy {
       console.log('cierro y recargo la agenda, result: ', result);
 
       // Ir a gestionar inscripciones.
+
+      this.router.navigate(['/escuela/gestion-inscripcion']);
     });
 
   }

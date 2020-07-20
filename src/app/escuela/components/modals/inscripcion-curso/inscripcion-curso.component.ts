@@ -123,6 +123,12 @@ export class InscripcionCursoComponent {
       alumnoCelular: [''],
       sede: [''],
       irABuscarAlAlumno: [false],
+
+      documentosEntregadosYFirmados: [false],
+      reglamentoEscuela: [false],
+      condicionesCurso: [false],
+      eLearning: [false],
+
       disponibilidadLunes: [''],
       disponibilidadMartes: [''],
       disponibilidadMiercoles: [''],
@@ -362,13 +368,6 @@ export class InscripcionCursoComponent {
       this.inscripcionCurso.disponibilidadViernes = this.disponibilidadViernesField.value;
       this.inscripcionCurso.disponibilidadSabado = this.disponibilidadSabadoField.value;
 
-      this.inscripcionCurso.escCurTe1 = this.escCurTe1Field.value;
-      this.inscripcionCurso.escCurTe2 = this.escCurTe2Field.value;
-      this.inscripcionCurso.escCurTe3 = this.escCurTe3Field.value;
-      this.inscripcionCurso.fechaClaseEstimada = this.fechaInicioEstimadaField.value;
-      this.inscripcionCurso.sede = this.sedeField.value;
-      this.inscripcionCurso.irABuscarAlAlumno = this.irABuscarAlAlumnoField.value;
-      console.log('this.inscripcionCurso: ', this.inscripcionCurso);
     }
 
     if (
@@ -541,6 +540,23 @@ export class InscripcionCursoComponent {
   generarInscripcion() {
     console.log('generarInscripcion ::: .inscripcionCurso: ', this.inscripcionCurso);
 
+    this.inscripcionCurso.escCurIni = this.escCurIniField.value;
+    this.inscripcionCurso.escCurFchIns = this.fechaClaseFiled.value;
+    this.inscripcionCurso.escCurTe1 = this.escCurTe1Field.value;
+    this.inscripcionCurso.escCurTe2 = this.escCurTe2Field.value;
+    this.inscripcionCurso.escCurTe3 = this.escCurTe3Field.value;
+
+
+    this.inscripcionCurso.sede = this.sedeField.value;
+    this.inscripcionCurso.irABuscarAlAlumno = this.irABuscarAlAlumnoField.value;
+
+    this.inscripcionCurso.condicionesCurso = this.condicionesCursoField.value;
+    this.inscripcionCurso.reglamentoEscuela = this.reglamentoEscuelaField.value;
+    this.inscripcionCurso.documentosEntregadosYFirmados = this.documentosEntregadosYFirmadosField.value;
+    this.inscripcionCurso.eLearning = this.eLearningField.value;
+
+
+    console.log('this.inscripcionCurso: ', this.inscripcionCurso);
     this.acuService.generarInscripcion(this.inscripcionCurso)
       .subscribe((res: any) => {
         console.log('res: ', res);
@@ -602,6 +618,22 @@ export class InscripcionCursoComponent {
     return this.form.get('cursoExamenPractico');
   }
 
+
+  get documentosEntregadosYFirmadosField() {
+    return this.form.get('documentosEntregadosYFirmados');
+  }
+
+  get reglamentoEscuelaField() {
+    return this.form.get('reglamentoEscuela');
+  }
+
+  get condicionesCursoField() {
+    return this.form.get('condicionesCurso');
+  }
+
+  get eLearningField() {
+    return this.form.get('eLearning');
+  }
 
   get cursoExamenTeoricoField() {
     return this.form.get('cursoExamenTeorico');
@@ -687,14 +719,14 @@ export class InscripcionCursoComponent {
   generateSedes() {
     const sede1 = {
       id: 1,
-      value: 'CYY',
+      value: 'Colonia y Yi',
       description: 'Colonia y Yi'
     };
     this.sedes.push(sede1);
 
     const sede2 = {
       id: 2,
-      value: 'AV.It',
+      value: 'Av.Italia',
       description: 'Avenida Italia'
     };
     this.sedes.push(sede2);

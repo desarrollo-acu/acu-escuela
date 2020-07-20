@@ -11,6 +11,7 @@ import { GestionAlumnoComponent } from './components/gestion-alumno/gestion-alum
 import { AbmCursoComponent } from './components/abm-curso/abm-curso.component';
 import { AbmAlumnoComponent } from './components/abm-alumno/abm-alumno.component';
 import { AbmInstructorComponent } from './components/abm-instructor/abm-instructor.component';
+import { GestionInscripcionComponent } from './components/gestion-inscripcion/gestion-inscripcion.component';
 
 
 
@@ -27,6 +28,10 @@ const routes: Routes = [
       {
         path: 'agenda-instructor',
         component: AgendaInstructorComponent
+      },
+      {
+        path: 'gestion-inscripcion',
+        component: GestionInscripcionComponent
       },
       {
         path: 'gestion-curso',
