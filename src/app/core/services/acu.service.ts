@@ -9,6 +9,7 @@ import { Alumno } from '@core/model/alumno.model';
 import { BehaviorSubject } from 'rxjs';
 import { Curso } from '@core/model/curso.model';
 import { Instructor } from '@core/model/instructor.model';
+import { AgendaClase } from '@core/model/agenda-clase.model';
 
 
 export interface LiberarParameters {
@@ -183,6 +184,13 @@ export class AcuService {
     });
   }
 
+  getDisponibilidadInstructor(clase: AgendaClase, cantidad: number) {
+    console.log('clase: ', clase);
+    return this.http.post(`${environment.url_ws}/obtenerDisponibilidadPorInstructor`, {
+      AgendaClase: clase,
+      countClasesEstimar: cantidad
+    });
+  }
   getClasesEstimadas(inscripcion: InscripcionCurso) {
     console.log('inscripción: ', inscripcion);
     return this.http.post(`${environment.url_ws}/obtenerDisponibilidadInstructor`, {
@@ -203,6 +211,7 @@ export class AcuService {
       }
     });
   }
+
 
   iniciarSesion(UsrId: string, Pass: string) {
     console.log('User: ', UsrId);
@@ -312,6 +321,31 @@ export class AcuService {
         ClasesEstimadas: inscripcion.ClasesEstimadas,
       }
     });
+  }
+
+  suspenderClase(claseAnterior: AgendaClase, nuevaClase?: any) {
+    const SuspenderClase: {
+      reagendaClase?: boolean;
+      nuevaFecha?: string;
+      nuevaHoraInicio?: number;
+      nuevaHoraFin?: number;
+      claseAnterior?: AgendaClase
+    } = {
+      reagendaClase: false,
+      claseAnterior
+    };
+    if (nuevaClase) {
+      SuspenderClase.reagendaClase = true;
+      SuspenderClase.nuevaFecha = nuevaClase.Fecha;
+      SuspenderClase.nuevaHoraInicio = nuevaClase.HoraInicio;
+      SuspenderClase.nuevaHoraFin = nuevaClase.HoraFin;
+    }
+
+    return this.http.post(`${environment.url_ws}/wsSuspenderClase`, {
+      SuspenderClase
+    });
+
+
   }
 
   obtenerAlumnos(pageSize: number, pageNumber: number, filtro: string) {

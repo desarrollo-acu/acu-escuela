@@ -5,6 +5,8 @@ import { map, shareReplay } from 'rxjs/operators';
 
 import { MediaMatcher } from '@angular/cdk/layout';
 import { Router } from '@angular/router';
+import { InscripcionCursoComponent } from '../modals/inscripcion-curso/inscripcion-curso.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-nav',
@@ -36,7 +38,8 @@ export class NavComponent implements OnDestroy {
     private breakpointObserver: BreakpointObserver,
     changeDetectorRef: ChangeDetectorRef,
     media: MediaMatcher,
-    private router: Router) {
+    private router: Router,
+    public dialog: MatDialog) {
     this.mobileQuery = media.matchMedia('(max-width: 600px)');
     this.mobileQueryListener = () => changeDetectorRef.detectChanges();
     // tslint:disable-next-line: deprecation
@@ -49,4 +52,29 @@ export class NavComponent implements OnDestroy {
     this.mobileQuery.removeListener(this.mobileQueryListener);
   }
 
+  inscripcion() {
+
+    const dialogRef = this.dialog.open(InscripcionCursoComponent, {
+      data: {
+        inscripcionCurso: {
+          TrnMode: '',
+          FechaClase: new Date(),
+          Hora: 0,
+          EscInsId: '',
+          EscInsNom: '',
+          TipCurId: 0,
+          TipCurNom: '',
+          EscAgeInsObservaciones: '',
+          mensaje: 'string'
+        }
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('cierro y recargo la agenda, result: ', result);
+
+      // Ir a gestionar inscripciones.
+    });
+
+  }
 }

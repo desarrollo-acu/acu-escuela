@@ -104,9 +104,9 @@ export class InscripcionCursoComponent {
       cursoExamenPractico: [''],
       cursoExamenTeorico: [''],
       fechaInicioEstimada: ['', Validators.required],
-      escCurTe1: ['', Validators.required],
-      escCurTe2: ['', Validators.required],
-      escCurTe3: ['', Validators.required],
+      escCurTe1: [''],
+      escCurTe2: [''],
+      escCurTe3: [''],
       escCurIni: ['', [Validators.required, MyValidators.fechaAnteriorAHoy]],
       alumnoNumero: [
         '',

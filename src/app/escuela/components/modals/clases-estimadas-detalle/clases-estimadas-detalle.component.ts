@@ -13,7 +13,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { AcuService } from '@core/services/acu.service';
 import { InscripcionCursoComponent } from '../inscripcion-curso/inscripcion-curso.component';
-import { ClaseEstimadaDetalleData } from '../clases-estimadas/clases-estimadas.component';
+
+import { ClaseEstimadaDetalle } from '@core/model/clase-estimada.model';
 
 @Component({
   selector: 'app-clases-estimadas-detalle',
@@ -23,7 +24,7 @@ import { ClaseEstimadaDetalleData } from '../clases-estimadas/clases-estimadas.c
 export class ClasesEstimadasDetalleComponent implements OnInit {
 
   displayedColumns: string[] = ['Fecha', 'HoraInicio', 'HoraFin'];
-  dataSource: MatTableDataSource<ClaseEstimadaDetalleData>;
+  dataSource: MatTableDataSource<ClaseEstimadaDetalle>;
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;

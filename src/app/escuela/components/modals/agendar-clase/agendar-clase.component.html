@@ -35,7 +35,7 @@
             <div class="row">
                 <div class="col-xs-4">
                     <mat-form-field class="full-width">
-                        <input matInput placeholder="Alumno" [(ngModel)]="agendaClase.AluNro"
+                        <input matInput placeholder="Número del alumno" [(ngModel)]="agendaClase.AluNro"
                             formControlName="alumnoNumero" [errorStateMatcher]="matcher">
                         <button mat-icon-button matSuffix [attr.aria-label]="'Hide password'"
                             (click)='seleccionarAlumno()'>
@@ -64,7 +64,7 @@
                 </div>
                 <div class="col">
                     <mat-form-field class="full-width">
-                        <input matInput placeholder="   " [(ngModel)]="agendaClase.AluNomApe"
+                        <input matInput placeholder="Nombre del alumno" [(ngModel)]="agendaClase.AluNomApe"
                             formControlName="alumnoNombre" [errorStateMatcher]="matcher">
                         <mat-error *ngIf="alumnoNombreField.hasError('required')">
                             Alumno es <strong>requerido</strong>
@@ -73,7 +73,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col">
+                <div class="col-xs">
                     <mat-form-field class="full-width">
 
                         <input matInput placeholder="Curso" [(ngModel)]="agendaClase.Cursos[0]"

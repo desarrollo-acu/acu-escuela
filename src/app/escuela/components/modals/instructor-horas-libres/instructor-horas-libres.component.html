@@ -1,0 +1,64 @@
+<mat-toolbar color="primary">
+    <h2 mat-dialog-title>Próximas horas libres de: {{ titulo }}</h2>
+</mat-toolbar>
+
+
+
+
+<!-- 'actions', 'EscInsNom', 'EscInsId', 'FechaInicio', 'FechaFin', 'detalle' -->
+<mat-form-field class="full-width">
+    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Buscar...">
+</mat-form-field>
+
+
+<mat-dialog-content class="mat-typography">
+
+
+    <div class="mat-elevation-z8">
+        <table mat-table [dataSource]="dataSource" matSort>
+
+            <!-- Actions Column -->
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef> </th>
+                <td mat-cell *matCellDef="let row">
+                    <button mat-mini-fab color="primary" [mat-dialog-close]="row" matTooltip="Seleccionar estimación">
+                        <mat-icon> check</mat-icon>
+                    </button>
+                </td>
+            </ng-container>
+
+            <!-- Fecha Column -->
+            <ng-container matColumnDef="Fecha">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha </th>
+                <td mat-cell *matCellDef="let row"> {{row.Fecha}} </td>
+            </ng-container>
+
+            <!-- HoraInicio Column -->
+            <ng-container matColumnDef="HoraInicio">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Hora Inicio </th>
+                <td mat-cell *matCellDef="let row"> {{row.HoraInicio | horaNumericString}} </td>
+            </ng-container>
+
+            <!-- Hora Fin Column -->
+            <ng-container matColumnDef="HoraFin">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Hora Fin </th>
+                <td mat-cell *matCellDef="let row"> {{row.HoraFin | horaNumericString }} </td>
+            </ng-container>
+
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+            </tr>
+        </table>
+
+        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+
+
+
+    </div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close (click)="onNoClick()">Cancelar</button>
+</mat-dialog-actions>

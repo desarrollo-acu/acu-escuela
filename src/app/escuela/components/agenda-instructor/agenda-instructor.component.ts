@@ -153,7 +153,7 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
     };
     for (const h of this.horaMovilPlano) {
       if (h.Hora === hora.Hora && h.EscInsId === instructor.EscInsId) {
-        cell.value = `${h.TipCurNom}`; // ${h.EscInsId}
+        cell.value = `${h.AluApe1} ${h.AluNro} ${h.TipCurId}`; // ${h.EscInsId}
         cell.class = h.claseCelda;
         cell.existe = true;
       }

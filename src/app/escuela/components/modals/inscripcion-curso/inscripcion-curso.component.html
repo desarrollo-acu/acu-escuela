@@ -193,10 +193,7 @@
                         <mat-hint> {{fecha1 | date:'EEEE' | daySpanish  }}</mat-hint>
                         <mat-datepicker-toggle matSuffix [for]="pickerPrimerTeorica"></mat-datepicker-toggle>
                         <mat-datepicker #pickerPrimerTeorica></mat-datepicker>
-                        <mat-error
-                            *ngIf="escCurTe1Field.hasError('required') && escCurTe1Field.dirty && escCurTe1Field.errors">
-                            La primer clase <strong>es requerida.</strong>
-                        </mat-error>
+
                         <mat-error
                             *ngIf="escCurTe1Field.hasError('fechaPosteriorInvalid')  && escCurTe1Field.dirty && escCurTe1Field.errors">
                             La primer clase debe <strong>ser posterior</strong> a la de inicio de curso.
@@ -211,10 +208,7 @@
                         <mat-hint> {{fecha2 | date:'EEEE' | daySpanish  }}</mat-hint>
                         <mat-datepicker-toggle matSuffix [for]="pickerSegundaTeorica"></mat-datepicker-toggle>
                         <mat-datepicker #pickerSegundaTeorica></mat-datepicker>
-                        <mat-error
-                            *ngIf="escCurTe2Field.hasError('required') && escCurTe2Field.dirty && escCurTe2Field.errors">
-                            La segunda clase <strong>es requerida.</strong>
-                        </mat-error>
+
                         <mat-error
                             *ngIf="escCurTe2Field.hasError('fechaPosteriorInvalid')  && escCurTe2Field.dirty && escCurTe2Field.errors">
                             La segunda clase debe <strong>ser posterior</strong> a la primer clase.
@@ -230,10 +224,6 @@
                         <mat-datepicker-toggle matSuffix [for]="pickerTercerTeorica"></mat-datepicker-toggle>
                         <mat-datepicker #pickerTercerTeorica></mat-datepicker>
                         <mat-error
-                            *ngIf="escCurTe3Field.hasError('required') && escCurTe3Field.dirty && escCurTe3Field.errors">
-                            La tercer clase <strong>es requerida.</strong>
-                        </mat-error>
-                        <mat-error
                             *ngIf="escCurTe3Field.hasError('fechaPosteriorInvalid')  && escCurTe3Field.dirty && escCurTe3Field.errors">
                             La tercer clase debe <strong>ser posterior</strong> a la segunda clase.
                         </mat-error>
@@ -243,7 +233,7 @@
 
             <mat-divider></mat-divider>
 
-            <h3>Horarios Clases Prácticas</h3>
+            <h3>Disponibilidad del alumno</h3>
             <div class="row">
                 <div class="col">
                     <!-- <div class="row"> -->

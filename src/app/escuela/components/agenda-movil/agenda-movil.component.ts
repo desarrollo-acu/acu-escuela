@@ -217,6 +217,8 @@ export class AgendaMovilComponent implements OnInit, AfterViewInit, OnDestroy {
 
               dialogRef.afterClosed().subscribe(result => {
                 this.animal = result;
+
+                this.getAgenda(this.fecha);
               });
 
             });

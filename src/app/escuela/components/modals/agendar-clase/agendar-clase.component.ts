@@ -16,36 +16,9 @@ import { instructorYaAsignadoValidator } from 'src/app/utils/validators/instruct
 import { licenciaInstructorValidator } from 'src/app/utils/validators/licencia-instructor-validator.directive';
 
 
+import { AgendaClase } from '@core/model/agenda-clase.model';
 
-export interface AgendaClase {
-  FechaClase: string;
-  Hora: number;
-  EscMovCod: number;
-  TrnMode: string;
-  AluId: string;
-  AluNro: string;
-  AluNomApe: string;
-  Cursos: string[];
-  CantidadClasesPracticas: number;
-  EsAgCuTipCla: string;
-  EsAgCuClaAdiSN: string;
-  EscInsId: string;
-  EscInsNom: string;
-  EsAgCuInsId: string;
-  EsAgCuInsNom: string;
-  EsAgCuDet: string;
-  EsAgCuEst: string;
-  EsAgCuObs: string;
-  EsAgCuDetAviso: string;
-  EscCurEmp: string;
-  EsAgCuInNoCorto: string;
-  EsAgCuNroCla: number;
-  EsAgCuEstOld: string;
-  EsAgCuAvisoOld: number;
-  EsAgCuAviso: number;
-  EsAgCuDetAvisoOld: string;
-  AvisoInstructor: string;
-}
+
 @Component({
   selector: 'app-agendar-clase',
   templateUrl: './agendar-clase.component.html',
