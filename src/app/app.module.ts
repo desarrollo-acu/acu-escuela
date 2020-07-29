@@ -18,6 +18,11 @@ import { MatNativeDateModule } from '@angular/material/core';
 
 
 
+import localeEsAr from '@angular/common/locales/global/es-AR';
+import { registerLocaleData } from '@angular/common';
+
+registerLocaleData(localeEsAr, 'es-AR');
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -37,9 +42,7 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatNativeDateModule,
     SharedModule
   ],
-  providers: [
-
-  ],
+  providers: [{ provide: LOCALE_ID, useValue: 'es-AR' }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

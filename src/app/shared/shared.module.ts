@@ -9,6 +9,7 @@ import { RouterModule } from '@angular/router';
 import { FooterComponent } from './components/footer/footer.component';
 import { HeaderComponent } from './components/header/header.component';
 import { HoraNumericStringPipe } from './pipes/hora-numeric-string.pipe';
+import { CustomDateFormatPipePipe } from './pipes/custom-date-format-pipe.pipe';
 
 
 
@@ -19,7 +20,8 @@ import { HoraNumericStringPipe } from './pipes/hora-numeric-string.pipe';
     ValueIPipe,
     FooterComponent,
     HeaderComponent,
-    HoraNumericStringPipe
+    HoraNumericStringPipe,
+    CustomDateFormatPipePipe
   ],
   imports: [
     CommonModule,
