@@ -20,23 +20,19 @@ import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MAT_MOMENT_DATE_FOR
   selector: 'app-abm-alumno',
   templateUrl: './abm-alumno.component.html',
   styleUrls: ['./abm-alumno.component.scss'],
-  providers: [
-    { provide: MAT_DATE_LOCALE, useValue: 'es-UY' },
-
-    // `MomentDateAdapter` and `MAT_MOMENT_DATE_FORMATS` can be automatically provided by importing
-    // `MatMomentDateModule` in your applications root module. We provide it at the component level
-    // here, due to limitations of our example generation script.
-    {
-      provide: DateAdapter,
-      useClass: MomentDateAdapter,
-      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
-    },
-    { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
-  ],
   // providers: [
-  //   { provide: DateAdapter, useClass: AppDateAdapter },
-  //   { provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS }
-  // ]
+  //   { provide: MAT_DATE_LOCALE, useValue: 'es-UY' },
+
+  //   // `MomentDateAdapter` and `MAT_MOMENT_DATE_FORMATS` can be automatically provided by importing
+  //   // `MatMomentDateModule` in your applications root module. We provide it at the component level
+  //   // here, due to limitations of our example generation script.
+  //   {
+  //     provide: DateAdapter,
+  //     useClass: MomentDateAdapter,
+  //     deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
+  //   },
+  //   { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
+  // ], 
 })
 export class AbmAlumnoComponent implements OnInit, OnDestroy {
 
@@ -94,17 +90,8 @@ export class AbmAlumnoComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
-  addEvent(type: string, event: MatDatepickerInputEvent<Date>) {
 
-    // let date = new Date(this.datePipe.transform(new Date(), 'dd-MM-yy'));
-    // console.log('date: ', date);
-    console.log('type: ', type);
-    console.log('event: ', event);
-    console.log('value: ', event.value);
-    console.log('event.target.value: ', event.target.value);
-    console.log('event.targetElement.value: ', new Date(event.targetElement.value));
-    // this.aluFchNacField.setValue(date);
-  }
+
   ngOnInit(): void {
     if (!this.primeraVez) {
 

@@ -23,7 +23,7 @@ import { SharedModule } from '../shared/shared.module';
 
 
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
-import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { MAT_DATE_LOCALE, MAT_DATE_FORMATS, DateAdapter } from '@angular/material/core';
 import { AgendarClaseComponent } from './components/modals/agendar-clase/agendar-clase.component';
 import { SeleccionarSocioComponent } from './components/modals/seleccionar-socio/seleccionar-socio.component';
 import { ClasesEstimadasComponent } from './components/modals/clases-estimadas/clases-estimadas.component';
@@ -42,6 +42,7 @@ import { SeleccionarItemCursoComponent } from './components/modals/seleccionar-i
 import { SuspenderClaseComponent } from './components/modals/suspender-clase/suspender-clase.component';
 import { InstructorHorasLibresComponent } from './components/modals/instructor-horas-libres/instructor-horas-libres.component';
 import { GestionInscripcionComponent } from './components/gestion-inscripcion/gestion-inscripcion.component';
+import { MAT_MOMENT_DATE_FORMATS, MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
 
 @NgModule({
   declarations: [
@@ -87,7 +88,21 @@ import { GestionInscripcionComponent } from './components/gestion-inscripcion/ge
     MatSortModule,
   ],
   providers: [
-    { provide: MAT_DATE_LOCALE, useValue: 'es-UY' }
-  ]
+    { provide: MAT_DATE_LOCALE, useValue: 'es-UY' },
+
+    // `MomentDateAdapter` and `MAT_MOMENT_DATE_FORMATS` can be automatically provided by importing
+    // `MatMomentDateModule` in your applications root module. We provide it at the component level
+    // here, due to limitations of our example generation script.
+    {
+      provide: DateAdapter,
+      useClass: MomentDateAdapter,
+      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
+    },
+    { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
+  ],
+
+  // providers: [
+  //   { provide: MAT_DATE_LOCALE, useValue: 'es-UY' }
+  // ]
 })
 export class EscuelaModule { }
