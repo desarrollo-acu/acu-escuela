@@ -10,6 +10,7 @@ export interface Instructor {
     EscInsSocMed?: string;
     EscInsConNom?: string;
     EscInsConTel?: string;
+    EscMovCod?: number;
     Items?: InstructorItem[];
 }
 

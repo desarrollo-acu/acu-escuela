@@ -1,7 +1,7 @@
 export interface AgendaClase {
     // FechaClase: string;
     Modo?: string;
-    FechaClase?: Date & string;
+    FechaClase?: string;
     Hora?: number;
     HoraNumero?: number;
     EscMovCod?: number;

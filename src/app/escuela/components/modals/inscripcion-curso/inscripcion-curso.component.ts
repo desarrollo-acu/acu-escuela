@@ -419,6 +419,10 @@ export class InscripcionCursoComponent {
         console.log('2.response: ' + JSON.stringify(result));
         console.log(`2. response ${result}`);
 
+        this.acuService.getPDFPlanDeClases(result).subscribe(pdf => {
+          this.acuService.getPDF(pdf, 'PlanDeClases');
+        });
+
         this.inscripcionCurso.ClasesEstimadas = result;
 
         this.openDialogFacturaRUT();
@@ -726,8 +730,8 @@ export class InscripcionCursoComponent {
 
     const sede2 = {
       id: 2,
-      value: 'Av.Italia',
-      description: 'Avenida Italia'
+      value: 'BASE-CARRASCO',
+      description: 'BASE CARRASCO'
     };
     this.sedes.push(sede2);
 

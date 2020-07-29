@@ -1,5 +1,5 @@
-<!-- novalidate -->
-<form [formGroup]="alumnoForm" (ngSubmit)="guardarAlumno($event)">
+<!-- novalidate  (ngSubmit)="guardarAlumno($event)" -->
+<form [formGroup]="alumnoForm">
     <mat-toolbar color="primary">
         <h2 mat-dialog-title>Datos del Alumno</h2>
     </mat-toolbar>
@@ -11,9 +11,8 @@
             <div class="row">
                 <div class="col">
                     <mat-form-field class="full-width">
-                        <input matInput #numeroAlumno placeholder="Número" formControlName="aluNro" maxlength="7"
-                            disabled>
-                        <mat-hint align="end">Cantidad de carácteres: {{numeroAlumno.value.length}} / 7</mat-hint>
+                        <input matInput #numeroAlumno placeholder="Número" formControlName="aluNro" maxlength="7" disabled>
+                        <mat-hint align="end">Cant. de carácteres: {{numeroAlumno.value.length}} / 7</mat-hint>
                     </mat-form-field>
                 </div>
             </div>
@@ -45,11 +44,10 @@
                 <div class="col-xs-8">
                     <div class="row">
 
-                        <div class="col-xs-6">
+                        <div class="col-xs-6 col-sm-6">
                             <mat-form-field>
-                                <input matInput #CIAlumno placeholder="Cédula de Identidad" formControlName="aluCi"
-                                    maxlength="7" required>
-                                <mat-hint align="end">Cantidad de carácteres: {{CIAlumno.value.length}} / 7</mat-hint>
+                                <input matInput #CIAlumno placeholder="Cédula de Identidad" formControlName="aluCi" maxlength="7" required>
+                                <mat-hint align="end">Cant. de carácteres: {{CIAlumno.value.length}} / 7</mat-hint>
                                 <mat-error *ngIf="aluCiField.hasError('required')">
                                     Cédula de Identidad es <strong>requerida</strong>.
                                 </mat-error>
@@ -59,19 +57,17 @@
 
                         </div>
 
-                        <div class="col-xs-2">
+                        <div class="col-xs-6 col-sm-2">
                             <mat-form-field>
-                                <input matInput #DVAlumno placeholder="Dígito Verificador" formControlName="aluDV"
-                                    maxlength="1" required>
-                                <mat-hint align="end">Cantidad de carácteres: {{DVAlumno.value.length}} / 1</mat-hint>
+                                <input matInput #DVAlumno placeholder="Dígito Verificador" formControlName="aluDV" maxlength="1" required>
+                                <mat-hint align="end">Cant. de carácteres: {{DVAlumno.value.length}} / 1</mat-hint>
 
                                 <mat-error *ngIf="aluDVField.hasError('required')">
                                     Dígito Verificador es <strong>requerido</strong>.
                                 </mat-error>
 
 
-                                <mat-error
-                                    *ngIf="aluDVField.hasError('digitoVerificadorInvalid')  && aluDVField.dirty && aluDVField.errors">
+                                <mat-error *ngIf="aluDVField.hasError('digitoVerificadorInvalid')  && aluDVField.dirty && aluDVField.errors">
                                     El dígito verificador es <strong>incorrecto</strong>, verifique.
                                 </mat-error>
                             </mat-form-field>
@@ -80,10 +76,9 @@
                     </div>
                 </div>
 
-                <div class="col-xs-4">
+                <div class="col-xs-6 col-sm-4">
                     <mat-form-field class="full-width">
-                        <input matInput [matDatepicker]="picker" placeholder="Fecha de Nacimiento"
-                            formControlName="aluFchNac">
+                        <input matInput [matDatepicker]="picker" placeholder="Fecha de Nacimiento" formControlName="aluFchNac">
                         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                         <mat-datepicker #picker></mat-datepicker>
                     </mat-form-field>
@@ -91,20 +86,18 @@
 
                 <div class="col">
                     <mat-form-field class="full-width">
-                        <input matInput #telefonoAlumno placeholder="Télefono" formControlName="aluTel1" maxlength="15"
-                            required>
-                        <mat-hint align="end">Cantidad de carácteres: {{telefonoAlumno.value.length}} / 15</mat-hint>
-                        <mat-error *ngIf="aluTel1Field.hasError('required')">
+                        <input matInput #telefonoAlumno placeholder="Télefono" formControlName="aluTel1" maxlength="15">
+                        <mat-hint align="end">Cant. de carácteres: {{telefonoAlumno.value.length}} / 15</mat-hint>
+                        <!-- <mat-error *ngIf="aluTel1Field.hasError('required')">
                             Télefono es <strong>requerido</strong>.
-                        </mat-error>
+                        </mat-error> -->
                     </mat-form-field>
                 </div>
 
                 <div class="col">
                     <mat-form-field class="full-width">
-                        <input matInput #celularAlumno placeholder="Celular" formControlName="aluTel2" maxlength="15"
-                            required>
-                        <mat-hint align="end">Cantidad de carácteres: {{celularAlumno.value.length}} / 15</mat-hint>
+                        <input matInput #celularAlumno placeholder="Celular" formControlName="aluTel2" maxlength="15" required>
+                        <mat-hint align="end">Cant. de carácteres: {{celularAlumno.value.length}} / 15</mat-hint>
                         <mat-error *ngIf="aluTel2Field.hasError('required')">
                             Celular es <strong>requerido</strong>.
                         </mat-error>
@@ -117,8 +110,7 @@
                 <div class="col">
                     <mat-form-field class="full-width">
                         <!--  -->
-                        <mat-select placeholder="Departamento" [(ngModel)]="depId" (blur)="getLocalidades(depId)"
-                            formControlName="aluDepId" required>
+                        <mat-select placeholder="Departamento" [(ngModel)]="depId" (blur)="getLocalidades(depId)" formControlName="aluDepId" required>
                             <mat-option *ngFor="let departamento of departamentos" [value]="departamento.DepId">
                                 {{ departamento.DepNom }}
                             </mat-option>
@@ -131,8 +123,7 @@
                 <div class="col">
                     <mat-form-field class="full-width">
                         <!--  -->
-                        <mat-select placeholder="Localidad/Barrio" [(ngModel)]="locId" formControlName="aluLocId"
-                            required>
+                        <mat-select placeholder="Localidad/Barrio" [(ngModel)]="locId" formControlName="aluLocId" required>
                             <mat-option *ngFor="let localidad of localidades" [value]="localidad.LocId">
                                 {{ localidad.LocNom }}
                             </mat-option>
@@ -148,9 +139,8 @@
             <div class="row">
                 <div class="col">
                     <mat-form-field class="full-width">
-                        <input matInput #direccionAlumno placeholder="Dirección" formControlName="aluDir"
-                            maxlength="60">
-                        <mat-hint align="end">Cantidad de carácteres: {{direccionAlumno.value.length}} / 60</mat-hint>
+                        <input matInput #direccionAlumno placeholder="Dirección" formControlName="aluDir" maxlength="60">
+                        <mat-hint align="end">Cant. de carácteres: {{direccionAlumno.value.length}} / 60</mat-hint>
                     </mat-form-field>
                 </div>
             </div>
@@ -189,29 +179,23 @@
 
                                 <div class="col-xs-4">
                                     <mat-form-field>
-                                        <input matInput #contactoNombreAlumno placeholder="Nombres"
-                                            formControlName="aluConNom" maxlength="35">
-                                        <mat-hint align="end">Cantidad de carácteres:
-                                            {{contactoNombreAlumno.value.length}} / 35</mat-hint>
+                                        <input matInput #contactoNombreAlumno placeholder="Nombres" formControlName="aluConNom" maxlength="35">
+                                        <mat-hint align="end">Cant. de carácteres: {{contactoNombreAlumno.value.length}} / 35</mat-hint>
                                     </mat-form-field>
                                 </div>
 
                                 <div class="col-xs-4">
                                     <mat-form-field>
-                                        <input matInput #contactoTelefonoAlumno placeholder="Télefono"
-                                            formControlName="aluConTel" maxlength="15">
-                                        <mat-hint align="end">Cantidad de carácteres:
-                                            {{contactoTelefonoAlumno.value.length}} / 15</mat-hint>
+                                        <input matInput #contactoTelefonoAlumno placeholder="Télefono" formControlName="aluConTel" maxlength="15">
+                                        <mat-hint align="end">Cant. de carácteres: {{contactoTelefonoAlumno.value.length}} / 15</mat-hint>
                                     </mat-form-field>
 
                                 </div>
 
                                 <div class="col-xs-4">
                                     <mat-form-field>
-                                        <input matInput #contactoParentescoAlumno placeholder="Parentesco"
-                                            formControlName="aluConPar" maxlength="15">
-                                        <mat-hint align="end">Cantidad de carácteres:
-                                            {{contactoParentescoAlumno.value.length}} / 15</mat-hint>
+                                        <input matInput #contactoParentescoAlumno placeholder="Parentesco" formControlName="aluConPar" maxlength="15">
+                                        <mat-hint align="end">Cant. de carácteres: {{contactoParentescoAlumno.value.length}} / 15</mat-hint>
                                     </mat-form-field>
                                 </div>
 
@@ -228,11 +212,9 @@
 
                     <mat-form-field>
                         <!--  -->
-                        <input matInput placeholder="Socio" (blur)='obtenerSocio(socId)' [(ngModel)]="socId"
-                            formControlName="socId">
+                        <input matInput placeholder="Socio" (blur)='obtenerSocio(socId)' [(ngModel)]="socId" formControlName="socId">
 
-                        <button mat-icon-button matSuffix [attr.aria-label]="'Hide password'"
-                            (click)='seleccionarSocio(socId)'>
+                        <button mat-icon-button matSuffix [attr.aria-label]="'Hide password'" (click)='seleccionarSocio(socId)'>
                             <mat-icon> search </mat-icon>
                         </button>
                     </mat-form-field>

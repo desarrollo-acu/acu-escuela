@@ -53,7 +53,7 @@ export class AltaAlumnoComponent {
       aluCi: ['', Validators.required],
       aluDV: ['', Validators.required],
       aluFchNac: ['', Validators.required],
-      aluTel1: ['', Validators.required],
+      aluTel1: [''],
       aluTel2: ['', Validators.required],
       aluDepId: ['', Validators.required],
       aluLocId: ['', Validators.required],

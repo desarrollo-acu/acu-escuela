@@ -35,16 +35,23 @@ export class NavComponent implements OnDestroy {
 
   private mobileQueryListener: () => void;
 
+  title: string;
+
   constructor(
     private breakpointObserver: BreakpointObserver,
     changeDetectorRef: ChangeDetectorRef,
     media: MediaMatcher,
     private router: Router,
     public dialog: MatDialog) {
+
     this.mobileQuery = media.matchMedia('(max-width: 600px)');
     this.mobileQueryListener = () => changeDetectorRef.detectChanges();
     // tslint:disable-next-line: deprecation
     this.mobileQuery.addListener(this.mobileQueryListener);
+
+    console.log('url: ', this.router.url);
+    this.changeTitle(this.router.url);
+
   }
 
 
@@ -74,11 +81,50 @@ export class NavComponent implements OnDestroy {
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('cierro y recargo la agenda, result: ', result);
+      if (result) {
 
-      // Ir a gestionar inscripciones.
-
-      this.router.navigate(['/escuela/gestion-inscripcion']);
+        // Ir a gestionar inscripciones.
+        this.changeTitle('/escuela/gestion-inscripcion');
+        this.router.navigate(['/escuela/gestion-inscripcion']);
+      }
     });
 
+  }
+
+  changeTitle(title: string) {
+    switch (title) {
+
+      case '/escuela/agenda-movil':
+        this.title = 'Agenda de moviles';
+        break;
+
+      case '/escuela/agenda-instructor':
+        this.title = 'Agenda de instructores';
+        break;
+
+      case '/escuela/gestion-inscripcion':
+      case '/escuela/abm-inscripcion':
+        this.title = 'Gestión de inscripciones';
+        break;
+
+      case '/escuela/gestion-instructor':
+      case '/escuela/abm-instructor':
+        this.title = 'Gestión de instructores';
+        break;
+
+      case '/escuela/gestion-curso':
+      case '/escuela/abm-curso':
+        this.title = 'Gestión de cursos';
+        break;
+
+      case '/escuela/gestion-alumno':
+      case '/escuela/abm-alumno':
+        this.title = 'Gestión de alumnos';
+        break;
+
+
+      default:
+        break;
+    }
   }
 }

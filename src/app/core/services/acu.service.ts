@@ -10,6 +10,7 @@ import { BehaviorSubject } from 'rxjs';
 import { Curso } from '@core/model/curso.model';
 import { Instructor } from '@core/model/instructor.model';
 import { AgendaClase } from '@core/model/agenda-clase.model';
+import { ClaseEstimada } from '../model/clase-estimada.model';
 
 
 export interface LiberarParameters {
@@ -191,6 +192,7 @@ export class AcuService {
       countClasesEstimar: cantidad
     });
   }
+
   getClasesEstimadas(inscripcion: InscripcionCurso) {
     console.log('inscripción: ', inscripcion);
     return this.http.post(`${environment.url_ws}/obtenerDisponibilidadInstructor`, {
@@ -462,6 +464,27 @@ export class AcuService {
 
   }
 
+  getPDFPlanDeClases(planDeClase: ClaseEstimada) {
+
+    const headers = new HttpHeaders();
+    // headers.set('Content-Type', 'application/pdf;');
+    headers.set('Aceppt', 'application/pdf;');
+    // headers.set('Content-Disposition', 'attachment;');
+    /*
+    , {
+      headers: headers,
+      responseType: 'blob' as 'json',
+    }
+    */
+    return this.http.post(`${environment.url_ws}/wsPDFPlanDeClases`, {
+      PlanDeClase: planDeClase
+    }, {
+      headers,
+      responseType: 'blob' as 'json',
+    });
+
+  }
+
   cleanStorageAgenda() {
     localStorage.removeItem('copiarMoverParameters');
     localStorage.removeItem('mainParameters');
@@ -480,6 +503,55 @@ export class AcuService {
 
   }
 
+  openSamePDF(pdf: any, fileName: string) {
+    const file = new Blob([pdf], { type: 'application/pdf' });
+    const fileURL = URL.createObjectURL(file);
+    window.open(fileURL, `${fileName}_${Math.floor(Math.random() * 101)}.pdf`, 'width=800,height=500');
+  }
+
+  openPDF(pdf: any) {
+    const file = new Blob([pdf], { type: 'application/pdf' });
+    const fileURL = URL.createObjectURL(file);
+    window.open(fileURL);
+  }
+
+  getPDF(pdf: any, fileName: string) {
+
+    /* Parameters: 
+          blob: any
+          fileName: string
+    */
+    const newBlob = new Blob([pdf], { type: 'application/pdf' });
+
+    // IE doesn't allow using a blob object directly as link href
+    // instead it is necessary to use msSaveOrOpenBlob
+    if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+      window.navigator.msSaveOrOpenBlob(newBlob);
+      return;
+    }
+
+    // For other browsers:
+    // Create a link pointing to the ObjectURL containing the blob.
+    const data = window.URL.createObjectURL(newBlob);
+
+    const link = document.createElement('a');
+    link.href = data;
+    link.download = `${fileName}_${Math.floor(Math.random() * 101)}.pdf`;
+    // this is necessary as link.click() does not work on the latest firefox
+    link.dispatchEvent(
+      new MouseEvent('click', {
+        bubbles: true,
+        cancelable: true,
+        view: window,
+      })
+    );
+
+    setTimeout(() => {
+      // For Firefox it is necessary to delay revoking the ObjectURL
+      window.URL.revokeObjectURL(data);
+      link.remove();
+    }, 100);
+  }
   // Test send parameters
 
   sendDataAlumno(modo: string, alumno: Alumno, numero?: number) {

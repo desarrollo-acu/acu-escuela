@@ -152,8 +152,6 @@ export class SeleccionarAlumnoComponent implements OnInit { // , AfterViewInit, 
       console.log('index: ', index);
 
       this.getAlumnos(pageEvento.pageSize, index, filter);
-      // } else {
-      //   this.getAlumnos(1000, 1, this.filtro);
 
     }
     return pageEvento;

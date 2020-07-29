@@ -96,9 +96,6 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
       escCurIteClaAdi: [''],
       // escCurItemCur: [''],
 
-      items: [null, Validators.required],
-      items_value: ['no', Validators.required]
-
     });
 
 
@@ -346,6 +343,7 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
                 EscItemCod: this.escItemCod.value,
                 EscItemDesc: this.escItemDesc.value,
                 EscCurIteClaAdi: this.escCurIteClaAdi.value,
+                modo: false
 
               };
 

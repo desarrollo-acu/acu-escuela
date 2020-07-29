@@ -21,6 +21,10 @@ Url api TESTING SQLServer:
   url_ws: 'http://192.1.0.86/ACU_WSACUTesting/rest',
   url_soap: 'http://192.1.0.86/ACU_WSACUTesting/',
 
+Url api TESTING MariaDB:
+  url_ws: 'http://192.1.0.86/ACU_MariaDBWS.NetEnvironment/rest',
+  url_soap: 'http://192.1.0.86/ACU_MariaDBWS.NetEnvironment/',
+
 URL api prod Oracle:
 
   url_ws: 'http://192.1.0.71/ACU_Web.NetEnvironment/rest',

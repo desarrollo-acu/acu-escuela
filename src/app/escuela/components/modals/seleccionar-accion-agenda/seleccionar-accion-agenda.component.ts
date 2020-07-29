@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { MatBottomSheetRef } from '@angular/material/bottom-sheet';
+import { Component, Inject } from '@angular/core';
+import { MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
 import { MatDialog } from '@angular/material/dialog';
 
 import Swal from 'sweetalert2';
@@ -15,15 +15,19 @@ import { CopiarMoverParameters } from 'src/app/core/model/copiarMoverParameters.
 export class SeleccionarAccionAgendaComponent {
   animal: any;
   pegar: boolean;
+  verOpciones: boolean;
   constructor(
     // tslint:disable-next-line: variable-name
     private _bottomSheetRef: MatBottomSheetRef<SeleccionarAccionAgendaComponent>,
     private acuService: AcuService,
-    public dialog: MatDialog,) {
+    public dialog: MatDialog,
+    @Inject(MAT_BOTTOM_SHEET_DATA) public data: any) {
+    this.verOpciones = this.data.verOpciones;
     this.pegar = JSON.parse(localStorage.getItem('pegar-clase'));
   }
 
   openLink(event: MouseEvent, key: string): void {
+    console.log('estoy en openlink');
 
     const fechaClase = localStorage.getItem('fechaClase');
 
@@ -42,6 +46,10 @@ export class SeleccionarAccionAgendaComponent {
 
       case 'suspender-clase':
         localStorage.setItem('abrirAgenda', `suspender-${tipoAgenda}`);
+        break;
+
+      case 'duplicar-clase':
+        localStorage.setItem('abrirAgenda', `duplicar-${tipoAgenda}`);
         break;
 
       case 'mover-clase':
@@ -84,8 +92,6 @@ export class SeleccionarAccionAgendaComponent {
                   });
                   localStorage.setItem('refreshLiberaAgenda', 'true');
 
-                  this._bottomSheetRef.dismiss();
-                  event.preventDefault();
                 });
             }
           });
@@ -115,14 +121,14 @@ export class SeleccionarAccionAgendaComponent {
                   this.copiarMoverClase(oldParameters, mainParameters);
                 }
 
-                this._bottomSheetRef.dismiss();
-                event.preventDefault();
+
+                this.cerrarBottomSheet(true, event);
               });
 
           } else {
             this.copiarMoverClase(oldParameters, mainParameters);
-            this._bottomSheetRef.dismiss();
-            event.preventDefault();
+
+            this.cerrarBottomSheet(true, event);
           }
 
 
@@ -135,15 +141,20 @@ export class SeleccionarAccionAgendaComponent {
         break;
 
       default:
+        this.acuService.cleanStorageAgenda();
         break;
     }
 
     if (continuar) {
-      this._bottomSheetRef.dismiss();
-      event.preventDefault();
+      this.cerrarBottomSheet(true, event);
     }
   }
 
+  cerrarBottomSheet(correcto?: boolean, event?: Event) {
+
+    this._bottomSheetRef.dismiss(correcto);
+    event.preventDefault();
+  }
 
 
   mensajeConfirmacion(title, text) {

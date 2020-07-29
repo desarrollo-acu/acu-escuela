@@ -4,6 +4,9 @@
 
             <mat-button-toggle-group>
                 <mat-button-toggle (click)="abmCurso('INS', null)">Agregar Curso</mat-button-toggle>
+                <mat-button-toggle (click)="getPdf()">PDF</mat-button-toggle>
+                <mat-button-toggle (click)="openPdf()">open PDF</mat-button-toggle>
+                <mat-button-toggle (click)="openSamePdf()">openSame PDF</mat-button-toggle>
             </mat-button-toggle-group>
 
 
@@ -24,8 +27,7 @@
 
                 <div *ngIf="!verCurso" align="center">
                     <h2 class="example-h2">Cargando cursos...</h2>
-                    <mat-progress-spinner class="example-margin" color="accent" mode="indeterminate"
-                        style="margin: 0px auto;">
+                    <mat-progress-spinner class="example-margin" color="accent" mode="indeterminate" style="margin: 0px auto;">
                     </mat-progress-spinner>
 
                 </div>
@@ -47,20 +49,18 @@
                     <!-- Estado Column -->
                     <ng-container matColumnDef="TipCurEst">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
-                        <td mat-cell *matCellDef="let row"> {{ (row.TipCurEst === 'A') ? 'Activo' : 'Baja'   }} </td>
+                        <td mat-cell *matCellDef="let row"> {{ (row.TipCurEst === 'A') ? 'Activo' : 'Baja' }} </td>
                     </ng-container>
 
                     <!-- Actions Column -->
                     <ng-container matColumnDef="actions">
                         <th mat-header-cell *matHeaderCellDef> </th>
                         <td mat-cell *matCellDef="let row">
-                            <button mat-mini-fab matTooltip="Editar curso" class="button-editar"
-                                matTooltipClass="tooltip-blue" (click)="abmCurso('UPD', row)">
+                            <button mat-mini-fab matTooltip="Editar curso" class="button-editar" matTooltipClass="tooltip-blue" (click)="abmCurso('UPD', row)">
                                 <mat-icon>edit</mat-icon>
                             </button>
 
-                            <button mat-mini-fab style="margin-left: 5px;" matTooltip="Eliminar curso"
-                                matTooltipClass="tooltip-red" (click)="abmCurso('DLT', row)">
+                            <button mat-mini-fab style="margin-left: 5px;" matTooltip="Eliminar curso" matTooltipClass="tooltip-red" (click)="abmCurso('DLT', row)">
                                 <mat-icon>delete</mat-icon>
                             </button>
                         </td>

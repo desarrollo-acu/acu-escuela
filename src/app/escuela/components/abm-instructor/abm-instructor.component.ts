@@ -315,7 +315,8 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
                   EscEstId: this.escEstId.value.ESCESTID,
                   InsLicObs: this.insLicObs.value,
                   EscEstDsc: this.estado.EscEstDsc,
-                  EscuelaEstado: this.estado
+                  EscuelaEstado: this.estado,
+                  modo: false
 
                 };
                 this.estado = null;

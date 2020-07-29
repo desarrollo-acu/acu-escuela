@@ -29,6 +29,8 @@ export class SuspenderClaseComponent implements OnInit {
   instructorAsignado = '';
   curso: string;
   hoy = new Date();
+  titulo: string;
+  esSuspender: boolean;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -40,6 +42,9 @@ export class SuspenderClaseComponent implements OnInit {
 
 
     this.agendaClase = this.data.agendaClase;
+    this.esSuspender = this.data.esSuspender;
+    this.titulo = (this.data.esSuspender) ? 'Suspender Clase' : 'Clase Doble';
+
     console.log('this.agendaClase : ', this.agendaClase);
     const day = Number(this.agendaClase.FechaClase.substring(this.agendaClase.FechaClase.length - 2, this.agendaClase.FechaClase.length));
     const month = Number(this.agendaClase.FechaClase.substring(5, 7));
@@ -63,7 +68,7 @@ export class SuspenderClaseComponent implements OnInit {
   }
 
   private buildForm() {
-
+    // const ESTADO_CLASE = (this.esSuspender) ? 
     this.form = this.formBuilder.group({
       fechaClase: [this.fechaClase],
       cursoId: [this.agendaClase.TipCurId],
@@ -98,12 +103,14 @@ export class SuspenderClaseComponent implements OnInit {
     this.alumnoNumero.disable();
     this.alumnoNombre.disable();
     this.numeroClase.disable();
-    // this.estadoClase.disable();
     this.claseAdicional.disable();
     this.tipoClase.disable();
     this.escInsId.disable();
     this.escInsNom.disable();
-
+    if (!this.esSuspender) {
+      this.estadoClase.setValue('D');
+      this.estadoClase.disable();
+    }
   }
 
   suspenderClase(event: Event) {
@@ -132,8 +139,9 @@ export class SuspenderClaseComponent implements OnInit {
         if (this.estadoClase.value !== 'S') {
 
           console.log('agendaClase: ', this.agendaClase);
-
-          this.acuService.getDisponibilidadInstructor(this.agendaClase, 1).subscribe((res: { ClasesEstimadas: ClaseEstimada[] }) => {
+          // Si no es suspender, entonces es una clase doble.
+          const cantidad = (this.esSuspender) ? 1 : 2;
+          this.acuService.getDisponibilidadInstructor(this.agendaClase, cantidad).subscribe((res: { ClasesEstimadas: ClaseEstimada[] }) => {
             console.log('res.ClasesEstimadas: ', res.ClasesEstimadas);
             const arrayPlano: {
               instructorCodigo?: string,

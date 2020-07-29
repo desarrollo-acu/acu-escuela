@@ -2,12 +2,16 @@ import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
 import Swal from 'sweetalert2';
-import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { MatBottomSheet, MatBottomSheetConfig } from '@angular/material/bottom-sheet';
 import { SeleccionarAccionAgendaComponent } from '../modals/seleccionar-accion-agenda/seleccionar-accion-agenda.component';
 import { SeleccionarFechaComponent } from '../modals/seleccionar-fecha/seleccionar-fecha.component';
 
 import { AgendaCursoComponent } from '../modals/agenda-curso/agenda-curso.component';
 import { AcuService } from 'src/app/core/services/acu.service';
+import { SuspenderClaseComponent } from '../modals/suspender-clase/suspender-clase.component';
+import { AgendaClase } from '@core/model/agenda-clase.model';
+import { AgendaCurso } from 'src/app/escuela/components/modals/agenda-curso/agenda-curso.component';
+import { Instructor } from '../../../core/model/instructor.model';
 
 export interface AgendaElement {
   Instructor: string;
@@ -42,7 +46,7 @@ export interface DataAgenda {
   MovCod: number;
   Valor: string;
   Disponible: boolean;
-  AluId: string;
+  AluId: number;
   AluApe1: string;
   EscInsId: string;
   EsAgCuInsNom: string;
@@ -86,7 +90,7 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
   columns: string[] = [];
   agendaDataSource: AgendaElement[];
   agenda: any[] = [];
-  instructores: any[] = [];
+  instructores: Instructor[] = [];
   horas: any[] = [];
   fechaClase = '';
   fecha: Date;
@@ -105,7 +109,7 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
 
     console.log('Agenda-instructor ngOnDestroy');
     this.acuService.cleanStorageAgenda();
-    //throw new Error("Method not implemented.");
+    // throw new Error("Method not implemented.");
   }
 
   ngOnInit() {
@@ -146,14 +150,21 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
   }
 
   existeEnHorasMoviles(hora: any, instructor: any): Cell {
+
     const cell: Cell = {
       value: '',
       class: '',
       existe: false
     };
     for (const h of this.horaMovilPlano) {
+
       if (h.Hora === hora.Hora && h.EscInsId === instructor.EscInsId) {
-        cell.value = `${h.AluApe1} ${h.AluNro} ${h.TipCurId}`; // ${h.EscInsId}
+
+
+        // tslint:disable-next-line: triple-equals
+        cell.value = (h.AluId != 0)
+          ? `${h.AluNro} ${h.AluApe1}  ${h.TipCurId}`
+          : `${h.TipCurId} ${h.TipCurNom}`; // ${h.EscInsId}
         cell.class = h.claseCelda;
         cell.existe = true;
       }
@@ -186,99 +197,153 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
     };
 
     localStorage.setItem('mainParameters', JSON.stringify(mainParameters));
-    const t = this._bottomSheet.open(SeleccionarAccionAgendaComponent);
-    t.afterDismissed().subscribe(() => {
-      console.log('fin open sheet: ');
+    const lugar = this.horaMovilPlano.find(h => {
+      if (h.EscInsId === instructor && h.Hora === hora) {
+        return h;
+      }
+    });
+    console.log('lugar: ', lugar);
 
-      const abrirAgenda = localStorage.getItem('abrirAgenda');
-      switch (abrirAgenda) {
-        case 'instructor':
-          console.log('3)fechaClase: ', this.fechaClase);
-          console.log('4)hora: ', hora);
-          console.log('5)instructor: ', instructor);
-          this.acuService.getInstructorAgenda(this.fechaClase, hora, instructor)
-            .subscribe((res: any) => {
 
-              console.log('6)res: ', res);
-              const dialogRef = this.dialog.open(AgendaCursoComponent, {
-                data: {
-                  agendaCurso: res.AgendaCurso,
-                }
+    const t = this._bottomSheet.open(SeleccionarAccionAgendaComponent, {
+      data: {
+        // tslint:disable-next-line: triple-equals
+        verOpciones: (lugar && lugar.AluId != 0)
+      }
+    });
+    t.afterDismissed().subscribe((seleccionoOpcion) => {
+      console.log('fin open sheet: ', seleccionoOpcion);
+      if (seleccionoOpcion) {
+
+        const abrirAgenda = localStorage.getItem('abrirAgenda');
+        console.log('  abrirAgenda: ', abrirAgenda);
+        switch (abrirAgenda) {
+          case 'instructor':
+            console.log('3)fechaClase: ', this.fechaClase);
+            console.log('4)hora: ', hora);
+            console.log('5)instructor: ', instructor);
+            this.acuService.getInstructorAgenda(this.fechaClase, hora, instructor)
+              .subscribe((res: any) => {
+
+                console.log('6)res: ', res);
+                const dialogRef = this.dialog.open(AgendaCursoComponent, {
+                  data: {
+                    agendaCurso: res.AgendaCurso,
+                  }
+                });
+
+                dialogRef.afterClosed().subscribe(result => {
+                  console.log('cierro el dialog, resultado: ', result);
+                  if (result) {
+                    this.mensajeConfirmacion('Confirmado!', result.mensaje).then((res2) => {
+                      if (res2.dismiss === Swal.DismissReason.timer) {
+                        console.log('Cierro  con el timer');
+                      }
+                    });
+                    // cambiar la celda.
+
+                    celda.removeAttribute('class');
+                    celda.innerHTML = result.TipCurNom;
+                    celda.classList.add('cdk-cell', 'mat-cell', `cdk-column-${hora}`,
+                      `mat-column-${hora}`, 'cell', 'greenLight-black', 'ng-star-inserted');
+                    this.animal = result;
+                  }
+                });
+
               });
+            break;
+          case 'suspender-instructor':
+            this.suspenderDuplicarClase(instructor, hora, true);
+            break;
+          case 'duplicar-instructor':
+            this.suspenderDuplicarClase(instructor, hora, false);
+            break;
 
-              dialogRef.afterClosed().subscribe(result => {
-                console.log('cierro el dialog, resultado: ', result);
-                if (result) {
-                  this.mensajeConfirmacion('Confirmado!', result.mensaje).then((res2) => {
-                    if (res2.dismiss === Swal.DismissReason.timer) {
-                      console.log('Cierro  con el timer');
-                    }
-                  });
-                  // cambiar la celda.
+          default:
+            const refreshAgenda = localStorage.getItem('refreshAgenda');
+            const refreshLiberaAgenda = localStorage.getItem('refreshLiberaAgenda');
 
-                  celda.removeAttribute('class');
-                  celda.innerHTML = result.TipCurNom;
-                  celda.classList.add('cdk-cell', 'mat-cell', `cdk-column-${hora}`,
-                    `mat-column-${hora}`, 'cell', 'greenLight-black', 'ng-star-inserted');
-                  this.animal = result;
-                }
-              });
-
-            });
-          break;
-
-        default:
-          const refreshAgenda = localStorage.getItem('refreshAgenda');
-          const refreshLiberaAgenda = localStorage.getItem('refreshLiberaAgenda');
-
-          if (refreshLiberaAgenda) {
-            localStorage.removeItem('refreshLiberaAgenda');
-            celda.removeAttribute('class');
-            celda.innerHTML = '';
-            celda.classList.add('cdk-cell', 'mat-cell', `cdk-column-${hora}`, `mat-column-${hora}`, 'cell', 'ng-star-inserted');
-          }
-
-          if (refreshAgenda) {
-            const classOld = localStorage.getItem('classOld');
-            const textOld = localStorage.getItem('textOld');
-
-            if (localStorage.getItem('limpiarCeldaOld')) {
-              const oldParameters = JSON.parse(localStorage.getItem('copiarMoverParameters'));
-              const celdaOld = document.getElementById(`${oldParameters.movilOld}${oldParameters.horaOld}`);
-              celdaOld.removeAttribute('class');
-              celdaOld.innerHTML = '';
-              celdaOld.classList.add(
-                'cdk-cell',
-                'mat-cell',
-                `cdk-column-${oldParameters.horaOld}`,
-                `mat-column-${oldParameters.horaOld}`,
-                'cell', 'ng-star-inserted'
-              );
-              localStorage.removeItem('copiarMoverParameters');
-              localStorage.removeItem('limpiarCeldaOld');
+            if (refreshLiberaAgenda) {
+              localStorage.removeItem('refreshLiberaAgenda');
+              celda.removeAttribute('class');
+              celda.innerHTML = '';
+              celda.classList.add('cdk-cell', 'mat-cell', `cdk-column-${hora}`, `mat-column-${hora}`, 'cell', 'ng-star-inserted');
             }
-            const arrayClass: string[] = classOld.split(' ');
-            localStorage.removeItem('classOld');
-            localStorage.removeItem('textOld');
 
-            localStorage.removeItem('refreshLiberaAgenda');
-            celda.removeAttribute('class');
-            celda.innerHTML = textOld;
-            arrayClass.forEach(element => {
-              console.log('class: ', element);
-              celda.classList.add(element);
-            });
-          }
+            if (refreshAgenda) {
+              const classOld = localStorage.getItem('classOld');
+              const textOld = localStorage.getItem('textOld');
 
-          break;
+              if (localStorage.getItem('limpiarCeldaOld')) {
+                const oldParameters = JSON.parse(localStorage.getItem('copiarMoverParameters'));
+                const celdaOld = document.getElementById(`${oldParameters.movilOld}${oldParameters.horaOld}`);
+                celdaOld.removeAttribute('class');
+                celdaOld.innerHTML = '';
+                celdaOld.classList.add(
+                  'cdk-cell',
+                  'mat-cell',
+                  `cdk-column-${oldParameters.horaOld}`,
+                  `mat-column-${oldParameters.horaOld}`,
+                  'cell', 'ng-star-inserted'
+                );
+                localStorage.removeItem('copiarMoverParameters');
+                localStorage.removeItem('limpiarCeldaOld');
+              }
+              const arrayClass: string[] = classOld.split(' ');
+              localStorage.removeItem('classOld');
+              localStorage.removeItem('textOld');
+
+              localStorage.removeItem('refreshLiberaAgenda');
+              celda.removeAttribute('class');
+              celda.innerHTML = textOld;
+              arrayClass.forEach(element => {
+                console.log('class: ', element);
+                celda.classList.add(element);
+              });
+            }
+
+            break;
+        }
+
       }
     });
 
   }
 
 
-  ngAfterViewInit() {
-    this.getAgenda(this.fecha);
+  // ngAfterViewInit() {
+  //   this.getAgenda(this.fecha);
+
+  // }
+
+  suspenderDuplicarClase(instructor: string, hora: number, esSuspender: boolean) {
+    const instr = this.instructores.find(ins => {
+      if (ins.EscInsId === instructor) {
+        return ins;
+      }
+    });
+
+    console.log('instrucasasator: ', instr);
+
+
+    this.acuService.getClaseAgenda(this.fechaClase, hora, instr.EscMovCod)
+      .subscribe((res: any) => {
+        console.log('resp suspender: ', res);
+
+        const dialogRef = this.dialog.open(SuspenderClaseComponent, {
+          data: {
+            agendaClase: res.AgendaClase,
+            esSuspender
+          }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+          this.animal = result;
+
+          this.getAgenda(this.fecha);
+        });
+
+      });
 
   }
 

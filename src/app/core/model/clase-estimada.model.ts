@@ -1,6 +1,7 @@
 
 
 export interface ClaseEstimada {
+    AluId?: number;
     EscInsId?: string;
     EscInsNom?: string;
     FechaInicio?: Date;

@@ -1,7 +1,7 @@
 <form [formGroup]="form" (ngSubmit)="suspenderClase($event)">
 
     <mat-toolbar color="primary">
-        <h2 mat-dialog-title>Suspender Clase</h2>
+        <h2 mat-dialog-title> {{titulo}} </h2>
     </mat-toolbar>
 
 
@@ -41,16 +41,14 @@
             <div class="col-xs-4">
                 <div class="box">
                     <mat-form-field class="full-width">
-                        <input matInput placeholder="Número del alumno" [(ngModel)]="agendaClase.AluNro"
-                            formControlName="alumnoNumero">
+                        <input matInput placeholder="Número del alumno" [(ngModel)]="agendaClase.AluNro" formControlName="alumnoNumero">
                     </mat-form-field>
                 </div>
             </div>
             <div class="col">
                 <div class="box">
                     <mat-form-field class="full-width">
-                        <input matInput placeholder="Nombre del alumno" [(ngModel)]="agendaClase.AluNomApe"
-                            formControlName="alumnoNombre">
+                        <input matInput placeholder="Nombre del alumno" [(ngModel)]="agendaClase.AluNomApe" formControlName="alumnoNombre">
 
                     </mat-form-field>
                 </div>
@@ -122,8 +120,7 @@
             <div class="col">
                 <div class="box">
                     <mat-form-field class="full-width">
-                        <mat-select [(value)]="agendaClase.EsAgCuClaAdiSN" placeholder="Es clase adicional?"
-                            formControlName="claseAdicional">
+                        <mat-select [(value)]="agendaClase.EsAgCuClaAdiSN" placeholder="Es clase adicional?" formControlName="claseAdicional">
                             <mat-option value="S">Si</mat-option>
                             <mat-option value="N">No</mat-option>
                         </mat-select>
@@ -139,7 +136,10 @@
                             <mat-option value="A">Asignada</mat-option>
                             <mat-option value="S">Suspendida Con Cobro</mat-option>
                             <mat-option value="U">Suspendida Sin Cobro</mat-option>
+                            <mat-option value="D">Clase Doble</mat-option>
                         </mat-select>
+
+
                     </mat-form-field>
                 </div>
             </div>
@@ -152,8 +152,7 @@
 
                         <!-- <textarea matInput></textarea> cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="2"
                         cdkAutosizeMaxRows="5" -->
-                        <textarea matInput placeholder="Observaciones" formControlName="observaciones"
-                            required></textarea>
+                        <textarea matInput placeholder="Observaciones" formControlName="observaciones" required></textarea>
                         <mat-error *ngIf="observaciones.hasError('required')">
                             Las obvservaciones de la suspensión de clase son <strong>requeridas</strong>
                         </mat-error>
@@ -258,8 +257,8 @@
 
     <mat-dialog-actions align="end">
 
-        <button mat-raised-button type="button" (click)="suspenderClase($event)" cdkFocusInitial
-            [disabled]="form.invalid" color="primary">Suspender Clase</button>
+        <button mat-raised-button type="button" (click)="suspenderClase($event)" cdkFocusInitial [disabled]="form.invalid" color="primary"> {{ (esSuspender) ? 'Suspender Clase' : 'Generar Clase doble'}}
+        </button>
         <button mat-button mat-dialog-close (click)="onNoClick()">Cancelar</button>
     </mat-dialog-actions>
 </form>

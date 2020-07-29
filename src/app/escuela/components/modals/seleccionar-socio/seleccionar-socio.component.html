@@ -62,8 +62,7 @@
 
         <!--  -->
 
-        <mat-paginator [length]="cantidad" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
-            (page)="updateEvent($event)">
+        <mat-paginator [length]="cantidad" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions" (page)="pageEvent = ejecutoEvent($event)">
         </mat-paginator>
 
 

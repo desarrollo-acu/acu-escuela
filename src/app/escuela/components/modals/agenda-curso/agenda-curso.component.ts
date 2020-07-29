@@ -20,6 +20,8 @@ export interface AgendaCurso {
   TipCurNom: string;
   EscAgeInsObservaciones: string;
   mensaje: string;
+
+
 }
 
 

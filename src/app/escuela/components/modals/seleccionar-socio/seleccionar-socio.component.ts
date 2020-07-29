@@ -73,6 +73,8 @@ export class SeleccionarSocioComponent implements AfterViewInit, OnInit, AfterVi
   }
 
   ngOnInit() {
+    this.ejecutoEvent(null);
+
     this.dataSource.paginator = this.paginator;
     this.dataSource.paginator.length = this.cantidad;
     this.dataSource.sort = this.sort;
@@ -101,36 +103,74 @@ export class SeleccionarSocioComponent implements AfterViewInit, OnInit, AfterVi
   }
 
 
+  ejecutoEvent(pageEvento: PageEvent) {
+    this.pageEvent = pageEvento;
+    const filter = (this.filtro) ? this.filtro : '';
+
+    console.log('ejecutoEvent, pageEvento: ', pageEvento);
+    if (pageEvento) {
+      let index = pageEvento.pageIndex;
+      this.pageSize = pageEvento.pageSize;
+      index += 1;
+
+      // Si estoy retrocediendo saco 1 del index
+      if (pageEvento.previousPageIndex > pageEvento.pageIndex) {
+        index -= 1;
+      }
+      console.log('index: ', index);
+
+      this.getSocios(pageEvento.pageSize, index, filter);
+    }
+    return pageEvento;
+
+  }
+
   getSocios(pageSize, pageNumber, filtro) {
+    if (pageNumber === 0) {
+      pageNumber = 1;
+    }
 
     this.acuService.getSocios(pageSize, pageNumber, 'FREE', filtro)
       .subscribe((res: any) => {
 
-        this.actualizarDatasource(res.Socios);
+        this.length = res.Cantidad;
+        this.actualizarDatasource(res.Socios, pageSize, pageNumber - 1);
       });
   }
 
-  updateEvent($event: PageEvent) {
-
-    this.pageEvent = $event;
-
-    this.acuService.getSocios(100, this.pageEvent.pageIndex, ' ', 0) // (1000, this.pageEvent.pageIndex)
-      .subscribe((res: any) => {
-
-        this.actualizarDatasource(res.Socios);
-      });
-  }
 
   onNoClick(): void {
     this.dialogRef.close();
   }
 
 
-  actualizarDatasource(data) {
+  actualizarDatasource(data, size?, index?) {
 
     this.dataSource = new MatTableDataSource(data);
     this.dataSource.paginator = this.paginator;
     // this.dataSource.paginator.length = cantidad;
     this.dataSource.sort = this.sort;
+
+    /*
+    
+
+    this.dataSource = data.Alumnos;
+    // this.pageIndex =  pageIndex;
+    if (size) {
+      this.pageSize = size;
+    }
+    console.log('cantidad: ', data.Cantidad);
+
+    this.length = data.Cantidad;
+    console.log('this.length: ', this.length);
+
+    // this.dataSource = new MatTableDataSource(data);
+    if (index) {
+      this.pageIndex = index;
+    }
+    this.dataSource.paginator = this.paginator;
+    // this.dataSource.paginator.length = cantidad;
+    this.dataSource.sort = this.sort;
+    */
   }
 }

@@ -32,7 +32,7 @@
                         <mat-form-field class="full-width" appearance="fill">
 
                             <mat-label>Activo? </mat-label>
-                            <mat-select (selectionChange)="verActivos($event)">
+                            <mat-select (selectionChange)="verActivos($event)" formControlName="escEstId">
                                 <mat-option *ngFor="let estado of estados" [value]="estado.value">{{estado.description}}
                                 </mat-option>
                             </mat-select>
@@ -47,8 +47,7 @@
 
                 <div *ngIf="!verInstructor" align="center">
                     <h2 class="example-h2">Cargando Instructores...</h2>
-                    <mat-progress-spinner class="example-margin" color="accent" mode="indeterminate"
-                        style="margin: 0px auto;">
+                    <mat-progress-spinner class="example-margin" color="accent" mode="indeterminate" style="margin: 0px auto;">
                     </mat-progress-spinner>
 
                 </div>
@@ -59,13 +58,11 @@
                     <ng-container matColumnDef="actions">
                         <th mat-header-cell *matHeaderCellDef> </th>
                         <td mat-cell *matCellDef="let row">
-                            <button mat-mini-fab matTooltip="Editar Instructor" class="button-editar"
-                                matTooltipClass="tooltip-blue" (click)="abmInstructor('UPD', row)">
+                            <button mat-mini-fab matTooltip="Editar Instructor" class="button-editar" matTooltipClass="tooltip-blue" (click)="abmInstructor('UPD', row)">
                                 <mat-icon>edit</mat-icon>
                             </button>
 
-                            <button mat-mini-fab style="margin-left: 5px;" matTooltip="Eliminar Instructor"
-                                matTooltipClass="tooltip-red" (click)="abmInstructor('DLT', row)">
+                            <button mat-mini-fab style="margin-left: 5px;" matTooltip="Eliminar Instructor" matTooltipClass="tooltip-red" (click)="abmInstructor('DLT', row)">
                                 <mat-icon>delete</mat-icon>
                             </button>
                         </td>
@@ -100,7 +97,7 @@
                     <ng-container matColumnDef="EscInsAct">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> Activo? </th>
                         <td mat-cell *matCellDef="let row">
-                            {{ (row.EscInsAct === 'S' || row.EscInsAct === 'A' ) ? 'Si' : 'No'   }} </td>
+                            {{ (row.EscInsAct === 'S' || row.EscInsAct === 'A' ) ? 'Si' : 'No' }} </td>
                     </ng-container>
 
 

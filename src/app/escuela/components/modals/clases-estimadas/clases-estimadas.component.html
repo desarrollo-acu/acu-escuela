@@ -53,10 +53,14 @@
             <ng-container matColumnDef="detalle">
                 <th mat-header-cell *matHeaderCellDef> </th>
                 <td mat-cell *matCellDef="let row">
-                    <button mat-mini-fab color="primary" (click)="verDetalle(row.Detalle)"
-                        matTooltip="Ver detalle de estimación">
+                    <button mat-mini-fab color="primary" (click)="verDetalle(row.Detalle)" matTooltip="Ver detalle de estimación">
                         <mat-icon> search</mat-icon>
                     </button>
+                    <button mat-mini-fab color="primary" (click)="verPDF(row)" matTooltip="Descargar PDF de Plan de Clases">
+                        <mat-icon> insert_drive_file</mat-icon>
+                    </button>
+
+
                 </td>
             </ng-container>
 

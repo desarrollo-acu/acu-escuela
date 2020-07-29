@@ -33,6 +33,7 @@ export class ClasesEstimadasComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<InscripcionCursoComponent>,
     public dialog: MatDialog,
+    private acuService: AcuService,
     @Inject(MAT_DIALOG_DATA) public data: any) {
 
     console.log('this.data.clasesEstimadas: ', this.data.clasesEstimadas);
@@ -54,6 +55,18 @@ export class ClasesEstimadasComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  verPDF(claseEstimada: ClaseEstimada) {
+    console.log('claseEstimada: ', claseEstimada);
+
+    this.acuService.getPDFPlanDeClases(claseEstimada).subscribe((pdf: any) => {
+      console.log('pdf: ', pdf);
+      this.acuService.getPDF(pdf, 'planDeClases');
+
+
+    });
+
   }
 
   verDetalle(detalle: ClaseEstimadaDetalle[]) {
