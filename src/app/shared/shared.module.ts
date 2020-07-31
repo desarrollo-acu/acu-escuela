@@ -10,6 +10,7 @@ import { FooterComponent } from './components/footer/footer.component';
 import { HeaderComponent } from './components/header/header.component';
 import { HoraNumericStringPipe } from './pipes/hora-numeric-string.pipe';
 import { CustomDateFormatPipePipe } from './pipes/custom-date-format-pipe.pipe';
+import { DayToStringPipe } from './pipes/day-to-string.pipe';
 
 
 
@@ -21,7 +22,8 @@ import { CustomDateFormatPipePipe } from './pipes/custom-date-format-pipe.pipe';
     FooterComponent,
     HeaderComponent,
     HoraNumericStringPipe,
-    CustomDateFormatPipePipe
+    CustomDateFormatPipePipe,
+    DayToStringPipe
   ],
   imports: [
     CommonModule,
@@ -33,6 +35,7 @@ import { CustomDateFormatPipePipe } from './pipes/custom-date-format-pipe.pipe';
     ValueIPipe,
     DaySpanishPipe,
     CiPipe,
+    DayToStringPipe,
     FooterComponent,
     HeaderComponent,
     HoraNumericStringPipe

@@ -11,6 +11,7 @@ import { Curso } from '@core/model/curso.model';
 import { Instructor } from '@core/model/instructor.model';
 import { AgendaClase } from '@core/model/agenda-clase.model';
 import { ClaseEstimada } from '../model/clase-estimada.model';
+import { Inscripcion } from '../model/inscripcion.model';
 
 
 export interface LiberarParameters {
@@ -55,6 +56,9 @@ export class AcuService {
   private instructorDataSource = new BehaviorSubject({ modo: 'INS', instructor: {}, id: 0 });
   instructorCurrentData = this.instructorDataSource.asObservable();
 
+  // esto va al inscripcionesService
+  private inscripcionDataSource = new BehaviorSubject({ inscripcion: {}, id: 0 });
+  inscripcionCurrentData = this.inscripcionDataSource.asObservable();
 
   constructor(
     private http: HttpClient) {
@@ -182,6 +186,12 @@ export class AcuService {
       FchClase: fechaClaseStr,
       HorClase: horaClase,
       EscMovCod: movilCod
+    });
+  }
+
+  getDisponibilidadAlumno(aluId: number) {
+    return this.http.post(`${environment.url_ws}/wsObtenerDisponibilidadPorAlumno`, {
+      AluId: aluId
     });
   }
 
@@ -572,6 +582,13 @@ export class AcuService {
 
     const data: { modo: string, instructor: Instructor, id: number } = (id) ? { modo, instructor, id } : { modo, instructor, id: 0 };
     this.instructorDataSource.next(data);
+
+  }
+
+  sendDataInscripcion(inscripcion: Inscripcion, id?: number) {
+
+    const data: { inscripcion: Inscripcion, id: number } = (id) ? { inscripcion, id } : { inscripcion, id: 0 };
+    this.inscripcionDataSource.next(data);
 
   }
 

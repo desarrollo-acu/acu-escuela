@@ -1,3 +1,4 @@
+import { ClaseEstimada } from './clase-estimada.model';
 export interface AgendaClase {
     // FechaClase: string;
     Modo?: string;
@@ -38,4 +39,5 @@ export interface AgendaClase {
     disponibilidadJueves?: string[];
     disponibilidadViernes?: string[];
     disponibilidadSabado?: string[];
+    planDeClases?: ClaseEstimada;
 }

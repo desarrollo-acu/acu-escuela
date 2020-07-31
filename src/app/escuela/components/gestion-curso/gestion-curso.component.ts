@@ -7,6 +7,8 @@ import { Curso } from '@core/model/curso.model';
 import { Router } from '@angular/router';
 import { confirmacionUsuario, mensajeConfirmacion } from '@utils/sweet-alert';
 import { ClaseEstimada, ClaseEstimadaDetalle } from '../../../core/model/clase-estimada.model';
+import { MatSelectChange } from '@angular/material/select';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 
 @Component({
@@ -21,10 +23,14 @@ export class GestionCursoComponent implements OnInit {
   verCurso: boolean;
   filtro: string;
 
+  estados = [];
+  form: FormGroup;
+
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
+    private fb: FormBuilder,
     private acuService: AcuService,
     private router: Router) {
 
@@ -140,7 +146,9 @@ export class GestionCursoComponent implements OnInit {
 
 
 
-    this.getCursos();
+    this.buildForm();
+    this.getCursos('A');
+    this.generateEstados();
 
   }
 
@@ -177,7 +185,7 @@ export class GestionCursoComponent implements OnInit {
 
               mensajeConfirmacion('Ok', res.Curso.ErrorMessage).then((res2) => {
 
-                this.getCursos();
+                this.getCursos(this.filtro);
 
               });
 
@@ -193,7 +201,7 @@ export class GestionCursoComponent implements OnInit {
 
   }
 
-  getCursos() {
+  getCursos(TipCurEst?: string) {
 
     this.verCurso = false;
     this.acuService.getCursos().subscribe((cursos: Curso[]) => {
@@ -201,12 +209,58 @@ export class GestionCursoComponent implements OnInit {
 
 
       this.verCurso = true;
+      const auxCursos = (TipCurEst === '-' || !TipCurEst)
+        ? cursos
+        : cursos.filter(instructor => instructor.TipCurEst === TipCurEst);
       // Assign the data to the data source for the table to render
-      this.dataSource = new MatTableDataSource(cursos);
+      this.dataSource = new MatTableDataSource(auxCursos);
 
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
     });
+  }
+
+  buildForm() {
+
+    this.form = this.fb.group({
+      tipCurEst: ['A'],
+    });
+  }
+  verActivos(event: MatSelectChange) {
+    console.log('event: ', event);
+
+    const filterValue = event.value;
+    console.log('filterValue: ', filterValue);
+    this.getCursos(filterValue);
+  }
+
+
+  generateEstados() {
+    const estado0 = {
+      id: 0,
+      value: '-',
+      description: 'Todos'
+    };
+
+    this.estados.push(estado0);
+
+    const estado1 = {
+      id: 1,
+      value: 'A',
+      description: 'Activo'
+    };
+    this.estados.push(estado1);
+
+    const estado2 = {
+      id: 2,
+      value: 'B',
+      description: 'Baja'
+    };
+    this.estados.push(estado2);
+
+
+
+    console.log('estados: ', this.estados);
   }
 
 }

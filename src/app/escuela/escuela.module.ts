@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, LOCALE_ID } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { EscuelaRoutingModule } from './escuela-routing.module';
@@ -44,6 +44,15 @@ import { InstructorHorasLibresComponent } from './components/modals/instructor-h
 import { GestionInscripcionComponent } from './components/gestion-inscripcion/gestion-inscripcion.component';
 import { MAT_MOMENT_DATE_FORMATS, MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
 
+import localeEsUy from '@angular/common/locales/global/es-UY';
+import localeEs from '@angular/common/locales/global/es';
+import { registerLocaleData } from '@angular/common';
+import { InscripcionesAlumnoComponent } from './components/modals/inscripciones-alumno/inscripciones-alumno.component';
+import { DisponibilidadAlumnoComponent } from './components/modals/disponibilidad-alumno/disponibilidad-alumno.component';
+import { AbmInscripcionComponent } from './components/abm-inscripcion/abm-inscripcion.component';
+registerLocaleData(localeEsUy, 'es-UY');
+registerLocaleData(localeEs, 'es');
+
 @NgModule({
   declarations: [
     AgendaMovilComponent,
@@ -73,7 +82,10 @@ import { MAT_MOMENT_DATE_FORMATS, MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPT
     SeleccionarItemCursoComponent,
     SuspenderClaseComponent,
     InstructorHorasLibresComponent,
-    GestionInscripcionComponent
+    GestionInscripcionComponent,
+    InscripcionesAlumnoComponent,
+    DisponibilidadAlumnoComponent,
+    AbmInscripcionComponent
   ],
   imports: [
     CommonModule,
@@ -99,6 +111,7 @@ import { MAT_MOMENT_DATE_FORMATS, MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPT
       deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
     },
     { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
+    { provide: LOCALE_ID, useValue: 'es' }
   ],
 
   // providers: [

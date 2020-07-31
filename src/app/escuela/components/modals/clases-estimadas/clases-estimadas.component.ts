@@ -61,8 +61,9 @@ export class ClasesEstimadasComponent implements OnInit {
     console.log('claseEstimada: ', claseEstimada);
 
     this.acuService.getPDFPlanDeClases(claseEstimada).subscribe((pdf: any) => {
-      console.log('pdf: ', pdf);
-      this.acuService.getPDF(pdf, 'planDeClases');
+
+      this.acuService.openSamePDF(pdf, 'PlanDeClases');
+      // this.acuService.getPDF(pdf, 'planDeClases');
 
 
     });

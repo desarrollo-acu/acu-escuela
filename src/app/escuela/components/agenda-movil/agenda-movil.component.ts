@@ -215,24 +215,12 @@ export class AgendaMovilComponent implements OnInit, AfterViewInit, OnDestroy {
 
               });
             break;
+
           case 'suspender-movil':
-            this.acuService.getClaseAgenda(this.fechaClase, hora, movil)
-              .subscribe((res: any) => {
-                console.log('resp suspender: ', res);
-
-                const dialogRef = this.dialog.open(SuspenderClaseComponent, {
-                  data: {
-                    agendaClase: res.AgendaClase,
-                  }
-                });
-
-                dialogRef.afterClosed().subscribe(result => {
-                  this.animal = result;
-
-                  this.getAgenda(this.fecha);
-                });
-
-              });
+            this.suspenderDuplicarClase(movil, hora, true);
+            break;
+          case 'duplicar-movil':
+            this.suspenderDuplicarClase(movil, hora, false);
             break;
 
           default:
@@ -285,6 +273,30 @@ export class AgendaMovilComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
 
+  suspenderDuplicarClase(movil: number, hora: number, esSuspender: boolean) {
+
+
+    this.acuService.getClaseAgenda(this.fechaClase, hora, movil)
+      .subscribe((res: any) => {
+        console.log('resp suspender: ', res);
+
+        const dialogRef = this.dialog.open(SuspenderClaseComponent, {
+          data: {
+            agendaClase: res.AgendaClase,
+            esSuspender
+          }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+          this.animal = result;
+
+          this.getAgenda(this.fecha);
+        });
+
+      });
+
+
+  }
   ngAfterViewInit() {
     // this.getAgenda(this.fecha);
 
@@ -587,7 +599,10 @@ export class AgendaMovilComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   formatDateToString(fecha: Date): string {
+    console.log('fecha: ', fecha);
+
     const day = fecha.getDate();
+    console.log('day: ', day);
     const month = fecha.getMonth() + 1;
     const year = fecha.getFullYear();
 

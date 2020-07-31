@@ -8,6 +8,7 @@ import { confirmacionUsuario, mensajeConfirmacion } from '@utils/sweet-alert';
 import { Instructor } from '@core/model/instructor.model';
 import { filter } from 'rxjs/operators';
 import { MatSelectChange } from '@angular/material/select';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-gestion-instructor',
@@ -16,31 +17,40 @@ import { MatSelectChange } from '@angular/material/select';
 })
 export class GestionInstructorComponent implements OnInit {
 
-  displayedColumns: string[] = ['actions', 'EscInsId', 'EscInsNom', 'EscInsNomCor', 'EscInsTel', 'EscInsAct'];
+  displayedColumns: string[] = ['actions', 'EscInsId', 'EscInsNom', 'EscInsTel', 'EscInsAct'];
   dataSource: MatTableDataSource<Instructor>;
   verInstructor: boolean;
   filtro: string;
   estados = [];
   instructores: Instructor[];
-
+  form: FormGroup;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
+
+    private fb: FormBuilder,
     private acuService: AcuService,
     private router: Router) {
+
 
   }
 
   ngOnInit() {
 
 
-
-    this.getInstructores();
+    this.buildForm();
+    this.getInstructores('S');
     this.generateEstados();
 
   }
 
+  buildForm() {
+
+    this.form = this.fb.group({
+      escInsAct: ['S'],
+    });
+  }
   verActivos(event: MatSelectChange) {
     console.log('event: ', event);
 
@@ -49,12 +59,7 @@ export class GestionInstructorComponent implements OnInit {
     const instructores = (filterValue === '-')
       ? this.instructores
       : this.instructores.filter(instructor => instructor.EscInsAct === filterValue);
-    /* .map(instructor => {
-      if (instructor.EscInsAct === filterValue) {
-        return instructor;
-      }
-    });
-    */
+
 
     console.log('instructores: ', instructores);
     this.dataSource = new MatTableDataSource(instructores);
@@ -96,7 +101,7 @@ export class GestionInstructorComponent implements OnInit {
 
                 mensajeConfirmacion('Ok', res.Instructor.ErrorMessage).then((res2) => {
 
-                  this.getInstructores();
+                  this.getInstructores(this.filtro);
 
                 });
 
@@ -140,7 +145,7 @@ export class GestionInstructorComponent implements OnInit {
     console.log('estados: ', this.estados);
   }
 
-  getInstructores() {
+  getInstructores(EscInsAct?: string) {
 
     this.verInstructor = false;
     this.acuService.getInstructores()
@@ -151,7 +156,11 @@ export class GestionInstructorComponent implements OnInit {
         this.verInstructor = true;
         // Assign the data to the data source for the table to render
         this.instructores = instructores;
-        this.dataSource = new MatTableDataSource(instructores);
+        const auxInstructores = (EscInsAct === '-')
+          ? this.instructores
+          : this.instructores.filter(instructor => instructor.EscInsAct === EscInsAct);
+
+        this.dataSource = new MatTableDataSource(auxInstructores);
 
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;

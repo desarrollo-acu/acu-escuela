@@ -34,6 +34,17 @@ export interface Inscripcion {
     EscCurClSinCosSusCnt?: number;
     EscAluCurObs?: string;
     EscAluCurFiltro?: string;
+
+
+
+    EscAluFechaInicioEstimada?: Date;
+
+    EscAluCurSede?: string;
+    EscAluCurRecogerEnDomicilio?: boolean;
+    EscAluCurCondicionesCurso?: boolean;
+    EscAluCurReglamentoEscuela?: boolean;
+    EscAluCurELearning?: boolean;
+
     Lineas1?: InscripcionLinea1[];
     DisponibilidadAlumno?: InscripcionDisponibilidadAlumno[];
 }

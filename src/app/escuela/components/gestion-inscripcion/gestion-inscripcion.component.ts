@@ -69,6 +69,8 @@ export class GestionInscripcionComponent implements OnInit {
 
   verDetalle(inscripcion: Inscripcion) {
 
+    this.acuService.sendDataInscripcion(inscripcion, 0);
+    this.router.navigate(['/escuela/abm-inscripcion']);
   }
 
 

@@ -420,7 +420,7 @@ export class InscripcionCursoComponent {
         console.log(`2. response ${result}`);
 
         this.acuService.getPDFPlanDeClases(result).subscribe(pdf => {
-          this.acuService.getPDF(pdf, 'PlanDeClases');
+          this.acuService.openSamePDF(pdf, 'PlanDeClases');
         });
 
         this.inscripcionCurso.ClasesEstimadas = result;

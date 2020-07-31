@@ -6,6 +6,9 @@ import { AcuService } from '@core/services/acu.service';
 import { Alumno } from '@core/model/alumno.model';
 import { Router } from '@angular/router';
 import { confirmacionUsuario, mensajeConfirmacion } from '@utils/sweet-alert';
+import { MatDialog } from '@angular/material/dialog';
+import { InscripcionesAlumnoComponent } from '../modals/inscripciones-alumno/inscripciones-alumno.component';
+import { AgendaClase } from '../../../core/model/agenda-clase.model';
 
 
 @Component({
@@ -15,7 +18,7 @@ import { confirmacionUsuario, mensajeConfirmacion } from '@utils/sweet-alert';
 })
 export class GestionAlumnoComponent implements OnInit {
 
-  displayedColumns: string[] = ['actions', 'AluNro', 'AluNomComp', 'AluCI'];
+  displayedColumns: string[] = ['actions', 'AluNro', 'AluNomComp', 'AluCI', 'inscripciones'];
 
   dataSource: MatTableDataSource<Alumno>;
   verAlumnos: boolean;
@@ -34,7 +37,8 @@ export class GestionAlumnoComponent implements OnInit {
 
   constructor(
     private acuService: AcuService,
-    private router: Router) {
+    private router: Router,
+    private dialog: MatDialog) {
     console.log('constructor gestion-alumno');
 
 
@@ -99,6 +103,29 @@ export class GestionAlumnoComponent implements OnInit {
           }
         });
 
+        break;
+      case 'INSC':
+        this.acuService.getDisponibilidadAlumno(alumno.AluId).subscribe((res: { Disponibilidades: AgendaClase[] }) => {
+          console.log('res: ', res);
+
+          const inscripcionesDialogRef = this.dialog.open(InscripcionesAlumnoComponent, {
+            height: 'auto',
+            width: '700px',
+            data: {
+              inscripciones: res.Disponibilidades,
+              alumno: `${alumno.AluNom} ${alumno.AluApe1}`
+            }
+          });
+
+          inscripcionesDialogRef.afterClosed().subscribe(result => {
+            console.log('result: ', result);
+
+            if (result) {
+
+            }
+
+          });
+        });
         break;
 
       default:
