@@ -117,6 +117,11 @@ export class NavComponent implements OnDestroy {
         this.title = 'Gestión de cursos';
         break;
 
+      case '/escuela/gestion-movil':
+      case '/escuela/abm-movil':
+        this.title = 'Gestión de moviles';
+        break;
+
       case '/escuela/gestion-alumno':
       case '/escuela/abm-alumno':
         this.title = 'Gestión de alumnos';

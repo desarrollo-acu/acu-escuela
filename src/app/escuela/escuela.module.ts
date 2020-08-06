@@ -50,6 +50,8 @@ import { registerLocaleData } from '@angular/common';
 import { InscripcionesAlumnoComponent } from './components/modals/inscripciones-alumno/inscripciones-alumno.component';
 import { DisponibilidadAlumnoComponent } from './components/modals/disponibilidad-alumno/disponibilidad-alumno.component';
 import { AbmInscripcionComponent } from './components/abm-inscripcion/abm-inscripcion.component';
+import { GestionMovilComponent } from './components/gestion-movil/gestion-movil.component';
+import { AbmMovilComponent } from './components/abm-movil/abm-movil.component';
 registerLocaleData(localeEsUy, 'es-UY');
 registerLocaleData(localeEs, 'es');
 
@@ -85,7 +87,9 @@ registerLocaleData(localeEs, 'es');
     GestionInscripcionComponent,
     InscripcionesAlumnoComponent,
     DisponibilidadAlumnoComponent,
-    AbmInscripcionComponent
+    AbmInscripcionComponent,
+    GestionMovilComponent,
+    AbmMovilComponent
   ],
   imports: [
     CommonModule,

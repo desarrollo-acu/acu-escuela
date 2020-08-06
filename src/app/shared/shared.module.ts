@@ -11,6 +11,7 @@ import { HeaderComponent } from './components/header/header.component';
 import { HoraNumericStringPipe } from './pipes/hora-numeric-string.pipe';
 import { CustomDateFormatPipePipe } from './pipes/custom-date-format-pipe.pipe';
 import { DayToStringPipe } from './pipes/day-to-string.pipe';
+import { FechaStringPipe } from './pipes/fecha-string.pipe';
 
 
 
@@ -23,7 +24,8 @@ import { DayToStringPipe } from './pipes/day-to-string.pipe';
     HeaderComponent,
     HoraNumericStringPipe,
     CustomDateFormatPipePipe,
-    DayToStringPipe
+    DayToStringPipe,
+    FechaStringPipe
   ],
   imports: [
     CommonModule,
@@ -38,8 +40,12 @@ import { DayToStringPipe } from './pipes/day-to-string.pipe';
     DayToStringPipe,
     FooterComponent,
     HeaderComponent,
-    HoraNumericStringPipe
+    HoraNumericStringPipe,
+    FechaStringPipe
 
-  ]
+  ],
+  // providers: [
+  //   { provide: LOCALE_ID, useValue: 'es-UY' }
+  // ],
 })
 export class SharedModule { }

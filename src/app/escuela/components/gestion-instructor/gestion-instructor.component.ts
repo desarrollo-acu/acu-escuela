@@ -157,7 +157,7 @@ export class GestionInstructorComponent implements OnInit {
         // Assign the data to the data source for the table to render
         this.instructores = instructores;
         const auxInstructores = (EscInsAct === '-')
-          ? this.instructores
+          ? this.instructores.filter(instructor => (instructor.EscInsAct === 'S' || instructor.EscInsAct === 'N'))
           : this.instructores.filter(instructor => instructor.EscInsAct === EscInsAct);
 
         this.dataSource = new MatTableDataSource(auxInstructores);

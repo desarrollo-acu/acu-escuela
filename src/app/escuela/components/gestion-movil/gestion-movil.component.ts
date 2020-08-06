@@ -6,21 +6,20 @@ import { AcuService } from '@core/services/acu.service';
 import { Curso } from '@core/model/curso.model';
 import { Router } from '@angular/router';
 import { confirmacionUsuario, mensajeConfirmacion } from '@utils/sweet-alert';
-import { ClaseEstimada, ClaseEstimadaDetalle } from '../../../core/model/clase-estimada.model';
 import { MatSelectChange } from '@angular/material/select';
 import { FormBuilder, FormGroup } from '@angular/forms';
-
+import { Movil } from '../../../core/model/movil.model';
 
 @Component({
-  selector: 'app-gestion-curso',
-  templateUrl: './gestion-curso.component.html',
-  styleUrls: ['./gestion-curso.component.scss']
+  selector: 'app-gestion-movil',
+  templateUrl: './gestion-movil.component.html',
+  styleUrls: ['./gestion-movil.component.scss']
 })
-export class GestionCursoComponent implements OnInit {
+export class GestionMovilComponent implements OnInit {
 
-  displayedColumns: string[] = ['actions', 'TipCurId', 'TipCurNom', 'TipCurEst'];
-  dataSource: MatTableDataSource<Curso>;
-  verCurso: boolean;
+  displayedColumns: string[] = ['actions', 'MovCod', 'EscVehEst'];
+  dataSource: MatTableDataSource<Movil>;
+  verMovil: boolean;
   filtro: string;
 
   estados = [];
@@ -36,12 +35,10 @@ export class GestionCursoComponent implements OnInit {
 
   }
 
-
   ngOnInit() {
 
-
     this.buildForm();
-    this.getCursos('A');
+    this.getMoviles('A');
     this.generateEstados();
 
   }
@@ -55,27 +52,26 @@ export class GestionCursoComponent implements OnInit {
     }
   }
 
-  abmCurso(modo: string, curso: Curso) {
+  abmMovil(modo: string, movil: Movil) {
     switch (modo) {
       case 'INS':
-        this.acuService.sendDataCurso(modo, curso, 0);
-        this.router.navigate(['/escuela/abm-curso']);
-
+        this.acuService.sendDataMovil(modo, movil, 0);
+        this.router.navigate(['/escuela/abm-movil']);
         break;
       case 'UPD':
 
-        this.acuService.sendDataCurso(modo, curso);
-        this.router.navigate(['/escuela/abm-curso']);
+        this.acuService.sendDataMovil(modo, movil);
+        this.router.navigate(['/escuela/abm-movil']);
         break;
       case 'DLT':
-        confirmacionUsuario('Confirmación de Usuario', `Está seguro que desea eliminar el curso: ${curso.TipCurNom}`).then((confirm) => {
+        confirmacionUsuario('Confirmación de Usuario', `Está seguro que desea eliminar el movil: ${movil.MovCod}`).then((confirm) => {
           if (confirm.isConfirmed) {
-            this.acuService.gestionCurso(modo, curso).subscribe((res: any) => {
+            this.acuService.gestionMovil(modo, movil).subscribe((res: any) => {
               console.log('res eli:', res);
 
-              mensajeConfirmacion('Ok', res.Curso.ErrorMessage).then((res2) => {
+              mensajeConfirmacion('Ok', res.Movil.ErrorMessage).then((res2) => {
 
-                this.getCursos(this.filtro);
+                this.getMoviles(this.filtro);
 
               });
 
@@ -91,19 +87,19 @@ export class GestionCursoComponent implements OnInit {
 
   }
 
-  getCursos(TipCurEst?: string) {
+  getMoviles(EscVehEst?: string) {
 
-    this.verCurso = false;
-    this.acuService.getCursos().subscribe((cursos: Curso[]) => {
-      console.log('Cursos: ', cursos);
+    this.verMovil = false;
+    this.acuService.getMoviles().subscribe((moviles: Movil[]) => {
+      console.log('moviles: ', moviles);
 
 
-      this.verCurso = true;
-      const auxCursos = (TipCurEst === '-' || !TipCurEst)
-        ? cursos
-        : cursos.filter(curso => curso.TipCurEst === TipCurEst);
+      this.verMovil = true;
+      const auxMoviles = (EscVehEst === '-' || !EscVehEst)
+        ? moviles
+        : moviles.filter(instructor => instructor.EscVehEst === EscVehEst);
       // Assign the data to the data source for the table to render
-      this.dataSource = new MatTableDataSource(auxCursos);
+      this.dataSource = new MatTableDataSource(auxMoviles);
 
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
@@ -121,7 +117,7 @@ export class GestionCursoComponent implements OnInit {
 
     const filterValue = event.value;
     console.log('filterValue: ', filterValue);
-    this.getCursos(filterValue);
+    this.getMoviles(filterValue);
   }
 
 
@@ -143,8 +139,8 @@ export class GestionCursoComponent implements OnInit {
 
     const estado2 = {
       id: 2,
-      value: 'B',
-      description: 'Baja'
+      value: 'D',
+      description: 'Deshabilitado'
     };
     this.estados.push(estado2);
 
@@ -154,4 +150,3 @@ export class GestionCursoComponent implements OnInit {
   }
 
 }
-

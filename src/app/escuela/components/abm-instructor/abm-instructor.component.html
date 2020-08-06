@@ -28,8 +28,7 @@
                                             <div class="box">
 
                                                 <mat-form-field class="full-width">
-                                                    <input matInput #codigoInstructor placeholder="Identificador"
-                                                        formControlName="escInsId" disabled>
+                                                    <input matInput #codigoInstructor placeholder="Identificador" formControlName="escInsId" disabled>
                                                     <!-- <mat-hint align="end">Cantidad de carácteres:
                                                         {{numeroAlumno.value.length}} / 7 maxlength="7" 
                                                     </mat-hint> -->
@@ -41,8 +40,7 @@
                                             <div class="box">
 
                                                 <mat-form-field class="full-width">
-                                                    <input matInput placeholder="Nombre" formControlName="escInsNom"
-                                                        required>
+                                                    <input matInput placeholder="Nombre" formControlName="escInsNom" required>
                                                     <mat-error *ngIf="escInsNom.hasError('required')">
                                                         Nombre es <strong>requerido</strong>.
                                                     </mat-error>
@@ -67,8 +65,7 @@
                                             <div class="box">
 
                                                 <mat-form-field class="full-width">
-                                                    <input matInput placeholder="Nombre Corto"
-                                                        formControlName="escInsNomCor" required>
+                                                    <input matInput placeholder="Nombre Corto" formControlName="escInsNomCor" required>
                                                     <mat-error *ngIf="escInsNomCor.hasError('required')">
                                                         Nombre Corto es <strong>requerido</strong>.
                                                     </mat-error>
@@ -79,7 +76,7 @@
                                             <div class="box">
 
                                                 <mat-form-field class="full-width">
-                                                    <mat-select formControlName="escInsAct">
+                                                    <mat-select formControlName="escInsAct" placeholder="Está activo?">
                                                         <mat-option value="S">Si</mat-option>
                                                         <mat-option value="N">No</mat-option>
                                                     </mat-select>
@@ -109,11 +106,9 @@
                                             <div class="box">
 
                                                 <mat-form-field class="full-width">
-                                                    <input matInput placeholder="Sociedad Medica"
-                                                        formControlName="escInsSocMed">
+                                                    <input matInput placeholder="Sociedad Medica" formControlName="escInsSocMed">
 
-                                                    <mat-error
-                                                        *ngIf="escInsSocMed.hasError('required') && escInsSocMed.dirty && escInsSocMed.errors">
+                                                    <mat-error *ngIf="escInsSocMed.hasError('required') && escInsSocMed.dirty && escInsSocMed.errors">
                                                         La sociedad médica del instructor <strong>es requerida.</strong>
                                                     </mat-error>
 
@@ -123,8 +118,7 @@
                                         <div class="col-xs-6">
                                             <div class="box">
                                                 <mat-form-field class="full-width">
-                                                    <input matInput placeholder="Nombre Contacto"
-                                                        formControlName="escInsConNom">
+                                                    <input matInput placeholder="Nombre Contacto" formControlName="escInsConNom">
                                                 </mat-form-field>
                                             </div>
                                         </div>
@@ -132,13 +126,13 @@
                                         <div class="col-xs-6">
                                             <div class="box">
                                                 <mat-form-field class="full-width">
-                                                    <input matInput placeholder="Teléfono"
-                                                        formControlName="escInsConTel">
+                                                    <input matInput placeholder="Teléfono" formControlName="escInsConTel">
                                                 </mat-form-field>
                                             </div>
                                         </div>
                                     </div>
 
+                                    <!-- Tabla Ausentismo -->
                                     <mat-divider></mat-divider>
                                     <div class="row">
 
@@ -148,7 +142,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    <div class="row" style="padding-bottom: 20px;">
                                         <div class="col-xs-12">
                                             <div class="box">
                                                 <!-- Magia para tabla dinamica -->
@@ -172,21 +166,13 @@
                                                             <th mat-header-cell *matHeaderCellDef> </th>
                                                             <td mat-cell *matCellDef="let row">
 
-                                                                <ng-container
-                                                                    *ngIf="row.InsLicIni !== null || !(row.modo)">
+                                                                <ng-container *ngIf="row.InsLicIni !== null || !(row.modo)">
 
-                                                                    <button mat-mini-fab matTooltip="Editar alumno"
-                                                                        matTooltipClass="tooltip-blue"
-                                                                        aria-label="Button that shows a red tooltip"
-                                                                        class="button-editar"
-                                                                        (click)="abmItem('UPD', row)">
+                                                                    <button mat-mini-fab matTooltip="Editar alumno" matTooltipClass="tooltip-blue" aria-label="Button that shows a red tooltip" class="button-editar" (click)="abmItem('UPD', row)">
                                                                         <mat-icon>edit</mat-icon>
                                                                     </button>
 
-                                                                    <button mat-mini-fab matTooltip="Eliminar alumno"
-                                                                        matTooltipClass="tooltip-red"
-                                                                        (click)="abmItem('DLT', row)"
-                                                                        style="margin-left: 5px;">
+                                                                    <button mat-mini-fab matTooltip="Eliminar alumno" matTooltipClass="tooltip-red" (click)="abmItem('DLT', row)" style="margin-left: 5px;">
                                                                         <mat-icon>delete</mat-icon>
                                                                     </button>
                                                                 </ng-container>
@@ -198,24 +184,19 @@
                                                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Desde
                                                             </th>
                                                             <td mat-cell *matCellDef="let row">
-                                                                <ng-container
-                                                                    *ngIf="row.InsLicIni !== null && row.modo !== 'UPD'  ; else elseTemplate">
-                                                                    {{row.InsLicIni | date:'dd/MM/yyyy' }}
+                                                                <ng-container *ngIf="row.InsLicIni !== null && row.modo !== 'UPD'  ; else elseTemplate">
+                                                                    {{row.InsLicIni | fechaString}}
+                                                                    <!-- | date:'dd/MM/yyyy' }} -->
                                                                 </ng-container>
                                                                 <ng-template #elseTemplate>
 
-                                                                    <mat-form-field appearance="legacy"
-                                                                        style="padding-right: 10px;">
-                                                                        <input matInput [matDatepicker]="dpDesde"
-                                                                            formControlName="insLicIni"
-                                                                            (dateChange)="validarFechaInicial('change', $event)">
-                                                                        <mat-datepicker-toggle matSuffix
-                                                                            [for]="dpDesde">
+                                                                    <mat-form-field appearance="legacy" style="padding-right: 10px;">
+                                                                        <input matInput [matDatepicker]="dpDesde" formControlName="insLicIni" (dateChange)="validarFechaInicial('change', $event)">
+                                                                        <mat-datepicker-toggle matSuffix [for]="dpDesde">
                                                                         </mat-datepicker-toggle>
                                                                         <mat-datepicker #dpDesde></mat-datepicker>
 
-                                                                        <mat-error
-                                                                            *ngIf="insLicIni.hasError('required') && insLicIni.dirty && insLicIni.errors">
+                                                                        <mat-error *ngIf="insLicIni.hasError('required') && insLicIni.dirty && insLicIni.errors">
                                                                             La fecha inicial <strong>es
                                                                                 requerida.</strong>
                                                                         </mat-error>
@@ -231,18 +212,16 @@
                                                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Hasta
                                                             </th>
                                                             <td mat-cell *matCellDef="let row">
-                                                                <ng-container
-                                                                    *ngIf="row.InsLicIni !== null && row.modo !== 'UPD' ; else elseTemplate">
-                                                                    {{row.InsLicFin  | date:'dd/MM/yyyy' }}
+                                                                <ng-container *ngIf="row.InsLicIni !== null && row.modo !== 'UPD' ; else elseTemplate">
+
+                                                                    {{ row.InsLicFin | fechaString }}
+                                                                    <!-- {{row.InsLicFin | date:'dd/MM/yyyy' }} -->
                                                                 </ng-container>
                                                                 <ng-template #elseTemplate>
 
-                                                                    <mat-form-field appearance="legacy"
-                                                                        style="padding-right: 10px;">
-                                                                        <input matInput [matDatepicker]="dpHasta"
-                                                                            formControlName="insLicFin">
-                                                                        <mat-datepicker-toggle matSuffix
-                                                                            [for]="dpHasta">
+                                                                    <mat-form-field appearance="legacy" style="padding-right: 10px;">
+                                                                        <input matInput [matDatepicker]="dpHasta" formControlName="insLicFin">
+                                                                        <mat-datepicker-toggle matSuffix [for]="dpHasta">
                                                                         </mat-datepicker-toggle>
                                                                         <mat-datepicker #dpHasta></mat-datepicker>
 
@@ -261,25 +240,20 @@
                                                             </th>
                                                             <td mat-cell *matCellDef="let row">
 
-                                                                <ng-container
-                                                                    *ngIf="row.InsLicIni !== null && row.modo !== 'UPD' ; else elseTemplate">
+                                                                <ng-container *ngIf="row.InsLicIni !== null && row.modo !== 'UPD' ; else elseTemplate">
                                                                     {{ row.EscEstDsc }}
                                                                 </ng-container>
                                                                 <ng-template #elseTemplate>
 
 
-                                                                    <mat-form-field appearance="legacy"
-                                                                        style="padding-right: 10px;">
+                                                                    <mat-form-field appearance="legacy" style="padding-right: 10px;">
                                                                         <!-- [(ngModel)]="estadoSeleccionado" -->
-                                                                        <mat-select formControlName="escEstId"
-                                                                            [(ngModel)]="estado" required>
-                                                                            <mat-option *ngFor="let e of estados"
-                                                                                [value]="e">
+                                                                        <mat-select formControlName="escEstId" [(ngModel)]="estado" required>
+                                                                            <mat-option *ngFor="let e of estados" [value]="e">
                                                                                 {{ e.EscEstDsc }}
                                                                             </mat-option>
                                                                         </mat-select>
-                                                                        <mat-error
-                                                                            *ngIf="escEstId.hasError('required')">
+                                                                        <mat-error *ngIf="escEstId.hasError('required')">
                                                                             Motivo es <strong>requerido</strong>.
                                                                         </mat-error>
                                                                     </mat-form-field>
@@ -296,16 +270,13 @@
                                                             <th mat-header-cell *matHeaderCellDef mat-sort-header>
                                                                 Observaciones </th>
                                                             <td mat-cell *matCellDef="let row">
-                                                                <ng-container
-                                                                    *ngIf="row.InsLicIni !== null && row.modo !== 'UPD' ; else elseTemplate">
+                                                                <ng-container *ngIf="row.InsLicIni !== null && row.modo !== 'UPD' ; else elseTemplate">
                                                                     {{row.InsLicObs}}
                                                                 </ng-container>
                                                                 <ng-template #elseTemplate>
 
-                                                                    <mat-form-field appearance="legacy"
-                                                                        style="padding-right: 10px;">
-                                                                        <input type="text" matInput
-                                                                            formControlName="insLicObs">
+                                                                    <mat-form-field appearance="legacy" style="padding-right: 10px;">
+                                                                        <input type="text" matInput formControlName="insLicObs">
                                                                     </mat-form-field>
                                                                 </ng-template>
                                                             </td>
@@ -317,17 +288,11 @@
 
                                                                 <ng-container *ngIf="row.modo">
 
-                                                                    <button mat-mini-fab matTooltip="Confirmar"
-                                                                        matTooltipClass="tooltip-blue"
-                                                                        class="button-editar"
-                                                                        (click)="confirmar(true, row)">
+                                                                    <button mat-mini-fab matTooltip="Confirmar" matTooltipClass="tooltip-blue" class="button-editar" (click)="confirmar(true, row)">
                                                                         <mat-icon>check</mat-icon>
                                                                     </button>
 
-                                                                    <button mat-mini-fab matTooltip="Cancelar"
-                                                                        matTooltipClass="tooltip-red"
-                                                                        (click)="confirmar(false, row)"
-                                                                        style="margin-left: 5px;">
+                                                                    <button mat-mini-fab matTooltip="Cancelar" matTooltipClass="tooltip-red" (click)="confirmar(false, row)" style="margin-left: 5px;">
                                                                         <mat-icon>close</mat-icon>
                                                                     </button>
 
@@ -347,6 +312,276 @@
                                     </div>
 
 
+                                    <!-- Tabla Horario -->
+                                    <mat-divider></mat-divider>
+                                    <div class="row">
+
+                                        <div class="col-xs-12">
+                                            <div class="box">
+                                                <h3>Horario</h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <div class="box">
+                                                <!-- Magia para tabla dinamica -->
+
+                                                <mat-button-toggle-group style="margin-bottom: 10px;">
+                                                    <mat-button-toggle (click)="abmHorario('INS', null)">
+                                                        Agregar Horario</mat-button-toggle>
+                                                </mat-button-toggle-group>
+
+                                                <div class="mat-elevation-z8">
+                                                    <table mat-table [dataSource]="horarioDataSource" matSort #horarioSort="matSort">
+
+                                                        <!-- 'actions-abm',
+                                                            'escInsDia',
+                                                            'escInsM1De',
+
+                                                            'escInsM1Ha',
+                                                            'escInsT1De',
+                                                            'escInsT1Ha',
+                                                            'escInsMovMa',
+                                                            'escInsMovTa',
+                                                            'confirmar-cancelar' -->
+
+                                                        <ng-container matColumnDef="actions-abm">
+                                                            <th mat-header-cell *matHeaderCellDef> </th>
+                                                            <td mat-cell *matCellDef="let row">
+
+                                                                <ng-container *ngIf="row.EscInsDia !== null || !(row.modo)">
+
+                                                                    <button mat-mini-fab matTooltip="Editar alumno" matTooltipClass="tooltip-blue" aria-label="Button that shows a red tooltip" class="button-editar" (click)="abmHorario('UPD', row)">
+                                                                        <mat-icon>edit</mat-icon>
+                                                                    </button>
+
+                                                                    <button mat-mini-fab matTooltip="Eliminar alumno" matTooltipClass="tooltip-red" (click)="abmHorario('DLT', row)" style="margin-left: 5px;">
+                                                                        <mat-icon>delete</mat-icon>
+                                                                    </button>
+                                                                </ng-container>
+                                                            </td>
+                                                        </ng-container>
+
+                                                        <!-- Día Column -->
+                                                        <ng-container matColumnDef="escInsDia">
+                                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Día
+                                                            </th>
+                                                            <td mat-cell *matCellDef="let row">
+                                                                <ng-container *ngIf="row.EscInsDia !== null && row.modo !== 'UPD'  ; else elseTemplate">
+                                                                    {{row.EscInsDia }}
+                                                                    <!-- | date:'dd/MM/yyyy' }} -->
+                                                                </ng-container>
+                                                                <ng-template #elseTemplate>
+
+                                                                    <mat-form-field class="table-form-field" appearance="legacy">
+                                                                        <!-- [(ngModel)]="estadoSeleccionado" -->
+
+                                                                        <mat-select formControlName="escInsDia" [(value)]="dia" (selectionChange)="existeDia(dia)" required>
+                                                                            <mat-option *ngFor="let d of dias" [value]="d">
+                                                                                {{ d}}
+                                                                            </mat-option>
+                                                                        </mat-select>
+                                                                        <mat-error *ngIf="escInsDia.hasError('required') && escInsDia.dirty && escInsDia.errors">
+                                                                            El día <strong>es
+                                                                                requerido.</strong>
+                                                                        </mat-error>
+                                                                    </mat-form-field>
+
+
+
+                                                                </ng-template>
+
+                                                            </td>
+                                                        </ng-container>
+
+                                                        <!-- Mañana Desde Column -->
+                                                        <ng-container matColumnDef="escInsM1De">
+                                                            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                                                Mañana Desde
+                                                            </th>
+                                                            <td mat-cell *matCellDef="let row">
+                                                                <ng-container *ngIf="row.EscInsDia !== null && row.modo !== 'UPD' ; else elseTemplate">
+                                                                    {{ row.EscInsM1De | horaNumericString}}
+                                                                </ng-container>
+                                                                <ng-template #elseTemplate>
+
+                                                                    <mat-form-field class="table-form-field" appearance="legacy">
+                                                                        <input matInput class="example-right-align" formControlName="escInsM1De">
+                                                                        <span matSuffix>:00</span>
+                                                                    </mat-form-field>
+
+                                                                </ng-template>
+                                                            </td>
+                                                        </ng-container>
+
+                                                        <!-- Mañana Hasta Column -->
+                                                        <ng-container matColumnDef="escInsM1Ha">
+                                                            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                                                Mañana Hasta
+                                                            </th>
+                                                            <td mat-cell *matCellDef="let row">
+
+                                                                <ng-container *ngIf="row.EscInsDia !== null && row.modo !== 'UPD' ; else elseTemplate">
+                                                                    {{ row.EscInsM1Ha | horaNumericString}}
+                                                                </ng-container>
+                                                                <ng-template #elseTemplate>
+
+
+                                                                    <mat-form-field class="table-form-field" appearance="legacy">
+                                                                        <!-- [(ngModel)]="estadoSeleccionado" -->
+
+                                                                        <input matInput class="example-right-align" formControlName="escInsM1Ha">
+                                                                        <span matSuffix>:00</span>
+
+                                                                    </mat-form-field>
+
+                                                                </ng-template>
+
+
+                                                            </td>
+
+                                                        </ng-container>
+
+                                                        <!-- Tarde Desde Column escInsT1De -->
+                                                        <ng-container matColumnDef="escInsT1De">
+                                                            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                                                Tarde Desde
+                                                            </th>
+                                                            <td mat-cell *matCellDef="let row">
+
+                                                                <ng-container *ngIf="row.EscInsDia !== null && row.modo !== 'UPD' ; else elseTemplate">
+                                                                    {{ row.EscInsT1De | horaNumericString}}
+                                                                </ng-container>
+                                                                <ng-template #elseTemplate>
+
+
+                                                                    <mat-form-field class="table-form-field" appearance="legacy">
+
+                                                                        <input matInput class="example-right-align" formControlName="escInsT1De">
+                                                                        <span matSuffix>:00</span>
+
+                                                                    </mat-form-field>
+
+                                                                </ng-template>
+
+
+                                                            </td>
+
+                                                        </ng-container>
+
+                                                        <!-- Tarde Hasta Column escInsT1Ha -->
+                                                        <ng-container matColumnDef="escInsT1Ha">
+                                                            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                                                Tarde Hasta
+                                                            </th>
+                                                            <td mat-cell *matCellDef="let row">
+
+                                                                <ng-container *ngIf="row.EscInsDia !== null && row.modo !== 'UPD' ; else elseTemplate">
+                                                                    {{ row.EscInsT1Ha | horaNumericString}}
+                                                                </ng-container>
+                                                                <ng-template #elseTemplate>
+
+
+                                                                    <mat-form-field class="table-form-field" appearance="legacy">
+
+                                                                        <input matInput class="example-right-align" formControlName="escInsT1Ha">
+                                                                        <span matSuffix>:00</span>
+
+                                                                    </mat-form-field>
+
+                                                                </ng-template>
+
+
+                                                            </td>
+
+                                                        </ng-container>
+
+                                                        <!-- Móvil Mañana Column escInsMovMa -->
+                                                        <ng-container matColumnDef="escInsMovMa">
+                                                            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                                                Móvil Mañana
+                                                            </th>
+                                                            <td mat-cell *matCellDef="let row">
+
+                                                                <ng-container *ngIf="row.EscInsDia !== null && row.modo !== 'UPD' ; else elseTemplate">
+                                                                    {{ row.EscInsMovMa }}
+                                                                </ng-container>
+                                                                <ng-template #elseTemplate>
+
+
+                                                                    <mat-form-field class="table-form-field" appearance="legacy">
+                                                                        <!-- [(ngModel)]="estadoSeleccionado" -->
+
+                                                                        <input matInput class="example-right-align" formControlName="escInsMovMa">
+
+                                                                    </mat-form-field>
+
+                                                                </ng-template>
+
+
+                                                            </td>
+
+                                                        </ng-container>
+                                                        <!-- Móvil Tarde Column escInsMovTa -->
+                                                        <ng-container matColumnDef="escInsMovTa">
+                                                            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                                                Móvil Tarde
+                                                            </th>
+                                                            <td mat-cell *matCellDef="let row">
+
+                                                                <ng-container *ngIf="row.EscInsDia !== null && row.modo !== 'UPD' ; else elseTemplate">
+                                                                    {{ row.EscInsMovTa }}
+                                                                </ng-container>
+                                                                <ng-template #elseTemplate>
+
+
+                                                                    <mat-form-field class="table-form-field" appearance="legacy">
+                                                                        <!-- [(ngModel)]="estadoSeleccionado" -->
+
+                                                                        <input matInput class="example-right-align" formControlName="escInsMovTa">
+
+
+                                                                    </mat-form-field>
+
+                                                                </ng-template>
+
+
+                                                            </td>
+
+                                                        </ng-container>
+
+                                                        <ng-container matColumnDef="confirmar-cancelar">
+                                                            <th mat-header-cell *matHeaderCellDef> </th>
+                                                            <td mat-cell *matCellDef="let row">
+
+                                                                <ng-container *ngIf="row.modo">
+
+                                                                    <button mat-mini-fab matTooltip="Confirmar" matTooltipClass="tooltip-blue" class="button-editar" (click)="confirmar(true, null, row)">
+                                                                        <mat-icon>check</mat-icon>
+                                                                    </button>
+
+                                                                    <button mat-mini-fab matTooltip="Cancelar" matTooltipClass="tooltip-red" (click)="confirmar(false, null, row)" style="margin-left: 5px;">
+                                                                        <mat-icon>close</mat-icon>
+                                                                    </button>
+
+                                                                </ng-container>
+                                                            </td>
+                                                        </ng-container>
+
+                                                        <tr mat-header-row *matHeaderRowDef="horarioDisplayedColumns">
+                                                        </tr>
+                                                        <tr mat-row *matRowDef="let row; columns: horarioDisplayedColumns;">
+                                                        </tr>
+                                                    </table>
+
+                                                    <mat-paginator #horarioPaginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
 
                                 </div>
                             </div>
@@ -355,8 +590,7 @@
                     <mat-card-actions align="end">
 
 
-                        <button mat-raised-button color="primary" type="button" [disabled]="instructorForm.invalid"
-                            (click)="guardarInstructor($event)">Guardar curso</button>
+                        <button mat-raised-button color="primary" type="button" [disabled]="instructorForm.invalid" (click)="guardarInstructor($event)">Guardar curso</button>
                         <button mat-raised-button (click)="onNoClick()">Cancelar</button>
                     </mat-card-actions>
                 </form>

@@ -12,6 +12,7 @@ import { Instructor } from '@core/model/instructor.model';
 import { AgendaClase } from '@core/model/agenda-clase.model';
 import { ClaseEstimada } from '../model/clase-estimada.model';
 import { Inscripcion } from '../model/inscripcion.model';
+import { Movil } from '../model/movil.model';
 
 
 export interface LiberarParameters {
@@ -51,6 +52,11 @@ export class AcuService {
   // esto va al cursoService
   private cursoDataSource = new BehaviorSubject({ modo: 'INS', curso: {}, id: 0 });
   cursoCurrentData = this.cursoDataSource.asObservable();
+
+  // esto va al movilService
+  private movilDataSource = new BehaviorSubject({ modo: 'INS', movil: {}, id: 0 });
+  movilCurrentData = this.movilDataSource.asObservable();
+
 
   // esto va al instructorService
   private instructorDataSource = new BehaviorSubject({ modo: 'INS', instructor: {}, id: 0 });
@@ -378,6 +384,7 @@ export class AcuService {
   obtenerInscripciones(pageSize: number, pageNumber: number, filtro: string) {
     return this.http.get(`${environment.url_ws}/wsGetInscripciones?PageSize=${pageSize}&PageNumber=${pageNumber}&Filtro=${filtro}`);
   }
+
   obtenerAlumnos(pageSize: number, pageNumber: number, filtro: string) {
     return this.http.get(`${environment.url_ws}/wsGetAlumnos?PageSize=${pageSize}&PageNumber=${pageNumber}&Filtro=${filtro}`);
   }
@@ -396,6 +403,16 @@ export class AcuService {
       Curso: {
         Mode: mode,
         Curso: curso
+      }
+    });
+  }
+
+
+  gestionMovil(mode: string, movil: Movil) {
+    return this.http.post(`${environment.url_ws}/wsGestionMovil`, {
+      Curso: {
+        Mode: mode,
+        Movil: movil
       }
     });
   }
@@ -424,6 +441,10 @@ export class AcuService {
 
     // return this.http.post(`${environment.url_ws}/wsObtenerCurso`, { TipCurId });
 
+  }
+
+  getMoviles() {
+    return this.http.get(`${environment.url_ws}/wsGetMoviles`);
   }
 
   getDepartamentos() {
@@ -575,6 +596,13 @@ export class AcuService {
 
     const data: { modo: string, curso: Curso, id: number } = (id) ? { modo, curso, id } : { modo, curso, id: 0 };
     this.cursoDataSource.next(data);
+
+  }
+
+  sendDataMovil(modo: string, movil: Movil, id?: number) {
+
+    const data: { modo: string, movil: Movil, id: number } = (id) ? { modo, movil, id } : { modo, movil, id: 0 };
+    this.movilDataSource.next(data);
 
   }
 
