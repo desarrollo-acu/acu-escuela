@@ -40,4 +40,6 @@ export interface AgendaClase {
     disponibilidadViernes?: string[];
     disponibilidadSabado?: string[];
     planDeClases?: ClaseEstimada;
+
+    UsrId?: string;
 }

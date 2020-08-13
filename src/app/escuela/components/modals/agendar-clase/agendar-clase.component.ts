@@ -323,6 +323,8 @@ export class AgendarClaseComponent implements OnInit {
       EsAgCuDetAviso: this.aviso.value,
       EsAgCuDetAvisoOld: this.agendaClase.EsAgCuDetAvisoOld,
 
+      UsrId: localStorage.getItem('UsrId')
+
 
 
     }

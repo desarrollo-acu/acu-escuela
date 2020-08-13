@@ -40,7 +40,7 @@ export class LoginComponent implements OnInit {
       this.showSppiner = false;
       if (res.Login.LoginOk) {
         mensajeConfirmacion('Excelente!', res.Login.Mensaje);
-
+        localStorage.setItem('UsrId', this.userField.value);
         this.router.navigate(['/escuela/agenda-movil']);
 
       } else {
