@@ -1,6 +1,6 @@
 import { AbstractControl, ValidatorFn, AsyncValidatorFn, ValidationErrors } from '@angular/forms';
 
-import { AcuService } from 'src/app/core/services/acu.service';
+import { AlumnoService } from '@core/services/alumno.service';
 
 import { FormGroup } from '@angular/forms';
 
@@ -8,8 +8,8 @@ export class MyValidators {
 
   existeAlumno;
 
-  constructor(private acuService: AcuService) {
-    this.existeAlumno = aluNro => this.acuService.existeAlumno(aluNro);
+  constructor(private alumnoService: AlumnoService) {
+    this.existeAlumno = aluNro => this.alumnoService.existeAlumno(aluNro);
   }
 
 
@@ -189,10 +189,10 @@ function validarRUC(RUC: number): boolean {
 
 export class FuncionesAuxiliares {
 
-  constructor(private acuService: AcuService) { }
+  constructor(private alumnoService: AlumnoService) { }
 
   public existeAlumno(aluNro: number) {
-    return this.acuService.existeAlumno(aluNro);
+    return this.alumnoService.existeAlumno(aluNro);
   }
 
 }

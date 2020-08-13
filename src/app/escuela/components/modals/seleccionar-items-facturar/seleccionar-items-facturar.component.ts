@@ -12,6 +12,9 @@ import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material/dial
 
 import { InscripcionCursoComponent } from '../inscripcion-curso/inscripcion-curso.component';
 import { confirmacionUsuario } from '@utils/sweet-alert';
+import { Prefactura } from '@core/model/prefactura.model';
+import { InscripcionService } from '@core/services/inscripcion.service';
+import { openSamePDF } from '../../../../utils/utils-functions';
 
 export interface FacturaItemData {
   TipCurId: number;
@@ -25,7 +28,7 @@ export interface FacturaItemData {
   styleUrls: ['./seleccionar-items-facturar.component.scss']
 })
 export class SeleccionarItemsFacturarComponent implements OnInit {
-  displayedColumns: string[] = ['actions', 'EscItemCod', 'EscItemDesc'];
+  displayedColumns: string[] = ['actions', 'EscItemCod', 'EscItemDesc', 'prefactura'];
   dataSource: MatTableDataSource<FacturaItemData>;
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -44,16 +47,19 @@ export class SeleccionarItemsFacturarComponent implements OnInit {
 
   titulo: string;
   esFactura: boolean;
+  prefactura: Prefactura;
 
   constructor(
     public dialogRef: MatDialogRef<InscripcionCursoComponent>,
     public dialog: MatDialog,
+    public inscripcionService: InscripcionService,
     @Inject(MAT_DIALOG_DATA) public data: any) {
 
     console.log('this.data: ', this.data);
 
 
     this.filtro = this.data.filtro;
+    this.prefactura = this.data.prefactura;
 
     this.titulo = this.data.titulo;
     this.esFactura = this.data.esFactura;
@@ -77,8 +83,29 @@ export class SeleccionarItemsFacturarComponent implements OnInit {
     }
   }
 
+  cerrar(item: any) {
+
+    this.verPrefactura(item);
+
+    confirmacionUsuario('Confirmar factura', 'Se generará la factura. ¿Confirma continuar?').then(confirma => {
+      console.log('confirma selectr item: ', confirma);
+
+      if (confirma.isConfirmed) {
+
+        const resp: any = {
+          TipCurId: item.TipCurId,
+          EscItemCod: item.EscItemCod,
+          EscItemDesc: item.EscItemDesc,
+          EscCurIteClaAdi: item.EscCurIteClaAdi,
+          prefactura: this.prefactura,
+        };
+
+        this.dialogRef.close(resp);
+      }
+    });
 
 
+  }
 
   onNoClick(): void {
 
@@ -93,6 +120,18 @@ export class SeleccionarItemsFacturarComponent implements OnInit {
     } else {
       this.dialogRef.close();
     }
+  }
+
+  verPrefactura(item: any) {
+    console.log('item: ', item);
+    this.prefactura.Lineas = [];
+    this.prefactura.Lineas.push({ ItemCod: item.EscItemCod });
+    this.inscripcionService.getPDFPrefactura(this.prefactura).subscribe((pdf: any) => {
+
+      openSamePDF(pdf, 'Prefactura');
+
+    });
+
   }
 
 

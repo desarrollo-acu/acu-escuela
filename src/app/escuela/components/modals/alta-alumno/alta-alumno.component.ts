@@ -3,7 +3,8 @@ import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AgendarClaseComponent } from '../agendar-clase/agendar-clase.component';
 import Swal from 'sweetalert2';
-import { AcuService } from 'src/app/core/services/acu.service';
+import { AcuService } from '@core/services/acu.service';
+import { AlumnoService } from '@core/services/alumno.service';
 import { SeleccionarSocioComponent } from '../seleccionar-socio/seleccionar-socio.component';
 
 import { Localidad } from '@core/model/localidad.model';
@@ -11,7 +12,8 @@ import { Departamento } from '@core/model/departamento.model';
 import { Alumno } from '@core/model/alumno.model';
 
 
-import { validarCIConDV } from 'src/app/utils/custom-validator';
+import { validarCIConDV } from '@utils/custom-validator';
+import { mensajeConfirmacion } from '@utils/sweet-alert';
 
 @Component({
   selector: 'app-alta-alumno',
@@ -43,6 +45,7 @@ export class AltaAlumnoComponent {
     public dialogRef: MatDialogRef<AgendarClaseComponent>,
     public dialog: MatDialog,
     private acuService: AcuService,
+    private alumnoService: AlumnoService,
     private fb: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: any) {
 
@@ -90,9 +93,6 @@ export class AltaAlumnoComponent {
 
     console.log('Submit, form valid: ', this.alumnoForm.valid);
     console.log('Submit, form value: ', this.alumnoForm.value);
-    // console.log('Submit, form value.cursoId: ', this.alumnoForm.value.cursoId);
-
-    // const existe: boolean = JSON.parse(localStorage.getItem('existe'));
 
     if (this.alumnoForm.valid) {
       console.log('alumnoForm.value: ', this.alumnoForm.value);
@@ -121,12 +121,12 @@ export class AltaAlumnoComponent {
       console.log('alumno: ', alumno);
       const log = JSON.stringify(alumno);
       console.log('alumno og: ', log);
-      this.acuService.gestionAlumno('INS', alumno) // guardarAgendaInstructor(this.inscripcionCurso)
+      this.alumnoService.gestionAlumno('INS', alumno)
         .subscribe((res: any) => {
           console.log('res: ', res);
 
           if (res.Alumno.ErrorCode === 0) {
-            this.mensajeConfirmacion('Confirmado!', res.Alumno.ErrorMessage).then((res2) => {
+            mensajeConfirmacion('Confirmado!', res.Alumno.ErrorMessage).then((res2) => {
               if (res2.dismiss === Swal.DismissReason.timer) {
                 console.log('Cierro  con el timer');
               }
@@ -142,8 +142,6 @@ export class AltaAlumnoComponent {
               text: res.Alumno.ErrorMessage
             });
           }
-          // console.log('mensaje: ', res.mensaje);
-          // this.inscripcionCurso.mensaje = res.mensaje;
         });
 
 
@@ -154,18 +152,6 @@ export class AltaAlumnoComponent {
     this.dialogRef.close();
   }
 
-  mensajeConfirmacion(title, text) {
-    return Swal.fire({
-      title,
-      text,
-      icon: 'success',
-      timer: 5000,
-      showConfirmButton: false,
-      onClose: () => {
-        console.log('Cieerro antes de timer');
-      }
-    });
-  }
 
   seleccionarSocio(parametro) {
     console.log('1)tipo: FREE');
@@ -194,10 +180,8 @@ export class AltaAlumnoComponent {
 
         if (result) {
           this.socio = result;
-          // this.socId = result.SocId;
           const socUltimoPago = `${result.SocMesPgo}/${result.SocAnoPgo}`;
           this.alumnoForm.patchValue({
-            // socId: result.SocId,
             socNom1: result.SocNom1,
             socApe1: result.SocApe1,
             socApe2: result.SocApe2,

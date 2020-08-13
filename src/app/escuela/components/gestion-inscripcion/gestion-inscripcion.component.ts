@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { AcuService } from '@core/services/acu.service';
+import { InscripcionService } from '@core/services/inscripcion.service';
 import { Inscripcion } from '@core/model/inscripcion.model';
 import { Router } from '@angular/router';
 import { confirmacionUsuario, mensajeConfirmacion } from '@utils/sweet-alert';
@@ -33,7 +33,7 @@ export class GestionInscripcionComponent implements OnInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
-    private acuService: AcuService,
+    private inscripcionService: InscripcionService,
     private router: Router) {
     console.log('constructor gestion-inscripcion');
 
@@ -69,7 +69,7 @@ export class GestionInscripcionComponent implements OnInit {
 
   verDetalle(inscripcion: Inscripcion) {
 
-    this.acuService.sendDataInscripcion(inscripcion, 0);
+    this.inscripcionService.sendDataInscripcion(inscripcion, 0);
     this.router.navigate(['/escuela/abm-inscripcion']);
   }
 
@@ -81,7 +81,7 @@ export class GestionInscripcionComponent implements OnInit {
       pageNumber = 1;
     }
     this.verInscripciones = false;
-    this.acuService.obtenerInscripciones(pageSize, pageNumber, filtro)
+    this.inscripcionService.obtenerInscripciones(pageSize, pageNumber, filtro)
       .subscribe((res: any) => {
 
         console.log('getInscripciones : ', res);

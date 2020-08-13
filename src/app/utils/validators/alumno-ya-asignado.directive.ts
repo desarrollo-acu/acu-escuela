@@ -3,12 +3,12 @@ import { AsyncValidatorFn, AsyncValidator, NG_ASYNC_VALIDATORS, AbstractControl,
 
 import { map } from 'rxjs/operators';
 
-import { AcuService } from 'src/app/core/services/acu.service';
+import { AlumnoService } from '@core/services/alumno.service';
 import { Observable } from 'rxjs';
 
-export function alumnoYaAsignadoValidator(acuService: AcuService): AsyncValidatorFn {
+export function alumnoYaAsignadoValidator(alumnoService: AlumnoService): AsyncValidatorFn {
   return (control: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> => {
-    return acuService.alumnoYaAsignado(control.value).pipe(
+    return alumnoService.alumnoYaAsignado(control.value).pipe(
       map(
         (res: any) => {
           console.log('res: ', res);
@@ -26,9 +26,9 @@ export function alumnoYaAsignadoValidator(acuService: AcuService): AsyncValidato
   providers: [{ provide: NG_ASYNC_VALIDATORS, useExisting: AlumnoYaAsignadoValidatorDirective, multi: true }]
 })
 export class AlumnoYaAsignadoValidatorDirective implements AsyncValidator {
-  constructor(private acuService: AcuService) { }
+  constructor(private alumnoService: AlumnoService) { }
 
   validate(control: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> {
-    return alumnoYaAsignadoValidator(this.acuService)(control);
+    return alumnoYaAsignadoValidator(this.alumnoService)(control);
   }
 }

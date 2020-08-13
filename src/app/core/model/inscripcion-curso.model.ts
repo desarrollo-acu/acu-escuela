@@ -50,6 +50,7 @@ export interface InscripcionCurso {
     reglamentoEscuela?: boolean;
     condicionesCurso?: boolean;
     eLearning?: boolean;
+    UsrId?: string;
 
 
 }

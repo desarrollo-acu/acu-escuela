@@ -44,8 +44,5 @@ import { FechaStringPipe } from './pipes/fecha-string.pipe';
     FechaStringPipe
 
   ],
-  // providers: [
-  //   { provide: LOCALE_ID, useValue: 'es-UY' }
-  // ],
 })
 export class SharedModule { }

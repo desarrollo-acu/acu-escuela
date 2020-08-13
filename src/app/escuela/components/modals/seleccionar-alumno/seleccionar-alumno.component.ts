@@ -9,7 +9,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { AgendarClaseComponent } from '../agendar-clase/agendar-clase.component';
 import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AcuService } from 'src/app/core/services/acu.service';
+import { AlumnoService } from 'src/app/core/services/alumno.service';
 import { Alumno } from '@core/model/alumno.model';
 
 @Component({
@@ -47,7 +47,7 @@ export class SeleccionarAlumnoComponent implements OnInit { // , AfterViewInit, 
   constructor(
     public dialogRef: MatDialogRef<AgendarClaseComponent>,
     public dialog: MatDialog,
-    private acuService: AcuService,
+    private alumnoService: AlumnoService,
     @Inject(MAT_DIALOG_DATA) public data: any) {
 
     // this.alumnos = this.data.alumnos;
@@ -123,7 +123,7 @@ export class SeleccionarAlumnoComponent implements OnInit { // , AfterViewInit, 
       pageNumber = 1;
     }
 
-    this.acuService.obtenerAlumnos(pageSize, pageNumber, filtro)
+    this.alumnoService.obtenerAlumnos(pageSize, pageNumber, filtro)
       .subscribe((res: any) => {
         console.log('res: ', res);
         console.log('5) filtro: ', filtro);

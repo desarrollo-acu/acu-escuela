@@ -16,6 +16,7 @@ import { InscripcionCursoComponent } from '../inscripcion-curso/inscripcion-curs
 import { ClasesEstimadasDetalleComponent } from '../clases-estimadas-detalle/clases-estimadas-detalle.component';
 
 import { ClaseEstimada, ClaseEstimadaDetalle } from '@core/model/clase-estimada.model';
+import { openSamePDF } from '../../../../utils/utils-functions';
 
 @Component({
   selector: 'app-clases-estimadas',
@@ -62,9 +63,7 @@ export class ClasesEstimadasComponent implements OnInit {
 
     this.acuService.getPDFPlanDeClases(claseEstimada).subscribe((pdf: any) => {
 
-      this.acuService.openSamePDF(pdf, 'PlanDeClases');
-      // this.acuService.getPDF(pdf, 'planDeClases');
-
+      openSamePDF(pdf, 'PlanDeClases');
 
     });
 

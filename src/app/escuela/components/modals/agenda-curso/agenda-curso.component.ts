@@ -6,6 +6,7 @@ import { SeleccionarAlumnoComponent } from '../seleccionar-alumno/seleccionar-al
 import { SeleccionarCursoComponent } from '../seleccionar-curso/seleccionar-curso.component';
 import { AcuService } from 'src/app/core/services/acu.service';
 import { Curso } from '@core/model/curso.model';
+import { CursoService } from '../../../../core/services/curso.service';
 
 
 
@@ -52,6 +53,7 @@ export class AgendaCursoComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<AgendaCursoComponent>,
     private acuService: AcuService,
+    private cursoService: CursoService,
     public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: any) {
 
@@ -134,7 +136,7 @@ export class AgendaCursoComponent implements OnInit, OnDestroy {
 
   seleccionarCurso() {
 
-    this.acuService.getCursos()
+    this.cursoService.getCursos()
       .subscribe((cursos: Curso[]) => {
         console.log('Cursos: ', cursos);
 
@@ -181,7 +183,7 @@ export class AgendaCursoComponent implements OnInit, OnDestroy {
     console.log('cursoId: ', this.cursoIdField.value);
     if (this.cursoIdField.value !== 0) {
 
-      this.acuService.getCurso(this.cursoIdField.value)
+      this.cursoService.getCurso(this.cursoIdField.value)
         .subscribe((res: any) => {
           console.log('res: ', res);
           this.agendaCurso.TipCurId = res.TipCurId;

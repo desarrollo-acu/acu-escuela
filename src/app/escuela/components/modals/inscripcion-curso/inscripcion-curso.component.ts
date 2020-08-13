@@ -21,6 +21,14 @@ import { mensajeConfirmacion } from '@utils/sweet-alert';
 
 import { Alumno } from '@core/model/alumno.model';
 import { AlumnoYaAsignadoValidatorDirective } from '@utils/validators/alumno-ya-asignado.directive';
+import { formatCI } from '@utils/utils-functions';
+import { InscripcionService } from '@core/services/inscripcion.service';
+import { CursoService } from '@core/services/curso.service';
+import { AlumnoService } from '@core/services/alumno.service';
+import { InstructorService } from '@core/services/instructor.service';
+import { confirmacionUsuario } from '../../../../utils/sweet-alert';
+import { Prefactura } from '../../../../core/model/prefactura.model';
+import { openSamePDF } from '../../../../utils/utils-functions';
 
 
 @Component({
@@ -62,6 +70,10 @@ export class InscripcionCursoComponent {
     private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<AgendaMovilComponent>,
     private acuService: AcuService,
+    private inscripcionService: InscripcionService,
+    private instructorService: InstructorService,
+    private cursoService: CursoService,
+    private alumnoService: AlumnoService,
     public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: any) {
     console.log('Estoy en el constructor de agenda-curso, la res es: ', this.data);
@@ -172,7 +184,7 @@ export class InscripcionCursoComponent {
     let cursos = JSON.parse(localStorage.getItem('Cursos'));
 
     if (!cursos) {
-      this.acuService.getCursos()
+      this.cursoService.getCursos()
         .subscribe((res: any) => {
           console.log('Cursos: ', res);
 
@@ -227,7 +239,7 @@ export class InscripcionCursoComponent {
     console.log('obtenerCurso - cursoId: ', cursoId);
     if (cursoId !== '') {
 
-      this.acuService.getCurso(cursoId)
+      this.cursoService.getCurso(cursoId)
         .subscribe((res: any) => {
           console.log('obtenerCurso - res: ', res);
           if (res.TipCurId === '0') {
@@ -270,30 +282,17 @@ export class InscripcionCursoComponent {
 
 
   seleccionarAlumno() {
-    // let alumnos = JSON.parse(localStorage.getItem('Alumnos'));
 
-    // let cantidad = localStorage.getItem('Cantidad');
-
-
-
-    // if (!alumnos) {
-
-    this.acuService.obtenerAlumnos(5, 1, '')
+    this.alumnoService.obtenerAlumnos(5, 1, '')
       .subscribe((res: any) => {
         console.log('res: ', res);
         console.log('res.Cantidad: ', res.Cantidad);
         console.log('res.Alumnos: ', res.Alumnos);
-        // alumnos = res.Alumnos;
-        // cantidad = res.Cantidad;
-        // localStorage.setItem('Alumnos', JSON.stringify(alumnos));
-        // localStorage.setItem('Cantidad', cantidad);
+
 
         this.openDialogAlumnos(res.Alumnos, res.Cantidad);
       });
 
-    // } else {
-    //   this.openDialogAlumnos(alumnos, cantidad);
-    // }
   }
 
 
@@ -302,7 +301,7 @@ export class InscripcionCursoComponent {
   }
 
   private openDialogAltaAlumnos() {
-    this.acuService.getAlumnoNumero().subscribe((alumno: { numero: number }) => {
+    this.alumnoService.getAlumnoNumero().subscribe((alumno: { numero: number }) => {
       console.log('alumno: ', alumno);
 
       const alumnosDialogRef = this.dialog.open(AltaAlumnoComponent, {
@@ -314,7 +313,7 @@ export class InscripcionCursoComponent {
       });
 
       alumnosDialogRef.afterClosed().subscribe(result => {
-        // this.alumno = result;
+
         console.log('1.alumno: ' + result);
         console.log('2.alumno: ' + JSON.stringify(result));
 
@@ -401,7 +400,7 @@ export class InscripcionCursoComponent {
     this.inscripcionCurso.escCurTe3 = this.escCurTe3Field.value;
     this.inscripcionCurso.fechaClaseEstimada = this.fechaInicioEstimadaField.value;
     this.inscripcionCurso.TipCurId = this.cursoIdField.value;
-    this.acuService.getClasesEstimadas(this.inscripcionCurso).subscribe((clasesEstimadas) => {
+    this.instructorService.getClasesEstimadas(this.inscripcionCurso).subscribe((clasesEstimadas) => {
       console.log('clasesEstimadas: ', clasesEstimadas);
 
       const clasesEstimadasDialogRef = this.dialog.open(ClasesEstimadasComponent, {
@@ -420,7 +419,7 @@ export class InscripcionCursoComponent {
         console.log(`2. response ${result}`);
 
         this.acuService.getPDFPlanDeClases(result).subscribe(pdf => {
-          this.acuService.openSamePDF(pdf, 'PlanDeClases');
+          openSamePDF(pdf, 'PlanDeClases');
         });
 
         this.inscripcionCurso.ClasesEstimadas = result;
@@ -452,7 +451,7 @@ export class InscripcionCursoComponent {
         this.inscripcionCurso.FacturaRut = result;
 
         if (result.generaFactura) {
-          this.acuService.getItemsPorCurso(this.inscripcionCurso.TipCurId).subscribe((itemsCurso: any) => {
+          this.cursoService.getItemsPorCurso(this.inscripcionCurso.TipCurId).subscribe((itemsCurso: any) => {
             console.log('itemsCurso: ', itemsCurso);
 
             this.openDialogSeleccionarItemsFactura(result, itemsCurso.Items);
@@ -474,6 +473,13 @@ export class InscripcionCursoComponent {
 
   private openDialogSeleccionarItemsFactura(facturaRUT: ResponseFacturaRUT, items: any) {
 
+    const prefactura: Prefactura = {
+      AluId: this.inscripcionCurso.AluId,
+      EscCurEmp: facturaRUT.RUT,
+      FacDto: facturaRUT.descuento,
+      UsrId: this.inscripcionCurso.UsrId
+    };
+
     const seleccionarItemsFactura = this.dialog.open(SeleccionarItemsFacturarComponent, {
       height: 'auto',
       width: '700px',
@@ -482,6 +488,7 @@ export class InscripcionCursoComponent {
         items,
         titulo: 'Seleccionar Items a Facturar',
         esFactura: true,
+        prefactura,
       }
     });
 
@@ -499,7 +506,7 @@ export class InscripcionCursoComponent {
           EscCurIteClaAdi: result.EscCurIteClaAdi,
         };
 
-        this.confirmacionUsuario(
+        confirmacionUsuario(
           'Confirmación de Usuario',
           'Se generará la factura correspondiente, desea continuar?')
           .then((res) => {
@@ -534,7 +541,7 @@ export class InscripcionCursoComponent {
     this.form.patchValue({
       alumnoNumero: result.AluNro,
       alumnoNombre: result.AluNomComp,
-      alumnoCI: this.formatCI(ci, dv),
+      alumnoCI: formatCI(ci, dv),
       alumnoTelefono: result.AluTel1,
       alumnoCelular: result.AluTel2,
     });
@@ -561,7 +568,7 @@ export class InscripcionCursoComponent {
 
 
     console.log('this.inscripcionCurso: ', this.inscripcionCurso);
-    this.acuService.generarInscripcion(this.inscripcionCurso)
+    this.inscripcionService.generarInscripcion(this.inscripcionCurso)
       .subscribe((res: any) => {
         console.log('res: ', res);
         console.log('mensaje: ', res.errorMensaje);
@@ -685,40 +692,6 @@ export class InscripcionCursoComponent {
   }
 
 
-  formatCI(value: string, digitoVerificador?: string): string {
-
-
-    const ci = value;
-    const cant: any = Math.ceil(ci.length / 3);
-
-    let cadena = new Array(cant);
-    let substring = ci;
-    let corte;
-    let result = '';
-
-    for (let i = 0; i < cant; i++) {
-
-
-      corte = (substring.length - 3);
-      cadena[i] = substring.substring(corte, substring.length);
-      substring = substring.substring(corte, 0);
-
-
-    }
-
-    cadena = cadena.reverse();
-
-    for (let i = 0; i < cadena.length; i++) {
-      if (i + 1 < cadena.length) {
-        result += cadena[i] + '.';
-      } else {
-        result += cadena[i] + '-';
-      }
-    }
-    console.log('result: ', result);
-
-    return result + digitoVerificador;
-  }
 
   generateSedes() {
     const sede1 = {
@@ -756,16 +729,5 @@ export class InscripcionCursoComponent {
     console.log('horas libres: ', this.horasLibres);
   }
 
-
-  confirmacionUsuario(title, text) {
-    return Swal.fire({
-      title,
-      text,
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Confirmar',
-      cancelButtonText: 'Cancelar'
-    });
-  }
 
 }

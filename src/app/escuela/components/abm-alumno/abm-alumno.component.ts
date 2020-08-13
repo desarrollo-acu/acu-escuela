@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { AlumnoService } from '@core/services/alumno.service';
 import { AcuService } from '@core/services/acu.service';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { Departamento } from '@core/model/departamento.model';
@@ -12,27 +13,11 @@ import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { mensajeConfirmacion } from '@utils/sweet-alert';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
-import { AppDateAdapter, APP_DATE_FORMATS } from '../../../utils/format-datepicker';
-import { MatDatepickerInputEvent } from '@angular/material/datepicker';
-import { DatePipe } from '@angular/common';
-import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MAT_MOMENT_DATE_FORMATS } from '@angular/material-moment-adapter';
 @Component({
   selector: 'app-abm-alumno',
   templateUrl: './abm-alumno.component.html',
   styleUrls: ['./abm-alumno.component.scss'],
-  // providers: [
-  //   { provide: MAT_DATE_LOCALE, useValue: 'es-UY' },
 
-  //   // `MomentDateAdapter` and `MAT_MOMENT_DATE_FORMATS` can be automatically provided by importing
-  //   // `MatMomentDateModule` in your applications root module. We provide it at the component level
-  //   // here, due to limitations of our example generation script.
-  //   {
-  //     provide: DateAdapter,
-  //     useClass: MomentDateAdapter,
-  //     deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
-  //   },
-  //   { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
-  // ], 
 })
 export class AbmAlumnoComponent implements OnInit, OnDestroy {
 
@@ -71,6 +56,7 @@ export class AbmAlumnoComponent implements OnInit, OnDestroy {
   primeraVez = false;
 
   constructor(
+    private alumnoService: AlumnoService,
     private acuService: AcuService,
     private fb: FormBuilder,
     private dialog: MatDialog,
@@ -95,7 +81,7 @@ export class AbmAlumnoComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     if (!this.primeraVez) {
 
-      this.subscription = this.acuService.alumnoCurrentData.subscribe((data) => {
+      this.subscription = this.alumnoService.alumnoCurrentData.subscribe((data) => {
         console.log('abm data: ', data);
         this.primeraVez = true;
         this.mode = data.modo;
@@ -260,7 +246,7 @@ export class AbmAlumnoComponent implements OnInit, OnDestroy {
       console.log('alumno: ', alumno);
       const log = JSON.stringify(alumno);
       console.log('alumno og: ', log);
-      this.acuService.gestionAlumno(this.mode, alumno) // guardarAgendaInstructor(this.inscripcionCurso)
+      this.alumnoService.gestionAlumno(this.mode, alumno) // guardarAgendaInstructor(this.inscripcionCurso)
         .subscribe((res: any) => {
           console.log('res: ', res);
 

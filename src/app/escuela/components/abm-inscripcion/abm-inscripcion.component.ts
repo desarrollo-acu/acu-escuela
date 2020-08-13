@@ -2,9 +2,9 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { GestionInscripcionComponent } from '../gestion-inscripcion/gestion-inscripcion.component';
-import { Inscripcion } from '../../../core/model/inscripcion.model';
-import { formatCI } from '../../../utils/utils-functions';
-import { AcuService } from '../../../core/services/acu.service';
+import { Inscripcion } from '@core/model/inscripcion.model';
+import { formatCI } from '@utils/utils-functions';
+import { InscripcionService } from '@core/services/inscripcion.service';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 
@@ -26,7 +26,7 @@ export class AbmInscripcionComponent implements OnInit {
   primeraVez = false;
 
   constructor(
-    private acuService: AcuService,
+    private inscripcionService: InscripcionService,
     private formBuilder: FormBuilder,
     private router: Router) {
 
@@ -40,7 +40,7 @@ export class AbmInscripcionComponent implements OnInit {
 
     if (!this.primeraVez) {
 
-      this.subscription = this.acuService.inscripcionCurrentData.subscribe((data) => {
+      this.subscription = this.inscripcionService.inscripcionCurrentData.subscribe((data) => {
         console.log('abm data: ', data);
         this.primeraVez = true;
 

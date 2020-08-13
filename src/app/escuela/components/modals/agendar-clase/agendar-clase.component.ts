@@ -6,17 +6,21 @@ import { SeleccionarAlumnoComponent } from '../seleccionar-alumno/seleccionar-al
 import { SeleccionarInstructorComponent } from '../seleccionar-instructor/seleccionar-instructor.component';
 
 import Swal from 'sweetalert2';
-import { SeleccionarFechaComponent } from '../seleccionar-fecha/seleccionar-fecha.component';
 import { AgendaMovilComponent } from '../../agenda-movil/agenda-movil.component';
-import { AcuService } from 'src/app/core/services/acu.service';
-import { existeAlumnoValidator } from 'src/app/utils/validators/existe-alumno-validator.directive';
-import { alumnoYaAsignadoValidator } from 'src/app/utils/validators/alumno-ya-asignado.directive';
-import { alumnoTieneExcepcionValidator } from 'src/app/utils/validators/alumno-tiene-excepecion.directive';
-import { instructorYaAsignadoValidator } from 'src/app/utils/validators/instructor-ya-asignado-validator.directive';
-import { licenciaInstructorValidator } from 'src/app/utils/validators/licencia-instructor-validator.directive';
+import { existeAlumnoValidator } from '@utils/validators/existe-alumno-validator.directive';
+import { alumnoYaAsignadoValidator } from '@utils/validators/alumno-ya-asignado.directive';
+import { alumnoTieneExcepcionValidator } from '@utils/validators/alumno-tiene-excepecion.directive';
+import { instructorYaAsignadoValidator } from '@utils/validators/instructor-ya-asignado-validator.directive';
+import { licenciaInstructorValidator } from '@utils/validators/licencia-instructor-validator.directive';
 
 
 import { AgendaClase } from '@core/model/agenda-clase.model';
+import { AlumnoService } from '@core/services/alumno.service';
+import { InstructorService } from '@core/services/instructor.service';
+import { CursoService } from '@core/services/curso.service';
+import { SeleccionarCursoComponent } from '../seleccionar-curso/seleccionar-curso.component';
+import { Alumno } from '@core/model/alumno.model';
+import { AcuService } from '@core/services/acu.service';
 
 
 @Component({
@@ -30,22 +34,29 @@ export class AgendarClaseComponent implements OnInit {
   matcher = new MyErrorStateMatcher();
   selected = ' ';
   agendaClase: AgendaClase;
-  hora: Date = new Date();
+  horaString: string;
+  horaNumber: number;
   fechaClase: Date = new Date();
-  movil: number;
-  instructorAsignado = '';
+
+
   curso: string;
   hoy = new Date();
 
   // para el dialog
-  alumno: any;
+  alumno: Alumno = {};
+  esAgCuAviso: number;
+  avisar: string;
 
   constructor(
     private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<AgendaMovilComponent>,
     private acuService: AcuService,
+    private cursoService: CursoService,
+    private alumnoService: AlumnoService,
+    private instructorService: InstructorService,
     public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: any) {
+    console.log('agenda: ', data);
 
     this.agendaClase = this.data.agendaClase;
     const day = Number(this.agendaClase.FechaClase.substring(this.agendaClase.FechaClase.length - 2, this.agendaClase.FechaClase.length));
@@ -56,11 +67,16 @@ export class AgendarClaseComponent implements OnInit {
     this.fechaClase.setMonth(month - 1);
     this.fechaClase.setFullYear(year);
 
+    this.esAgCuAviso = this.agendaClase.EsAgCuAviso;
+    this.avisar = (this.agendaClase.EsAgCuAviso === 0 || this.agendaClase.EsAgCuAviso === 2) ? 'Avisar' : 'Avisado';
+    this.alumno.AluId = this.agendaClase.AluId;
 
-    this.hora.setHours(this.agendaClase.Hora, 0);
-    this.instructorAsignado = `${this.agendaClase.EsAgCuInsId.toString().trim()} ${this.agendaClase.EsAgCuInsNom}`;
-    this.movil = this.agendaClase.EscMovCod;
+
+    this.horaString = `${this.agendaClase.Hora}:00`;
+    // this.instructorAsignado = `${this.agendaClase.EsAgCuInsId.toString().trim()} ${this.agendaClase.EsAgCuInsNom}`;
+    // this.movil = this.agendaClase.EscMovCod;
     this.buildForm();
+    this.deshabilitarCampos();
   }
   ngOnInit() {
 
@@ -80,30 +96,33 @@ export class AgendarClaseComponent implements OnInit {
   private buildForm() {
     if (this.agendaClase) {
       this.form = this.formBuilder.group({
-        fechaClase: [this.fechaClase],
-        movil: [this.agendaClase.EscMovCod, [Validators.required]],
+        fecha: [this.fechaClase],
+        hora: [this.horaString],
+        movil: [this.agendaClase.EscMovCod],
         alumnoNumero: [
           this.agendaClase.AluNro,
           [Validators.required], // sync validators
           [
-            existeAlumnoValidator(this.acuService),
-            alumnoYaAsignadoValidator(this.acuService),
-            alumnoTieneExcepcionValidator(this.acuService)
+            existeAlumnoValidator(this.alumnoService),
+            alumnoYaAsignadoValidator(this.alumnoService),
+            alumnoTieneExcepcionValidator(this.alumnoService)
           ] // async validators
         ],
-        alumnoNombre: [this.agendaClase.AluNomApe, [Validators.required]],
-        curso: [this.agendaClase.Cursos[0], [Validators.required]],
+        alumnoNombre: [this.agendaClase.AluNomApe],
+        cursoId: [this.agendaClase.TipCurId, [Validators.required]],
+        cursoNombre: [this.agendaClase.TipCurNom],
         tipoClase: [this.agendaClase.EsAgCuTipCla],
         numeroClase: [this.agendaClase.EsAgCuNroCla],
         claseAdicional: [this.agendaClase.EsAgCuClaAdiSN],
         avisoInstructor: [this.agendaClase.AvisoInstructor],
-        instructorAsignado: [this.instructorAsignado],
-        instructor: [
-          this.agendaClase.EscInsId,
+
+        instructorId: [
+          this.agendaClase.EsAgCuInsId,
           [Validators.required], // sync validators
-          [licenciaInstructorValidator(this.acuService), instructorYaAsignadoValidator(this.acuService)] // async validators
+          [licenciaInstructorValidator(this.instructorService), instructorYaAsignadoValidator(this.instructorService)] // async validators
 
         ],
+        instructorNombre: [`${this.agendaClase.EsAgCuInsId.toString().trim()} ${this.agendaClase.EsAgCuInsNom}`],
         detalle: [this.agendaClase.EsAgCuDet],
         estadoClase: [this.agendaClase.EsAgCuEst],
         observaciones: [this.agendaClase.EsAgCuObs],
@@ -112,30 +131,33 @@ export class AgendarClaseComponent implements OnInit {
 
     } else {
       this.form = this.formBuilder.group({
-        fechaClase: ['', [Validators.required]],
-        movil: ['', [Validators.required]],
+        fecha: [''],
+        hora: [''],
+        movil: [''],
         alumnoNumero: [
           '',
           [Validators.required], // sync validators
           [
-            existeAlumnoValidator(this.acuService),
-            alumnoYaAsignadoValidator(this.acuService),
-            alumnoTieneExcepcionValidator(this.acuService)
+            existeAlumnoValidator(this.alumnoService),
+            alumnoYaAsignadoValidator(this.alumnoService),
+            alumnoTieneExcepcionValidator(this.alumnoService)
           ] // async validators
         ],
         alumnoNombre: ['', [Validators.required]],
-        curso: ['', [Validators.required]],
+
+        cursoId: ['', [Validators.required]],
+        cursoNombre: [''],
         tipoClase: [''],
         numeroClase: [''],
         claseAdicional: [''],
         avisoInstructor: [''],
-        instructorAsignado: [''],
-        instructor: [
+        instructorId: [
           '',
           [Validators.required], // sync validators
-          [licenciaInstructorValidator(this.acuService), instructorYaAsignadoValidator(this.acuService)] // async validators
+          [licenciaInstructorValidator(this.instructorService), instructorYaAsignadoValidator(this.instructorService)] // async validators
 
         ],
+        instructorNombre: [''],
         detalle: [''],
         estadoClase: [''],
         observaciones: [''],
@@ -144,20 +166,39 @@ export class AgendarClaseComponent implements OnInit {
     }
   }
 
-  seleccionarInstructor() {
-    // let instructores = JSON.parse(localStorage.getItem('Instructores'));
+  deshabilitarCampos() {
+    // Deshabilitar fecha de inscripicón
+    this.fecha.disable();
+    this.hora.disable();
+    this.movil.disable();
 
-    // if (!instructores) {
-    this.acuService.getInstructores()
+    // Campos deshabilitados del alumno
+    this.alumnoNombre.disable();
+
+    // Campos deshabilitados del curso
+
+    this.cursoNombre.disable();
+    this.numeroClase.disable();
+    this.claseAdicional.disable();
+
+    // Campos deshabilitados del instructor
+
+    this.instructorNombre.disable();
+    this.avisoInstructor.disable();
+
+    this.estadoClase.disable();
+
+
+
+
+  }
+  seleccionarInstructor() {
+
+    this.instructorService.getInstructores()
       .subscribe((res: any) => {
 
-        // instructores = res.Instructores;
-        // localStorage.setItem('Instructores', JSON.stringify(instructores));
         this.openDialogInstructores(res.Instructores);
       });
-    // } else {
-    //   this.openDialogInstructores(instructores);
-    // }
   }
 
   private openDialogInstructores(instructores) {
@@ -180,20 +221,45 @@ export class AgendarClaseComponent implements OnInit {
   }
 
   seleccionarAlumno() {
-    let alumnos = JSON.parse(localStorage.getItem('Alumnos'));
 
-    if (!alumnos) {
-      this.acuService.getAlumnos()
-        .subscribe((res: any) => {
-          alumnos = res.Alumnos;
-          localStorage.setItem('Alumnos', JSON.stringify(alumnos));
-          this.openDialogAlumnos(alumnos);
-        });
-    } else {
-      this.openDialogAlumnos(alumnos);
-    }
+    this.alumnoService.getAlumnos()
+      .subscribe((res: any) => {
+        this.openDialogAlumnos(res.Alumnos);
+      });
+
   }
 
+
+  seleccionarCurso() {
+
+    this.cursoService.getCursos()
+      .subscribe((res: any) => {
+        console.log('Cursos: ', res);
+
+        this.openDialogCursos(res);
+      });
+
+  }
+
+  private openDialogCursos(cursos) {
+    const cursosDialogRef = this.dialog.open(SeleccionarCursoComponent, {
+      height: 'auto',
+      width: '700px',
+      data: {
+        cursos,
+      }
+    });
+
+    cursosDialogRef.afterClosed().subscribe(result => {
+      console.log('result: ', result);
+      this.curso = result;
+      this.agendaClase.TipCurId = result.TipCurId;
+      this.agendaClase.TipCurNom = result.TipCurNom;
+      this.addInfoCursoToForm(result);
+
+    });
+
+  }
   private openDialogAlumnos(alumnos) {
     const alumnosDialogRef = this.dialog.open(SeleccionarAlumnoComponent, {
       height: 'auto',
@@ -203,43 +269,184 @@ export class AgendarClaseComponent implements OnInit {
       }
     });
 
-    alumnosDialogRef.afterClosed().subscribe(result => {
-      this.alumno = result;
+    alumnosDialogRef.afterClosed().subscribe((alumno: Alumno) => {
+      this.alumno = alumno;
       this.form.patchValue({
-        alumnoNombre: result.AluNomComp,
-        alumnoNumero: result.AluNro
+        alumnoNombre: alumno.AluNomComp,
+        alumnoNumero: alumno.AluNro
       });
     });
 
   }
 
-  get alumnoNombreField() {
-    return this.form.get('alumnoNombre');
-  }
+  avisoAlumno() {
 
-  get alumnoNumeroField() {
-    return this.form.get('alumnoNumero');
-  }
-  get instructorAsignadoField() {
-    return this.form.get('instructorAsignado');
-  }
-
-  get instructorField() {
-    return this.form.get('instructor');
-  }
-  get cursoField() {
-    return this.form.get('curso');
-  }
-
-  guardarClase(event: Event) {
-    event.preventDefault();
-    if (this.form.valid) {
-      const agendaClase = this.form.value;
-
+    if (this.esAgCuAviso === 0 || this.esAgCuAviso === 2) {
+      this.avisar = 'Avisado';
+      this.esAgCuAviso = 1;
+    } else {
+      this.avisar = 'Avisar';
+      this.esAgCuAviso = 2;
 
     }
   }
 
+  guardarClase(event: Event) {
+
+    event.preventDefault();
+    console.log('Submit, form valid: ', this.form.valid);
+    console.log('Submit, form value: ', this.form.value);
+    console.log('Submit, form value.cursoId: ', this.form.value.cursoId);
+
+    if (this.form.invalid) {
+      return;
+    }
+
+
+    console.log('form.value: ', this.form.value);
+
+    const agendaClase: AgendaClase = {
+      FechaClase: this.agendaClase.FechaClase,
+      Hora: this.agendaClase.Hora,
+      EscMovCod: this.agendaClase.EscMovCod,
+      Modo: this.agendaClase.Modo,
+      EsAgCuInsId: this.instructorId.value,
+      AluId: this.alumno.AluId,
+      TipCurId: this.cursoId.value,
+      EscAluCurId: this.agendaClase.EscAluCurId,
+      EsAgCuDet: this.detalle.value,
+      EsAgCuTipCla: this.tipoClase.value,
+      EsAgCuObs: this.observaciones.value,
+      EsAgCuNroCla: this.numeroClase.value,
+      EsAgCuEst: this.estadoClase.value,
+      EsAgCuClaAdiSN: this.claseAdicional.value,
+      EsAgCuDetAviso: this.aviso.value,
+      EsAgCuDetAvisoOld: this.agendaClase.EsAgCuDetAvisoOld,
+
+
+
+    }
+
+    this.acuService.guardarAgendaClase(this.agendaClase)
+      .subscribe((res: any) => {
+        console.log('res: ', res);
+        console.log('mensaje: ', res.mensaje);
+        //     this.agendaClase.mensaje = res.mensaje;
+        this.dialogRef.close(res);
+      });
+
+  }
+
+
+  obtenerCurso() {
+    const cursoId = this.form.get('cursoId').value;
+    console.log('obtenerCurso - cursoId: ', cursoId);
+    if (cursoId !== '') {
+
+      this.cursoService.getCurso(cursoId)
+        .subscribe((res: any) => {
+          console.log('obtenerCurso - res: ', res);
+          if (res.TipCurId === '0') {
+
+            Swal.fire({
+              icon: 'warning',
+              title: 'No encontrado!',
+              text: 'El código del curso no existe, seleccione un existente.'
+            }).then((res2) => {
+              if (res2.dismiss === Swal.DismissReason.timer) {
+                console.log('Cierro  con ela timer');
+              }
+            });
+          }
+
+          res.TipCurId = cursoId;
+          this.agendaClase.TipCurId = res.TipCurId;
+          this.agendaClase.TipCurNom = res.TipCurId;
+
+          this.addInfoCursoToForm(res);
+        });
+
+    }
+  }
+
+
+
+  addInfoCursoToForm(result: any) {
+
+    this.form.patchValue({
+      cursoId: result.TipCurId,
+      cursoNombre: result.TipCurNom,
+    });
+  }
+
+  get fecha() {
+    return this.form.get('fecha');
+  }
+
+  get hora() {
+    return this.form.get('hora');
+  }
+
+  get movil() {
+    return this.form.get('movil');
+  }
+
+  get alumnoNombre() {
+    return this.form.get('alumnoNombre');
+  }
+
+  get alumnoNumero() {
+    return this.form.get('alumnoNumero');
+  }
+  get instructorAsignado() {
+    return this.form.get('instructorAsignado');
+  }
+
+  get avisoInstructor() {
+    return this.form.get('avisoInstructor');
+  }
+
+  get instructorId() {
+    return this.form.get('instructorId');
+  }
+
+
+  get instructorNombre() {
+    return this.form.get('instructorNombre');
+  }
+
+  get numeroClase() {
+    return this.form.get('numeroClase');
+  }
+  get observaciones() {
+    return this.form.get('observaciones');
+  }
+
+
+
+
+  get aviso() {
+    return this.form.get('aviso');
+  }
+  get claseAdicional() {
+    return this.form.get('claseAdicional');
+  }
+  get estadoClase() {
+    return this.form.get('estadoClase');
+  }
+  get detalle() {
+    return this.form.get('detalle');
+  }
+  get tipoClase() {
+    return this.form.get('tipoClase');
+  }
+  get cursoId() {
+    return this.form.get('cursoId');
+  }
+
+  get cursoNombre() {
+    return this.form.get('cursoNombre');
+  }
 }
 
 

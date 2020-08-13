@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { AcuService } from '@core/services/acu.service';
+import { CursoService } from '@core/services/curso.service';
 import { Curso } from '@core/model/curso.model';
 import { Router } from '@angular/router';
 import { confirmacionUsuario, mensajeConfirmacion } from '@utils/sweet-alert';
@@ -31,7 +31,7 @@ export class GestionCursoComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private acuService: AcuService,
+    private cursoService: CursoService,
     private router: Router) {
 
   }
@@ -58,19 +58,19 @@ export class GestionCursoComponent implements OnInit {
   abmCurso(modo: string, curso: Curso) {
     switch (modo) {
       case 'INS':
-        this.acuService.sendDataCurso(modo, curso, 0);
+        this.cursoService.sendDataCurso(modo, curso, 0);
         this.router.navigate(['/escuela/abm-curso']);
 
         break;
       case 'UPD':
 
-        this.acuService.sendDataCurso(modo, curso);
+        this.cursoService.sendDataCurso(modo, curso);
         this.router.navigate(['/escuela/abm-curso']);
         break;
       case 'DLT':
         confirmacionUsuario('Confirmación de Usuario', `Está seguro que desea eliminar el curso: ${curso.TipCurNom}`).then((confirm) => {
           if (confirm.isConfirmed) {
-            this.acuService.gestionCurso(modo, curso).subscribe((res: any) => {
+            this.cursoService.gestionCurso(modo, curso).subscribe((res: any) => {
               console.log('res eli:', res);
 
               mensajeConfirmacion('Ok', res.Curso.ErrorMessage).then((res2) => {
@@ -94,7 +94,7 @@ export class GestionCursoComponent implements OnInit {
   getCursos(TipCurEst?: string) {
 
     this.verCurso = false;
-    this.acuService.getCursos().subscribe((cursos: Curso[]) => {
+    this.cursoService.getCursos().subscribe((cursos: Curso[]) => {
       console.log('Cursos: ', cursos);
 
 

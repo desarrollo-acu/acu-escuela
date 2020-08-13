@@ -1,12 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { AcuService } from '@core/services/acu.service';
+import { MovilService } from '@core/services/movil.service';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { Router } from '@angular/router';
 import { mensajeConfirmacion } from '@utils/sweet-alert';
 import Swal from 'sweetalert2';
 
-import { Movil } from '../../../core/model/movil.model';
+import { Movil } from '@core/model/movil.model';
 
 
 @Component({
@@ -26,7 +26,7 @@ export class AbmMovilComponent implements OnInit, OnDestroy {
   titulo: string;
 
   constructor(
-    private acuService: AcuService,
+    private movilService: MovilService,
     private fb: FormBuilder,
     private router: Router) {
 
@@ -41,7 +41,7 @@ export class AbmMovilComponent implements OnInit, OnDestroy {
 
     if (!this.primeraVez) {
 
-      this.subscription = this.acuService.movilCurrentData.subscribe((data) => {
+      this.subscription = this.movilService.movilCurrentData.subscribe((data) => {
         console.log('abm data: ', data);
         this.primeraVez = true;
         this.mode = data.modo;
@@ -115,7 +115,7 @@ export class AbmMovilComponent implements OnInit, OnDestroy {
       console.log('movil: ', movil);
       const log = JSON.stringify(movil);
       console.log('movil og: ', log);
-      this.acuService.gestionMovil(this.mode, movil)
+      this.movilService.gestionMovil(this.mode, movil)
         .subscribe((res: any) => {
           console.log('res: ', res);
 

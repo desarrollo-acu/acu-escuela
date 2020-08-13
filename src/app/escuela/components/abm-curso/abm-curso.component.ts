@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { CursoService } from '@core/services/curso.service';
 import { AcuService } from '@core/services/acu.service';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -27,16 +28,17 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
   itemForm: FormGroup;
 
   items: CursoItem[] = [];
-  // 'EscCurItemCur', 
+
   displayedColumns: string[] = ['actions-abm', 'EscItemCod', 'EscItemDesc', 'EscCurIteClaAdi', 'confirmar-cancelar'];
 
-  dataSource: MatTableDataSource<CursoItem>; // = new MatTableDataSource(this.items);
+  dataSource: MatTableDataSource<CursoItem>;
 
   mode: string;
   primeraVez = false;
   titulo: string;
 
   constructor(
+    private cursoService: CursoService,
     private acuService: AcuService,
     private fb: FormBuilder,
     private dialog: MatDialog,
@@ -53,7 +55,7 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
 
     if (!this.primeraVez) {
 
-      this.subscription = this.acuService.cursoCurrentData.subscribe((data) => {
+      this.subscription = this.cursoService.cursoCurrentData.subscribe((data) => {
         console.log('abm data: ', data);
         this.primeraVez = true;
         this.mode = data.modo;
@@ -62,7 +64,7 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
 
         this.changeForm(data.modo, data.curso);
 
-      }); /// .currentMessage.subscribe(message => this.message = message)
+      });
     }
 
 
@@ -94,7 +96,6 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
       escItemCod: [0, Validators.required],
       escItemDesc: [''],
       escCurIteClaAdi: [''],
-      // escCurItemCur: [''],
 
     });
 
@@ -119,7 +120,6 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
     const modoItem = localStorage.getItem('modoItem');
     localStorage.removeItem('modoItem');
 
-    // this.existeCodigo();
     this.acuService.getItem(codigo).subscribe((itemCurso: ItemCurso[]) => {
       console.log('itemCurso: ', itemCurso);
       console.log('.length: ', itemCurso.length);
@@ -133,7 +133,6 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
         if (esCabezal) {
 
           this.cursoForm.patchValue({
-            // socId: result.SocId,
             tipCuItemIdValCur: item.ItemCod,
             tipCuItemDescValCur: item.ItemDes
           });
@@ -141,7 +140,6 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
           if (!this.existeCodigo(item.ItemCod, modoItem)) {
 
             this.cursoForm.patchValue({
-              // socId: result.SocId,
               escItemCod: item.ItemCod,
               escItemDesc: item.ItemDes
             });
@@ -151,7 +149,6 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
 
 
       }
-      // });
 
     });
 
@@ -160,8 +157,6 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
   existeCodigo(codigo: number, modo: string | boolean): boolean {
     console.log(`codigo :: ${codigo}`);
     console.log(`modo :: ${modo}`);
-    // switch (modo) {
-    //   case 'INS':
 
     const auxItem = this.items.find(i => {
       console.log(`i.EscItemCod :: ${i.EscItemCod}`);
@@ -178,22 +173,7 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
       errorMensaje('Error', 'El código ingresado ya existe. Elija otro.').then();
       return true;
     }
-    //     break;
 
-    //   case 'UPD':
-    //     console.log('this.items: ', this.items);
-    //     const auxItems = this.items.filter(i => i.EscItemCod === codigo);
-    //     console.log('auxItems: ', auxItems);
-    //     console.log(`cantidad:  ${auxItems.length}`);
-
-    //     if (auxItems.length > 1) {
-    //       this.escItemCod.setValue('');
-    //       this.escItemDesc.setValue('');
-    //       errorMensaje('Error', 'El código ingresado ya existe. Elija otro.').then();
-    //       return true;
-    //     }
-    //     break;
-    // }
 
     return false;
   }
@@ -215,7 +195,7 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
       });
 
       seleccionarItemsFactura.afterClosed().subscribe((item: ItemCurso) => {
-        // this.alumno = item;
+
         console.log('1.response: ', item);
         console.log('2.response: ', JSON.stringify(item));
 
@@ -227,7 +207,6 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
           if (esCabezal) {
 
             this.cursoForm.patchValue({
-              // socId: result.SocId,
               tipCuItemIdValCur: item.ItemCod,
               tipCuItemDescValCur: item.ItemDes
             });
@@ -235,7 +214,6 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
             if (!this.existeCodigo(item.ItemCod, modoItem)) {
 
               this.cursoForm.patchValue({
-                // socId: result.SocId,
                 escItemCod: item.ItemCod,
                 escItemDesc: item.ItemDes
               });
@@ -257,10 +235,6 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
 
     if (modo === 'INS') {
       this.titulo = 'Agregar';
-      // this.aluId = 0;
-      // console.log('aluNumero: ', aluNumero);
-      // this.aluNroField.setValue(aluNumero);
-      // console.log('this.aluNroField.value: ', this.aluNroField.value);
 
     } else {
 
@@ -289,12 +263,10 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
       const aux = new MatTableDataSource(this.items);
       this.dataSource = aux;
     }
-    // this.rows.push(this.createItemFormGroup());
   }
 
   onRemoveRow(rowIndex: number) {
     this.dataSource.data.splice(rowIndex, 1);
-    // this.rows.removeAt(rowIndex);
   }
 
   createItemFormGroup(): FormGroup {
@@ -314,15 +286,11 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
         case 'INS':
 
           this.items = this.items.map(i => {
-            // let aux: CursoItem = i;
             if (i.EscItemCod === 0) {
               i.EscItemCod = this.escItemCod.value;
               i.EscItemDesc = this.escItemDesc.value;
               i.EscCurIteClaAdi = this.escCurIteClaAdi.value;
-              // i.isUpdate = false;
-              // i.isInsert = false;
-              // i.isDelete = undefined;
-              // i.modo = false;
+
               this.escItemCod.setValue(0);
               this.escItemDesc.setValue('');
               this.escCurIteClaAdi.setValue('');
@@ -366,12 +334,6 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
                   this.items.splice(index, 1);
                 }
 
-                // this.items = this.items.map(i => {
-                //   if (i.EscItemCod !== item.EscItemCod) {
-                //     return i;
-                //   }
-
-                // });
 
                 console.log('items: ', this.items);
                 this.dataSource = new MatTableDataSource(this.items);
@@ -388,12 +350,6 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
             this.items.splice(index, 1);
           }
 
-          // this.items = this.items.map(i => {
-          //   if (i.EscItemCod !== item.EscItemCod) {
-          //     return i;
-          //   }
-
-          // });
 
           console.log('items: ', this.items);
           this.dataSource = new MatTableDataSource(this.items);
@@ -440,8 +396,6 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
 
         this.items = this.items.map(i => {
           if (i.EscItemCod === item.EscItemCod) {
-            // i.isUpdate = true;
-            // i.isInsert = false;
             i.isDelete = false;
             i.modo = modo;
           }
@@ -450,7 +404,6 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
         });
 
         this.cursoForm.patchValue({
-          // socId: result.SocId,
           escItemCod: item.EscItemCod,
           escItemDesc: item.EscItemDesc,
           escCurIteClaAdi: item.EscCurIteClaAdi
@@ -460,8 +413,6 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
       case 'DLT':
         this.items = this.items.map(i => {
           if (i.EscItemCod === item.EscItemCod) {
-            // i.isUpdate = true;
-            // i.isInsert = false;
             i.isDelete = true;
             i.modo = modo;
           }
@@ -501,7 +452,7 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
       console.log('curso: ', curso);
       const log = JSON.stringify(curso);
       console.log('curso og: ', log);
-      this.acuService.gestionCurso(this.mode, curso) // guardarAgendaInstructor(this.inscripcionCurso)
+      this.cursoService.gestionCurso(this.mode, curso) // guardarAgendaInstructor(this.inscripcionCurso)
         .subscribe((res: any) => {
           console.log('res: ', res);
 
@@ -605,10 +556,6 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
   get escCurIteClaAdi() {
     return this.cursoForm.get('escCurIteClaAdi');
   }
-  // get escCurItemCur() {
-  //   return this.cursoForm.get('escCurItemCur');
-  // }
-
 
 
 }

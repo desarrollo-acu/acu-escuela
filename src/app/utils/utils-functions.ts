@@ -84,3 +84,63 @@ export function formatCI(value: string, digitoVerificador?: string): string {
 export function horaToString(hora: number): string {
     return `${hora / 100}:00`;
 }
+
+
+export function openSamePDF(pdf: any, fileName: string) {
+    const file = new Blob([pdf], { type: 'application/pdf' });
+    const fileURL = URL.createObjectURL(file);
+    const popUp = window.open(fileURL, `${fileName}_${Math.floor(Math.random() * 101)}.pdf`, 'width=800,height=500');
+    console.log('popup> ', popUp);
+    console.log('popup.name> ', popUp.name);
+
+    if (popUp === null || popUp.name === 'undefined' || typeof (popUp) === 'undefined') {
+        alert('Por favor deshabilita el bloqueador de ventanas emergentes y vuelve a intentar.');
+    }
+    else {
+        popUp.focus();
+    }
+}
+
+export function openPDF(pdf: any) {
+    const file = new Blob([pdf], { type: 'application/pdf' });
+    const fileURL = URL.createObjectURL(file);
+    window.open(fileURL);
+}
+
+export function getPDF(pdf: any, fileName: string) {
+
+    /* Parameters: 
+          blob: any
+          fileName: string
+    */
+    const newBlob = new Blob([pdf], { type: 'application/pdf' });
+
+    // IE doesn't allow using a blob object directly as link href
+    // instead it is necessary to use msSaveOrOpenBlob
+    if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+        window.navigator.msSaveOrOpenBlob(newBlob);
+        return;
+    }
+
+    // For other browsers:
+    // Create a link pointing to the ObjectURL containing the blob.
+    const data = window.URL.createObjectURL(newBlob);
+
+    const link = document.createElement('a');
+    link.href = data;
+    link.download = `${fileName}_${Math.floor(Math.random() * 101)}.pdf`;
+    // this is necessary as link.click() does not work on the latest firefox
+    link.dispatchEvent(
+        new MouseEvent('click', {
+            bubbles: true,
+            cancelable: true,
+            view: window,
+        })
+    );
+
+    setTimeout(() => {
+        // For Firefox it is necessary to delay revoking the ObjectURL
+        window.URL.revokeObjectURL(data);
+        link.remove();
+    }, 100);
+}

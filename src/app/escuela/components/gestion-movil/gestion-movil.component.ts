@@ -2,13 +2,12 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { AcuService } from '@core/services/acu.service';
-import { Curso } from '@core/model/curso.model';
+import { MovilService } from '@core/services/movil.service';
 import { Router } from '@angular/router';
 import { confirmacionUsuario, mensajeConfirmacion } from '@utils/sweet-alert';
 import { MatSelectChange } from '@angular/material/select';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Movil } from '../../../core/model/movil.model';
+import { Movil } from '@core/model/movil.model';
 
 @Component({
   selector: 'app-gestion-movil',
@@ -30,7 +29,7 @@ export class GestionMovilComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private acuService: AcuService,
+    private movilService: MovilService,
     private router: Router) {
 
   }
@@ -55,18 +54,18 @@ export class GestionMovilComponent implements OnInit {
   abmMovil(modo: string, movil: Movil) {
     switch (modo) {
       case 'INS':
-        this.acuService.sendDataMovil(modo, movil, 0);
+        this.movilService.sendDataMovil(modo, movil, 0);
         this.router.navigate(['/escuela/abm-movil']);
         break;
       case 'UPD':
 
-        this.acuService.sendDataMovil(modo, movil);
+        this.movilService.sendDataMovil(modo, movil);
         this.router.navigate(['/escuela/abm-movil']);
         break;
       case 'DLT':
         confirmacionUsuario('Confirmación de Usuario', `Está seguro que desea eliminar el movil: ${movil.MovCod}`).then((confirm) => {
           if (confirm.isConfirmed) {
-            this.acuService.gestionMovil(modo, movil).subscribe((res: any) => {
+            this.movilService.gestionMovil(modo, movil).subscribe((res: any) => {
               console.log('res eli:', res);
 
               mensajeConfirmacion('Ok', res.Movil.ErrorMessage).then((res2) => {
@@ -90,7 +89,7 @@ export class GestionMovilComponent implements OnInit {
   getMoviles(EscVehEst?: string) {
 
     this.verMovil = false;
-    this.acuService.getMoviles().subscribe((moviles: Movil[]) => {
+    this.movilService.getMoviles().subscribe((moviles: Movil[]) => {
       console.log('moviles: ', moviles);
 
 

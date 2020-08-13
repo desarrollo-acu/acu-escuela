@@ -2,10 +2,10 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AgendaMovilComponent } from '../../agenda-movil/agenda-movil.component';
-import { AcuService } from 'src/app/core/services/acu.service';
-import { MyValidators } from 'src/app/utils/validators';
-import { ResponseFacturaRUT } from 'src/app/core/model/responseFacturaRUT.model';
-import { RequiredAfterFieldNoChecked, RequiredAfterFieldChecked } from 'src/app/utils/custom-validator';
+
+import { MyValidators } from '@utils/validators';
+import { ResponseFacturaRUT } from '@core/model/responseFacturaRUT.model';
+import { RequiredAfterFieldNoChecked, RequiredAfterFieldChecked } from '@utils/custom-validator';
 import { confirmacionUsuario } from '@utils/sweet-alert';
 
 @Component({
@@ -26,7 +26,7 @@ export class FacturaRutComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<AgendaMovilComponent>,
-    private acuService: AcuService,
+
     @Inject(MAT_DIALOG_DATA) public data: any) {
     this.facturaResponse = {
       generaFactura: this.facturaCheck,
@@ -76,8 +76,6 @@ export class FacturaRutComponent implements OnInit {
       validator: [
         RequiredAfterFieldNoChecked('factura', 'noFacMot'),
         RequiredAfterFieldChecked('facturaConRUT', 'razonSocial'),
-        // RequiredAfterFieldChecked('facturaConRUT', 'RUT'),
-        // RequiredAfterFieldChecked('facturaConRUT', 'razonSocial'),
       ]
     });
   }

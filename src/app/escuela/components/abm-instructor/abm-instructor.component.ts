@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 
 
 import { Subscription } from 'rxjs';
+import { InstructorService } from '@core/services/instructor.service';
 import { AcuService } from '@core/services/acu.service';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -25,7 +26,7 @@ import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/materia
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
-import { InstructorHorario } from '../../../core/model/instructor.model';
+import { InstructorHorario } from '@core/model/instructor.model';
 
 
 @Component({
@@ -33,13 +34,7 @@ import { InstructorHorario } from '../../../core/model/instructor.model';
   templateUrl: './abm-instructor.component.html',
   styleUrls: ['./abm-instructor.component.scss'],
   providers: [
-    // The locale would typically be provided on the root module of your application. We do it at
-    // the component level here, due to limitations of our example generation script.
     { provide: MAT_DATE_LOCALE, useValue: 'es-ES' },
-
-    // `MomentDateAdapter` and `MAT_MOMENT_DATE_FORMATS` can be automatically provided by importing
-    // `MatMomentDateModule` in your applications root module. We provide it at the component level
-    // here, due to limitations of our example generation script.
     {
       provide: DateAdapter,
       useClass: MomentDateAdapter,
@@ -77,12 +72,12 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
     'confirmar-cancelar'];
 
 
-  dataSource: MatTableDataSource<InstructorItem>; // = new MatTableDataSource(this.items);
+  dataSource: MatTableDataSource<InstructorItem>;
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
-  horarioDataSource: MatTableDataSource<InstructorHorario>; // = new MatTableDataSource(this.items);
+  horarioDataSource: MatTableDataSource<InstructorHorario>;
 
   @ViewChild('horarioPaginator', { static: true }) horarioPaginator: MatPaginator;
   @ViewChild('horarioSort') horarioSort: MatSort;
@@ -92,6 +87,7 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
   titulo: string;
 
   constructor(
+    private instructorService: InstructorService,
     private acuService: AcuService,
     private fb: FormBuilder,
     private dialog: MatDialog,
@@ -115,7 +111,7 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
         this.estados = estados;
         console.log('2) res estados escuela: ', this.estados);
 
-        this.subscription = this.acuService.instructorCurrentData.subscribe((data) => {
+        this.subscription = this.instructorService.instructorCurrentData.subscribe((data) => {
           console.log('abm data: ', data);
           this.primeraVez = true;
           this.mode = data.modo;
@@ -719,7 +715,7 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
       console.log('instructor: ', instructor);
       const log = JSON.stringify(instructor);
       console.log('instructor og: ', log);
-      this.acuService.gestionInstructor(this.mode, instructor)
+      this.instructorService.gestionInstructor(this.mode, instructor)
         .subscribe((res: any) => {
           console.log('res: ', res);
 

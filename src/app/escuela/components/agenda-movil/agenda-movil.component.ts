@@ -3,7 +3,8 @@ import { MatDialog } from '@angular/material/dialog';
 
 import Swal from 'sweetalert2';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
-import { AcuService } from 'src/app/core/services/acu.service';
+import { AcuService } from '@core/services/acu.service';
+import { InstructorService } from '@core/services/instructor.service';
 import { SeleccionarAccionAgendaComponent } from '../modals/seleccionar-accion-agenda/seleccionar-accion-agenda.component';
 import { AgendarClaseComponent } from '../modals/agendar-clase/agendar-clase.component';
 import { InscripcionCursoComponent } from '../modals/inscripcion-curso/inscripcion-curso.component';
@@ -96,6 +97,7 @@ export class AgendaMovilComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(
     private acuService: AcuService,
+    private instructorService: InstructorService,
     public dialog: MatDialog,
     // tslint:disable-next-line: variable-name
     private _bottomSheet: MatBottomSheet
@@ -369,7 +371,7 @@ export class AgendaMovilComponent implements OnInit, AfterViewInit, OnDestroy {
       ],
       fechaClaseEstimada: new Date()
     };
-    this.acuService.getClasesEstimadas(inscripcionCurso).subscribe((clasesEstimadas) => {
+    this.instructorService.getClasesEstimadas(inscripcionCurso).subscribe((clasesEstimadas) => {
       console.log('clasesEstimadas: ', clasesEstimadas);
 
       const clasesEstimadasDialogRef = this.dialog.open(ClasesEstimadasComponent, {

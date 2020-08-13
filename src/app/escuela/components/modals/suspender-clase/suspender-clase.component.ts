@@ -3,7 +3,8 @@ import { FormBuilder, FormGroup, Validators, } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 
 import { AgendaMovilComponent } from '../../agenda-movil/agenda-movil.component';
-import { AcuService } from 'src/app/core/services/acu.service';
+import { AcuService } from '@core/services/acu.service';
+import { InstructorService } from '@core/services/instructor.service';
 import { AgendaClase } from '@core/model/agenda-clase.model';
 import { ClaseEstimada, ClaseEstimadaDetalle } from '@core/model/clase-estimada.model';
 import { InstructorHorasLibresComponent } from '../instructor-horas-libres/instructor-horas-libres.component';
@@ -36,6 +37,7 @@ export class SuspenderClaseComponent implements OnInit {
     private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<AgendaMovilComponent>,
     private acuService: AcuService,
+    private instructorService: InstructorService,
     public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: any) {
 
@@ -68,7 +70,6 @@ export class SuspenderClaseComponent implements OnInit {
   }
 
   private buildForm() {
-    // const ESTADO_CLASE = (this.esSuspender) ? 
     this.form = this.formBuilder.group({
       fechaClase: [this.fechaClase],
       cursoId: [this.agendaClase.TipCurId],
@@ -79,13 +80,6 @@ export class SuspenderClaseComponent implements OnInit {
       tipoClase: [this.agendaClase.EsAgCuTipCla],
       escInsId: [this.agendaClase.EsAgCuInsId],
       escInsNom: [this.agendaClase.EsAgCuInsNom],
-      // cursoExamenPractico: [this.agendaClase],
-      // cursoExamenTeorico: [this.agendaClase],
-      // fechaInicioEstimada: [this.agendaClase, Validators.required],
-      // escCurTe1: [this.agendaClase, Validators.required],
-      // escCurTe2: [this.agendaClase, Validators.required],
-      // escCurTe3: [this.agendaClase, Validators.required],
-      // escCurIni: [this.agendaClase, [Validators.required, MyValidators.fechaAnteriorAHoy]],
       alumnoNumero: [this.agendaClase.AluNro],
       alumnoNombre: [this.agendaClase.AluNomApe],
       disponibilidadLunes: [this.data.agendaClase.disponibilidadLunes],
@@ -141,44 +135,44 @@ export class SuspenderClaseComponent implements OnInit {
           console.log('agendaClase: ', this.agendaClase);
           // Si no es suspender, entonces es una clase doble.
           const cantidad = (this.esSuspender) ? 1 : 2;
-          this.acuService.getDisponibilidadInstructor(this.agendaClase, cantidad).subscribe((res: { ClasesEstimadas: ClaseEstimada[] }) => {
-            console.log('res.ClasesEstimadas: ', res.ClasesEstimadas);
-            const arrayPlano: {
-              instructorCodigo?: string,
-              instructorNombre?: string,
-              detalle?: ClaseEstimadaDetalle[]
-            } = {};
-            console.log('res.ClasesEstimadas.length: ', res.ClasesEstimadas.length);
-            console.log('res.ClasesEstimadas[1]: ', res.ClasesEstimadas[1]);
-            arrayPlano.instructorCodigo = res.ClasesEstimadas[1].EscInsId;
-            arrayPlano.instructorNombre = res.ClasesEstimadas[1].EscInsNom;
-            arrayPlano.detalle = [];
-            res.ClasesEstimadas.forEach(clase => {
-              arrayPlano.detalle.push(...clase.Detalle);
+          this.instructorService.getDisponibilidadInstructor(this.agendaClase, cantidad)
+            .subscribe((res: { ClasesEstimadas: ClaseEstimada[] }) => {
+              console.log('res.ClasesEstimadas: ', res.ClasesEstimadas);
+              const arrayPlano: {
+                instructorCodigo?: string,
+                instructorNombre?: string,
+                detalle?: ClaseEstimadaDetalle[]
+              } = {};
+              console.log('res.ClasesEstimadas.length: ', res.ClasesEstimadas.length);
+              console.log('res.ClasesEstimadas[1]: ', res.ClasesEstimadas[1]);
+              arrayPlano.instructorCodigo = res.ClasesEstimadas[1].EscInsId;
+              arrayPlano.instructorNombre = res.ClasesEstimadas[1].EscInsNom;
+              arrayPlano.detalle = [];
+              res.ClasesEstimadas.forEach(clase => {
+                arrayPlano.detalle.push(...clase.Detalle);
+              });
+
+              console.log('arrayPlano: ', arrayPlano);
+
+              const clasesEstimadasDialogRef = this.dialog.open(InstructorHorasLibresComponent, {
+                height: 'auto',
+                width: '700px',
+                data: {
+                  clasesEstimadas: arrayPlano
+                }
+              });
+
+
+              clasesEstimadasDialogRef.afterClosed().subscribe((nuevaClase: any) => {
+                console.log('1.response: ' + nuevaClase);
+                console.log('2.response: ' + JSON.stringify(nuevaClase));
+                console.log(`2. response ${nuevaClase}`);
+
+                this.finalizarSuspenderClase(nuevaClase);
+
+              });
+
             });
-
-            console.log('arrayPlano: ', arrayPlano);
-
-            const clasesEstimadasDialogRef = this.dialog.open(InstructorHorasLibresComponent, {
-              height: 'auto',
-              width: '700px',
-              data: {
-                clasesEstimadas: arrayPlano
-              }
-            });
-
-
-            clasesEstimadasDialogRef.afterClosed().subscribe((nuevaClase: any) => {
-              // this.alumno = nuevaClase;
-              console.log('1.response: ' + nuevaClase);
-              console.log('2.response: ' + JSON.stringify(nuevaClase));
-              console.log(`2. response ${nuevaClase}`);
-
-              this.finalizarSuspenderClase(nuevaClase);
-
-            });
-
-          });
 
         } else {
           this.finalizarSuspenderClase();

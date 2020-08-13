@@ -5,11 +5,11 @@ import { map } from 'rxjs/operators';
 
 
 import { Observable } from 'rxjs';
-import { AcuService } from 'src/app/core/services/acu.service';
+import { AlumnoService } from '@core/services/alumno.service';
 
-export function alumnoTieneExcepcionValidator(acuService: AcuService): AsyncValidatorFn {
+export function alumnoTieneExcepcionValidator(alumnoService: AlumnoService): AsyncValidatorFn {
   return (control: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> => {
-    return acuService.alumnoTieneExcepcion(control.value).pipe(
+    return alumnoService.alumnoTieneExcepcion(control.value).pipe(
       map(
         (res: any) => {
           console.log('AlumnoTieneExcepclion.res: ', res);
@@ -27,9 +27,9 @@ export function alumnoTieneExcepcionValidator(acuService: AcuService): AsyncVali
   providers: [{ provide: NG_ASYNC_VALIDATORS, useExisting: AlumnoTieneExcepecionValidatorDirective, multi: true }]
 })
 export class AlumnoTieneExcepecionValidatorDirective implements AsyncValidator {
-  constructor(private acuService: AcuService) { }
+  constructor(private alumnoService: AlumnoService) { }
 
   validate(control: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> {
-    return alumnoTieneExcepcionValidator(this.acuService)(control);
+    return alumnoTieneExcepcionValidator(this.alumnoService)(control);
   }
 }

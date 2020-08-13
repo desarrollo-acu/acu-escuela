@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { AcuService } from '@core/services/acu.service';
+import { AlumnoService } from '@core/services/alumno.service';
 import { Alumno } from '@core/model/alumno.model';
 import { Router } from '@angular/router';
 import { confirmacionUsuario, mensajeConfirmacion } from '@utils/sweet-alert';
@@ -36,7 +36,7 @@ export class GestionAlumnoComponent implements OnInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
-    private acuService: AcuService,
+    private alumnoService: AlumnoService,
     private router: Router,
     private dialog: MatDialog) {
     console.log('constructor gestion-alumno');
@@ -74,23 +74,23 @@ export class GestionAlumnoComponent implements OnInit {
   abmAlumno(modo: string, alumno: Alumno) {
     switch (modo) {
       case 'INS':
-        this.acuService.getAlumnoNumero().subscribe((res: { numero: number }) => {
+        this.alumnoService.getAlumnoNumero().subscribe((res: { numero: number }) => {
           console.log('res: ', res);
 
 
-          this.acuService.sendDataAlumno(modo, alumno, res.numero);
+          this.alumnoService.sendDataAlumno(modo, alumno, res.numero);
           this.router.navigate(['/escuela/abm-alumno']);
         });
         break;
       case 'UPD':
 
-        this.acuService.sendDataAlumno(modo, alumno);
+        this.alumnoService.sendDataAlumno(modo, alumno);
         this.router.navigate(['/escuela/abm-alumno']);
         break;
       case 'DLT':
         confirmacionUsuario('Confirmación de Usuario', `Está seguro que desea eliminar el alumno: ${alumno.AluNomComp}`).then((res) => {
           if (res.isConfirmed) {
-            this.acuService.gestionAlumno(modo, alumno).subscribe((res: any) => {
+            this.alumnoService.gestionAlumno(modo, alumno).subscribe((res: any) => {
               console.log('res eli:', res);
 
               mensajeConfirmacion('Ok', res.Alumno.ErrorMessage).then((res2) => {
@@ -105,7 +105,7 @@ export class GestionAlumnoComponent implements OnInit {
 
         break;
       case 'INSC':
-        this.acuService.getDisponibilidadAlumno(alumno.AluId).subscribe((res: { Disponibilidades: AgendaClase[] }) => {
+        this.alumnoService.getDisponibilidadAlumno(alumno.AluId).subscribe((res: { Disponibilidades: AgendaClase[] }) => {
           console.log('res: ', res);
 
           const inscripcionesDialogRef = this.dialog.open(InscripcionesAlumnoComponent, {
@@ -142,7 +142,7 @@ export class GestionAlumnoComponent implements OnInit {
       pageNumber = 1;
     }
     this.verAlumnos = false;
-    this.acuService.obtenerAlumnos(pageSize, pageNumber, filtro)
+    this.alumnoService.obtenerAlumnos(pageSize, pageNumber, filtro)
       .subscribe((res: any) => {
 
         console.log('getAlumnos : ', res);

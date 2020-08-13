@@ -47,6 +47,7 @@ export interface Inscripcion {
 
     Lineas1?: InscripcionLinea1[];
     DisponibilidadAlumno?: InscripcionDisponibilidadAlumno[];
+    UsrId?: string;
 }
 
 export interface InscripcionLinea1 {

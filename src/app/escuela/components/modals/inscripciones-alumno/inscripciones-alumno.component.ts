@@ -6,7 +6,8 @@ import { GestionAlumnoComponent } from '../../gestion-alumno/gestion-alumno.comp
 import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AgendaClase } from '@core/model/agenda-clase.model';
 import { DisponibilidadAlumnoComponent } from '../disponibilidad-alumno/disponibilidad-alumno.component';
-import { AcuService } from '../../../../core/services/acu.service';
+import { AcuService } from '@core/services/acu.service';
+import { openSamePDF } from '@utils/utils-functions';
 
 @Component({
   selector: 'app-inscripciones-alumno',
@@ -65,7 +66,7 @@ export class InscripcionesAlumnoComponent implements OnInit {
     console.log('inscripcion: ', inscripcion);
 
     this.acuService.getPDFPlanDeClases(inscripcion.planDeClases).subscribe(pdf => {
-      this.acuService.openSamePDF(pdf, 'PlanDeClases');
+      openSamePDF(pdf, 'PlanDeClases');
     });
 
 

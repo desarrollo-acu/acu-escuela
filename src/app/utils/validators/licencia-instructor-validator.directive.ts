@@ -3,12 +3,12 @@ import { AsyncValidatorFn, AsyncValidator, NG_ASYNC_VALIDATORS, AbstractControl,
 
 import { map } from 'rxjs/operators';
 
-import { AcuService } from 'src/app/core/services/acu.service';
+import { InstructorService } from 'src/app/core/services/instructor.service';
 import { Observable } from 'rxjs';
 
-export function licenciaInstructorValidator(acuService: AcuService): AsyncValidatorFn {
+export function licenciaInstructorValidator(instructorService: InstructorService): AsyncValidatorFn {
   return (control: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> => {
-    return acuService.licenciaInstructor(control.value).pipe(
+    return instructorService.licenciaInstructor(control.value).pipe(
       map(
         (res: any) => {
           // tslint:disable-next-line: object-literal-key-quotes
@@ -24,9 +24,9 @@ export function licenciaInstructorValidator(acuService: AcuService): AsyncValida
   providers: [{ provide: NG_ASYNC_VALIDATORS, useExisting: LicenciaInstructorValidatorDirective, multi: true }]
 })
 export class LicenciaInstructorValidatorDirective implements AsyncValidator {
-  constructor(private acuService: AcuService) { }
+  constructor(private instructorService: InstructorService) { }
 
   validate(control: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> {
-    return licenciaInstructorValidator(this.acuService)(control);
+    return licenciaInstructorValidator(this.instructorService)(control);
   }
 }

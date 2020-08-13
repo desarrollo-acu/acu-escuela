@@ -3,12 +3,12 @@ import { AsyncValidatorFn, AsyncValidator, NG_ASYNC_VALIDATORS, AbstractControl,
 
 import { map } from 'rxjs/operators';
 
-import { AcuService } from 'src/app/core/services/acu.service';
+import { AlumnoService } from '@core/services/alumno.service';
 import { Observable } from 'rxjs';
 
-export function existeAlumnoValidator(acuService: AcuService): AsyncValidatorFn {
+export function existeAlumnoValidator(alumnoService: AlumnoService): AsyncValidatorFn {
   return (control: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> => {
-    return acuService.existeAlumno(control.value).pipe(
+    return alumnoService.existeAlumno(control.value).pipe(
       map(
         (res: any) => {
           console.log('res: ', res);
@@ -26,9 +26,9 @@ export function existeAlumnoValidator(acuService: AcuService): AsyncValidatorFn 
   providers: [{ provide: NG_ASYNC_VALIDATORS, useExisting: ExisteAlumnoValidatorDirective, multi: true }]
 })
 export class ExisteAlumnoValidatorDirective implements AsyncValidator {
-  constructor(private acuService: AcuService) { }
+  constructor(private alumnoService: AlumnoService) { }
 
   validate(control: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> {
-    return existeAlumnoValidator(this.acuService)(control);
+    return existeAlumnoValidator(this.alumnoService)(control);
   }
 }
