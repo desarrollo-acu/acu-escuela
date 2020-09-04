@@ -148,17 +148,6 @@ export class AcuService {
 
 
 
-  iniciarSesion(UsrId: string, Pass: string) {
-    console.log('User: ', UsrId);
-    console.log('Pass: ', Pass);
-
-    return this.http.post(`${environment.url_ws}/wsInicioEscuela`, {
-      UsrId,
-      Pass
-    });
-
-  }
-
 
 
   getItems() {

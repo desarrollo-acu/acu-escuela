@@ -3,7 +3,11 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { AgendarClaseComponent } from '../agendar-clase/agendar-clase.component';
-import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {
+  MatDialogRef,
+  MatDialog,
+  MAT_DIALOG_DATA,
+} from '@angular/material/dialog';
 
 export interface InstructorData {
   EscInsId: string;
@@ -15,11 +19,15 @@ export interface InstructorData {
 @Component({
   selector: 'app-seleccionar-instructor',
   templateUrl: './seleccionar-instructor.component.html',
-  styleUrls: ['./seleccionar-instructor.component.scss']
+  styleUrls: ['./seleccionar-instructor.component.scss'],
 })
 export class SeleccionarInstructorComponent implements OnInit {
-
-  displayedColumns: string[] = ['actions', 'EscInsId', 'EscInsNom', 'EscInsTel'];
+  displayedColumns: string[] = [
+    'actions',
+    'EscInsId',
+    'EscInsNom',
+    'EscInsTel',
+  ];
   dataSource: MatTableDataSource<InstructorData>;
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -28,8 +36,9 @@ export class SeleccionarInstructorComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<AgendarClaseComponent>,
     public dialog: MatDialog,
-    @Inject(MAT_DIALOG_DATA) public data: any) {
-
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {
+    console.log('this.data: ', this.data);
     const instructores = this.data.instructores;
     console.log('instructores: ', instructores);
 
@@ -43,14 +52,12 @@ export class SeleccionarInstructorComponent implements OnInit {
   }
 
   applyFilter(filterValue: string) {
-
     this.dataSource.filter = filterValue.trim().toLowerCase();
 
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
   }
-
 
   onNoClick(): void {
     this.dialogRef.close();

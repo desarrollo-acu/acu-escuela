@@ -1,15 +1,23 @@
 import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormControl, FormGroupDirective, NgForm } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  FormControl,
+  FormGroupDirective,
+  NgForm,
+} from '@angular/forms';
+import {
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+  MatDialog,
+} from '@angular/material/dialog';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { SeleccionarAlumnoComponent } from '../seleccionar-alumno/seleccionar-alumno.component';
 import { SeleccionarCursoComponent } from '../seleccionar-curso/seleccionar-curso.component';
 import { AcuService } from 'src/app/core/services/acu.service';
 import { Curso } from '@core/model/curso.model';
 import { CursoService } from '../../../../core/services/curso.service';
-
-
-
 
 export interface AgendaCurso {
   TrnMode: string;
@@ -21,20 +29,15 @@ export interface AgendaCurso {
   TipCurNom: string;
   EscAgeInsObservaciones: string;
   mensaje: string;
-
-
+  UsrId: string;
 }
-
 
 @Component({
   selector: 'app-agenda-curso',
   templateUrl: './agenda-curso.component.html',
-  styleUrls: ['./agenda-curso.component.scss']
+  styleUrls: ['./agenda-curso.component.scss'],
 })
 export class AgendaCursoComponent implements OnInit, OnDestroy {
-
-
-
   form: FormGroup;
   matcher = new MyErrorStateMatcher();
   selected = ' ';
@@ -55,12 +58,20 @@ export class AgendaCursoComponent implements OnInit, OnDestroy {
     private acuService: AcuService,
     private cursoService: CursoService,
     public dialog: MatDialog,
-    @Inject(MAT_DIALOG_DATA) public data: any) {
-
-    console.log('Estoy en el constructor de agenda-curso, la res es: ', this.data);
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {
+    console.log(
+      'Estoy en el constructor de agenda-curso, la res es: ',
+      this.data
+    );
     this.agendaCurso = this.data.agendaCurso;
     console.log('   this.agendaCurso es: ', this.agendaCurso);
-    const day = Number(this.agendaCurso.FechaClase.substring(this.agendaCurso.FechaClase.length - 2, this.agendaCurso.FechaClase.length));
+    const day = Number(
+      this.agendaCurso.FechaClase.substring(
+        this.agendaCurso.FechaClase.length - 2,
+        this.agendaCurso.FechaClase.length
+      )
+    );
     const month = Number(this.agendaCurso.FechaClase.substring(5, 7));
     const year = Number(this.agendaCurso.FechaClase.substring(0, 4));
 
@@ -68,34 +79,28 @@ export class AgendaCursoComponent implements OnInit, OnDestroy {
     this.fechaClase.setMonth(month - 1);
     this.fechaClase.setFullYear(year);
 
-    this.cursoNombre = (this.agendaCurso) ? this.agendaCurso.TipCurNom : '';
+    this.cursoNombre = this.agendaCurso ? this.agendaCurso.TipCurNom : '';
 
     this.hora.setHours(this.agendaCurso.Hora, 0);
     this.instructor = this.agendaCurso.EscInsId;
     this.buildForm();
   }
   ngOnInit() {
-
     // toISOString, es el formato que leyo bien la api.
     localStorage.setItem('fechaClase', this.fechaClase.toISOString());
     const horaStr = this.agendaCurso.Hora * 100;
     localStorage.setItem('horaClase', horaStr.toString());
     localStorage.setItem('instructorCod', this.instructor.toString());
-
   }
 
-
   ngOnDestroy(): void {
-
     this.acuService.cleanStorageAgenda();
     //throw new Error('Method not implemented.');
   }
 
-
   onNoClick(): void {
     this.dialogRef.close();
   }
-
 
   private buildForm() {
     if (this.agendaCurso) {
@@ -109,12 +114,11 @@ export class AgendaCursoComponent implements OnInit, OnDestroy {
             // existeAlumnoValidator(this.acuService),
             // alumnoYaAsignadoValidator(this.acuService),
             // alumnoTieneExcepcionValidator(this.acuService)
-          ] // async validators
+          ], // async validators
         ],
         cursoNombre: [this.agendaCurso.TipCurNom, [Validators.required]],
-        observaciones: [this.agendaCurso.EscAgeInsObservaciones]
+        observaciones: [this.agendaCurso.EscAgeInsObservaciones],
       });
-
     } else {
       this.form = this.formBuilder.group({
         fechaClase: ['', [Validators.required]],
@@ -126,23 +130,20 @@ export class AgendaCursoComponent implements OnInit, OnDestroy {
             // existeAlumnoValidator(this.acuService),
             // alumnoYaAsignadoValidator(this.acuService),
             // alumnoTieneExcepcionValidator(this.acuService)
-          ] // async validators
+          ], // async validators
         ],
         cursoNombre: [''],
-        observaciones: ['']
+        observaciones: [''],
       });
     }
   }
 
   seleccionarCurso() {
+    this.cursoService.getCursos().subscribe((cursos: Curso[]) => {
+      console.log('Cursos: ', cursos);
 
-    this.cursoService.getCursos()
-      .subscribe((cursos: Curso[]) => {
-        console.log('Cursos: ', cursos);
-
-        this.openDialogCursos(cursos);
-      });
-
+      this.openDialogCursos(cursos);
+    });
   }
 
   private openDialogCursos(cursos: Curso[]) {
@@ -152,19 +153,18 @@ export class AgendaCursoComponent implements OnInit, OnDestroy {
       width: '700px',
       data: {
         cursos,
-      }
+      },
     });
 
-    cursosDialogRef.afterClosed().subscribe(result => {
+    cursosDialogRef.afterClosed().subscribe((result) => {
       this.curso = result;
       this.cursoNombre = this.agendaCurso.TipCurNom = result.TipCurNom;
 
       this.form.patchValue({
         cursoNombre: result.TipCurNom,
-        cursoId: result.TipCurId
+        cursoId: result.TipCurId,
       });
     });
-
   }
 
   get cursoNombreField() {
@@ -179,11 +179,10 @@ export class AgendaCursoComponent implements OnInit, OnDestroy {
   }
 
   obtenerCurso() {
-
     console.log('cursoId: ', this.cursoIdField.value);
     if (this.cursoIdField.value !== 0) {
-
-      this.cursoService.getCurso(this.cursoIdField.value)
+      this.cursoService
+        .getCurso(this.cursoIdField.value)
         .subscribe((res: any) => {
           console.log('res: ', res);
           this.agendaCurso.TipCurId = res.TipCurId;
@@ -194,7 +193,6 @@ export class AgendaCursoComponent implements OnInit, OnDestroy {
             cursoNombre: res.TipCurNom,
           });
         });
-
     }
   }
 
@@ -212,26 +210,31 @@ export class AgendaCursoComponent implements OnInit, OnDestroy {
 
     if (this.form.valid) {
       console.log('form.value: ', this.form.value);
+      this.agendaCurso.UsrId = localStorage.getItem('usrId');
       console.log('this.agendaCurso: ', this.agendaCurso);
-      this.acuService.guardarAgendaInstructor(this.agendaCurso)
+      this.acuService
+        .guardarAgendaInstructor(this.agendaCurso)
         .subscribe((res: any) => {
           console.log('res: ', res);
           console.log('mensaje: ', res.mensaje);
           this.agendaCurso.mensaje = res.mensaje;
           this.dialogRef.close(res);
         });
-
-
     }
   }
-
 }
-
 
 /** Error when invalid control is dirty, touched, or submitted. */
 export class MyErrorStateMatcher implements ErrorStateMatcher {
-  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+  isErrorState(
+    control: FormControl | null,
+    form: FormGroupDirective | NgForm | null
+  ): boolean {
     const isSubmitted = form && form.submitted;
-    return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
+    return !!(
+      control &&
+      control.invalid &&
+      (control.dirty || control.touched || isSubmitted)
+    );
   }
 }

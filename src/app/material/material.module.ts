@@ -22,7 +22,6 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatDialogModule } from '@angular/material/dialog';
 
-
 import { LayoutModule } from '@angular/cdk/layout';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 
@@ -99,8 +98,6 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
     MatTreeModule,
     PortalModule,
     ScrollingModule,
-
-
   ],
   exports: [
     CommonModule,
@@ -150,7 +147,6 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
     MatTreeModule,
     PortalModule,
     ScrollingModule,
-
-  ]
+  ],
 })
-export class MaterialModule { }
+export class MaterialModule {}

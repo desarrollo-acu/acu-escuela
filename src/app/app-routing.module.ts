@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { LayoutComponent } from './layout/layout.component';
+import { AutenticacionGuard } from './core/guards/autenticacion.guard';
 
 
 
@@ -27,6 +28,7 @@ const routes: Routes = [
   {
     path: 'escuela',
     loadChildren: () => import('./escuela/escuela.module').then(m => m.EscuelaModule),
+    canActivate: [AutenticacionGuard]
   },
   {
     path: 'auth',

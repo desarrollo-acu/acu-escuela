@@ -1,16 +1,21 @@
 import { Component, Inject } from '@angular/core';
-import { MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
+import {
+  MatBottomSheetRef,
+  MAT_BOTTOM_SHEET_DATA,
+} from '@angular/material/bottom-sheet';
 import { MatDialog } from '@angular/material/dialog';
 
 import Swal from 'sweetalert2';
-import { AcuService, LiberarParameters } from 'src/app/core/services/acu.service';
+import {
+  AcuService,
+  LiberarParameters,
+} from 'src/app/core/services/acu.service';
 import { CopiarMoverParameters } from 'src/app/core/model/copiarMoverParameters.model';
-
 
 @Component({
   selector: 'app-seleccionar-accion-agenda',
   templateUrl: './seleccionar-accion-agenda.component.html',
-  styleUrls: ['./seleccionar-accion-agenda.component.scss']
+  styleUrls: ['./seleccionar-accion-agenda.component.scss'],
 })
 export class SeleccionarAccionAgendaComponent {
   animal: any;
@@ -18,10 +23,13 @@ export class SeleccionarAccionAgendaComponent {
   verOpciones: boolean;
   constructor(
     // tslint:disable-next-line: variable-name
-    private _bottomSheetRef: MatBottomSheetRef<SeleccionarAccionAgendaComponent>,
+    private _bottomSheetRef: MatBottomSheetRef<
+      SeleccionarAccionAgendaComponent
+    >,
     private acuService: AcuService,
     public dialog: MatDialog,
-    @Inject(MAT_BOTTOM_SHEET_DATA) public data: any) {
+    @Inject(MAT_BOTTOM_SHEET_DATA) public data: any
+  ) {
     this.verOpciones = this.data.verOpciones;
     this.pegar = JSON.parse(localStorage.getItem('pegar-clase'));
   }
@@ -39,9 +47,11 @@ export class SeleccionarAccionAgendaComponent {
     localStorage.removeItem('abrirAgenda');
     let continuar = true;
     switch (key) {
-
       case 'abrir-clase':
         localStorage.setItem('abrirAgenda', tipoAgenda);
+        break;
+      case 'examen-clase':
+        localStorage.setItem('abrirAgenda', `examen-${tipoAgenda}`);
         break;
 
       case 'suspender-clase':
@@ -54,9 +64,8 @@ export class SeleccionarAccionAgendaComponent {
 
       case 'mover-clase':
       case 'copiar-clase': // setItem('abrirAgenda', tipoAgenda);
-
         const copiarMoverParameters = {
-          accion: (key === 'mover-clase') ? 'MOVER' : 'COPIAR',
+          accion: key === 'mover-clase' ? 'MOVER' : 'COPIAR',
           fechaOld: mainParameters.fecha,
           movilOld: mainParameters.movil,
           horaOld: mainParameters.hora,
@@ -64,75 +73,71 @@ export class SeleccionarAccionAgendaComponent {
           textOld: mainParameters.text,
         };
 
-        localStorage.setItem('copiarMoverParameters', JSON.stringify(copiarMoverParameters));
+        localStorage.setItem(
+          'copiarMoverParameters',
+          JSON.stringify(copiarMoverParameters)
+        );
 
         this.setPegarStorage();
         break;
 
       case 'liberar-clase':
-
         continuar = false;
-        this.confirmacionUsuario('Confirmación de usuario',
-          'ATENCIÓN: Se liberará la hora, perdiendose los datos actuales. ¿Confirma continuar?')
-          .then((result) => {
-            if (result.value) {
-              const liberarParameters: LiberarParameters = {
-                fechaClase: mainParameters.fecha,
-                horaClase: mainParameters.hora,
-                movil: mainParameters.movil
-              };
-              this.acuService.liberarClase(liberarParameters)
-                .subscribe((res: any) => {
-
-                  Swal.fire({
-                    icon: 'success',
-                    title: res.Gx_msg,
-                    showConfirmButton: false,
-                    timer: 4000
-                  });
-                  localStorage.setItem('refreshLiberaAgenda', 'true');
-
+        this.confirmacionUsuario(
+          'Confirmación de usuario',
+          'ATENCIÓN: Se liberará la hora, perdiendose los datos actuales. ¿Confirma continuar?'
+        ).then((result) => {
+          if (result.value) {
+            const liberarParameters: LiberarParameters = {
+              fechaClase: mainParameters.fecha,
+              horaClase: mainParameters.hora,
+              movil: mainParameters.movil,
+            };
+            this.acuService
+              .liberarClase(liberarParameters)
+              .subscribe((res: any) => {
+                Swal.fire({
+                  icon: 'success',
+                  title: res.Gx_msg,
+                  showConfirmButton: false,
+                  timer: 4000,
                 });
-            }
-          });
-
-
+                localStorage.setItem('refreshLiberaAgenda', 'true');
+              });
+          }
+        });
 
         break;
 
       case 'pegar-clase':
-
-        const oldParameters = JSON.parse(localStorage.getItem('copiarMoverParameters'));
+        const oldParameters = JSON.parse(
+          localStorage.getItem('copiarMoverParameters')
+        );
 
         if (existe) {
           Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: 'Ese turno ya esta ocupado, elegi otro!'
+            text: 'Ese turno ya esta ocupado, elegi otro!',
           });
         } else {
           if (oldParameters.fechaOld > mainParameters.fecha) {
             continuar = false;
             this.confirmacionUsuario(
               'Confirmación de usuario',
-              'ATENCIÓN: La fecha seleccionada es anterior a la actual. ¿Confirma continuar?')
-              .then((result) => {
-                if (result.value) {
-                  this.copiarMoverClase(oldParameters, mainParameters);
-                }
+              'ATENCIÓN: La fecha seleccionada es anterior a la actual. ¿Confirma continuar?'
+            ).then((result) => {
+              if (result.value) {
+                this.copiarMoverClase(oldParameters, mainParameters);
+              }
 
-
-                this.cerrarBottomSheet(true, event);
-              });
-
+              this.cerrarBottomSheet(true, event);
+            });
           } else {
             this.copiarMoverClase(oldParameters, mainParameters);
 
             this.cerrarBottomSheet(true, event);
           }
-
-
-
         }
         break;
 
@@ -151,11 +156,9 @@ export class SeleccionarAccionAgendaComponent {
   }
 
   cerrarBottomSheet(correcto?: boolean, event?: Event) {
-
     this._bottomSheetRef.dismiss(correcto);
     event.preventDefault();
   }
-
 
   mensajeConfirmacion(title, text) {
     return Swal.fire({
@@ -166,7 +169,7 @@ export class SeleccionarAccionAgendaComponent {
       showConfirmButton: false,
       onClose: () => {
         console.log('Cieerro antes de timer');
-      }
+      },
     });
   }
 
@@ -177,18 +180,16 @@ export class SeleccionarAccionAgendaComponent {
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Confirmar',
-      cancelButtonText: 'Cancelar'
+      cancelButtonText: 'Cancelar',
     });
   }
 
   setPegarStorage() {
-
     this.pegar = !this.pegar;
     localStorage.setItem('pegar-clase', this.pegar.toString());
   }
 
   copiarMoverClase(oldParameters, mainParameters) {
-
     const params: CopiarMoverParameters = {
       accion: oldParameters.accion,
       fechaClaseOld: oldParameters.fechaOld,
@@ -202,22 +203,18 @@ export class SeleccionarAccionAgendaComponent {
     if (oldParameters.accion === 'MOVER') {
       localStorage.setItem('limpiarCeldaOld', 'true');
     }
-    this.acuService.copiarMoverClase(params)
-      .subscribe((res: any) => {
-
-        Swal.fire({
-          icon: 'success',
-          title: res.Gx_msg,
-          showConfirmButton: false,
-          timer: 4000
-        });
-
-
-        localStorage.setItem('classOld', oldParameters.classOld);
-        localStorage.setItem('textOld', oldParameters.textOld);
-        localStorage.setItem('refreshAgenda', 'true');
+    this.acuService.copiarMoverClase(params).subscribe((res: any) => {
+      Swal.fire({
+        icon: 'success',
+        title: res.Gx_msg,
+        showConfirmButton: false,
+        timer: 4000,
       });
 
+      localStorage.setItem('classOld', oldParameters.classOld);
+      localStorage.setItem('textOld', oldParameters.textOld);
+      localStorage.setItem('refreshAgenda', 'true');
+    });
 
     this.setPegarStorage();
   }

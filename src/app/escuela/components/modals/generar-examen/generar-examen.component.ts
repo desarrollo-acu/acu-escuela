@@ -1,0 +1,316 @@
+import { Component, OnInit, Inject } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import {
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+  MatDialog,
+} from '@angular/material/dialog';
+
+import { AcuService } from '@core/services/acu.service';
+import { InstructorService } from '@core/services/instructor.service';
+import { AgendaClase } from '@core/model/agenda-clase.model';
+import { confirmacionUsuario, mensajeConfirmacion } from '@utils/sweet-alert';
+import { AgendaMovilComponent } from '../../agenda-movil/agenda-movil.component';
+import { CursoService } from '../../../../core/services/curso.service';
+import { SeleccionarCursoComponent } from '../seleccionar-curso/seleccionar-curso.component';
+import { SeleccionarAlumnoComponent } from '../seleccionar-alumno/seleccionar-alumno.component';
+import { AlumnoService } from '../../../../core/services/alumno.service';
+import Swal from 'sweetalert2';
+import { SeleccionarInstructorComponent } from '../seleccionar-instructor/seleccionar-instructor.component';
+import { InscripcionService } from '../../../../core/services/inscripcion.service';
+import { Inscripcion } from '../../../../core/model/inscripcion.model';
+import { GenerarExamen } from '../../../../core/model/generar-examen.model';
+import { Instructor } from '../../../../core/model/instructor.model';
+import { MovilService } from '../../../../core/services/movil.service';
+@Component({
+  selector: 'app-generar-examen',
+  templateUrl: './generar-examen.component.html',
+  styleUrls: ['./generar-examen.component.scss'],
+})
+export class GenerarExamenComponent implements OnInit {
+  form: FormGroup;
+  agendaClase: AgendaClase;
+
+  tipCurId: number = null;
+  aluId: number = null;
+  instructorId: number = null;
+  mostrarExamen = false;
+  tituloExamen = '';
+  examenConCosto = false;
+
+  constructor(
+    private formBuilder: FormBuilder,
+    public dialogRef: MatDialogRef<AgendaMovilComponent>,
+    private movilService: MovilService,
+    private instructorService: InstructorService,
+    private inscripcionService: InscripcionService,
+    private alumnoService: AlumnoService,
+    private cursoService: CursoService,
+    public dialog: MatDialog,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {
+    this.agendaClase = this.data.agendaClase;
+    console.log('aaaa .agendaClase : ', this.agendaClase);
+    this.buildForm();
+  }
+
+  ngOnInit(): void {}
+
+  get fechaClase() {
+    return this.form.get('fechaClase');
+  }
+  get hora() {
+    return this.form.get('hora');
+  }
+  get movil() {
+    return this.form.get('movil');
+  }
+  get cursoId() {
+    return this.form.get('cursoId');
+  }
+  get cursoNombre() {
+    return this.form.get('cursoNombre');
+  }
+  get alumnoNumero() {
+    return this.form.get('alumnoNumero');
+  }
+  get alumnoNombre() {
+    return this.form.get('alumnoNombre');
+  }
+  get numeroClase() {
+    return this.form.get('numeroClase');
+  }
+  get estadoClase() {
+    return this.form.get('estadoClase');
+  }
+  get escInsId() {
+    return this.form.get('escInsId');
+  }
+  get escInsNom() {
+    return this.form.get('escInsNom');
+  }
+
+  get claseAdicional() {
+    return this.form.get('claseAdicional');
+  }
+
+  get tipoClase() {
+    return this.form.get('tipoClase');
+  }
+
+  get observaciones() {
+    return this.form.get('observaciones');
+  }
+
+  private buildForm() {
+    this.form = this.formBuilder.group({
+      fechaClase: [this.agendaClase.FechaClase],
+      hora: [`${this.agendaClase.Hora}:00`],
+      movil: [this.agendaClase.EscMovCod],
+      cursoId: [this.agendaClase.TipCurId],
+      cursoNombre: [this.agendaClase.TipCurNom],
+      numeroClase: [this.agendaClase.EsAgCuNroCla],
+      estadoClase: [this.agendaClase.EsAgCuEst],
+      claseAdicional: [this.agendaClase.EsAgCuClaAdiSN],
+      tipoClase: [this.agendaClase.EsAgCuTipCla],
+      escInsId: [this.agendaClase.EsAgCuInsId],
+      escInsNom: [this.agendaClase.EsAgCuInsNom],
+      alumnoNumero: [this.agendaClase.AluNro],
+      alumnoNombre: [this.agendaClase.AluNomApe],
+      disponibilidadLunes: [this.data.agendaClase.disponibilidadLunes],
+      disponibilidadMartes: [this.data.agendaClase.disponibilidadMartes],
+      disponibilidadMiercoles: [this.data.agendaClase.disponibilidadMiercoles],
+      disponibilidadJueves: [this.data.agendaClase.disponibilidadJueves],
+      disponibilidadViernes: [this.data.agendaClase.disponibilidadViernes],
+      disponibilidadSabado: [this.data.agendaClase.disponibilidadSabado],
+      observaciones: [this.agendaClase.EsAgCuObs, Validators.required],
+    });
+
+    this.fechaClase.disable();
+    this.hora.disable();
+    this.movil.disable();
+    this.cursoNombre.disable();
+    // this.alumnoNumero.disable();
+    this.alumnoNombre.disable();
+    // this.numeroClase.disable();
+    // this.claseAdicional.disable();
+    // this.tipoClase.disable();
+    // this.escInsId.disable();
+    this.escInsNom.disable();
+    // if (!this.esSuspender) {
+    //   this.estadoClase.setValue('D');
+    //   this.estadoClase.disable();
+    // }
+  }
+  seleccionarMovil() {
+    this.movilService.getMoviles().subscribe((res) => {
+      console.log(res);
+    });
+  }
+  seleccionarInstructor() {
+    this.instructorService
+      .getInstructores()
+      .subscribe((instructores: Instructor[]) => {
+        this.openDialogInstructores(instructores);
+      });
+  }
+
+  private openDialogInstructores(instructores) {
+    const instructoresDialogRef = this.dialog.open(
+      SeleccionarInstructorComponent,
+      {
+        height: 'auto',
+        width: '700px',
+        data: {
+          instructores,
+        },
+      }
+    );
+
+    instructoresDialogRef.afterClosed().subscribe((result) => {
+      this.form.patchValue({
+        escInsId: result.EscInsId,
+        escInsNom: result.EscInsNom,
+      });
+    });
+  }
+
+  seleccionarCurso() {
+    this.cursoService.getCursos().subscribe((res: any) => {
+      this.openDialogCursos(res);
+    });
+  }
+
+  private openDialogCursos(cursos) {
+    const cursosDialogRef = this.dialog.open(SeleccionarCursoComponent, {
+      height: 'auto',
+      width: '700px',
+      data: {
+        cursos,
+      },
+    });
+
+    cursosDialogRef.afterClosed().subscribe((curso) => {
+      this.addInfoCursoToForm(curso);
+    });
+  }
+
+  seleccionarAlumno() {
+    this.alumnoService.obtenerAlumnos(5, 1, '').subscribe((res: any) => {
+      console.log('res: ', res);
+      console.log('res.Cantidad: ', res.Cantidad);
+      console.log('res.Alumnos: ', res.Alumnos);
+
+      this.openDialogAlumnos(res.Alumnos, res.Cantidad);
+    });
+  }
+
+  private openDialogAlumnos(alumnos, cantidad) {
+    const alumnosDialogRef = this.dialog.open(SeleccionarAlumnoComponent, {
+      height: 'auto',
+      width: '700px',
+      data: {
+        alumnos,
+        cantidad,
+      },
+    });
+
+    alumnosDialogRef.afterClosed().subscribe((alumno) => {
+      // this.alumno = alumno;
+      console.log('1.alumno: ' + alumno);
+      console.log('2.alumno: ' + JSON.stringify(alumno));
+      if (alumno) {
+        this.aluId = alumno.AluId;
+        this.obtenerInscripcion();
+        this.form.patchValue({
+          alumnoNumero: alumno.AluNro,
+          alumnoNombre: alumno.AluNomComp,
+        });
+      }
+    });
+  }
+
+  obtenerCurso() {
+    const cursoId = this.form.get('cursoId').value;
+    console.log('obtenerCurso - cursoId: ', cursoId);
+    if (cursoId !== '') {
+      this.cursoService.getCurso(cursoId).subscribe((curso: any) => {
+        console.log('obtenerCurso - curso: ', curso);
+        if (curso.TipCurId === '0') {
+          return Swal.fire({
+            icon: 'warning',
+            title: 'No encontrado!',
+            text: 'El código del curso no existe, seleccione un existente.',
+          }).then();
+        }
+
+        this.addInfoCursoToForm(curso);
+      });
+    }
+  }
+
+  addInfoCursoToForm(curso: any) {
+    this.tipCurId = curso.TipCurId;
+    this.obtenerInscripcion();
+    this.form.patchValue({
+      cursoId: curso.TipCurId,
+      cursoNombre: curso.TipCurNom,
+    });
+  }
+
+  obtenerInscripcion() {
+    console.log(this.aluId);
+    console.log(this.tipCurId);
+
+    if (this.aluId === null || this.tipCurId === null) {
+      return;
+    }
+
+    this.inscripcionService
+      .obtenerInscripcion(this.aluId, this.tipCurId)
+      .subscribe((inscripcion: Inscripcion) => {
+        console.log('inscripcion: ', inscripcion);
+        this.mostrarExamen = true;
+        this.examenConCosto = inscripcion.cantidadExamenes > 0;
+        this.tituloExamen = this.examenConCosto ? 'con' : 'sin';
+
+        this.form.patchValue({
+          escInsId: inscripcion.EscInsId,
+          escInsNom: inscripcion.EscInsNom,
+        });
+      });
+  }
+
+  generarExamen(event: Event) {
+    console.log(event);
+
+    if (this.form.invalid) {
+      return;
+    }
+    confirmacionUsuario(
+      'Confirmar generación de examen',
+      `Se generará un nuevo examen ${this.tituloExamen} costo para el alumno ${this.alumnoNombre.value}, ¿Desea continuar? `
+    ).then((res) => {
+      if (!res.isConfirmed) {
+        return;
+      }
+      const generarExamen: GenerarExamen = {
+        alumnoVaADarExamen: this.aluId,
+        cursoParaExamen: this.tipCurId,
+
+        clasePreviaExamen: false,
+        observacionesExamen: this.observaciones.value,
+        instructorSeleccionado: this.escInsId.value,
+        claseAnterior: this.agendaClase,
+        examenConCosto: this.examenConCosto,
+      };
+      this.inscripcionService
+        .generarExamen(generarExamen)
+        .subscribe((res) => console.log(res));
+    });
+  }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+}
