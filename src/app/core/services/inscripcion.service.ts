@@ -80,11 +80,9 @@ export class InscripcionService {
   }
 
   obtenerInscripcion(aluId: number, cursoId: number) {
-    return this.http
-      .get(
-        `${environment.url_ws}/wsGetInscripcion?AluId=${aluId}&TipCurId=${cursoId}`
-      )
-      .pipe(map((inscripcion: any) => inscripcion.Inscripciones[0]));
+    return this.http.get(
+      `${environment.url_ws}/wsGetInscripcion?AluId=${aluId}&TipCurId=${cursoId}`
+    );
   }
 
   getPDFPrefactura(preFactura: Prefactura) {

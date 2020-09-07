@@ -12,10 +12,9 @@ import { Movil } from '@core/model/movil.model';
 @Component({
   selector: 'app-gestion-movil',
   templateUrl: './gestion-movil.component.html',
-  styleUrls: ['./gestion-movil.component.scss']
+  styleUrls: ['./gestion-movil.component.scss'],
 })
 export class GestionMovilComponent implements OnInit {
-
   displayedColumns: string[] = ['actions', 'MovCod', 'EscVehEst'];
   dataSource: MatTableDataSource<Movil>;
   verMovil: boolean;
@@ -30,16 +29,13 @@ export class GestionMovilComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private movilService: MovilService,
-    private router: Router) {
-
-  }
+    private router: Router
+  ) {}
 
   ngOnInit() {
-
     this.buildForm();
     this.getMoviles('A');
     this.generateEstados();
-
   }
 
   applyFilter(event: Event) {
@@ -58,23 +54,26 @@ export class GestionMovilComponent implements OnInit {
         this.router.navigate(['/escuela/abm-movil']);
         break;
       case 'UPD':
-
         this.movilService.sendDataMovil(modo, movil);
         this.router.navigate(['/escuela/abm-movil']);
         break;
       case 'DLT':
-        confirmacionUsuario('Confirmación de Usuario', `Está seguro que desea eliminar el movil: ${movil.MovCod}`).then((confirm) => {
+        confirmacionUsuario(
+          'Confirmación de Usuario',
+          `Está seguro que desea eliminar el movil: ${movil.MovCod}`
+        ).then((confirm) => {
           if (confirm.isConfirmed) {
-            this.movilService.gestionMovil(modo, movil).subscribe((res: any) => {
-              console.log('res eli:', res);
+            this.movilService
+              .gestionMovil(modo, movil)
+              .subscribe((res: any) => {
+                console.log('res eli:', res);
 
-              mensajeConfirmacion('Ok', res.Movil.ErrorMessage).then((res2) => {
-
-                this.getMoviles(this.filtro);
-
+                mensajeConfirmacion('Ok', res.Movil.ErrorMessage).then(
+                  (res2) => {
+                    this.getMoviles(this.filtro);
+                  }
+                );
               });
-
-            });
           }
         });
 
@@ -83,20 +82,18 @@ export class GestionMovilComponent implements OnInit {
       default:
         break;
     }
-
   }
 
   getMoviles(EscVehEst?: string) {
-
     this.verMovil = false;
     this.movilService.getMoviles().subscribe((moviles: Movil[]) => {
       console.log('moviles: ', moviles);
 
-
       this.verMovil = true;
-      const auxMoviles = (EscVehEst === '-' || !EscVehEst)
-        ? moviles
-        : moviles.filter(instructor => instructor.EscVehEst === EscVehEst);
+      const auxMoviles =
+        EscVehEst === '-' || !EscVehEst
+          ? moviles
+          : moviles.filter((movil) => movil.EscVehEst === EscVehEst);
       // Assign the data to the data source for the table to render
       this.dataSource = new MatTableDataSource(auxMoviles);
 
@@ -106,7 +103,6 @@ export class GestionMovilComponent implements OnInit {
   }
 
   buildForm() {
-
     this.form = this.fb.group({
       tipCurEst: ['A'],
     });
@@ -119,12 +115,11 @@ export class GestionMovilComponent implements OnInit {
     this.getMoviles(filterValue);
   }
 
-
   generateEstados() {
     const estado0 = {
       id: 0,
       value: '-',
-      description: 'Todos'
+      description: 'Todos',
     };
 
     this.estados.push(estado0);
@@ -132,20 +127,17 @@ export class GestionMovilComponent implements OnInit {
     const estado1 = {
       id: 1,
       value: 'A',
-      description: 'Activo'
+      description: 'Activo',
     };
     this.estados.push(estado1);
 
     const estado2 = {
       id: 2,
       value: 'D',
-      description: 'Deshabilitado'
+      description: 'Deshabilitado',
     };
     this.estados.push(estado2);
 
-
-
     console.log('estados: ', this.estados);
   }
-
 }

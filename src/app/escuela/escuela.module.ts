@@ -53,6 +53,7 @@ import { AbmInscripcionComponent } from './components/abm-inscripcion/abm-inscri
 import { GestionMovilComponent } from './components/gestion-movil/gestion-movil.component';
 import { AbmMovilComponent } from './components/abm-movil/abm-movil.component';
 import { GenerarExamenComponent } from './components/modals/generar-examen/generar-examen.component';
+import { SeleccionarMovilComponent } from './components/modals/seleccionar-movil/seleccionar-movil.component';
 registerLocaleData(localeEsUy, 'es-UY');
 registerLocaleData(localeEs, 'es');
 
@@ -91,7 +92,8 @@ registerLocaleData(localeEs, 'es');
     AbmInscripcionComponent,
     GestionMovilComponent,
     AbmMovilComponent,
-    GenerarExamenComponent
+    GenerarExamenComponent,
+    SeleccionarMovilComponent
   ],
   imports: [
     CommonModule,
