@@ -374,30 +374,39 @@ export class GenerarExamenComponent implements OnInit {
           }
         );
 
-        clasesEstimadasDialogRef.afterClosed().subscribe((nuevaClase: any) => {
-          console.log('1.response: ' + nuevaClase);
-          console.log('2.response: ' + JSON.stringify(nuevaClase));
-          console.log(`2. response ${nuevaClase}`);
+        clasesEstimadasDialogRef
+          .afterClosed()
+          .subscribe((nuevaClase: ClaseEstimadaDetalle) => {
+            console.log('1.response: ' + nuevaClase);
+            console.log('2.response: ' + JSON.stringify(nuevaClase));
+            console.log(`2. response ${nuevaClase}`);
 
-          this.finGenerarExamen(nuevaClase, true);
-        });
+            this.finGenerarExamen(nuevaClase, true);
+          });
       });
   }
 
-  finGenerarExamen(nuevaClase?: string, reagendaClase?: boolean) {
+  finGenerarExamen(nuevaClase?: ClaseEstimadaDetalle, reagendaClase?: boolean) {
     const generarExamen: GenerarExamen = {
       alumnoVaADarExamen: this.aluId,
       cursoParaExamen: this.tipCurId,
 
       clasePreviaExamen: false,
       observacionesExamen: this.observaciones.value,
-      instructorSeleccionado: this.escInsId.value,
       claseAnterior: this.agendaClase,
       examenConCosto: this.examenConCosto,
-      nuevaClase,
+      instructorSeleccionado: this.escInsId.value,
+      movilSeleccionado: this.movil.value,
       reagendaClase,
       EscAluCurId: this.escAluCurId,
+      usrId: localStorage.getItem('usrId'),
     };
+
+    if (nuevaClase) {
+      generarExamen.nuevaFecha = nuevaClase.Fecha;
+      generarExamen.nuevaHoraInicio = nuevaClase.HoraInicio;
+      generarExamen.nuevaHoraFin = nuevaClase.HoraFin;
+    }
 
     this.inscripcionService
       .generarExamen(generarExamen)

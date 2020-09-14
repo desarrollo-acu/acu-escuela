@@ -13,6 +13,7 @@ import { InscripcionCurso } from '@core/model/inscripcion-curso.model';
 import { ClasesEstimadasComponent } from '../modals/clases-estimadas/clases-estimadas.component';
 import { SuspenderClaseComponent } from '../modals/suspender-clase/suspender-clase.component';
 import { GenerarExamenComponent } from '../modals/generar-examen/generar-examen.component';
+import { isMoment, Moment } from 'moment';
 
 export interface AgendaElement {
   Movil: string;
@@ -603,9 +604,18 @@ export class AgendaMovilComponent implements OnInit, AfterViewInit, OnDestroy {
       });
   }
 
-  formatDateToString(fecha: Date): string {
+  formatDateToString(fechaParm: Date | Moment): string {
+    console.log('fecha: ', fechaParm);
+    let auxFecha: Date;
+    if (isMoment(fechaParm)) {
+      auxFecha = fechaParm.toDate();
+    } else if (fechaParm instanceof Date) {
+      auxFecha = fechaParm;
+    }
+    console.log('auxFecha: ', auxFecha);
+    const fecha = auxFecha;
+    this.fecha = auxFecha;
     console.log('fecha: ', fecha);
-
     const day = fecha.getDate();
     console.log('day: ', day);
     const month = fecha.getMonth() + 1;

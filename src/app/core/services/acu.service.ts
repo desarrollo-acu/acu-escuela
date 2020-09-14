@@ -9,11 +9,9 @@ import { CopiarMoverParameters } from '../model/copiarMoverParameters.model';
 import { AgendaCurso } from 'src/app/escuela/components/modals/agenda-curso/agenda-curso.component';
 import { CuotaSocial } from '../model/cuotaSocial.model';
 
-
 import { AgendaClase } from '@core/model/agenda-clase.model';
 import { ClaseEstimada } from '../model/clase-estimada.model';
-
-
+import { Suspenderclase } from '../model/suspender-clase.model';
 
 export interface LiberarParameters {
   fechaClase: Date;
@@ -27,31 +25,28 @@ export interface DuplicarDiaParameters {
   EsAgCuAviso: number;
 }
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AcuService {
-
   xmlhttp = new XMLHttpRequest();
 
   httpOptions = {
     headers: new HttpHeaders({
-      'Content-Type': 'application/json'
-    })
+      'Content-Type': 'application/json',
+    }),
   };
 
   httOptionsXml = {
     headers: new HttpHeaders({
-      'Content-Type': 'application/soap+xml'
-    })
+      'Content-Type': 'application/soap+xml',
+    }),
   };
 
-
-
-
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getTablaAgenda() {
-    return this.http.post(`${environment.url_ws}/wsObtenerTablaAgenda`, {}, this.httpOptions)
+    return this.http
+      .post(`${environment.url_ws}/wsObtenerTablaAgenda`, {}, this.httpOptions)
       .subscribe((res: any) => {
         console.log('res: ', res);
         console.log('res.TablaAgenda', res.TablaAgenda);
@@ -61,21 +56,27 @@ export class AcuService {
   }
 
   getClaseAgenda(fechaClase: string, horaClase: number, movCod: number) {
-    return this.http.post(`${environment.url_ws}/wsObtenerAgendaClase`, {
-      FechaClase: fechaClase,
-      HoraClase: horaClase,
-      MovCod: movCod
-    }, this.httpOptions);
-
+    return this.http.post(
+      `${environment.url_ws}/wsObtenerAgendaClase`,
+      {
+        FechaClase: fechaClase,
+        HoraClase: horaClase,
+        MovCod: movCod,
+      },
+      this.httpOptions
+    );
   }
 
   getInstructorAgenda(fechaClase: string, horaClase: number, EscInsId: string) {
-    return this.http.post(`${environment.url_ws}/wsObtenerInstructorAgenda`, {
-      Fecha: fechaClase,
-      Hora: horaClase,
-      EscInsId
-    }, this.httpOptions);
-
+    return this.http.post(
+      `${environment.url_ws}/wsObtenerInstructorAgenda`,
+      {
+        Fecha: fechaClase,
+        Hora: horaClase,
+        EscInsId,
+      },
+      this.httpOptions
+    );
   }
 
   getAgenda() {
@@ -85,70 +86,87 @@ export class AcuService {
   getAgendaPorFecha(fecha: any, tipo: string) {
     return this.http.post(`${environment.url_ws}/wsObtenerAgendaPorFecha`, {
       fecha,
-      tipo
+      tipo,
     });
   }
 
-  validarCopiarMoverClase(fechaClase: string, horaClase: number, movCod: number) {
-    return this.http.post(`${environment.url_ws}/WSValidarCopiarMoverClase`, {
-      FchClase: fechaClase,
-      MovCod: movCod,
-      Hora: horaClase
-    }, this.httpOptions);
-
+  validarCopiarMoverClase(
+    fechaClase: string,
+    horaClase: number,
+    movCod: number
+  ) {
+    return this.http.post(
+      `${environment.url_ws}/WSValidarCopiarMoverClase`,
+      {
+        FchClase: fechaClase,
+        MovCod: movCod,
+        Hora: horaClase,
+      },
+      this.httpOptions
+    );
   }
 
   duplicarDiaAgenda(params: DuplicarDiaParameters) {
-    return this.http.post(`${environment.url_ws}/wsDuplicarDiaAgenda`, {
-      FchClase: params.fechaClase,
-      FechaNueva: params.fechaNueva,
-      EsAgCuAviso: params.EsAgCuAviso
-    }, this.httpOptions);
-
+    return this.http.post(
+      `${environment.url_ws}/wsDuplicarDiaAgenda`,
+      {
+        FchClase: params.fechaClase,
+        FechaNueva: params.fechaNueva,
+        EsAgCuAviso: params.EsAgCuAviso,
+      },
+      this.httpOptions
+    );
   }
 
   moverDiaAgenda(params: DuplicarDiaParameters) {
-    return this.http.post(`${environment.url_ws}/wsMoverDiaAgenda`, {
-      FchClase: params.fechaClase,
-      FechaNueva: params.fechaNueva,
-      EsAgCuAviso: params.EsAgCuAviso
-    }, this.httpOptions);
-
+    return this.http.post(
+      `${environment.url_ws}/wsMoverDiaAgenda`,
+      {
+        FchClase: params.fechaClase,
+        FechaNueva: params.fechaNueva,
+        EsAgCuAviso: params.EsAgCuAviso,
+      },
+      this.httpOptions
+    );
   }
 
   liberarDiaAgenda(FchClase: Date) {
-    return this.http.post(`${environment.url_ws}/wsLiberarDiaAgenda`, {
-      FchClase
-    }, this.httpOptions);
-
+    return this.http.post(
+      `${environment.url_ws}/wsLiberarDiaAgenda`,
+      {
+        FchClase,
+      },
+      this.httpOptions
+    );
   }
 
   copiarMoverClase(params: CopiarMoverParameters) {
-    return this.http.post(`${environment.url_ws}/WSCopiarMoverClase`, {
-      Accion: params.accion,
-      FchClaseOld: params.fechaClaseOld,
-      HorClaseOld: params.horaClaseOld,
-      MovilOld: params.movilOld,
-      FchClase: params.fechaClase,
-      HorClase: params.horaClase,
-      Movil: params.movil
-    }, this.httpOptions);
-
+    return this.http.post(
+      `${environment.url_ws}/WSCopiarMoverClase`,
+      {
+        Accion: params.accion,
+        FchClaseOld: params.fechaClaseOld,
+        HorClaseOld: params.horaClaseOld,
+        MovilOld: params.movilOld,
+        FchClase: params.fechaClase,
+        HorClase: params.horaClase,
+        Movil: params.movil,
+      },
+      this.httpOptions
+    );
   }
 
   liberarClase(params: LiberarParameters) {
-    return this.http.post(`${environment.url_ws}/wsLiberarClase`, {
-      FchClase: params.fechaClase,
-      HorClase: params.horaClase,
-      Movil: params.movil
-    }, this.httpOptions);
-
+    return this.http.post(
+      `${environment.url_ws}/wsLiberarClase`,
+      {
+        FchClase: params.fechaClase,
+        HorClase: params.horaClase,
+        Movil: params.movil,
+      },
+      this.httpOptions
+    );
   }
-
-
-
-
-
 
   getItems() {
     return this.http.get(`${environment.url_ws}/wsGetItems`);
@@ -159,15 +177,10 @@ export class AcuService {
   }
 
   suspenderClase(claseAnterior: AgendaClase, nuevaClase?: any) {
-    const SuspenderClase: {
-      reagendaClase?: boolean;
-      nuevaFecha?: string;
-      nuevaHoraInicio?: number;
-      nuevaHoraFin?: number;
-      claseAnterior?: AgendaClase
-    } = {
+    const SuspenderClase: Suspenderclase = {
       reagendaClase: false,
-      claseAnterior
+      claseAnterior,
+      usrId: localStorage.getItem('usrId'),
     };
     if (nuevaClase) {
       SuspenderClase.reagendaClase = true;
@@ -177,13 +190,9 @@ export class AcuService {
     }
 
     return this.http.post(`${environment.url_ws}/wsSuspenderClase`, {
-      SuspenderClase
+      SuspenderClase,
     });
-
-
   }
-
-
 
   getEscuelaEstados() {
     return this.http.get(`${environment.url_ws}/wsGetEscuelaEstados`);
@@ -196,19 +205,18 @@ export class AcuService {
 
   guardarAgendaInstructor(agendaCurso: AgendaCurso) {
     return this.http.post(`${environment.url_ws}/wsGuardarAgendaInstructor`, {
-      agendaCurso
+      agendaCurso,
     });
   }
 
   guardarAgendaClase(agendaClase: AgendaClase) {
     return this.http.post(`${environment.url_ws}/wsGuardarAgendaClase`, {
-      agendaClase
+      agendaClase,
     });
   }
 
   getSocio(SocId) {
     return this.http.get(`${environment.url_ws}/wsGetSDTSocio?SocId=${SocId}`);
-
   }
 
   getSocios(cantidad: number, page: number, tipo: string, filtro: number) {
@@ -222,31 +230,32 @@ export class AcuService {
   }
 
   getFacturasPendientes(socId: number) {
-
-    return this.http.get(`${environment.url_ws}/wsGetCuotasSociales?SocId=${socId}`);
+    return this.http.get(
+      `${environment.url_ws}/wsGetCuotasSociales?SocId=${socId}`
+    );
     // return this.http.get(`${environment.url_ws}/wsGetFacturasPendientes?PageSize=${cantidad}&PageNumber=${page}&SocId=${socId}`);
   }
 
-
   facturarCuotasSociales(cuotasSociales: CuotaSocial) {
     return this.http.post(`${environment.url_ws}/wsFacturarCuotasSociales`, {
-      cuotasSociales
+      cuotasSociales,
     });
-
   }
 
   getPDFPlanDeClases(planDeClase: ClaseEstimada) {
-
     const headers = new HttpHeaders();
     headers.set('Aceppt', 'application/pdf;');
 
-    return this.http.post(`${environment.url_ws}/wsPDFPlanDeClases`, {
-      PlanDeClase: planDeClase
-    }, {
-      headers,
-      responseType: 'blob' as 'json',
-    });
-
+    return this.http.post(
+      `${environment.url_ws}/wsPDFPlanDeClases`,
+      {
+        PlanDeClase: planDeClase,
+      },
+      {
+        headers,
+        responseType: 'blob' as 'json',
+      }
+    );
   }
 
   cleanStorageAgenda() {
@@ -255,7 +264,6 @@ export class AcuService {
     localStorage.removeItem('limpiarCeldaOld');
     localStorage.removeItem('pegar-clase');
 
-
     localStorage.removeItem('fechaClase');
     localStorage.removeItem('fecha');
     localStorage.removeItem('instructor');
@@ -263,14 +271,8 @@ export class AcuService {
     localStorage.removeItem('hora');
     localStorage.removeItem('existe');
     localStorage.removeItem('tipoAgenda');
-
-
   }
-
-
 }
-
-
 
 function xml2json(xml) {
   try {
@@ -280,10 +282,10 @@ function xml2json(xml) {
         const item = xml.children.item(i);
         const nodeName = item.nodeName;
 
-        if (typeof (obj[nodeName]) === 'undefined') {
+        if (typeof obj[nodeName] === 'undefined') {
           obj[nodeName] = xml2json(item);
         } else {
-          if (typeof (obj[nodeName].push) === 'undefined') {
+          if (typeof obj[nodeName].push === 'undefined') {
             const old = obj[nodeName];
 
             obj[nodeName] = [];
