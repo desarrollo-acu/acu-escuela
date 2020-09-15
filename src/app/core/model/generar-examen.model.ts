@@ -1,4 +1,5 @@
 import { AgendaClase } from './agenda-clase.model';
+import { ClaseEstimadaDetalle } from './clase-estimada.model';
 
 export interface GenerarExamen {
   alumnoVaADarExamen?: number;
@@ -15,4 +16,7 @@ export interface GenerarExamen {
   reagendaClase?: boolean;
   EscAluCurId?: number;
   usrId?: string;
+  reservarClasePrevia?: boolean;
+
+  clasesAReagendar?: ClaseEstimadaDetalle[];
 }

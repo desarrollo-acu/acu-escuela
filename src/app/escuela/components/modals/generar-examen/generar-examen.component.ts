@@ -46,6 +46,8 @@ export class GenerarExamenComponent implements OnInit {
   examenConCosto = false;
   escAluCurId: number;
 
+  clasesAReagendar: ClaseEstimadaDetalle[] = [];
+
   constructor(
     private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<AgendaMovilComponent>,
@@ -53,6 +55,7 @@ export class GenerarExamenComponent implements OnInit {
     private instructorService: InstructorService,
     private inscripcionService: InscripcionService,
     private alumnoService: AlumnoService,
+    private acuService: AcuService,
     private cursoService: CursoService,
     public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: any
@@ -113,6 +116,10 @@ export class GenerarExamenComponent implements OnInit {
     return this.form.get('tipoClase');
   }
 
+  get reservarClasePrevia() {
+    return this.form.get('reservarClasePrevia');
+  }
+
   get observaciones() {
     return this.form.get('observaciones');
   }
@@ -132,6 +139,7 @@ export class GenerarExamenComponent implements OnInit {
       escInsNom: [this.agendaClase.EsAgCuInsNom],
       alumnoNumero: [this.agendaClase.AluNro],
       alumnoNombre: [this.agendaClase.AluNomApe],
+      reservarClasePrevia: [false],
       disponibilidadLunes: [this.data.agendaClase.disponibilidadLunes],
       disponibilidadMartes: [this.data.agendaClase.disponibilidadMartes],
       disponibilidadMiercoles: [this.data.agendaClase.disponibilidadMiercoles],
@@ -324,26 +332,77 @@ export class GenerarExamenComponent implements OnInit {
 
       console.log(this.agendaClase.AluId);
       console.log(this.aluId);
+      console.log(this.agendaClase);
 
-      if (this.agendaClase.AluId !== this.aluId) {
-        this.obtenerNuevaClase();
-      } else {
-        this.finGenerarExamen();
+      // Si reserva clase previa, evaluo si tiene clase anterior para la hora inmediatamente anterior
+      if (this.reservarClasePrevia.value) {
+        this.acuService
+          .getClaseAgenda(
+            this.agendaClase.FechaClase,
+            this.agendaClase.Hora - 1,
+            this.movil.value
+          )
+          .subscribe(({ AgendaClase }: { AgendaClase: AgendaClase }) => {
+            const clasePrevia = AgendaClase;
+
+            // Si existeClaseAgenda previa y no es del alumno que estoy generando examen, entonces obtengo nueva y espero a que el usuario la seleccione.
+            if (
+              clasePrevia.existeClaseAgenda &&
+              clasePrevia.AluId !== this.aluId &&
+              // tslint:disable-next-line: triple-equals
+              clasePrevia.AluId != 0
+            ) {
+              this.obtenerNuevaClase(
+                clasePrevia,
+                clasePrevia.EsAgCuInsId
+              ).then(() => this.evaluarClaseSeleccionada());
+            } else {
+              this.evaluarClaseSeleccionada();
+            }
+          });
+      }
+      // Si el alumno es 0 => es un lugar libre en la agenda
+      else {
+        this.evaluarClaseSeleccionada();
       }
     });
+  }
+
+  /* 
+      Evaluar clase seleccionada quiere decir evaluar si hay
+      que reagendar el turno donde se agendara el examen o no
+  */
+  evaluarClaseSeleccionada() {
+    if (
+      this.agendaClase.AluId !== this.aluId &&
+      // tslint:disable-next-line: triple-equals
+      this.agendaClase.AluId != 0
+    ) {
+      this.obtenerNuevaClase(
+        this.agendaClase,
+        this.escInsId.value,
+        true
+      ).then();
+    } else {
+      this.finGenerarExamen();
+    }
   }
 
   onNoClick(): void {
     this.dialogRef.close();
   }
 
-  obtenerNuevaClase() {
+  async obtenerNuevaClase(
+    agendaClase: AgendaClase,
+    EsAgCuInsId: string,
+    finExamen?: boolean
+  ) {
     const auxAgendaClase: AgendaClase = {
-      ...this.agendaClase,
-      EsAgCuInsId: this.escInsId.value,
+      ...agendaClase,
+      EsAgCuInsId,
     };
 
-    this.instructorService
+    await this.instructorService
       .getDisponibilidadInstructor(auxAgendaClase, 1)
       .subscribe((res: { ClasesEstimadas: ClaseEstimada[] }) => {
         console.log('res.ClasesEstimadas: ', res.ClasesEstimadas);
@@ -352,16 +411,13 @@ export class GenerarExamenComponent implements OnInit {
           instructorNombre?: string;
           detalle?: ClaseEstimadaDetalle[];
         } = {};
-        console.log('res.ClasesEstimadas.length: ', res.ClasesEstimadas.length);
-        console.log('res.ClasesEstimadas[1]: ', res.ClasesEstimadas[1]);
+
         arrayPlano.instructorCodigo = res.ClasesEstimadas[1].EscInsId;
         arrayPlano.instructorNombre = res.ClasesEstimadas[1].EscInsNom;
         arrayPlano.detalle = [];
         res.ClasesEstimadas.forEach((clase) => {
           arrayPlano.detalle.push(...clase.Detalle);
         });
-
-        console.log('arrayPlano: ', arrayPlano);
 
         const clasesEstimadasDialogRef = this.dialog.open(
           InstructorHorasLibresComponent,
@@ -377,16 +433,16 @@ export class GenerarExamenComponent implements OnInit {
         clasesEstimadasDialogRef
           .afterClosed()
           .subscribe((nuevaClase: ClaseEstimadaDetalle) => {
-            console.log('1.response: ' + nuevaClase);
-            console.log('2.response: ' + JSON.stringify(nuevaClase));
-            console.log(`2. response ${nuevaClase}`);
+            this.clasesAReagendar.push(nuevaClase);
 
-            this.finGenerarExamen(nuevaClase, true);
+            if (finExamen) {
+              this.finGenerarExamen();
+            }
           });
       });
   }
 
-  finGenerarExamen(nuevaClase?: ClaseEstimadaDetalle, reagendaClase?: boolean) {
+  finGenerarExamen() {
     const generarExamen: GenerarExamen = {
       alumnoVaADarExamen: this.aluId,
       cursoParaExamen: this.tipCurId,
@@ -397,16 +453,12 @@ export class GenerarExamenComponent implements OnInit {
       examenConCosto: this.examenConCosto,
       instructorSeleccionado: this.escInsId.value,
       movilSeleccionado: this.movil.value,
-      reagendaClase,
+
       EscAluCurId: this.escAluCurId,
       usrId: localStorage.getItem('usrId'),
+      reservarClasePrevia: this.reservarClasePrevia.value,
+      clasesAReagendar: this.clasesAReagendar,
     };
-
-    if (nuevaClase) {
-      generarExamen.nuevaFecha = nuevaClase.Fecha;
-      generarExamen.nuevaHoraInicio = nuevaClase.HoraInicio;
-      generarExamen.nuevaHoraFin = nuevaClase.HoraFin;
-    }
 
     this.inscripcionService
       .generarExamen(generarExamen)

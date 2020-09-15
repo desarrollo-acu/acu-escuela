@@ -12,6 +12,7 @@ import { CuotaSocial } from '../model/cuotaSocial.model';
 import { AgendaClase } from '@core/model/agenda-clase.model';
 import { ClaseEstimada } from '../model/clase-estimada.model';
 import { Suspenderclase } from '../model/suspender-clase.model';
+import { map } from 'rxjs/operators';
 
 export interface LiberarParameters {
   fechaClase: Date;
