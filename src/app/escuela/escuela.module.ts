@@ -20,10 +20,12 @@ import { MaterialModule } from '../material/material.module';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
 
-
-
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
-import { MAT_DATE_LOCALE, MAT_DATE_FORMATS, DateAdapter } from '@angular/material/core';
+import {
+  MAT_DATE_LOCALE,
+  MAT_DATE_FORMATS,
+  DateAdapter,
+} from '@angular/material/core';
 import { AgendarClaseComponent } from './components/modals/agendar-clase/agendar-clase.component';
 import { SeleccionarSocioComponent } from './components/modals/seleccionar-socio/seleccionar-socio.component';
 import { ClasesEstimadasComponent } from './components/modals/clases-estimadas/clases-estimadas.component';
@@ -42,7 +44,11 @@ import { SeleccionarItemCursoComponent } from './components/modals/seleccionar-i
 import { SuspenderClaseComponent } from './components/modals/suspender-clase/suspender-clase.component';
 import { InstructorHorasLibresComponent } from './components/modals/instructor-horas-libres/instructor-horas-libres.component';
 import { GestionInscripcionComponent } from './components/gestion-inscripcion/gestion-inscripcion.component';
-import { MAT_MOMENT_DATE_FORMATS, MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
+import {
+  MAT_MOMENT_DATE_FORMATS,
+  MomentDateAdapter,
+  MAT_MOMENT_DATE_ADAPTER_OPTIONS,
+} from '@angular/material-moment-adapter';
 
 import localeEsUy from '@angular/common/locales/global/es-UY';
 import localeEs from '@angular/common/locales/global/es';
@@ -54,6 +60,8 @@ import { GestionMovilComponent } from './components/gestion-movil/gestion-movil.
 import { AbmMovilComponent } from './components/abm-movil/abm-movil.component';
 import { GenerarExamenComponent } from './components/modals/generar-examen/generar-examen.component';
 import { SeleccionarMovilComponent } from './components/modals/seleccionar-movil/seleccionar-movil.component';
+import { TestComponent } from './components/test/test.component';
+
 registerLocaleData(localeEsUy, 'es-UY');
 registerLocaleData(localeEs, 'es');
 
@@ -93,7 +101,8 @@ registerLocaleData(localeEs, 'es');
     GestionMovilComponent,
     AbmMovilComponent,
     GenerarExamenComponent,
-    SeleccionarMovilComponent
+    SeleccionarMovilComponent,
+    TestComponent,
   ],
   imports: [
     CommonModule,
@@ -116,14 +125,14 @@ registerLocaleData(localeEs, 'es');
     {
       provide: DateAdapter,
       useClass: MomentDateAdapter,
-      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
+      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
     },
     { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
-    { provide: LOCALE_ID, useValue: 'es' }
+    { provide: LOCALE_ID, useValue: 'es' },
   ],
 
   // providers: [
   //   { provide: MAT_DATE_LOCALE, useValue: 'es-UY' }
   // ]
 })
-export class EscuelaModule { }
+export class EscuelaModule {}

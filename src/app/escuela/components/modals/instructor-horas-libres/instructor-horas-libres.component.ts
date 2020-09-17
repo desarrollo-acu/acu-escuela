@@ -10,23 +10,29 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 
 import { MatTableDataSource } from '@angular/material/table';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import {
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+  MatDialog,
+} from '@angular/material/dialog';
 import { AcuService } from '@core/services/acu.service';
 import { InscripcionCursoComponent } from '../inscripcion-curso/inscripcion-curso.component';
 import { ClasesEstimadasDetalleComponent } from '../clases-estimadas-detalle/clases-estimadas-detalle.component';
-import { ClaseEstimada, ClaseEstimadaDetalle } from '@core/model/clase-estimada.model';
-
+import {
+  ClaseEstimada,
+  ClaseEstimadaDetalle,
+} from '@core/model/clase-estimada.model';
 
 @Component({
   selector: 'app-instructor-horas-libres',
   templateUrl: './instructor-horas-libres.component.html',
-  styleUrls: ['./instructor-horas-libres.component.scss']
+  styleUrls: ['./instructor-horas-libres.component.scss'],
 })
 export class InstructorHorasLibresComponent implements OnInit {
-
   displayedColumns: string[] = ['actions', 'Fecha', 'HoraInicio', 'HoraFin'];
   dataSource: MatTableDataSource<ClaseEstimadaDetalle>;
 
+  alumno: string;
   detalle: ClaseEstimadaDetalle[];
   titulo: string;
 
@@ -36,11 +42,18 @@ export class InstructorHorasLibresComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<InscripcionCursoComponent>,
     public dialog: MatDialog,
-    @Inject(MAT_DIALOG_DATA) public data: any) {
-
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {
     console.log('this.data.clasesEstimadas: ', this.data.clasesEstimadas);
     this.detalle = this.data.clasesEstimadas.detalle;
-    this.titulo = `${this.data.clasesEstimadas.instructorCodigo} - ${this.data.clasesEstimadas.instructorNombre}`;
+
+    // this.alumno = this.data.alumno ? this.data.alumno : '';
+
+    this.titulo = this.data.alumno
+      ? `Seleccionar hora libre para: ${this.data.alumno}. `
+      : '';
+    this.titulo += `Próximas horas libres de: ${this.data.clasesEstimadas.instructorCodigo} - 
+    ${this.data.clasesEstimadas.instructorNombre}`;
 
     // Assign the data to the data source for the table to render
     this.dataSource = new MatTableDataSource(this.data.clasesEstimadas.detalle);
@@ -52,7 +65,6 @@ export class InstructorHorasLibresComponent implements OnInit {
   }
 
   applyFilter(filterValue: string) {
-
     this.dataSource.filter = filterValue.trim().toLowerCase();
 
     if (this.dataSource.paginator) {
@@ -63,7 +75,6 @@ export class InstructorHorasLibresComponent implements OnInit {
   verDetalle(detalle: ClaseEstimadaDetalle[]) {
     console.log('detalle: ', detalle);
 
-
     // const clasesEstimadasDialogRef = this.dialog.open(ClasesEstimadasDetalleComponent, {
     //   height: 'auto',
     //   width: '700px',
@@ -72,18 +83,13 @@ export class InstructorHorasLibresComponent implements OnInit {
     //   }
     // });
 
-
     // clasesEstimadasDialogRef.afterClosed().subscribe((result: any) => {
     //   // this.alumno = result;
     //   console.log('1.response: ' + result);
     //   console.log('2.response: ' + JSON.stringify(result));
     //   console.log(`2. response ${result}`);
 
-
-
-
     // });
-
   }
 
   onNoClick(): void {

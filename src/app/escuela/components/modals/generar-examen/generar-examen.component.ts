@@ -345,7 +345,8 @@ export class GenerarExamenComponent implements OnInit {
           .subscribe(({ AgendaClase }: { AgendaClase: AgendaClase }) => {
             const clasePrevia = AgendaClase;
 
-            // Si existeClaseAgenda previa y no es del alumno que estoy generando examen, entonces obtengo nueva y espero a que el usuario la seleccione.
+            // Si existeClaseAgenda previa y no es del alumno que estoy
+            // generando examen, entonces obtengo nueva y espero a que el usuario la seleccione.
             if (
               clasePrevia.existeClaseAgenda &&
               clasePrevia.AluId !== this.aluId &&
@@ -397,49 +398,54 @@ export class GenerarExamenComponent implements OnInit {
     EsAgCuInsId: string,
     finExamen?: boolean
   ) {
-    const auxAgendaClase: AgendaClase = {
-      ...agendaClase,
-      EsAgCuInsId,
-    };
+    return new Promise((resolve, reject) => {
+      const auxAgendaClase: AgendaClase = {
+        ...agendaClase,
+        EsAgCuInsId,
+      };
 
-    await this.instructorService
-      .getDisponibilidadInstructor(auxAgendaClase, 1)
-      .subscribe((res: { ClasesEstimadas: ClaseEstimada[] }) => {
-        console.log('res.ClasesEstimadas: ', res.ClasesEstimadas);
-        const arrayPlano: {
-          instructorCodigo?: string;
-          instructorNombre?: string;
-          detalle?: ClaseEstimadaDetalle[];
-        } = {};
+      this.instructorService
+        .getDisponibilidadInstructor(auxAgendaClase, 1)
+        .subscribe((res: { ClasesEstimadas: ClaseEstimada[] }) => {
+          console.log('res.ClasesEstimadas: ', res.ClasesEstimadas);
+          const arrayPlano: {
+            instructorCodigo?: string;
+            instructorNombre?: string;
+            detalle?: ClaseEstimadaDetalle[];
+          } = {};
 
-        arrayPlano.instructorCodigo = res.ClasesEstimadas[1].EscInsId;
-        arrayPlano.instructorNombre = res.ClasesEstimadas[1].EscInsNom;
-        arrayPlano.detalle = [];
-        res.ClasesEstimadas.forEach((clase) => {
-          arrayPlano.detalle.push(...clase.Detalle);
-        });
-
-        const clasesEstimadasDialogRef = this.dialog.open(
-          InstructorHorasLibresComponent,
-          {
-            height: 'auto',
-            width: '700px',
-            data: {
-              clasesEstimadas: arrayPlano,
-            },
-          }
-        );
-
-        clasesEstimadasDialogRef
-          .afterClosed()
-          .subscribe((nuevaClase: ClaseEstimadaDetalle) => {
-            this.clasesAReagendar.push(nuevaClase);
-
-            if (finExamen) {
-              this.finGenerarExamen();
-            }
+          arrayPlano.instructorCodigo = res.ClasesEstimadas[1].EscInsId;
+          arrayPlano.instructorNombre = res.ClasesEstimadas[1].EscInsNom;
+          arrayPlano.detalle = [];
+          res.ClasesEstimadas.forEach((clase) => {
+            arrayPlano.detalle.push(...clase.Detalle);
           });
-      });
+
+          const clasesEstimadasDialogRef = this.dialog.open(
+            InstructorHorasLibresComponent,
+            {
+              height: 'auto',
+              width: '700px',
+              data: {
+                clasesEstimadas: arrayPlano,
+                alumno: auxAgendaClase.AluNomApe,
+              },
+            }
+          );
+
+          clasesEstimadasDialogRef
+            .afterClosed()
+            .subscribe((nuevaClase: ClaseEstimadaDetalle) => {
+              this.clasesAReagendar.push(nuevaClase);
+
+              if (finExamen) {
+                resolve(this.finGenerarExamen());
+              } else {
+                resolve();
+              }
+            });
+        });
+    });
   }
 
   finGenerarExamen() {
@@ -459,6 +465,7 @@ export class GenerarExamenComponent implements OnInit {
       reservarClasePrevia: this.reservarClasePrevia.value,
       clasesAReagendar: this.clasesAReagendar,
     };
+    console.log(': clasesAReagendar: ', this.clasesAReagendar);
 
     this.inscripcionService
       .generarExamen(generarExamen)

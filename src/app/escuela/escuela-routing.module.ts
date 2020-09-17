@@ -15,9 +15,7 @@ import { GestionInscripcionComponent } from './components/gestion-inscripcion/ge
 import { AbmInscripcionComponent } from './components/abm-inscripcion/abm-inscripcion.component';
 import { AbmMovilComponent } from './components/abm-movil/abm-movil.component';
 import { GestionMovilComponent } from './components/gestion-movil/gestion-movil.component';
-
-
-
+import { TestComponent } from './components/test/test.component';
 
 const routes: Routes = [
   {
@@ -26,69 +24,70 @@ const routes: Routes = [
     children: [
       {
         path: 'agenda-movil',
-        component: AgendaMovilComponent
+        component: AgendaMovilComponent,
       },
       {
         path: 'agenda-instructor',
-        component: AgendaInstructorComponent
+        component: AgendaInstructorComponent,
       },
       {
         path: 'gestion-inscripcion',
-        component: GestionInscripcionComponent
+        component: GestionInscripcionComponent,
       },
       {
         path: 'gestion-curso',
-        component: GestionCursoComponent
+        component: GestionCursoComponent,
       },
       {
         path: 'gestion-movil',
-        component: GestionMovilComponent
+        component: GestionMovilComponent,
       },
       {
         path: 'gestion-alumno',
-        component: GestionAlumnoComponent
+        component: GestionAlumnoComponent,
       },
       {
         path: 'gestion-instructor',
-        component: GestionInstructorComponent
+        component: GestionInstructorComponent,
       },
       {
         path: 'abm-inscripcion',
-        component: AbmInscripcionComponent
-
+        component: AbmInscripcionComponent,
       },
       {
         path: 'abm-curso',
-        component: AbmCursoComponent
-
+        component: AbmCursoComponent,
       },
       {
         path: 'abm-movil',
-        component: AbmMovilComponent
-
+        component: AbmMovilComponent,
       },
       {
         path: 'abm-alumno',
-        component: AbmAlumnoComponent
+        component: AbmAlumnoComponent,
       },
       {
         path: 'abm-instructor',
-        component: AbmInstructorComponent
+        component: AbmInstructorComponent,
       },
       {
         path: 'agendaclase',
-        component: AgendarClaseComponent
+        component: AgendarClaseComponent,
       },
       {
         path: 'seleccionarAlumno',
-        component: SeleccionarAlumnoComponent
+        component: SeleccionarAlumnoComponent,
       },
-    ]
-  }
+      {
+        path: 'test',
+        component: TestComponent,
+      },
+    ],
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class EscuelaRoutingModule { }
+export class EscuelaRoutingModule {}

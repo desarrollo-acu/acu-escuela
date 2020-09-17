@@ -273,6 +273,53 @@ export class AcuService {
     localStorage.removeItem('existe');
     localStorage.removeItem('tipoAgenda');
   }
+
+  // test ws
+
+  testWsLogicsat() {
+    const headers = new HttpHeaders();
+
+    headers.set('Access-Control-Allow-Origin', '*');
+    headers.set('Access-Control-Allow-Methods', 'GET, POST');
+    headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    return this.http.post(
+      `http://api.logicsat.com/logicsat/rest/WSGetServicios`,
+      `
+    {
+    "WSAutorizacion": {
+        "Guid": "0a9ee8b9-8cf8-4e95-933c-35194d2f0559",
+        "Usuario": "api@acu.com",
+        "Password": "apiacu2020"
+    },
+    "WSSDTFiltroServicio": {
+        "Id": "",
+        "SuperiorId": "0",
+        "IdExterno": "",
+        "NroServicio": "",
+        "NroAsistencia": "",
+        "Estado": "",
+        "FechaLlamadaInicial": "15-09-2020 00:00:00",
+        "FechaLlamadaFinal": "16-09-2020 23:59:00",
+        "Procedencia": "",
+        "Prestador": "",
+        "Movil": "",
+        "Operador": "",
+        "Telefonista": "",
+        "Prestacion": "",
+        "Causa": "",
+        "SubCausa": "",
+        "Motivo": "",
+        "Pais": "",
+        "Departamento": "",
+        "Ciudad": "",
+        "Zona": "",
+        "NroTracking": ""
+    }
+}
+    `,
+      { headers }
+    );
+  }
 }
 
 function xml2json(xml) {
