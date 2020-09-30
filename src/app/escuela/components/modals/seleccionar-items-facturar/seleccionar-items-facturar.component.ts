@@ -1,14 +1,13 @@
-import {
-  Component,
-  OnInit,
-  ViewChild,
-  Inject,
-} from '@angular/core';
+import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { AgendarClaseComponent } from '../agendar-clase/agendar-clase.component';
-import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {
+  MatDialogRef,
+  MatDialog,
+  MAT_DIALOG_DATA,
+} from '@angular/material/dialog';
 
 import { InscripcionCursoComponent } from '../inscripcion-curso/inscripcion-curso.component';
 import { confirmacionUsuario } from '@utils/sweet-alert';
@@ -25,10 +24,10 @@ export interface FacturaItemData {
 @Component({
   selector: 'app-seleccionar-items-facturar',
   templateUrl: './seleccionar-items-facturar.component.html',
-  styleUrls: ['./seleccionar-items-facturar.component.scss']
+  styleUrls: ['./seleccionar-items-facturar.component.scss'],
 })
 export class SeleccionarItemsFacturarComponent implements OnInit {
-  displayedColumns: string[] = ['actions', 'EscItemCod', 'EscItemDesc', 'prefactura'];
+  displayedColumns: string[] = ['EscItemCod', 'EscItemDesc', 'actions'];
   dataSource: MatTableDataSource<FacturaItemData>;
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -53,10 +52,9 @@ export class SeleccionarItemsFacturarComponent implements OnInit {
     public dialogRef: MatDialogRef<InscripcionCursoComponent>,
     public dialog: MatDialog,
     public inscripcionService: InscripcionService,
-    @Inject(MAT_DIALOG_DATA) public data: any) {
-
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {
     console.log('this.data: ', this.data);
-
 
     this.filtro = this.data.filtro;
     this.prefactura = this.data.prefactura;
@@ -66,7 +64,6 @@ export class SeleccionarItemsFacturarComponent implements OnInit {
 
     // Assign the data to the data source for the table to render
     this.dataSource = new MatTableDataSource(this.data.items);
-
   }
 
   ngOnInit() {
@@ -75,7 +72,6 @@ export class SeleccionarItemsFacturarComponent implements OnInit {
   }
 
   applyFilter(filterValue: string) {
-
     this.dataSource.filter = filterValue.trim().toLowerCase();
 
     if (this.dataSource.paginator) {
@@ -84,14 +80,13 @@ export class SeleccionarItemsFacturarComponent implements OnInit {
   }
 
   cerrar(item: any) {
-
     this.verPrefactura(item);
 
-    confirmacionUsuario('Confirmar factura', 'Se generará la factura. ¿Confirma continuar?').then(confirma => {
-      console.log('confirma selectr item: ', confirma);
-
+    confirmacionUsuario(
+      'Confirmar factura',
+      'Se generará la factura correspondiente. ¿Confirma continuar?'
+    ).then((confirma) => {
       if (confirma.isConfirmed) {
-
         const resp: any = {
           TipCurId: item.TipCurId,
           EscItemCod: item.EscItemCod,
@@ -103,14 +98,14 @@ export class SeleccionarItemsFacturarComponent implements OnInit {
         this.dialogRef.close(resp);
       }
     });
-
-
   }
 
   onNoClick(): void {
-
     if (this.esFactura) {
-      confirmacionUsuario('Cancelar factura', 'Se cancelará el proceso de facturación. ¿Confirma continuar?').then(confirma => {
+      confirmacionUsuario(
+        'Cancelar factura',
+        'Se cancelará el proceso de facturación. ¿Confirma continuar?'
+      ).then((confirma) => {
         console.log('confirma selectr item: ', confirma);
 
         if (confirma.isConfirmed) {
@@ -126,13 +121,10 @@ export class SeleccionarItemsFacturarComponent implements OnInit {
     console.log('item: ', item);
     this.prefactura.Lineas = [];
     this.prefactura.Lineas.push({ ItemCod: item.EscItemCod });
-    this.inscripcionService.getPDFPrefactura(this.prefactura).subscribe((pdf: any) => {
-
-      openSamePDF(pdf, 'Prefactura');
-
-    });
-
+    this.inscripcionService
+      .getPDFPrefactura(this.prefactura)
+      .subscribe((pdf: any) => {
+        openSamePDF(pdf, 'Prefactura');
+      });
   }
-
-
 }

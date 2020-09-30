@@ -67,7 +67,16 @@ export class InscripcionService {
         documentosEntregadosYFirmados:
           inscripcion.documentosEntregadosYFirmados,
         eLearning: inscripcion.eLearning,
+        examenMedico: inscripcion.examenMedico,
+        licenciaCedulaIdentidad: inscripcion.licenciaCedulaIdentidad,
+        pagoDeLicencia: inscripcion.pagoDeLicencia,
+
+        fechaLicCedulaIdentidad: inscripcion.fechaLicCedulaIdentidad,
+        fechaPagoLicencia: inscripcion.fechaPagoLicencia,
+        fechaExamenMedico: inscripcion.fechaExamenMedico,
+
         fechaClaseEstimada: inscripcion.fechaClaseEstimada,
+
         usrId: localStorage.getItem('usrId'),
       },
     });

@@ -4,7 +4,6 @@ import { ClaseEstimadaDetalle } from './clase-estimada.model';
 export interface GenerarExamen {
   alumnoVaADarExamen?: number;
   cursoParaExamen?: number;
-  clasePreviaExamen?: boolean;
   observacionesExamen?: string;
   claseAnterior?: AgendaClase;
   examenConCosto?: boolean;
@@ -18,5 +17,10 @@ export interface GenerarExamen {
   usrId?: string;
   reservarClasePrevia?: boolean;
 
-  clasesAReagendar?: ClaseEstimadaDetalle[];
+  clasesAReagendar?: GenerarExamenItems[];
+}
+
+export interface GenerarExamenItems {
+  detalle?: ClaseEstimadaDetalle;
+  clasePrevia?: AgendaClase;
 }

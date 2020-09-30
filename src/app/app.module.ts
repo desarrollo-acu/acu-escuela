@@ -20,6 +20,7 @@ import { MatNativeDateModule, MAT_DATE_LOCALE, DateAdapter, MAT_DATE_FORMATS } f
 
 import * as localeEsUy from '@angular/common/locales/global/es-UY';
 import { registerLocaleData } from '@angular/common';
+import { ExisteAlumnoByCiValidatorDirective } from './utils/validators/existe-alumno-by-ci-validator.directive';
 // import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MAT_MOMENT_DATE_FORMATS } from '@angular/material-moment-adapter';
 
 registerLocaleData(localeEsUy, 'es-UY');
@@ -27,7 +28,8 @@ registerLocaleData(localeEsUy, 'es-UY');
 @NgModule({
   declarations: [
     AppComponent,
-    LayoutComponent
+    LayoutComponent,
+    ExisteAlumnoByCiValidatorDirective
   ],
   imports: [
     BrowserModule,

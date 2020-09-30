@@ -1,6 +1,10 @@
 import { Component, Inject } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {
+  MatDialog,
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+} from '@angular/material/dialog';
 import { AgendarClaseComponent } from '../agendar-clase/agendar-clase.component';
 import Swal from 'sweetalert2';
 import { AcuService } from '@core/services/acu.service';
@@ -11,22 +15,19 @@ import { Localidad } from '@core/model/localidad.model';
 import { Departamento } from '@core/model/departamento.model';
 import { Alumno } from '@core/model/alumno.model';
 
-
 import { validarCIConDV } from '@utils/custom-validator';
 import { mensajeConfirmacion } from '@utils/sweet-alert';
+import { existeAlumnoByCiValidator } from '@utils/validators/existe-alumno-by-ci-validator.directive';
 
 @Component({
   selector: 'app-alta-alumno',
   templateUrl: './alta-alumno.component.html',
-  styleUrls: ['./alta-alumno.component.scss']
+  styleUrls: ['./alta-alumno.component.scss'],
 })
 export class AltaAlumnoComponent {
   socId: number;
 
   socio: any;
-
-  depId: number;
-  locId: number;
 
   alumnoForm: FormGroup;
 
@@ -47,55 +48,51 @@ export class AltaAlumnoComponent {
     private acuService: AcuService,
     private alumnoService: AlumnoService,
     private fb: FormBuilder,
-    @Inject(MAT_DIALOG_DATA) public data: any) {
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {
+    this.alumnoForm = this.fb.group(
+      {
+        aluNro: [this.data.alumnoNumero],
+        aluNom: ['', Validators.required],
+        aluApe1: ['', Validators.required],
+        aluCi: [
+          '',
+          [Validators.required],
+          [existeAlumnoByCiValidator(this.alumnoService)],
+        ],
+        aluDV: ['', Validators.required],
+        aluFchNac: ['', Validators.required],
+        aluTel1: [''],
+        aluTel2: ['', Validators.required],
+        aluDepId: ['', Validators.required],
+        aluLocId: ['', Validators.required],
+        aluDir: [''],
+        aluMail: ['', [Validators.required, Validators.email]],
+        aluConNom: [''],
+        aluConTel: [''],
+        aluConPar: [''],
+        socId: [''],
+        socNom1: [''],
+        socApe1: [''],
+        socApe2: [''],
+        socUltimoPago: [''],
+        cantPres: [''],
+        aluPar: [''],
+      },
+      {
+        validator: [validarCIConDV('aluCi', 'aluDV')],
+      }
+    );
 
-    this.alumnoForm = this.fb.group({
-      aluNro: [this.data.alumnoNumero],
-      aluNom: ['', Validators.required],
-      aluApe1: ['', Validators.required],
-      aluCi: ['', Validators.required],
-      aluDV: ['', Validators.required],
-      aluFchNac: ['', Validators.required],
-      aluTel1: [''],
-      aluTel2: ['', Validators.required],
-      aluDepId: ['', Validators.required],
-      aluLocId: ['', Validators.required],
-      aluDir: [''],
-      aluMail: ['', [
-        Validators.required,
-        Validators.email,
-      ]],
-      aluConNom: [''],
-      aluConTel: [''],
-      aluConPar: [''],
-      socId: [''],
-      socNom1: [''],
-      socApe1: [''],
-      socApe2: [''],
-      socUltimoPago: [''],
-      cantPres: [''],
-      aluPar: [''],
-    }, {
-      validator: [
-        validarCIConDV('aluCi', 'aluDV')]
+    acuService.getDepartamentos().subscribe((res: any) => {
+      this.departamentos = res.Departamentos;
     });
-
-    acuService.getDepartamentos()
-      .subscribe((res: any) => {
-        console.log('SDTDepartamento: ', res);
-        this.departamentos = res.Departamentos;
-      });
   }
-
 
   guardarAlumno(event: Event) {
     event.preventDefault();
 
-    console.log('Submit, form valid: ', this.alumnoForm.valid);
-    console.log('Submit, form value: ', this.alumnoForm.value);
-
     if (this.alumnoForm.valid) {
-      console.log('alumnoForm.value: ', this.alumnoForm.value);
       const alumno: Alumno = {
         AluId: 0,
         AluNro: this.aluNroField.value,
@@ -118,33 +115,21 @@ export class AltaAlumnoComponent {
         AluLocId: this.aluLocIdField.value,
       };
 
-      console.log('alumno: ', alumno);
-      const log = JSON.stringify(alumno);
-      console.log('alumno og: ', log);
-      this.alumnoService.gestionAlumno('INS', alumno)
-        .subscribe((res: any) => {
-          console.log('res: ', res);
-
-          if (res.Alumno.ErrorCode === 0) {
-            mensajeConfirmacion('Confirmado!', res.Alumno.ErrorMessage).then((res2) => {
-              if (res2.dismiss === Swal.DismissReason.timer) {
-                console.log('Cierro  con el timer');
-              }
-
+      this.alumnoService.gestionAlumno('INS', alumno).subscribe((res: any) => {
+        if (res.Alumno.ErrorCode === 0) {
+          mensajeConfirmacion('Confirmado!', res.Alumno.ErrorMessage).then(
+            () => {
               this.dialogRef.close(res.Alumno);
-            });
-
-
-          } else {
-            Swal.fire({
-              icon: 'error',
-              title: 'Error',
-              text: res.Alumno.ErrorMessage
-            });
-          }
-        });
-
-
+            }
+          );
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: res.Alumno.ErrorMessage,
+          });
+        }
+      });
     }
   }
 
@@ -152,45 +137,36 @@ export class AltaAlumnoComponent {
     this.dialogRef.close();
   }
 
-
   seleccionarSocio(parametro) {
-    console.log('1)tipo: FREE');
-    console.log('2)parametro: ', parametro);
-
-
-    this.acuService.getSocios(100, 1, 'FREE', parametro)
+    this.acuService
+      .getSocios(100, 1, 'FREE', parametro)
       .subscribe((res: any) => {
-        console.log('3) res.socios22: ', res);
-
-        //  socios = res.Socios;
         this.openDialogSocios(res.Socios, res.Cantidad, 'FREE', parametro);
-        // localStorage.setItem('Socios', JSON.stringify(socios));
       });
-
   }
 
-  getLocalidades(depId) {
-    this.localidades = this.departamentos.find((depto: any) => depto.DepId === depId).Localidades;
+  getLocalidades() {
+    this.localidades = this.departamentos.find(
+      (depto: any) => depto.DepId === this.aluDepIdField.value
+    ).Localidades;
   }
 
-  obtenerSocio(socioId) {
-    this.acuService.getSocio(socioId)
-      .subscribe((result: any) => {
-        console.log('result: ', result);
+  obtenerSocio() {
+    this.acuService.getSocio(this.socIdField.value).subscribe((result: any) => {
+      console.log('result: ', result);
 
-        if (result) {
-          this.socio = result;
-          const socUltimoPago = `${result.SocMesPgo}/${result.SocAnoPgo}`;
-          this.alumnoForm.patchValue({
-            socNom1: result.SocNom1,
-            socApe1: result.SocApe1,
-            socApe2: result.SocApe2,
-            socUltimoPago,
-            cantPres: result.CantPres
-          });
-
-        }
-      });
+      if (result) {
+        this.socio = result;
+        const socUltimoPago = `${result.SocMesPgo}/${result.SocAnoPgo}`;
+        this.alumnoForm.patchValue({
+          socNom1: result.SocNom1,
+          socApe1: result.SocApe1,
+          socApe2: result.SocApe2,
+          socUltimoPago,
+          cantPres: result.CantPres,
+        });
+      }
+    });
   }
 
   private openDialogSocios(socios, cantidad, tipo, filtro) {
@@ -202,12 +178,10 @@ export class AltaAlumnoComponent {
         tipo,
         cantidad,
         socios,
-      }
+      },
     });
 
-    sociosDialogRef.afterClosed().subscribe(result => {
-      console.log('result: ', result);
-
+    sociosDialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.socio = result;
         this.socId = result.SocId;
@@ -218,15 +192,11 @@ export class AltaAlumnoComponent {
           socApe1: result.SocApe1,
           socApe2: result.SocApe2,
           socUltimoPago,
-          cantPres: result.CantPres
+          cantPres: result.CantPres,
         });
-
       }
-
     });
-
   }
-
 
   get aluDVField() {
     return this.alumnoForm.get('aluDV');
@@ -315,8 +285,4 @@ export class AltaAlumnoComponent {
   get aluParField() {
     return this.alumnoForm.get('aluPar');
   }
-
-
-
 }
-

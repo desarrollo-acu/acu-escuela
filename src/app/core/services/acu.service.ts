@@ -13,6 +13,7 @@ import { AgendaClase } from '@core/model/agenda-clase.model';
 import { ClaseEstimada } from '../model/clase-estimada.model';
 import { Suspenderclase } from '../model/suspender-clase.model';
 import { map } from 'rxjs/operators';
+import { EnvioNotificacion } from '../model/envio-notificacion.model';
 
 export interface LiberarParameters {
   fechaClase: Date;
@@ -274,6 +275,11 @@ export class AcuService {
     localStorage.removeItem('tipoAgenda');
   }
 
+  enviarNotificacion(envioNotificacion: EnvioNotificacion) {
+    return this.http.post(`${environment.url_ws}/wsEnvioNotificacion`, {
+      envioNotificacion,
+    });
+  }
   // test ws
 
   testWsLogicsat() {

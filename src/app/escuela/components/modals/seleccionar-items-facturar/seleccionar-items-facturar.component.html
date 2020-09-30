@@ -16,15 +16,6 @@
     <div class="mat-elevation-z8">
         <table mat-table [dataSource]="dataSource" matSort>
 
-            <!-- Actions Column   [mat-dialog-close]="row"-->
-            <ng-container matColumnDef="actions">
-                <th mat-header-cell *matHeaderCellDef> </th>
-                <td mat-cell *matCellDef="let row">
-                    <button mat-mini-fab color="primary" (click)="cerrar(row)">
-                        <mat-icon> check</mat-icon>
-                    </button>
-                </td>
-            </ng-container>
 
 
             <!-- Código Column -->
@@ -41,13 +32,17 @@
             </ng-container>
 
 
-            <!-- prefactura Column -->
-            <ng-container matColumnDef="prefactura">
+            <!-- actions Column -->
+            <ng-container matColumnDef="actions">
                 <th mat-header-cell *matHeaderCellDef> </th>
                 <td mat-cell *matCellDef="let row">
 
                     <button mat-mini-fab color="primary" (click)="verPrefactura(row)" matTooltip="Descargar PDF de Prefactura">
                         <mat-icon> insert_drive_file</mat-icon>
+                    </button>
+
+                    <button mat-mini-fab color="primary" (click)="cerrar(row)">
+                        <mat-icon> check</mat-icon>
                     </button>
 
 

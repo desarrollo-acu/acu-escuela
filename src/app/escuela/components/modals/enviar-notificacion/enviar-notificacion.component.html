@@ -1,0 +1,114 @@
+<form [formGroup]="form">
+
+    <mat-toolbar color="primary">
+        <h2 mat-dialog-title> Enviar Notificación </h2>
+    </mat-toolbar>
+
+
+    <mat-dialog-content class="mat-typography">
+
+
+
+        <!-- Alumno y su info -->
+        <div class="row">
+            <div class="col-xs-4">
+                <div class="box">
+                    <mat-form-field class="full-width">
+                        <input matInput placeholder="Número del alumno" formControlName="alumnoNumero">
+                        <button mat-icon-button matSuffix [attr.aria-label]="'Hide password'" (click)='seleccionarAlumno()'>
+                            <mat-icon> search </mat-icon>
+                        </button>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="col-xs-8">
+                <div class="box">
+                    <mat-form-field class="full-width">
+                        <input matInput placeholder="Nombre del alumno" formControlName="alumnoNombre">
+
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="col-xs">
+                <div class="box">
+                    <mat-form-field class="full-width">
+                        <input matInput placeholder="Celular del alumno" formControlName="alumnoCelular">
+
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="col-xs">
+                <div class="box">
+                    <mat-form-field class="full-width">
+                        <input matInput placeholder="Email del alumno" formControlName="alumnoEmail">
+
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <h3> Tipos de envio </h3>
+        <!-- Tipo de notificacion -->
+        <div class="row">
+            <div class="col-xs">
+                <div class="box">
+                    <mat-selection-list formControlName="tipoNotificacion">
+                        <mat-list-option *ngFor="let tipo of tipoNotificaciones" [value]="tipo">
+                            {{tipo.descripcion}}
+                        </mat-list-option>
+                    </mat-selection-list>
+                </div>
+            </div>
+
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <h3> Mensaje </h3>
+        <!-- Mensaje -->
+
+        <div class="row">
+            <div class="col-xs">
+                <div class="box">
+                    <mat-form-field class="full-width">
+
+
+                        <textarea matInput placeholder="Asunto" formControlName="asunto" cdkAutosizeMinRows="2" cdkAutosizeMaxRows="5" required></textarea>
+                        <mat-error *ngIf="asunto.hasError('required')">
+                            El asunto es <strong>requerido</strong>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="col-xs">
+                <div class="box">
+                    <mat-form-field class="full-width">
+
+
+                        <textarea matInput placeholder="Mensaje" formControlName="mensaje" cdkAutosizeMinRows="2" cdkAutosizeMaxRows="5" required></textarea>
+                        <mat-error *ngIf="mensaje.hasError('required')">
+                            El mensaje es <strong>requerido</strong>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+
+        </div>
+
+
+
+
+
+
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+
+        <button mat-raised-button type="button" (click)="enviarNotificacion($event)" cdkFocusInitial [disabled]="form.invalid" color="primary"> Enviar notificación
+        </button>
+        <button mat-button mat-dialog-close (click)="onNoClick()">Cancelar</button>
+    </mat-dialog-actions>
+</form>

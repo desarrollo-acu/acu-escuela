@@ -19,7 +19,10 @@ import Swal from 'sweetalert2';
 import { SeleccionarInstructorComponent } from '../seleccionar-instructor/seleccionar-instructor.component';
 import { InscripcionService } from '../../../../core/services/inscripcion.service';
 import { Inscripcion } from '../../../../core/model/inscripcion.model';
-import { GenerarExamen } from '../../../../core/model/generar-examen.model';
+import {
+  GenerarExamen,
+  GenerarExamenItems,
+} from '../../../../core/model/generar-examen.model';
 import { Instructor } from '../../../../core/model/instructor.model';
 import { MovilService } from '../../../../core/services/movil.service';
 import { Movil } from '../../../../core/model/movil.model';
@@ -46,7 +49,7 @@ export class GenerarExamenComponent implements OnInit {
   examenConCosto = false;
   escAluCurId: number;
 
-  clasesAReagendar: ClaseEstimadaDetalle[] = [];
+  clasesAReagendar: GenerarExamenItems[] = [];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -69,6 +72,7 @@ export class GenerarExamenComponent implements OnInit {
     if (this.agendaClase.TipCurId) {
       this.tipCurId = this.agendaClase.TipCurId;
     }
+    this.obtenerInscripcion();
     this.buildForm();
   }
 
@@ -125,9 +129,14 @@ export class GenerarExamenComponent implements OnInit {
   }
 
   private buildForm() {
+    const hora =
+      this.agendaClase.Hora < 10
+        ? `0${this.agendaClase.Hora}`
+        : this.agendaClase.Hora;
+
     this.form = this.formBuilder.group({
       fechaClase: [this.agendaClase.FechaClase],
-      hora: [`${this.agendaClase.Hora}:00`],
+      hora: [`${hora}:00`],
       movil: [this.agendaClase.EscMovCod],
       cursoId: [this.agendaClase.TipCurId],
       cursoNombre: [this.agendaClase.TipCurNom],
@@ -156,6 +165,7 @@ export class GenerarExamenComponent implements OnInit {
     this.alumnoNombre.disable();
     this.escInsNom.disable();
   }
+
   seleccionarMovil() {
     this.movilService.getMoviles().subscribe((moviles: Movil[]) => {
       console.log('moviles: ', moviles);
@@ -342,6 +352,7 @@ export class GenerarExamenComponent implements OnInit {
             this.agendaClase.Hora - 1,
             this.movil.value
           )
+          // tslint:disable-next-line: no-shadowed-variable
           .subscribe(({ AgendaClase }: { AgendaClase: AgendaClase }) => {
             const clasePrevia = AgendaClase;
 
@@ -401,7 +412,7 @@ export class GenerarExamenComponent implements OnInit {
     return new Promise((resolve, reject) => {
       const auxAgendaClase: AgendaClase = {
         ...agendaClase,
-        EsAgCuInsId,
+        // EsAgCuInsId,
       };
 
       this.instructorService
@@ -436,7 +447,11 @@ export class GenerarExamenComponent implements OnInit {
           clasesEstimadasDialogRef
             .afterClosed()
             .subscribe((nuevaClase: ClaseEstimadaDetalle) => {
-              this.clasesAReagendar.push(nuevaClase);
+              const claseAReagendar: GenerarExamenItems = {
+                clasePrevia: auxAgendaClase,
+                detalle: nuevaClase,
+              };
+              this.clasesAReagendar.push(claseAReagendar);
 
               if (finExamen) {
                 resolve(this.finGenerarExamen());
@@ -449,16 +464,20 @@ export class GenerarExamenComponent implements OnInit {
   }
 
   finGenerarExamen() {
+    // Si hay items en clasesAReagender, entonces reagenda clase.
+    const reagendaClase: boolean = this.clasesAReagendar.length > 0;
+
     const generarExamen: GenerarExamen = {
       alumnoVaADarExamen: this.aluId,
       cursoParaExamen: this.tipCurId,
 
-      clasePreviaExamen: false,
       observacionesExamen: this.observaciones.value,
       claseAnterior: this.agendaClase,
       examenConCosto: this.examenConCosto,
       instructorSeleccionado: this.escInsId.value,
       movilSeleccionado: this.movil.value,
+
+      reagendaClase,
 
       EscAluCurId: this.escAluCurId,
       usrId: localStorage.getItem('usrId'),

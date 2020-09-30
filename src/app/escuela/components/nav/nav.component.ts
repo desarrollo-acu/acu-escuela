@@ -8,17 +8,18 @@ import { Router } from '@angular/router';
 import { InscripcionCursoComponent } from '../modals/inscripcion-curso/inscripcion-curso.component';
 import { MatDialog } from '@angular/material/dialog';
 import { formatDateToString } from '@utils/utils-functions';
+import { EnviarNotificacionComponent } from '../modals/enviar-notificacion/enviar-notificacion.component';
 
 @Component({
   selector: 'app-nav',
   templateUrl: './nav.component.html',
-  styleUrls: ['./nav.component.scss']
+  styleUrls: ['./nav.component.scss'],
 })
 export class NavComponent implements OnDestroy {
-
-  isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
+  isHandset$: Observable<boolean> = this.breakpointObserver
+    .observe(Breakpoints.Handset)
     .pipe(
-      map(result => result.matches),
+      map((result) => result.matches),
       shareReplay()
     );
 
@@ -26,12 +27,15 @@ export class NavComponent implements OnDestroy {
 
   fillerNav = Array.from({ length: 50 }, (_, i) => `Nav Item ${i + 1}`);
 
-  fillerContent = Array.from({ length: 50 }, () =>
-    `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+  fillerContent = Array.from(
+    { length: 50 },
+    () =>
+      `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
        laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
        voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-       cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`);
+       cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`
+  );
 
   private mobileQueryListener: () => void;
 
@@ -42,8 +46,8 @@ export class NavComponent implements OnDestroy {
     changeDetectorRef: ChangeDetectorRef,
     media: MediaMatcher,
     private router: Router,
-    public dialog: MatDialog) {
-
+    public dialog: MatDialog
+  ) {
     this.mobileQuery = media.matchMedia('(max-width: 600px)');
     this.mobileQueryListener = () => changeDetectorRef.detectChanges();
     // tslint:disable-next-line: deprecation
@@ -51,9 +55,7 @@ export class NavComponent implements OnDestroy {
 
     console.log('url: ', this.router.url);
     this.changeTitle(this.router.url);
-
   }
-
 
   ngOnDestroy(): void {
     // tslint:disable-next-line: deprecation
@@ -74,26 +76,29 @@ export class NavComponent implements OnDestroy {
           TipCurId: 0,
           TipCurNom: '',
           EscAgeInsObservaciones: '',
-          mensaje: 'string'
-        }
-      }
+          mensaje: 'string',
+        },
+      },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       console.log('cierro y recargo la agenda, result: ', result);
       if (result) {
-
         // Ir a gestionar inscripciones.
         this.changeTitle('/escuela/gestion-inscripcion');
         this.router.navigate(['/escuela/gestion-inscripcion']);
       }
     });
+  }
 
+  enviarNotificacion() {
+    const dialogRef = this.dialog.open(EnviarNotificacionComponent);
+
+    dialogRef.afterClosed().subscribe();
   }
 
   changeTitle(title: string) {
     switch (title) {
-
       case '/escuela/agenda-movil':
         this.title = 'Agenda de moviles';
         break;
@@ -126,7 +131,6 @@ export class NavComponent implements OnDestroy {
       case '/escuela/abm-alumno':
         this.title = 'Gestión de alumnos';
         break;
-
 
       default:
         break;

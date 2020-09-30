@@ -61,6 +61,7 @@ import { AbmMovilComponent } from './components/abm-movil/abm-movil.component';
 import { GenerarExamenComponent } from './components/modals/generar-examen/generar-examen.component';
 import { SeleccionarMovilComponent } from './components/modals/seleccionar-movil/seleccionar-movil.component';
 import { TestComponent } from './components/test/test.component';
+import { EnviarNotificacionComponent } from './components/modals/enviar-notificacion/enviar-notificacion.component';
 
 registerLocaleData(localeEsUy, 'es-UY');
 registerLocaleData(localeEs, 'es');
@@ -103,6 +104,7 @@ registerLocaleData(localeEs, 'es');
     GenerarExamenComponent,
     SeleccionarMovilComponent,
     TestComponent,
+    EnviarNotificacionComponent,
   ],
   imports: [
     CommonModule,

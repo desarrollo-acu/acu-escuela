@@ -1,7 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AlumnoService } from '@core/services/alumno.service';
 import { AcuService } from '@core/services/acu.service';
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import {
+  FormGroup,
+  FormBuilder,
+  Validators,
+  FormControl,
+} from '@angular/forms';
 import { Departamento } from '@core/model/departamento.model';
 import { Localidad } from '@core/model/localidad.model';
 import { validarCIConDV } from '@utils/custom-validator';
@@ -12,15 +17,18 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { mensajeConfirmacion } from '@utils/sweet-alert';
-import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { existeAlumnoByCiValidator } from '../../../utils/validators/existe-alumno-by-ci-validator.directive';
+import {
+  DateAdapter,
+  MAT_DATE_FORMATS,
+  MAT_DATE_LOCALE,
+} from '@angular/material/core';
 @Component({
   selector: 'app-abm-alumno',
   templateUrl: './abm-alumno.component.html',
   styleUrls: ['./abm-alumno.component.scss'],
-
 })
 export class AbmAlumnoComponent implements OnInit, OnDestroy {
-
   private subscription: Subscription;
   socId: number;
   socio: any;
@@ -35,7 +43,6 @@ export class AbmAlumnoComponent implements OnInit, OnDestroy {
 
   departamentoFilteredOptions: Observable<Departamento[]>;
   localidadFilteredOptions: Observable<Localidad[]>;
-
 
   alumnoForm: FormGroup;
 
@@ -63,11 +70,8 @@ export class AbmAlumnoComponent implements OnInit, OnDestroy {
     private router: Router,
     private dateAdapter: DateAdapter<any>
   ) {
-
     this.buildForm();
-
   }
-
 
   french() {
     this.dateAdapter.setLocale('fr');
@@ -77,54 +81,44 @@ export class AbmAlumnoComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
-
   ngOnInit(): void {
     if (!this.primeraVez) {
-
-      this.subscription = this.alumnoService.alumnoCurrentData.subscribe((data) => {
-        console.log('abm data: ', data);
-        this.primeraVez = true;
-        this.mode = data.modo;
-        this.changeForm(data.modo, data.alumno, data.numero);
-
-      }); /// .currentMessage.subscribe(message => this.message = message)
+      this.subscription = this.alumnoService.alumnoCurrentData.subscribe(
+        (data) => {
+          console.log('abm data: ', data);
+          this.primeraVez = true;
+          this.mode = data.modo;
+          this.changeForm(data.modo, data.alumno, data.numero);
+        }
+      ); /// .currentMessage.subscribe(message => this.message = message)
     }
   }
 
   private changeForm(modo: string, alumno: Alumno, aluNumero: number) {
-    this.acuService.getDepartamentos()
-      .subscribe((res: any) => {
-        console.log('SDTDepartamento: ', res);
-        console.log('alumno: ', alumno);
-        this.departamentos = res.Departamentos;
+    this.acuService.getDepartamentos().subscribe((res: any) => {
+      console.log('SDTDepartamento: ', res);
+      console.log('alumno: ', alumno);
+      this.departamentos = res.Departamentos;
 
-        if (modo === 'INS') {
-          this.titulo = 'Agregar';
-          this.aluId = 0;
-          console.log('aluNumero: ', aluNumero);
-          this.aluNroField.setValue(aluNumero);
-          console.log('this.aluNroField.value: ', this.aluNroField.value);
+      if (modo === 'INS') {
+        this.titulo = 'Agregar';
+        this.aluId = 0;
+        console.log('aluNumero: ', aluNumero);
+        this.aluNroField.setValue(aluNumero);
+        console.log('this.aluNroField.value: ', this.aluNroField.value);
+      } else {
+        this.aluId = alumno.AluId;
+        this.depId = alumno.AluDepId;
+        this.locId = alumno.AluLocId;
 
-        } else {
-
-          this.aluId = alumno.AluId;
-          this.depId = alumno.AluDepId;
-          this.locId = alumno.AluLocId;
-
-          this.titulo = 'Editar';
-          this.setValuesForm(alumno);
-
-
-        }
-        this.aluNroField.disable();
-
-      });
+        this.titulo = 'Editar';
+        this.setValuesForm(alumno);
+      }
+      this.aluNroField.disable();
+    });
   }
 
-
   private setValuesForm(alumno: Alumno) {
-
-
     this.aluNroField.setValue(alumno.AluNro);
     this.aluNomField.setValue(alumno.AluNom);
     this.aluApe1Field.setValue(alumno.AluApe1);
@@ -145,79 +139,69 @@ export class AbmAlumnoComponent implements OnInit, OnDestroy {
     this.socIdField.setValue(alumno.SOCID);
     this.aluParField.setValue(alumno.AluPar);
 
-
     console.log('DepId field: ', this.aluDepIdField.value);
     console.log('LocId field: ', this.aluLocIdField.value);
 
-    this.departamento = this.departamentos.find((depto) => depto.DepId === alumno.AluDepId);
-    this.localidad = this.departamento.Localidades.find((loc) => loc.LocId === alumno.AluLocId);
+    this.departamento = this.departamentos.find(
+      (depto) => depto.DepId === alumno.AluDepId
+    );
+    this.localidad = this.departamento.Localidades.find(
+      (loc) => loc.LocId === alumno.AluLocId
+    );
 
     // this.departamento = this.departamentos.find(depto => depto.DepId === alumno.AluDepId);
     // if (this.departamento.Localidades) {
 
     //   this.localidad = this.departamento.Localidades.find(loc => loc.LocId === alumno.AluLocId);
     // }
-
   }
 
   private buildForm() {
-
-    this.alumnoForm = this.fb.group({
-      aluNro: [''],
-      aluNom: ['', Validators.required],
-      aluApe1: ['', Validators.required],
-      aluCi: ['', Validators.required],
-      aluDV: ['', Validators.required],
-      aluFchNac: ['', Validators.required],
-      aluTel1: [''],
-      aluTel2: ['', Validators.required],
-      aluDepId: ['', Validators.required],
-      aluLocId: ['', Validators.required],
-      aluDir: [''],
-      aluMail: ['', [
-        Validators.required,
-        Validators.email,
-      ]],
-      aluConNom: [''],
-      aluConTel: [''],
-      aluConPar: [''],
-      socId: [''],
-      socNom1: [''],
-      socApe1: [''],
-      socApe2: [''],
-      socUltimoPago: [''],
-      cantPres: [''],
-      aluPar: [''],
-    }, {
-      validator: [
-        validarCIConDV('aluCi', 'aluDV')]
-    });
-
-
-
+    this.alumnoForm = this.fb.group(
+      {
+        aluNro: [''],
+        aluNom: ['', Validators.required],
+        aluApe1: ['', Validators.required],
+        aluCi: [
+          '',
+          ,
+          [Validators.required],
+          [existeAlumnoByCiValidator(this.alumnoService)],
+        ],
+        aluDV: ['', Validators.required],
+        aluFchNac: ['', Validators.required],
+        aluTel1: [''],
+        aluTel2: ['', Validators.required],
+        aluDepId: ['', Validators.required],
+        aluLocId: ['', Validators.required],
+        aluDir: [''],
+        aluMail: ['', [Validators.required, Validators.email]],
+        aluConNom: [''],
+        aluConTel: [''],
+        aluConPar: [''],
+        socId: [''],
+        socNom1: [''],
+        socApe1: [''],
+        socApe2: [''],
+        socUltimoPago: [''],
+        cantPres: [''],
+        aluPar: [''],
+      },
+      {
+        validator: [validarCIConDV('aluCi', 'aluDV')],
+      }
+    );
 
     this.socNom1Field.disable();
     this.socApe1Field.disable();
     this.socApe2Field.disable();
     this.socUltimoPagoField.disable();
-
-
-
   }
 
   guardarAlumno(event: Event) {
     event.preventDefault();
 
-    console.log('Submit, form valid: ', this.alumnoForm.valid);
-    console.log('Submit, form value: ', this.alumnoForm.value);
-    // console.log('Submit, form value.cursoId: ', this.alumnoForm.value.cursoId);
-
-    // const existe: boolean = JSON.parse(localStorage.getItem('existe'));
-
     if (this.alumnoForm.valid) {
-      console.log('alumnoForm.value: ', this.alumnoForm.value);
-      console.log('locId.value: ', this.locId);
-      console.log('depId.value: ', this.depId);
       const depto: Departamento = this.aluDepIdField.value;
       const loc: Localidad = this.aluLocIdField.value;
 
@@ -243,36 +227,25 @@ export class AbmAlumnoComponent implements OnInit, OnDestroy {
         AluLocId: loc.LocId,
       };
 
-      console.log('alumno: ', alumno);
-      const log = JSON.stringify(alumno);
-      console.log('alumno og: ', log);
-      this.alumnoService.gestionAlumno(this.mode, alumno) // guardarAgendaInstructor(this.inscripcionCurso)
+      this.alumnoService
+        .gestionAlumno(this.mode, alumno) // guardarAgendaInstructor(this.inscripcionCurso)
         .subscribe((res: any) => {
           console.log('res: ', res);
 
           if (res.Alumno.ErrorCode === 0) {
-            mensajeConfirmacion('Confirmado!', res.Alumno.ErrorMessage).then((res2) => {
-              if (res2.dismiss === Swal.DismissReason.timer) {
-                console.log('Cierro  con el timer');
+            mensajeConfirmacion('Confirmado!', res.Alumno.ErrorMessage).then(
+              (res2) => {
+                this.router.navigate(['/escuela/gestion-alumno']);
               }
-
-              this.router.navigate(['/escuela/gestion-alumno']);
-
-            });
-
-
+            );
           } else {
             Swal.fire({
               icon: 'error',
               title: 'Error',
-              text: res.Alumno.ErrorMessage
+              text: res.Alumno.ErrorMessage,
             });
           }
-          // console.log('mensaje: ', res.mensaje);
-          // this.inscripcionCurso.mensaje = res.mensaje;
         });
-
-
     }
   }
 
@@ -282,45 +255,35 @@ export class AbmAlumnoComponent implements OnInit, OnDestroy {
   }
 
   seleccionarSocio(parametro) {
-    console.log('1)tipo: FREE');
-    console.log('2)parametro: ', parametro);
-
-
-    this.acuService.getSocios(100, 1, 'FREE', parametro)
+    this.acuService
+      .getSocios(100, 1, 'FREE', parametro)
       .subscribe((res: any) => {
-        console.log('3) res.socios22: ', res);
-
-        //  socios = res.Socios;
         this.openDialogSocios(res.Socios, res.Cantidad, 'FREE', parametro);
-        // localStorage.setItem('Socios', JSON.stringify(socios));
       });
-
   }
 
   getLocalidades(depId) {
-    this.localidades = this.departamentos.find((depto: any) => depto.DepId === depId).Localidades;
+    this.localidades = this.departamentos.find(
+      (depto: any) => depto.DepId === depId
+    ).Localidades;
   }
 
   obtenerSocio(socioId) {
-    this.acuService.getSocio(socioId)
-      .subscribe((result: any) => {
-        console.log('result: ', result);
-
-        if (result) {
-          this.socio = result;
-          // this.socId = result.SocId;
-          const socUltimoPago = `${result.SocMesPgo}/${result.SocAnoPgo}`;
-          this.alumnoForm.patchValue({
-            // socId: result.SocId,
-            socNom1: result.SocNom1,
-            socApe1: result.SocApe1,
-            socApe2: result.SocApe2,
-            socUltimoPago,
-            cantPres: result.CantPres
-          });
-
-        }
-      });
+    this.acuService.getSocio(socioId).subscribe((result: any) => {
+      if (result) {
+        this.socio = result;
+        // this.socId = result.SocId;
+        const socUltimoPago = `${result.SocMesPgo}/${result.SocAnoPgo}`;
+        this.alumnoForm.patchValue({
+          // socId: result.SocId,
+          socNom1: result.SocNom1,
+          socApe1: result.SocApe1,
+          socApe2: result.SocApe2,
+          socUltimoPago,
+          cantPres: result.CantPres,
+        });
+      }
+    });
   }
 
   private openDialogSocios(socios, cantidad, tipo, filtro) {
@@ -332,12 +295,10 @@ export class AbmAlumnoComponent implements OnInit, OnDestroy {
         tipo,
         cantidad,
         socios,
-      }
+      },
     });
 
-    sociosDialogRef.afterClosed().subscribe(result => {
-      console.log('result: ', result);
-
+    sociosDialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.socio = result;
         this.socId = result.SocId;
@@ -348,15 +309,11 @@ export class AbmAlumnoComponent implements OnInit, OnDestroy {
           socApe1: result.SocApe1,
           socApe2: result.SocApe2,
           socUltimoPago,
-          cantPres: result.CantPres
+          cantPres: result.CantPres,
         });
-
       }
-
     });
-
   }
-
 
   get aluDVField() {
     return this.alumnoForm.get('aluDV');
@@ -445,8 +402,4 @@ export class AbmAlumnoComponent implements OnInit, OnDestroy {
   get aluParField() {
     return this.alumnoForm.get('aluPar');
   }
-
-
-
 }
-

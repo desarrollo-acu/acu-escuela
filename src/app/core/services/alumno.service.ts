@@ -5,19 +5,19 @@ import { environment } from '@environments/environment';
 import { Alumno } from '../model/alumno.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AlumnoService {
-
-
-  private alumnoDataSource = new BehaviorSubject({ modo: 'INS', alumno: {}, numero: 0 });
+  private alumnoDataSource = new BehaviorSubject({
+    modo: 'INS',
+    alumno: {},
+    numero: 0,
+  });
   alumnoCurrentData = this.alumnoDataSource.asObservable();
 
-
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   alumnoTieneExcepcion(aluNro: number) {
-
     const fechaClaseStr = localStorage.getItem('fechaClase').substring(0, 10);
     const horaClaseStr = localStorage.getItem('horaClase');
 
@@ -31,21 +31,23 @@ export class AlumnoService {
     return this.http.post(`${environment.url_ws}/wsAlumnoTieneExcepcion`, {
       AluNro: aluNro,
       FchClase: fechaClaseStr,
-      HorClase: horaClase
+      HorClase: horaClase,
     });
   }
-
 
   existeAlumno(aluNro: number) {
     return this.http.post(`${environment.url_ws}/wsExisteAlumno`, {
-      AluNro: aluNro
+      AluNro: aluNro,
     });
   }
 
+  existeAlumnoByCI(aluCi: number) {
+    return this.http.get(
+      `${environment.url_ws}/existeAlumnoByCi?aluCi=${aluCi}`
+    );
+  }
 
   alumnoYaAsignado(aluNro: number) {
-
-
     const fechaClaseStr = localStorage.getItem('fechaClase').substring(0, 10);
     const horaClaseStr = localStorage.getItem('horaClase');
     const movilCodStr = localStorage.getItem('movilCod');
@@ -62,20 +64,21 @@ export class AlumnoService {
 
     console.log('fechaClaseStr: ', fechaClaseStr);
 
-
     return this.http.post(`${environment.url_ws}/wsAlumnoYaAsignado`, {
-
       AluNro: aluNro,
       FchClase: fechaClaseStr,
       HorClase: horaClase,
-      EscMovCod: movilCod
+      EscMovCod: movilCod,
     });
   }
 
   getDisponibilidadAlumno(aluId: number) {
-    return this.http.post(`${environment.url_ws}/wsObtenerDisponibilidadPorAlumno`, {
-      AluId: aluId
-    });
+    return this.http.post(
+      `${environment.url_ws}/wsObtenerDisponibilidadPorAlumno`,
+      {
+        AluId: aluId,
+      }
+    );
   }
 
   getAlumnos() {
@@ -83,30 +86,28 @@ export class AlumnoService {
   }
 
   obtenerAlumnos(pageSize: number, pageNumber: number, filtro: string) {
-    return this.http.get(`${environment.url_ws}/wsGetAlumnos?PageSize=${pageSize}&PageNumber=${pageNumber}&Filtro=${filtro}`);
+    return this.http.get(
+      `${environment.url_ws}/wsGetAlumnos?PageSize=${pageSize}&PageNumber=${pageNumber}&Filtro=${filtro}`
+    );
   }
 
   gestionAlumno(mode: string, alumno: Alumno) {
     return this.http.post(`${environment.url_ws}/wsGestionAlumno`, {
       Alumno: {
         Mode: mode,
-        Alumno: alumno
-      }
+        Alumno: alumno,
+      },
     });
   }
-
 
   getAlumnoNumero() {
     return this.http.get(`${environment.url_ws}/wsGetUltimoNumeroAlumno`);
   }
 
-
   sendDataAlumno(modo: string, alumno: Alumno, numero?: number) {
-
-    const data: { modo: string, alumno: Alumno, numero: number } = (numero) ? { modo, alumno, numero } : { modo, alumno, numero: 0 };
+    const data: { modo: string; alumno: Alumno; numero: number } = numero
+      ? { modo, alumno, numero }
+      : { modo, alumno, numero: 0 };
     this.alumnoDataSource.next(data);
-
   }
-
-
 }

@@ -4,16 +4,29 @@
 
 export const environment = {
   production: false,
-  url_ws: 'http://192.1.0.86/ACU_WSACUTesting/rest',
+  url_ws: 'http://192.1.0.86/ACUWSv15/rest',
 };
 
 /*
+
+Url api net v16 SQLServer:
+  url_ws: 'http://192.1.0.86/ACUWSv15/rest',
+  url_soap: 'http://192.1.0.86/ACUWSv15/',
+
+Url api net v16 SQLServer:
+  url_ws: 'http://192.1.0.86/ACUWSv16/rest',
+  url_soap: 'http://192.1.0.86/ACUWSv16/',
+
+Url api NetCore v16 SQLServer:
+  url_ws: 'http://192.1.0.86/ACUWSv16NetCore/rest',
+  url_soap: 'http://192.1.0.86/ACUWSv16NetCore/',
+
 
 Url api local desarrollo SQLServer:
   url_ws: 'http://localhost/ACU_web/rest',
   url_soap: 'http://localhost/ACU_web/',
 
-Url api desarrollo SQLServer:
+  Url api desarrollo SQLServer:
   url_ws: 'http://192.1.0.86/ACU_WS.NetEnvironment/rest',
   url_soap: 'http://192.1.0.86/ACU_WS.NetEnvironment/',
 

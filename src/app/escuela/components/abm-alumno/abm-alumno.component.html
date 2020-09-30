@@ -71,6 +71,9 @@
                                                                 <mat-error *ngIf="aluCiField.hasError('required')">
                                                                     Cédula de Identidad es <strong>requerida</strong>.
                                                                 </mat-error>
+                                                                <mat-error *ngIf="aluCiField.hasError('existeAlumnoByCi') && aluCiField.dirty && aluCiField.errors">
+                                                                    La cédula ingresada <strong>ya existe</strong> en el sistema.
+                                                                </mat-error>
 
 
                                                             </mat-form-field>

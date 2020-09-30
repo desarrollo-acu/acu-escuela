@@ -10,22 +10,34 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 
 import { MatTableDataSource } from '@angular/material/table';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import {
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+  MatDialog,
+} from '@angular/material/dialog';
 import { AcuService } from '@core/services/acu.service';
 import { InscripcionCursoComponent } from '../inscripcion-curso/inscripcion-curso.component';
 import { ClasesEstimadasDetalleComponent } from '../clases-estimadas-detalle/clases-estimadas-detalle.component';
 
-import { ClaseEstimada, ClaseEstimadaDetalle } from '@core/model/clase-estimada.model';
+import {
+  ClaseEstimada,
+  ClaseEstimadaDetalle,
+} from '@core/model/clase-estimada.model';
 import { openSamePDF } from '../../../../utils/utils-functions';
 
 @Component({
   selector: 'app-clases-estimadas',
   templateUrl: './clases-estimadas.component.html',
-  styleUrls: ['./clases-estimadas.component.scss']
+  styleUrls: ['./clases-estimadas.component.scss'],
 })
 export class ClasesEstimadasComponent implements OnInit {
-
-  displayedColumns: string[] = ['actions', 'EscInsId', 'EscInsNom', 'FechaInicio', 'FechaFin', 'detalle'];
+  displayedColumns: string[] = [
+    'EscInsId',
+    'EscInsNom',
+    'FechaInicio',
+    'FechaFin',
+    'detalle',
+  ];
   dataSource: MatTableDataSource<ClaseEstimada>;
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -35,13 +47,18 @@ export class ClasesEstimadasComponent implements OnInit {
     public dialogRef: MatDialogRef<InscripcionCursoComponent>,
     public dialog: MatDialog,
     private acuService: AcuService,
-    @Inject(MAT_DIALOG_DATA) public data: any) {
-
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {
     console.log('this.data.clasesEstimadas: ', this.data.clasesEstimadas);
-    console.log('this.data.clasesEstimadas.EscInsId: ', this.data.clasesEstimadas.ClasesEstimadas);
+    console.log(
+      'this.data.clasesEstimadas.EscInsId: ',
+      this.data.clasesEstimadas.ClasesEstimadas
+    );
 
     // Assign the data to the data source for the table to render
-    this.dataSource = new MatTableDataSource(this.data.clasesEstimadas.ClasesEstimadas);
+    this.dataSource = new MatTableDataSource(
+      this.data.clasesEstimadas.ClasesEstimadas
+    );
   }
 
   ngOnInit() {
@@ -50,7 +67,6 @@ export class ClasesEstimadasComponent implements OnInit {
   }
 
   applyFilter(filterValue: string) {
-
     this.dataSource.filter = filterValue.trim().toLowerCase();
 
     if (this.dataSource.paginator) {
@@ -62,37 +78,30 @@ export class ClasesEstimadasComponent implements OnInit {
     console.log('claseEstimada: ', claseEstimada);
 
     this.acuService.getPDFPlanDeClases(claseEstimada).subscribe((pdf: any) => {
-
       openSamePDF(pdf, 'PlanDeClases');
-
     });
-
   }
 
   verDetalle(detalle: ClaseEstimadaDetalle[]) {
     console.log('detalle: ', detalle);
 
-
-    const clasesEstimadasDialogRef = this.dialog.open(ClasesEstimadasDetalleComponent, {
-      height: 'auto',
-      width: '700px',
-      data: {
-        detalle
+    const clasesEstimadasDialogRef = this.dialog.open(
+      ClasesEstimadasDetalleComponent,
+      {
+        height: 'auto',
+        width: '700px',
+        data: {
+          detalle,
+        },
       }
-    });
-
+    );
 
     clasesEstimadasDialogRef.afterClosed().subscribe((result: any) => {
       // this.alumno = result;
       console.log('1.response: ' + result);
       console.log('2.response: ' + JSON.stringify(result));
       console.log(`2. response ${result}`);
-
-
-
-
     });
-
   }
 
   onNoClick(): void {
