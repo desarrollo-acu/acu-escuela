@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
-import { Curso } from '../model/curso.model';
 import { map } from 'rxjs/operators';
+import { Curso } from '../model/curso.model';
 
 @Injectable({
   providedIn: 'root',
@@ -15,9 +15,17 @@ export class CursoService {
     curso: {},
     id: 0,
   });
+
   cursoCurrentData = this.cursoDataSource.asObservable();
 
   constructor(private http: HttpClient) {}
+
+  sendDataCurso(modo: string, curso: Curso, id?: number) {
+    const data: { modo: string; curso: Curso; id: number } = id
+      ? { modo, curso, id }
+      : { modo, curso, id: 0 };
+    this.cursoDataSource.next(data);
+  }
 
   getItemsPorCurso(cursoId: number) {
     return this.http.get(
@@ -46,12 +54,5 @@ export class CursoService {
     return this.http
       .get(`${environment.url_ws}/wsGetUltimoCursoId`)
       .pipe(map((curso: { Cursoid: number }) => Number(curso.Cursoid)));
-  }
-
-  sendDataCurso(modo: string, curso: Curso, id?: number) {
-    const data: { modo: string; curso: Curso; id: number } = id
-      ? { modo, curso, id }
-      : { modo, curso, id: 0 };
-    this.cursoDataSource.next(data);
   }
 }

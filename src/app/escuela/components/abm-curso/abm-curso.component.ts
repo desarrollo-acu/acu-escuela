@@ -1,21 +1,21 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { CursoService } from '@core/services/curso.service';
-import { AcuService } from '@core/services/acu.service';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
+
+import { CursoService } from '@core/services/curso.service';
+import { AcuService } from '@core/services/acu.service';
+import { SeleccionarItemCursoComponent } from '../modals/seleccionar-item-curso/seleccionar-item-curso.component';
+import { ItemCurso } from '@core/model/item-curso.model';
 import { Curso, CursoItem } from '@core/model/curso.model';
 import {
   mensajeConfirmacion,
   confirmacionUsuario,
   errorMensaje,
 } from '@utils/sweet-alert';
-import Swal from 'sweetalert2';
-import { MatTableDataSource } from '@angular/material/table';
-
-import { SeleccionarItemCursoComponent } from '../modals/seleccionar-item-curso/seleccionar-item-curso.component';
-import { MatDialog } from '@angular/material/dialog';
-import { ItemCurso } from '@core/model/item-curso.model';
 
 @Component({
   selector: 'app-abm-curso',
@@ -63,7 +63,6 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
     if (!this.primeraVez) {
       this.subscription = this.cursoService.cursoCurrentData.subscribe(
         (data) => {
-          console.log('abm data: ', data);
           this.primeraVez = true;
           this.mode = data.modo;
 
@@ -105,7 +104,6 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
   }
 
   obtenerCodigo(esCabezal: boolean) {
-    console.log(`ejecuto obtenerCodigo`);
     if (localStorage.getItem('seleccionarItem')) {
       localStorage.removeItem('seleccionarItem');
       return;
@@ -119,10 +117,6 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
     localStorage.removeItem('modoItem');
 
     this.acuService.getItem(codigo).subscribe((itemCurso: ItemCurso[]) => {
-      console.log('itemCurso: ', itemCurso);
-      console.log('.length: ', itemCurso.length);
-      console.log('.modoItem: ', modoItem);
-
       if (itemCurso.length === 1) {
         const item: ItemCurso = itemCurso[0];
 
@@ -144,12 +138,7 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
   }
 
   existeCodigo(codigo: number, modo: string | boolean): boolean {
-    console.log(`codigo :: ${codigo}`);
-    console.log(`modo :: ${modo}`);
-
     const auxItem = this.items.find((i) => {
-      console.log(`i.EscItemCod :: ${i.EscItemCod}`);
-
       if (codigo === i.EscItemCod) {
         this.escItemCod.setValue('');
         this.escItemDesc.setValue('');
@@ -169,12 +158,9 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
   }
 
   seleccionarItem(esCabezal: boolean) {
-    console.log(`ejecuto seleccionarItem`);
     localStorage.setItem('seleccionarItem', 'true');
 
     this.acuService.getItems().subscribe((itemsCurso: any) => {
-      console.log('itemsCurso: ', itemsCurso);
-
       const seleccionarItemsFactura = this.dialog.open(
         SeleccionarItemCursoComponent,
         {
@@ -187,9 +173,6 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
       );
 
       seleccionarItemsFactura.afterClosed().subscribe((item: ItemCurso) => {
-        console.log('1.response: ', item);
-        console.log('2.response: ', JSON.stringify(item));
-
         const modoItem = localStorage.getItem('modoItem');
         localStorage.removeItem('modoItem');
 
@@ -219,8 +202,6 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
       this.tipCurId.disable();
     } else {
       this.titulo = 'Editar';
-      console.log('datasource curso: ', curso);
-      console.log('datasource Items: ', curso.Items);
       this.dataSource = new MatTableDataSource(curso.Items);
       this.items = curso.Items;
       this.setValuesForm(curso);
@@ -229,9 +210,7 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
 
   addRow() {
     const existe = this.items.find((i) => i.EscItemCod === 0);
-    console.log(`existe : ${existe} `);
     if (!existe) {
-      console.log(`no existe `);
       const item: CursoItem = {
         EscItemCod: 0,
         EscItemDesc: '',
@@ -260,8 +239,6 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
   }
 
   confirmar(confirma: boolean, item: CursoItem) {
-    console.log('confirma: ', confirma);
-    console.log('item: ', item);
     if (confirma) {
       switch (item.modo) {
         case 'INS':
@@ -314,7 +291,6 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
                 this.items.splice(index, 1);
               }
 
-              console.log('items: ', this.items);
               this.dataSource = new MatTableDataSource(this.items);
             }
           });
@@ -331,7 +307,6 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
             this.items.splice(index, 1);
           }
 
-          console.log('items: ', this.items);
           this.dataSource = new MatTableDataSource(this.items);
           break;
         default:
@@ -351,16 +326,12 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
           break;
       }
     }
-
-    console.log('items: ', this.items);
   }
 
   abmItem(modo: string, item: CursoItem) {
     localStorage.setItem('modoItem', modo);
     switch (modo) {
       case 'INS':
-        console.log(`insert,  modo: ${modo}, item: ${item} `);
-
         this.addRow();
         break;
       case 'UPD':
@@ -396,13 +367,7 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
   guardarCurso(event: Event) {
     event.preventDefault();
 
-    console.log('Submit, event: ', event);
-    console.log('Submit, form valid: ', this.cursoForm.valid);
-    console.log('Submit, form value: ', this.cursoForm.value);
-
     if (this.cursoForm.valid) {
-      console.log('cursoForm.value: ', this.cursoForm.value);
-
       const curso: Curso = {
         TipCurId: this.tipCurId.value,
         TipCurNom: this.tipCurNom.value,
@@ -423,14 +388,10 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
         Items: this.items,
       };
 
-      console.log('curso: ', curso);
       const log = JSON.stringify(curso);
-      console.log('curso og: ', log);
       this.cursoService
         .gestionCurso(this.mode, curso) // guardarAgendaInstructor(this.inscripcionCurso)
         .subscribe((res: any) => {
-          console.log('res: ', res);
-
           if (res.errorCode === 0) {
             mensajeConfirmacion('Confirmado!', res.errorMessage).then(
               (res2) => {
@@ -517,8 +478,6 @@ export class AbmCursoComponent implements OnInit, OnDestroy {
   }
 
   stringFromBoolean(isTrue: boolean): string {
-    console.log('stringfromboolean');
-
     return isTrue ? 'S' : 'N';
   }
 }

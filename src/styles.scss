@@ -235,10 +235,6 @@ body {
     font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
-.full-width {
-    width: 100%;
-}
-
 .shipping-card {
     min-width: 120px;
     margin: 20px auto;
@@ -261,4 +257,13 @@ body {
 
 .col:last-child {
     margin-right: 0;
+}
+
+.full-width {
+    width: 100%;
+    margin-top: 10px;
+}
+
+table {
+    width: 100%;
 }

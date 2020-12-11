@@ -62,6 +62,9 @@ import { GenerarExamenComponent } from './components/modals/generar-examen/gener
 import { SeleccionarMovilComponent } from './components/modals/seleccionar-movil/seleccionar-movil.component';
 import { TestComponent } from './components/test/test.component';
 import { EnviarNotificacionComponent } from './components/modals/enviar-notificacion/enviar-notificacion.component';
+import { SeleccionarInscripcionComponent } from './dialogs/seleccionar-inscripcion/seleccionar-inscripcion.component';
+import { GestionExamenComponent } from './pages/gestion-examen/gestion-examen.component';
+import { AbmExamenComponent } from './pages/abm-examen/abm-examen.component';
 
 registerLocaleData(localeEsUy, 'es-UY');
 registerLocaleData(localeEs, 'es');
@@ -105,6 +108,9 @@ registerLocaleData(localeEs, 'es');
     SeleccionarMovilComponent,
     TestComponent,
     EnviarNotificacionComponent,
+    SeleccionarInscripcionComponent,
+    GestionExamenComponent,
+    AbmExamenComponent,
   ],
   imports: [
     CommonModule,

@@ -47,6 +47,7 @@ export interface Inscripcion {
   DisponibilidadAlumno?: InscripcionDisponibilidadAlumno[];
   UsrId?: string;
   cantidadExamenes?: number;
+  Curso?: string;
 }
 
 export interface InscripcionLinea1 {

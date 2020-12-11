@@ -43,7 +43,7 @@
             <div class="col-xs-4">
                 <div class="box">
                     <mat-form-field class="full-width">
-                        <input matInput placeholder="Número del alumno" formControlName="alumnoNumero">
+                        <input matInput placeholder="Número del alumno" formControlName="alumnoNumero" required>
                         <button mat-icon-button matSuffix [attr.aria-label]="'Hide password'" (click)='seleccionarAlumno()'>
                             <mat-icon> search </mat-icon>
                         </button>
@@ -64,7 +64,7 @@
             <div class="col-xs-4">
                 <div class="box">
                     <mat-form-field class="full-width">
-                        <input matInput placeholder="Curso" formControlName="cursoId" (keyup)='obtenerCurso()'>
+                        <input matInput placeholder="Curso" formControlName="cursoId" (keyup)='obtenerCurso()' required>
                         <button mat-icon-button matSuffix [attr.aria-label]="'Hide password'" (click)='seleccionarCurso()'>
                             <mat-icon> search </mat-icon>
                         </button>
@@ -88,7 +88,7 @@
             <div class="col-xs-4">
                 <div class="box">
                     <mat-form-field class="full-width">
-                        <input matInput placeholder="Código del Instructor" formControlName="escInsId">
+                        <input matInput placeholder="Código del Instructor" formControlName="escInsId" required>
 
                         <button mat-icon-button matSuffix [attr.aria-label]="'Hide password'" (click)='seleccionarInstructor()'>
                             <mat-icon> search </mat-icon>
@@ -140,10 +140,8 @@
 
                         <!-- <textarea matInput></textarea> cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="2"
                         cdkAutosizeMaxRows="5" -->
-                        <textarea matInput placeholder="Observaciones" formControlName="observaciones" cdkAutosizeMinRows="2" cdkAutosizeMaxRows="5" required></textarea>
-                        <mat-error *ngIf="observaciones.hasError('required')">
-                            Las obvservaciones del examen son <strong>requeridas</strong>
-                        </mat-error>
+                        <textarea matInput placeholder="Observaciones" formControlName="observaciones" cdkAutosizeMinRows="2" cdkAutosizeMaxRows="5"></textarea>
+
                     </mat-form-field>
                 </div>
             </div>

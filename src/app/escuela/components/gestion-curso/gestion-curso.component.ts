@@ -39,6 +39,7 @@ export class GestionCursoComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.paginator._intl.itemsPerPageLabel = 'Items por Página';
     this.buildForm();
     this.getCursos('A');
     this.generateEstados();
@@ -75,8 +76,6 @@ export class GestionCursoComponent implements OnInit {
             this.cursoService
               .gestionCurso(modo, curso)
               .subscribe((res: any) => {
-                console.log('res eli:', res);
-
                 mensajeConfirmacion('Ok', res.errorMessage).then((res2) => {
                   this.getCursos(this.filtro);
                 });
@@ -94,8 +93,6 @@ export class GestionCursoComponent implements OnInit {
   getCursos(TipCurEst?: string) {
     this.verCurso = false;
     this.cursoService.getCursos().subscribe((cursos: Curso[]) => {
-      console.log('Cursos: ', cursos);
-
       this.verCurso = true;
       const auxCursos =
         TipCurEst === '-' || !TipCurEst

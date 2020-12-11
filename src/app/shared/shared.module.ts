@@ -12,6 +12,8 @@ import { HoraNumericStringPipe } from './pipes/hora-numeric-string.pipe';
 import { CustomDateFormatPipePipe } from './pipes/custom-date-format-pipe.pipe';
 import { DayToStringPipe } from './pipes/day-to-string.pipe';
 import { FechaStringPipe } from './pipes/fecha-string.pipe';
+import { SeleccionarCustomComponent } from './components/seleccionar-custom/seleccionar-custom.component';
+import { GestionCustomComponent } from './components/gestion-custom/gestion-custom.component';
 
 
 
@@ -25,7 +27,9 @@ import { FechaStringPipe } from './pipes/fecha-string.pipe';
     HoraNumericStringPipe,
     CustomDateFormatPipePipe,
     DayToStringPipe,
-    FechaStringPipe
+    FechaStringPipe,
+    SeleccionarCustomComponent,
+    GestionCustomComponent
   ],
   imports: [
     CommonModule,
@@ -41,7 +45,9 @@ import { FechaStringPipe } from './pipes/fecha-string.pipe';
     FooterComponent,
     HeaderComponent,
     HoraNumericStringPipe,
-    FechaStringPipe
+    FechaStringPipe,
+    SeleccionarCustomComponent,
+    GestionCustomComponent
 
   ],
 })

@@ -1,28 +1,29 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { AlumnoService } from '@core/services/alumno.service';
-import { AcuService } from '@core/services/acu.service';
 import {
   FormGroup,
   FormBuilder,
   Validators,
   FormControl,
 } from '@angular/forms';
-import { Departamento } from '@core/model/departamento.model';
-import { Localidad } from '@core/model/localidad.model';
-import { validarCIConDV } from '@utils/custom-validator';
-import { Alumno } from '@core/model/alumno.model';
 import Swal from 'sweetalert2';
-import { SeleccionarSocioComponent } from '../modals/seleccionar-socio/seleccionar-socio.component';
-import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
-import { mensajeConfirmacion } from '@utils/sweet-alert';
-import { existeAlumnoByCiValidator } from '../../../utils/validators/existe-alumno-by-ci-validator.directive';
+import { MatDialog } from '@angular/material/dialog';
 import {
   DateAdapter,
   MAT_DATE_FORMATS,
   MAT_DATE_LOCALE,
 } from '@angular/material/core';
+
+import { AlumnoService } from '@core/services/alumno.service';
+import { AcuService } from '@core/services/acu.service';
+import { Departamento } from '@core/model/departamento.model';
+import { Localidad } from '@core/model/localidad.model';
+import { validarCIConDV } from '@utils/custom-validator';
+import { Alumno } from '@core/model/alumno.model';
+import { SeleccionarSocioComponent } from '../modals/seleccionar-socio/seleccionar-socio.component';
+import { mensajeConfirmacion } from '@utils/sweet-alert';
+import { existeAlumnoByCiValidator } from '@utils/validators/existe-alumno-by-ci-validator.directive';
 @Component({
   selector: 'app-abm-alumno',
   templateUrl: './abm-alumno.component.html',
@@ -85,7 +86,6 @@ export class AbmAlumnoComponent implements OnInit, OnDestroy {
     if (!this.primeraVez) {
       this.subscription = this.alumnoService.alumnoCurrentData.subscribe(
         (data) => {
-          console.log('abm data: ', data);
           this.primeraVez = true;
           this.mode = data.modo;
           this.changeForm(data.modo, data.alumno, data.numero);
@@ -96,16 +96,12 @@ export class AbmAlumnoComponent implements OnInit, OnDestroy {
 
   private changeForm(modo: string, alumno: Alumno, aluNumero: number) {
     this.acuService.getDepartamentos().subscribe((res: any) => {
-      console.log('SDTDepartamento: ', res);
-      console.log('alumno: ', alumno);
       this.departamentos = res.Departamentos;
 
       if (modo === 'INS') {
         this.titulo = 'Agregar';
         this.aluId = 0;
-        console.log('aluNumero: ', aluNumero);
         this.aluNroField.setValue(aluNumero);
-        console.log('this.aluNroField.value: ', this.aluNroField.value);
       } else {
         this.aluId = alumno.AluId;
         this.depId = alumno.AluDepId;
@@ -139,9 +135,6 @@ export class AbmAlumnoComponent implements OnInit, OnDestroy {
     this.socIdField.setValue(alumno.SOCID);
     this.aluParField.setValue(alumno.AluPar);
 
-    console.log('DepId field: ', this.aluDepIdField.value);
-    console.log('LocId field: ', this.aluLocIdField.value);
-
     this.departamento = this.departamentos.find(
       (depto) => depto.DepId === alumno.AluDepId
     );
@@ -164,7 +157,6 @@ export class AbmAlumnoComponent implements OnInit, OnDestroy {
         aluApe1: ['', Validators.required],
         aluCi: [
           '',
-          ,
           [Validators.required],
           [existeAlumnoByCiValidator(this.alumnoService)],
         ],
@@ -191,7 +183,6 @@ export class AbmAlumnoComponent implements OnInit, OnDestroy {
         validator: [validarCIConDV('aluCi', 'aluDV')],
       }
     );
-
     this.socNom1Field.disable();
     this.socApe1Field.disable();
     this.socApe2Field.disable();
@@ -230,8 +221,6 @@ export class AbmAlumnoComponent implements OnInit, OnDestroy {
       this.alumnoService
         .gestionAlumno(this.mode, alumno) // guardarAgendaInstructor(this.inscripcionCurso)
         .subscribe((res: any) => {
-          console.log('res: ', res);
-
           if (res.Alumno.ErrorCode === 0) {
             mensajeConfirmacion('Confirmado!', res.Alumno.ErrorMessage).then(
               (res2) => {
@@ -315,10 +304,6 @@ export class AbmAlumnoComponent implements OnInit, OnDestroy {
     });
   }
 
-  get aluDVField() {
-    return this.alumnoForm.get('aluDV');
-  }
-
   get aluNroField() {
     return this.alumnoForm.get('aluNro');
   }
@@ -333,6 +318,10 @@ export class AbmAlumnoComponent implements OnInit, OnDestroy {
 
   get aluCiField() {
     return this.alumnoForm.get('aluCi');
+  }
+
+  get aluDVField() {
+    return this.alumnoForm.get('aluDV');
   }
 
   get aluFchNacField() {

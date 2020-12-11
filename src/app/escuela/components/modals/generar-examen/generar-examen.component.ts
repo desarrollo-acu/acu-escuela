@@ -32,6 +32,9 @@ import {
   ClaseEstimadaDetalle,
 } from '../../../../core/model/clase-estimada.model';
 import { InstructorHorasLibresComponent } from '../instructor-horas-libres/instructor-horas-libres.component';
+import { SeleccionarInscripcionComponent } from '../../../dialogs/seleccionar-inscripcion/seleccionar-inscripcion.component';
+import { ResponseSDTCustom } from '../../../../core/model/response-sdt-custom.model';
+import { errorMensaje } from '../../../../utils/sweet-alert';
 @Component({
   selector: 'app-generar-examen',
   templateUrl: './generar-examen.component.html',
@@ -138,15 +141,15 @@ export class GenerarExamenComponent implements OnInit {
       fechaClase: [this.agendaClase.FechaClase],
       hora: [`${hora}:00`],
       movil: [this.agendaClase.EscMovCod],
-      cursoId: [this.agendaClase.TipCurId],
+      cursoId: [this.agendaClase.TipCurId, Validators.required],
       cursoNombre: [this.agendaClase.TipCurNom],
       numeroClase: [this.agendaClase.EsAgCuNroCla],
       estadoClase: [this.agendaClase.EsAgCuEst],
       claseAdicional: [this.agendaClase.EsAgCuClaAdiSN],
       tipoClase: [this.agendaClase.EsAgCuTipCla],
-      escInsId: [this.agendaClase.EsAgCuInsId],
+      escInsId: [this.agendaClase.EsAgCuInsId, Validators.required],
       escInsNom: [this.agendaClase.EsAgCuInsNom],
-      alumnoNumero: [this.agendaClase.AluNro],
+      alumnoNumero: [this.agendaClase.AluNro, Validators.required],
       alumnoNombre: [this.agendaClase.AluNomApe],
       reservarClasePrevia: [false],
       disponibilidadLunes: [this.data.agendaClase.disponibilidadLunes],
@@ -155,7 +158,7 @@ export class GenerarExamenComponent implements OnInit {
       disponibilidadJueves: [this.data.agendaClase.disponibilidadJueves],
       disponibilidadViernes: [this.data.agendaClase.disponibilidadViernes],
       disponibilidadSabado: [this.data.agendaClase.disponibilidadSabado],
-      observaciones: ['', Validators.required],
+      observaciones: [''],
     });
 
     this.fechaClase.disable();
@@ -221,11 +224,28 @@ export class GenerarExamenComponent implements OnInit {
   }
 
   seleccionarCurso() {
-    this.cursoService.getCursos().subscribe((res: any) => {
-      this.openDialogCursos(res);
+    this.inscripcionService
+      .getInscripcionesByAlumno(this.aluId)
+      .subscribe((res: any) => this.openDialogInscripciones(res.Inscripciones));
+    // this.cursoService.getCursos().subscribe((res: any) => {
+    //   this.openDialogCursos(res);
+    // });
+  }
+  private openDialogInscripciones(inscripciones) {
+    console.log('respuesta inscripciones::: ', inscripciones);
+
+    const dialogRef = this.dialog.open(SeleccionarInscripcionComponent, {
+      height: 'auto',
+      width: '700px',
+      data: {
+        inscripciones,
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((inscripcion) => {
+      this.addInfoCursoToForm(inscripcion);
     });
   }
-
   private openDialogCursos(cursos) {
     const cursosDialogRef = this.dialog.open(SeleccionarCursoComponent, {
       height: 'auto',
@@ -303,6 +323,8 @@ export class GenerarExamenComponent implements OnInit {
   }
 
   obtenerInscripcion() {
+    console.log('estoy obtenerInscripcion::: ');
+
     console.log(this.aluId);
     console.log(this.tipCurId);
 
@@ -380,7 +402,7 @@ export class GenerarExamenComponent implements OnInit {
     });
   }
 
-  /* 
+  /*
       Evaluar clase seleccionada quiere decir evaluar si hay
       que reagendar el turno donde se agendara el examen o no
   */
@@ -488,6 +510,15 @@ export class GenerarExamenComponent implements OnInit {
 
     this.inscripcionService
       .generarExamen(generarExamen)
-      .subscribe((res) => console.log(res));
+      .subscribe((response: ResponseSDTCustom) => {
+        console.log(response);
+        if (response.errorCode === 0) {
+          mensajeConfirmacion('Excelente!', response.errorMensaje).then(() =>
+            this.dialogRef.close()
+          );
+        } else {
+          errorMensaje('Error', response.errorMensaje);
+        }
+      });
   }
 }

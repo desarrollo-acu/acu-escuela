@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject } from 'rxjs';
 import { Alumno } from '../model/alumno.model';
 
 @Injectable({
@@ -13,9 +13,18 @@ export class AlumnoService {
     alumno: {},
     numero: 0,
   });
+
   alumnoCurrentData = this.alumnoDataSource.asObservable();
 
   constructor(private http: HttpClient) {}
+
+  sendDataAlumno(modo: string, alumno: Alumno, numero?: number) {
+    const data: { modo: string; alumno: Alumno; numero: number } = numero
+      ? { modo, alumno, numero }
+      : { modo, alumno, numero: 0 };
+
+    this.alumnoDataSource.next(data);
+  }
 
   alumnoTieneExcepcion(aluNro: number) {
     const fechaClaseStr = localStorage.getItem('fechaClase').substring(0, 10);
@@ -24,10 +33,6 @@ export class AlumnoService {
     const fechaClase = Date.parse(fechaClaseStr);
     const horaClase = parseInt(horaClaseStr, 10);
 
-    console.log('aluNro: ', aluNro);
-    console.log('fechaClaseStr: ', fechaClaseStr);
-    console.log('horaClase: ', horaClase);
-    console.log('fechaClase: ', fechaClase);
     return this.http.post(`${environment.url_ws}/wsAlumnoTieneExcepcion`, {
       AluNro: aluNro,
       FchClase: fechaClaseStr,
@@ -55,14 +60,6 @@ export class AlumnoService {
     const fechaClase = Date.parse(fechaClaseStr);
     const horaClase = parseInt(horaClaseStr, 10);
     const movilCod = parseInt(movilCodStr, 10);
-
-    console.log('parametros: ');
-    console.log(' AluNro: ', aluNro);
-    console.log(' fechaClase: ', fechaClase);
-    console.log(' horaClase: ', horaClase);
-    console.log(' movCod: ', movilCod);
-
-    console.log('fechaClaseStr: ', fechaClaseStr);
 
     return this.http.post(`${environment.url_ws}/wsAlumnoYaAsignado`, {
       AluNro: aluNro,
@@ -102,12 +99,5 @@ export class AlumnoService {
 
   getAlumnoNumero() {
     return this.http.get(`${environment.url_ws}/wsGetUltimoNumeroAlumno`);
-  }
-
-  sendDataAlumno(modo: string, alumno: Alumno, numero?: number) {
-    const data: { modo: string; alumno: Alumno; numero: number } = numero
-      ? { modo, alumno, numero }
-      : { modo, alumno, numero: 0 };
-    this.alumnoDataSource.next(data);
   }
 }

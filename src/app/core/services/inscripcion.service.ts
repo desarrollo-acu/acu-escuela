@@ -7,6 +7,8 @@ import { InscripcionCurso } from '../model/inscripcion-curso.model';
 import { Prefactura } from '../model/prefactura.model';
 import { map } from 'rxjs/operators';
 import { GenerarExamen } from '../model/generar-examen.model';
+import { ResponseSDTCustom } from '../model/response-sdt-custom.model';
+import { Examen } from '../model/examen.model';
 
 @Injectable({
   providedIn: 'root',
@@ -28,11 +30,9 @@ export class InscripcionService {
     this.inscripcionDataSource.next(data);
   }
 
-  generarExamen(generarExamen: GenerarExamen) {
-    return this.http.post(`${environment.url_ws}/wsGenerarExamen`, {
+  generarExamen = (generarExamen: GenerarExamen)  => this.http.post<ResponseSDTCustom>(`${environment.url_ws}/wsGenerarExamen`, {
       generarExamen,
     });
-  }
 
   generarInscripcion(inscripcion: InscripcionCurso) {
     console.log('::::: inscripción: ', inscripcion);
@@ -93,6 +93,13 @@ export class InscripcionService {
       `${environment.url_ws}/wsGetInscripcion?AluId=${aluId}&TipCurId=${cursoId}`
     );
   }
+
+  getInscripcionesByAlumno = (alumnoId: number) => this.http.get (`${environment.url_ws}/wsGetInscripcionesByAlumno?AluId=${alumnoId}`);
+
+  getExamenes  = () => this.http.get<Examen[]>(`${environment.url_ws}/wsGetExamenes`);
+
+  getExamenById  = (examen: Examen) =>
+    this.http.get<Examen>(`${environment.url_ws}/wsGetExamenById?aluID=${examen.ALUID}&tipCurId=${examen.TIPCURID}&escAluCurId=${examen.EscAluCurId}&escAluCurExamenId=${examen.EscAluCurExamenId}`);
 
   getPDFPrefactura(preFactura: Prefactura) {
     const headers = new HttpHeaders();

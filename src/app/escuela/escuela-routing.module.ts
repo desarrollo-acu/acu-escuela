@@ -16,6 +16,8 @@ import { AbmInscripcionComponent } from './components/abm-inscripcion/abm-inscri
 import { AbmMovilComponent } from './components/abm-movil/abm-movil.component';
 import { GestionMovilComponent } from './components/gestion-movil/gestion-movil.component';
 import { TestComponent } from './components/test/test.component';
+import { GestionExamenComponent } from './pages/gestion-examen/gestion-examen.component';
+import { AbmExamenComponent } from './pages/abm-examen/abm-examen.component';
 
 const routes: Routes = [
   {
@@ -47,6 +49,10 @@ const routes: Routes = [
         component: GestionAlumnoComponent,
       },
       {
+        path: 'gestion-examen',
+        component: GestionExamenComponent,
+      },
+      {
         path: 'gestion-instructor',
         component: GestionInstructorComponent,
       },
@@ -69,6 +75,10 @@ const routes: Routes = [
       {
         path: 'abm-instructor',
         component: AbmInstructorComponent,
+      },
+      {
+        path: 'abm-examen',
+        component: AbmExamenComponent,
       },
       {
         path: 'agendaclase',
