@@ -50,7 +50,7 @@
                     <button mat-mini-fab color="primary" (click)="verPDF(row)" matTooltip="Descargar PDF de Plan de Clases" style="margin-left: 5px;">
                         <mat-icon> insert_drive_file</mat-icon>
                     </button>
-                    <button mat-mini-fab color="primary" [mat-dialog-close]="row" matTooltip="Seleccionar estimación" style="margin-left: 5px;">
+                    <button mat-mini-fab color="primary" (click)="seleccionarEstimacion(row)" matTooltip="Seleccionar estimación" style="margin-left: 5px;">
                         <mat-icon> check</mat-icon>
                     </button>
 
@@ -73,5 +73,6 @@
 
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-    <button mat-button mat-dialog-close (click)="onNoClick()">Cancelar</button>
+    <button mat-button (click)="onSalir()">Salir</button>
+    <button mat-button mat-dialog-close (click)="onNoClick()">Volver</button>
 </mat-dialog-actions>

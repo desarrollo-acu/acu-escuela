@@ -6,4 +6,8 @@ export interface CopiarMoverParameters {
     fechaClase: Date;
     horaClase: number;
     movil: number;
+    escInsIdOld?: string;
+    escInsId?: string;
+    esMovil?: boolean;
+    userId?: string;
 }

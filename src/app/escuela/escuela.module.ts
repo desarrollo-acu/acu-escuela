@@ -65,6 +65,7 @@ import { EnviarNotificacionComponent } from './components/modals/enviar-notifica
 import { SeleccionarInscripcionComponent } from './dialogs/seleccionar-inscripcion/seleccionar-inscripcion.component';
 import { GestionExamenComponent } from './pages/gestion-examen/gestion-examen.component';
 import { AbmExamenComponent } from './pages/abm-examen/abm-examen.component';
+import { GenerarClaseAdicionalComponent } from './dialogs/generar-clase-adicional/generar-clase-adicional.component';
 
 registerLocaleData(localeEsUy, 'es-UY');
 registerLocaleData(localeEs, 'es');
@@ -111,6 +112,7 @@ registerLocaleData(localeEs, 'es');
     SeleccionarInscripcionComponent,
     GestionExamenComponent,
     AbmExamenComponent,
+    GenerarClaseAdicionalComponent,
   ],
   imports: [
     CommonModule,

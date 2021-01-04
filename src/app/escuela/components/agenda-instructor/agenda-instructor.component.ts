@@ -12,6 +12,11 @@ import { SuspenderClaseComponent } from '../modals/suspender-clase/suspender-cla
 import { AgendaClase } from '@core/model/agenda-clase.model';
 import { AgendaCurso } from 'src/app/escuela/components/modals/agenda-curso/agenda-curso.component';
 import { Instructor } from '../../../core/model/instructor.model';
+import { VerAgendaComponent } from '../../../shared/dialogs/ver-agenda/ver-agenda.component';
+import { GenerarClaseAdicionalComponent } from '@escuela/dialogs/generar-clase-adicional/generar-clase-adicional.component';
+import { GenerarExamenComponent } from '../modals/generar-examen/generar-examen.component';
+
+import { isMoment, Moment } from 'moment';
 
 export interface AgendaElement {
   Instructor: string;
@@ -109,7 +114,6 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
 
     console.log('Agenda-instructor ngOnDestroy');
     this.acuService.cleanStorageAgenda();
-    // throw new Error("Method not implemented.");
   }
 
   ngOnInit() {
@@ -176,7 +180,7 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
 
   showAlert(instructor: string, hora: number, existe: boolean): void {
     const text = `Instructor: ${instructor} ; Hora: ${hora} ; Existe:  ${existe}`;
-
+    const escInsId = instructor;
     const celda = document.getElementById(`${instructor}${hora}`);
     celda.getAttribute('class');
     console.log(text);
@@ -191,6 +195,7 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
     const mainParameters = {
       fecha: this.fechaClase,
       instructor,
+      esMovil: false,
       hora,
       class: celda.getAttribute('class'),
       text: celda.innerHTML,
@@ -211,6 +216,7 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
         verOpciones: (lugar && lugar.AluId != 0)
       }
     });
+
     t.afterDismissed().subscribe((seleccionoOpcion) => {
       console.log('fin open sheet: ', seleccionoOpcion);
       if (seleccionoOpcion) {
@@ -226,32 +232,33 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
               .subscribe((res: any) => {
 
                 console.log('6)res: ', res);
-                const dialogRef = this.dialog.open(AgendaCursoComponent, {
+                const dialogRef = this.dialog.open(VerAgendaComponent, {
                   data: {
                     agendaCurso: res.AgendaCurso,
+                    agendaClase: res.AgendaCurso.AgendaClase,
                   }
                 });
 
                 dialogRef.afterClosed().subscribe(result => {
                   console.log('cierro el dialog, resultado: ', result);
                   if (result) {
-                    this.mensajeConfirmacion('Confirmado!', result.mensaje).then((res2) => {
-                      if (res2.dismiss === Swal.DismissReason.timer) {
-                        console.log('Cierro  con el timer');
-                      }
-                    });
+                    this.mensajeConfirmacion('Confirmado!', result.mensaje).then();
                     // cambiar la celda.
 
-                    celda.removeAttribute('class');
-                    celda.innerHTML = result.TipCurNom;
-                    celda.classList.add('cdk-cell', 'mat-cell', `cdk-column-${hora}`,
-                      `mat-column-${hora}`, 'cell', 'greenLight-black', 'ng-star-inserted');
                     this.animal = result;
                   }
                 });
 
               });
             break;
+
+          case 'clase-adicional-instructor':
+            this.generarClaseAdicional(instructor, hora);
+            break;
+          case 'examen-instructor':
+            this.generarExamen(instructor, hora);
+            break;
+
           case 'suspender-instructor':
             this.suspenderDuplicarClase(instructor, hora, true);
             break;
@@ -311,10 +318,49 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
   }
 
 
-  // ngAfterViewInit() {
-  //   this.getAgenda(this.fecha);
 
-  // }
+  generarClaseAdicional(instructor: string, hora: number) {
+    const instr = this.instructores.find(ins => ins.EscInsId === instructor);
+
+    this.acuService
+      .getClaseAgenda(this.fechaClase, hora, instr.EscMovCod)
+      .subscribe((res: any) => {
+        const agendaClase = {...res.AgendaClase, EscInsId: instructor, EscInsNom: instr.EscInsNom, EsAgCuInsId: instructor, EsAgCuInsNom: instr.EscInsNom,  };
+        const dialogRef = this.dialog.open(GenerarClaseAdicionalComponent, {
+          data: {
+            agendaClase
+          },
+        });
+
+        dialogRef.afterClosed().subscribe((result) => {
+          this.animal = result;
+
+          this.getAgenda(this.fecha);
+        });
+      });
+  }
+
+  generarExamen(instructor: string, hora: number) {
+    const instr = this.instructores.find(ins => ins.EscInsId === instructor);
+
+    this.acuService
+      .getClaseAgenda(this.fechaClase, hora, instr.EscMovCod)
+      .subscribe((res: any) => {
+        const agendaClase = {...res.AgendaClase, EscInsId: instructor, EscInsNom: instr.EscInsNom, EsAgCuInsId: instructor, EsAgCuInsNom: instr.EscInsNom,  };
+
+        const dialogRef = this.dialog.open(GenerarExamenComponent, {
+          data: {
+            agendaClase
+          },
+        });
+
+        dialogRef.afterClosed().subscribe((result) => {
+          this.animal = result;
+
+          this.getAgenda(this.fecha);
+        });
+      });
+  }
 
   suspenderDuplicarClase(instructor: string, hora: number, esSuspender: boolean) {
     const instr = this.instructores.find(ins => {
@@ -570,8 +616,20 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
     return item.HoraPorcentaje; // .map(t => t.cost).reduce((acc, value) => acc + value, 0);
   }
 
-  formatDateToString(fecha: Date): string {
+  formatDateToString(fechaParm: Date | Moment): string {
+    console.log('fecha: ', fechaParm);
+    let auxFecha: Date;
+    if (isMoment(fechaParm)) {
+      auxFecha = fechaParm.toDate();
+    } else if (fechaParm instanceof Date) {
+      auxFecha = fechaParm;
+    }
+    console.log('auxFecha: ', auxFecha);
+    const fecha = auxFecha;
+    this.fecha = auxFecha;
+    console.log('fecha: ', fecha);
     const day = fecha.getDate();
+    console.log('day: ', day);
     const month = fecha.getMonth() + 1;
     const year = fecha.getFullYear();
 
@@ -591,6 +649,5 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
       strMonth = month.toString();
     }
     return `${strYear}-${strMonth}-${strDay}`;
-
   }
 }

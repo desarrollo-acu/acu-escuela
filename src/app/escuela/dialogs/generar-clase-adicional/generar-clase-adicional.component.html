@@ -1,0 +1,137 @@
+<form [formGroup]="form">
+
+    <mat-toolbar color="primary">
+        <h2 mat-dialog-title> Generar clase adicional </h2>
+    </mat-toolbar>
+
+
+    <mat-dialog-content class="mat-typography">
+        <div class="row">
+            <div class="col-xs">
+                <div class="box">
+
+                    <mat-form-field class="full-width">
+
+                        <input matInput [matDatepicker]="picker" placeholder="Fecha" formControlName="fechaClase">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+
+                </div>
+            </div>
+            <div class="col-xs">
+                <div class="box">
+
+                    <mat-form-field class="full-width">
+                        <input matInput type="time" placeholder="Hora" formControlName="hora">
+                    </mat-form-field>
+
+                </div>
+            </div>
+            <div class="col-xs">
+                <div class="box">
+                    <mat-form-field class="full-width">
+                        <input matInput placeholder="Número de Movil" formControlName="movil">
+                        <!-- formControlName="movil" -->
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-4">
+                <div class="box">
+                    <mat-form-field class="full-width">
+                        <input matInput placeholder="Número del alumno" formControlName="alumnoNumero" required>
+                        <button mat-icon-button matSuffix [attr.aria-label]="'Hide password'" (click)='seleccionarAlumno()'>
+                          <mat-icon> search </mat-icon>
+                      </button>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="col-xs">
+                <div class="box">
+                    <mat-form-field class="full-width">
+                        <input matInput placeholder="Nombre del alumno" formControlName="alumnoNombre">
+
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-4">
+                <div class="box">
+                    <mat-form-field class="full-width">
+                        <input matInput placeholder="Curso" formControlName="cursoId" (keyup)='obtenerCurso()' required>
+                        <button mat-icon-button matSuffix [attr.aria-label]="'Hide password'" (click)='seleccionarCurso()'>
+                          <mat-icon> search </mat-icon>
+                      </button>
+
+
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="col-xs">
+                <div class="box">
+                    <mat-form-field class="full-width">
+
+                        <input matInput placeholder="Nombre del curso" formControlName="cursoNombre">
+
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-4">
+                <div class="box">
+                    <mat-form-field class="full-width">
+                        <input matInput placeholder="Código del Instructor" formControlName="escInsId" required>
+
+                        <button mat-icon-button matSuffix [attr.aria-label]="'Hide password'" (click)='seleccionarInstructor()'>
+                          <mat-icon> search </mat-icon>
+                      </button>
+                    </mat-form-field>
+
+                </div>
+            </div>
+            <div class="col-xs">
+                <div class="box">
+                    <mat-form-field class="full-width">
+                        <input matInput placeholder="Nombre del Instructor" formControlName="escInsNom">
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="row">
+            <div class="col-xs">
+                <div class="box">
+                    <mat-form-field class="full-width">
+
+
+                        <textarea matInput placeholder="Observaciones" formControlName="observaciones" cdkAutosizeMinRows="2" cdkAutosizeMaxRows="5"></textarea>
+
+                    </mat-form-field>
+                </div>
+            </div>
+
+        </div>
+
+
+
+
+
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+
+        <button mat-raised-button type="button" (click)="generarClaseAdicional($event)" cdkFocusInitial [disabled]="form.invalid" color="primary"> Generar
+          Clase Adicional
+      </button>
+        <button mat-button mat-dialog-close (click)="onNoClick()">Cancelar</button>
+    </mat-dialog-actions>
+</form>

@@ -1,46 +1,37 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import {
-  MatDialogRef,
-  MAT_DIALOG_DATA,
-  MatDialog,
-} from '@angular/material/dialog';
-
-import { AcuService } from '@core/services/acu.service';
-import { InstructorService } from '@core/services/instructor.service';
+import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AgendaClase } from '@core/model/agenda-clase.model';
-import { confirmacionUsuario, mensajeConfirmacion } from '@utils/sweet-alert';
-import { AgendaMovilComponent } from '../../agenda-movil/agenda-movil.component';
-import { CursoService } from '../../../../core/services/curso.service';
-import { SeleccionarCursoComponent } from '../seleccionar-curso/seleccionar-curso.component';
-import { SeleccionarAlumnoComponent } from '../seleccionar-alumno/seleccionar-alumno.component';
-import { AlumnoService } from '../../../../core/services/alumno.service';
+import { ClaseEstimada, ClaseEstimadaDetalle } from '@core/model/clase-estimada.model';
+import { GenerarExamenItems, GenerarExamen } from '@core/model/generar-examen.model';
+import { Inscripcion } from '@core/model/inscripcion.model';
+import { Instructor } from '@core/model/instructor.model';
+import { Movil } from '@core/model/movil.model';
+import { ResponseSDTCustom } from '@core/model/response-sdt-custom.model';
+import { AcuService } from '@core/services/acu.service';
+import { AlumnoService } from '@core/services/alumno.service';
+import { CursoService } from '@core/services/curso.service';
+import { InscripcionService } from '@core/services/inscripcion.service';
+import { InstructorService } from '@core/services/instructor.service';
+import { MovilService } from '@core/services/movil.service';
+import { AgendaMovilComponent } from '@escuela/components/agenda-movil/agenda-movil.component';
+import { InstructorHorasLibresComponent } from '@escuela/components/modals/instructor-horas-libres/instructor-horas-libres.component';
+import { SeleccionarAlumnoComponent } from '@escuela/components/modals/seleccionar-alumno/seleccionar-alumno.component';
+import { SeleccionarCursoComponent } from '@escuela/components/modals/seleccionar-curso/seleccionar-curso.component';
+import { SeleccionarInstructorComponent } from '@escuela/components/modals/seleccionar-instructor/seleccionar-instructor.component';
+import { SeleccionarMovilComponent } from '@escuela/components/modals/seleccionar-movil/seleccionar-movil.component';
+import { confirmacionUsuario, mensajeConfirmacion, errorMensaje } from '@utils/sweet-alert';
 import Swal from 'sweetalert2';
-import { SeleccionarInstructorComponent } from '../seleccionar-instructor/seleccionar-instructor.component';
-import { InscripcionService } from '../../../../core/services/inscripcion.service';
-import { Inscripcion } from '../../../../core/model/inscripcion.model';
-import {
-  GenerarExamen,
-  GenerarExamenItems,
-} from '../../../../core/model/generar-examen.model';
-import { Instructor } from '../../../../core/model/instructor.model';
-import { MovilService } from '../../../../core/services/movil.service';
-import { Movil } from '../../../../core/model/movil.model';
-import { SeleccionarMovilComponent } from '../seleccionar-movil/seleccionar-movil.component';
-import {
-  ClaseEstimada,
-  ClaseEstimadaDetalle,
-} from '../../../../core/model/clase-estimada.model';
-import { InstructorHorasLibresComponent } from '../instructor-horas-libres/instructor-horas-libres.component';
-import { SeleccionarInscripcionComponent } from '../../../dialogs/seleccionar-inscripcion/seleccionar-inscripcion.component';
-import { ResponseSDTCustom } from '../../../../core/model/response-sdt-custom.model';
-import { errorMensaje } from '../../../../utils/sweet-alert';
+import { SeleccionarInscripcionComponent } from '../seleccionar-inscripcion/seleccionar-inscripcion.component';
+import { GenerarClaseAdicional } from '../../../core/model/generar-clase-adicional.model';
+import { mensajeWarning } from '../../../utils/sweet-alert';
+
 @Component({
-  selector: 'app-generar-examen',
-  templateUrl: './generar-examen.component.html',
-  styleUrls: ['./generar-examen.component.scss'],
+  selector: 'app-generar-clase-adicional',
+  templateUrl: './generar-clase-adicional.component.html',
+  styleUrls: ['./generar-clase-adicional.component.scss']
 })
-export class GenerarExamenComponent implements OnInit {
+export class GenerarClaseAdicionalComponent implements OnInit {
   form: FormGroup;
   agendaClase: AgendaClase;
 
@@ -51,91 +42,67 @@ export class GenerarExamenComponent implements OnInit {
   tituloExamen = '';
   examenConCosto = false;
   escAluCurId: number;
+  esInstructor: boolean;
 
   clasesAReagendar: GenerarExamenItems[] = [];
 
   constructor(
     private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<AgendaMovilComponent>,
-    private movilService: MovilService,
     private instructorService: InstructorService,
     private inscripcionService: InscripcionService,
     private alumnoService: AlumnoService,
-    private acuService: AcuService,
     private cursoService: CursoService,
     public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.agendaClase = this.data.agendaClase;
-    console.log('aaaa .agendaClase : ', this.agendaClase);
+    this.esInstructor = this.data.esInstructor;
 
-    if (this.agendaClase.AluId) {
-      this.aluId = this.agendaClase.AluId;
-    }
-    if (this.agendaClase.TipCurId) {
-      this.tipCurId = this.agendaClase.TipCurId;
-    }
-    this.obtenerInscripcion();
+
     this.buildForm();
   }
 
   ngOnInit(): void {}
 
-  get fechaClase() {
-    return this.form.get('fechaClase');
-  }
-  get hora() {
-    return this.form.get('hora');
-  }
-  get movil() {
-    return this.form.get('movil');
-  }
-  get cursoId() {
-    return this.form.get('cursoId');
-  }
-  get cursoNombre() {
-    return this.form.get('cursoNombre');
-  }
-  get alumnoNumero() {
-    return this.form.get('alumnoNumero');
-  }
-  get alumnoNombre() {
-    return this.form.get('alumnoNombre');
-  }
-  get numeroClase() {
-    return this.form.get('numeroClase');
-  }
-  get estadoClase() {
-    return this.form.get('estadoClase');
-  }
-  get escInsId() {
-    return this.form.get('escInsId');
-  }
-  get escInsNom() {
-    return this.form.get('escInsNom');
-  }
+  get fechaClase() { return this.form.get('fechaClase'); }
 
-  get claseAdicional() {
-    return this.form.get('claseAdicional');
-  }
+  get hora() { return this.form.get('hora'); }
 
-  get tipoClase() {
-    return this.form.get('tipoClase');
-  }
+  get movil() { return this.form.get('movil'); }
 
-  get reservarClasePrevia() {
-    return this.form.get('reservarClasePrevia');
-  }
+  get cursoId() { return this.form.get('cursoId'); }
 
-  get observaciones() {
-    return this.form.get('observaciones');
-  }
+  get cursoNombre() { return this.form.get('cursoNombre'); }
+
+  get alumnoNumero() { return this.form.get('alumnoNumero'); }
+
+  get alumnoNombre() { return this.form.get('alumnoNombre'); }
+
+  get numeroClase() { return this.form.get('numeroClase'); }
+
+  get estadoClase() { return this.form.get('estadoClase'); }
+
+  get escInsId() { return this.form.get('escInsId'); }
+
+  get escInsNom() { return this.form.get('escInsNom'); }
+
+  get claseAdicional() { return this.form.get('claseAdicional'); }
+
+  get tipoClase() { return this.form.get('tipoClase'); }
+
+  get reservarClasePrevia() { return this.form.get('reservarClasePrevia'); }
+
+  get observaciones() { return this.form.get('observaciones'); }
 
   private buildForm() {
     const hora =
       this.agendaClase.Hora < 10
         ? `0${this.agendaClase.Hora}`
         : this.agendaClase.Hora;
+
+      console.log('EscInsId:: ', this.agendaClase.EscInsId);
+      console.log('EsAgCuInsId:: ', this.agendaClase.EsAgCuInsId);
 
     this.form = this.formBuilder.group({
       fechaClase: [this.agendaClase.FechaClase],
@@ -167,32 +134,8 @@ export class GenerarExamenComponent implements OnInit {
 
     this.alumnoNombre.disable();
     this.escInsNom.disable();
-  }
 
-  seleccionarMovil() {
-    this.movilService.getMoviles().subscribe((moviles: Movil[]) => {
-      console.log('moviles: ', moviles);
-
-      const auxMoviles = moviles.filter((movil) => movil.EscVehEst === 'A');
-
-      this.openDialogMoviles(auxMoviles);
-    });
-  }
-
-  private openDialogMoviles(moviles: Movil[]) {
-    const movilesDialogRef = this.dialog.open(SeleccionarMovilComponent, {
-      height: 'auto',
-      width: '700px',
-      data: {
-        moviles,
-      },
-    });
-
-    movilesDialogRef.afterClosed().subscribe((movil) => {
-      this.form.patchValue({
-        escInsId: movil.MovCod,
-      });
-    });
+    console.log('this.escInsId:: ', this.escInsId.value);
   }
 
   seleccionarInstructor() {
@@ -227,10 +170,9 @@ export class GenerarExamenComponent implements OnInit {
     this.inscripcionService
       .getInscripcionesByAlumno(this.aluId)
       .subscribe((res: any) => this.openDialogInscripciones(res.Inscripciones));
-    // this.cursoService.getCursos().subscribe((res: any) => {
-    //   this.openDialogCursos(res);
-    // });
+
   }
+
   private openDialogInscripciones(inscripciones) {
     console.log('respuesta inscripciones::: ', inscripciones);
 
@@ -244,19 +186,6 @@ export class GenerarExamenComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((inscripcion) => {
       this.addInfoCursoToForm(inscripcion);
-    });
-  }
-  private openDialogCursos(cursos) {
-    const cursosDialogRef = this.dialog.open(SeleccionarCursoComponent, {
-      height: 'auto',
-      width: '700px',
-      data: {
-        cursos,
-      },
-    });
-
-    cursosDialogRef.afterClosed().subscribe((curso) => {
-      this.addInfoCursoToForm(curso);
     });
   }
 
@@ -323,7 +252,6 @@ export class GenerarExamenComponent implements OnInit {
   }
 
   obtenerInscripcion() {
-    console.log('estoy obtenerInscripcion::: ');
 
     console.log(this.aluId);
     console.log(this.tipCurId);
@@ -348,78 +276,53 @@ export class GenerarExamenComponent implements OnInit {
       });
   }
 
-  generarExamen(event: Event) {
-    console.log(event);
+  generarClaseAdicional(event: Event) {
 
     if (this.form.invalid) {
       return;
     }
     confirmacionUsuario(
-      'Confirmar generación de examen',
-      `Se generará un nuevo examen ${this.tituloExamen} costo para el alumno ${this.alumnoNombre.value}, ¿Desea continuar? `
+      'Confirmar generación de clase adicional',
+      `Se generará una nueva clase adicional para el alumno ${this.alumnoNombre.value}, ¿Desea continuar? `
     ).then((res) => {
       if (!res.isConfirmed) {
         return;
       }
 
-      console.log(this.agendaClase.AluId);
-      console.log(this.aluId);
-      console.log(this.agendaClase);
 
-      // Si reserva clase previa, evaluo si tiene clase anterior para la hora inmediatamente anterior
-      if (this.reservarClasePrevia.value) {
-        this.acuService
-          .getClaseAgenda(
-            this.agendaClase.FechaClase,
-            this.agendaClase.Hora - 1,
-            this.movil.value
-          )
-          // tslint:disable-next-line: no-shadowed-variable
-          .subscribe(({ AgendaClase }: { AgendaClase: AgendaClase }) => {
-            const clasePrevia = AgendaClase;
+    const generarClaseAdicional: GenerarClaseAdicional = {
+      fecha: this.agendaClase.FechaClase,
+      hora: this.agendaClase.Hora,
+      movilSeleccionado: this.movil.value,
 
-            // Si existeClaseAgenda previa y no es del alumno que estoy
-            // generando examen, entonces obtengo nueva y espero a que el usuario la seleccione.
-            if (
-              clasePrevia.existeClaseAgenda &&
-              clasePrevia.AluId !== this.aluId &&
-              // tslint:disable-next-line: triple-equals
-              clasePrevia.AluId != 0
-            ) {
-              this.obtenerNuevaClase(
-                clasePrevia,
-                clasePrevia.EsAgCuInsId
-              ).then(() => this.evaluarClaseSeleccionada());
-            } else {
-              this.evaluarClaseSeleccionada();
-            }
-          });
-      }
-      // Si el alumno es 0 => es un lugar libre en la agenda
-      else {
-        this.evaluarClaseSeleccionada();
-      }
+      alumnoClaseAdicional: this.aluId,
+      cursoClaseAdicional: this.tipCurId,
+      instructorSeleccionado: this.escInsId.value,
+      observacionesClaseAdicional: this.observaciones.value,
+      claseAnterior: this.agendaClase,
+      escAluCurId: this.escAluCurId,
+      usrId: localStorage.getItem('usrId'),
+
+    };
+
+    this.inscripcionService
+      .generarClaseAdicional(generarClaseAdicional)
+      .subscribe((response: ResponseSDTCustom) => {
+        console.log(response);
+        if (response.errorCode === 0) {
+          mensajeConfirmacion('Excelente!', response.errorMensaje).then(() =>
+            this.dialogRef.close()
+          );
+        } else if(response.errorCode === 2){
+          mensajeWarning('Atención', response.errorMensaje ).then(() =>
+          this.dialogRef.close()
+        );
+        }else{
+          errorMensaje('Error', response.errorMensaje);
+        }
+      });
+
     });
-  }
-
-  /*
-      Evaluar clase seleccionada quiere decir evaluar si hay
-      que reagendar el turno donde se agendara el examen o no
-  */
-  evaluarClaseSeleccionada() {
-    if (
-      this.agendaClase.AluId !== this.aluId &&
-      // tslint:disable-next-line: triple-equals
-      this.agendaClase.AluId != 0
-    ) {
-      this.obtenerNuevaClase(
-        this.agendaClase,
-        this.escInsId.value,
-        true
-      ).then();
-    } else {
-      this.finGenerarExamen();
-    }
   }
 
   onNoClick(): void {
@@ -475,50 +378,9 @@ export class GenerarExamenComponent implements OnInit {
               };
               this.clasesAReagendar.push(claseAReagendar);
 
-              if (finExamen) {
-                resolve(this.finGenerarExamen());
-              } else {
-                resolve(null);
-              }
             });
         });
     });
   }
 
-  finGenerarExamen() {
-    // Si hay items en clasesAReagender, entonces reagenda clase.
-    const reagendaClase: boolean = this.clasesAReagendar.length > 0;
-
-    const generarExamen: GenerarExamen = {
-      alumnoVaADarExamen: this.aluId,
-      cursoParaExamen: this.tipCurId,
-
-      observacionesExamen: this.observaciones.value,
-      claseAnterior: this.agendaClase,
-      examenConCosto: this.examenConCosto,
-      instructorSeleccionado: this.escInsId.value,
-      movilSeleccionado: this.movil.value,
-
-      reagendaClase,
-
-      EscAluCurId: this.escAluCurId,
-      usrId: localStorage.getItem('usrId'),
-      reservarClasePrevia: this.reservarClasePrevia.value,
-      clasesAReagendar: this.clasesAReagendar,
-    };
-    console.log(': clasesAReagendar: ', this.clasesAReagendar);
-
-    this.inscripcionService
-      .generarExamen(generarExamen)
-      .subscribe((response: ResponseSDTCustom) => {
-        console.log(response);
-        if (response.errorCode === 0) {
-          mensajeConfirmacion('Excelente!', response.errorMensaje).then(() =>
-            this.dialogRef.close()
-          );
-        } else {
-          errorMensaje('Error', response.errorMensaje);
-        }
-      });
-  }
 }

@@ -1,4 +1,3 @@
-<!--  -->
 <form [formGroup]="form" (ngSubmit)="guardarClase($event)">
 
     <mat-toolbar color="primary">
@@ -25,17 +24,14 @@
             <div class="row">
                 <div class="col-xs-4">
                     <mat-form-field class="full-width">
-                        <input matInput placeholder="Número del Alumno" formControlName="alumnoNumero" [errorStateMatcher]="matcher">
+
+                        <input matInput type="number" placeholder="Cédula de Identidad" formControlName="alumnoCI" id="searchAlumno" #searchAlumno>
                         <button mat-icon-button matSuffix [attr.aria-label]="'Hide password'" (click)='seleccionarAlumno()'>
                             <mat-icon> search </mat-icon>
                         </button>
                         <button mat-icon-button matSuffix [attr.aria-label]="'Hide password'" (click)='altaAlumno()'>
                             <mat-icon> add </mat-icon>
                         </button>
-
-                        <mat-error *ngIf="alumnoNumeroField.hasError('required') && alumnoNumeroField.dirty && alumnoNumeroField.errors">
-                            El número del alumno <strong>es requerido.</strong>
-                        </mat-error>
 
                     </mat-form-field>
                 </div>
@@ -49,7 +45,12 @@
             <div class="row">
                 <div class="col">
                     <mat-form-field class="full-width">
-                        <input matInput placeholder="Cédula de Identidad" formControlName="alumnoCI">
+                        <input matInput placeholder="Número del Alumno" formControlName="alumnoNumero" [errorStateMatcher]="matcher">
+
+
+                        <mat-error *ngIf="alumnoNumeroField.hasError('required') && alumnoNumeroField.dirty && alumnoNumeroField.errors">
+                            El número del alumno <strong>es requerido.</strong>
+                        </mat-error>
                     </mat-form-field>
                 </div>
                 <div class="col">
@@ -127,12 +128,7 @@
                         <input matInput [matDatepicker]="pickerCurso" placeholder="Inicio del Curso" formControlName="escCurIni">
                         <mat-datepicker-toggle matSuffix [for]="pickerCurso"></mat-datepicker-toggle>
                         <mat-datepicker #pickerCurso></mat-datepicker>
-                        <!-- <mat-error *ngIf="escCurIniField.hasError('required') && escCurIniField.dirty && escCurIniField.errors">
-                            La fecha de inicio del curso <strong>es requerido.</strong>
-                        </mat-error>
-                        <mat-error *ngIf="escCurIniField.hasError('fecha_invalid')  && escCurIniField.dirty && escCurIniField.errors">
-                            ATENCIÓN: La fecha de inicio del curso <strong>es anterior</strong> a la fecha de hoy.
-                        </mat-error> -->
+
 
                     </mat-form-field>
                 </div>
@@ -142,6 +138,9 @@
                         <input matInput [matDatepicker]="pickerEstimada" placeholder="Fecha de Inicio propuesta por el Alumno" formControlName="fechaInicioEstimada">
                         <mat-datepicker-toggle matSuffix [for]="pickerEstimada"></mat-datepicker-toggle>
                         <mat-datepicker #pickerEstimada></mat-datepicker>
+                        <mat-error *ngIf="fechaInicioEstimadaField.hasError('required')">
+                            La Fecha de Inicio propuesta por el Alumno <strong>es requerida.</strong>
+                        </mat-error>
                     </mat-form-field>
                 </div>
             </div>
@@ -162,7 +161,6 @@
 
                     <div id="irABuscarAlAlumno" style=" margin-top: 20px;">
                         <mat-checkbox formControlName="irABuscarAlAlumno" color="primary">
-                            <!-- (ngModelChange)="updateAllComplete()" -->
                             Recoger al alumno en su domicilio?
                         </mat-checkbox>
                     </div>
@@ -355,7 +353,6 @@
             <h3>Disponibilidad del alumno</h3>
             <div class="row">
                 <div class="col">
-                    <!-- <div class="row"> -->
                     <h4>Lunes</h4>
                     <mat-form-field>
                         <mat-label>Horas Disponibles</mat-label>
@@ -364,10 +361,8 @@
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
-                    <!-- </div> -->
                 </div>
                 <div class="col">
-                    <!-- <div class="row"> -->
                     <h4>Martes</h4>
                     <mat-form-field>
                         <mat-label>Horas Disponibles</mat-label>
@@ -376,10 +371,8 @@
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
-                    <!-- </div> -->
                 </div>
                 <div class="col">
-                    <!-- <div class="row"> -->
                     <h4>Miercoles</h4>
                     <mat-form-field>
                         <mat-label>Horas Disponibles</mat-label>
@@ -388,13 +381,11 @@
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
-                    <!-- </div> -->
                 </div>
 
             </div>
             <div class="row">
                 <div class="col">
-                    <!-- <div class="row"> -->
                     <h4>Jueves</h4>
                     <mat-form-field>
                         <mat-label>Horas Disponibles</mat-label>
@@ -403,10 +394,8 @@
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
-                    <!-- </div> -->
                 </div>
                 <div class="col">
-                    <!-- <div class="row"> -->
                     <h4>Viernes</h4>
                     <mat-form-field>
                         <mat-label>Horas Disponibles</mat-label>
@@ -415,10 +404,8 @@
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
-                    <!-- </div> -->
                 </div>
                 <div class="col">
-                    <!-- <div class="row"> -->
                     <h4>Sabado</h4>
                     <mat-form-field>
                         <mat-label>Horas Disponibles</mat-label>
@@ -427,7 +414,6 @@
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
-                    <!-- </div> -->
                 </div>
 
             </div>
@@ -437,7 +423,6 @@
                     <mat-form-field class="full-width">
 
                         <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5" placeholder="Observaciones" formControlName="observaciones"></textarea>
-                        <!-- [(ngModel)]="inscripcionCurso.EscAgeInsObservaciones" -->
                     </mat-form-field>
                 </div>
             </div>
@@ -447,7 +432,7 @@
 
     <mat-dialog-actions align="end">
 
-        <button mat-raised-button type="button" (click)="guardarClase($event)" cdkFocusInitial [disabled]="form.invalid" color="primary">Guardar Cambios</button>
+        <button mat-raised-button type="button" (click)="guardarClase($event)" cdkFocusInitial [disabled]="form.invalid" color="primary">Continuar inscripción</button>
         <button mat-button mat-dialog-close (click)="onNoClick()">Cancelar</button>
     </mat-dialog-actions>
 

@@ -6,6 +6,9 @@
         <a mat-list-item (click)="openLink($event, 'examen-clase')">
             <span mat-line>Generar examen</span>
         </a>
+        <a mat-list-item (click)="openLink($event, 'clase-adicional')" *ngIf="!verOpciones">
+            <span mat-line>Generar clase adicional</span>
+        </a>
         <ng-container *ngIf="verOpciones">
             <a mat-list-item (click)="openLink($event, 'suspender-clase')">
                 <span mat-line>Suspender Clase</span>

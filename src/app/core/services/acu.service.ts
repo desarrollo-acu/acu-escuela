@@ -1,4 +1,4 @@
-/* 
+/*
 Este Servicio contiene las funcionalidades de las agendas, principalmente.
  */
 
@@ -153,6 +153,30 @@ export class AcuService {
         FchClase: params.fechaClase,
         HorClase: params.horaClase,
         Movil: params.movil,
+      },
+      this.httpOptions
+    );
+  }
+
+
+  copiarMoverInstructorClase(params: CopiarMoverParameters) {
+    return this.http.post(
+      `${environment.url_ws}/wsCopiarMoverInstructorClase`,
+      {
+        CopiarMoverInstructorClase: {
+          Accion: params.accion,
+          FchClaseOld: params.fechaClaseOld,
+          HorClaseOld: params.horaClaseOld,
+          MovilOld: params.movilOld,
+          FchClase: params.fechaClase,
+          HorClase: params.horaClase,
+          Movil: params.movil,
+          EscInsId : params.escInsId,
+          EscInsIdOld : params.escInsIdOld,
+          EsMovil: params.esMovil,
+          UserId: params.userId,
+
+        }
       },
       this.httpOptions
     );

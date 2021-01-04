@@ -9,7 +9,7 @@ import { AcuService } from '@core/services/acu.service';
 import { AlumnoService } from '@core/services/alumno.service';
 import { CursoService } from '@core/services/curso.service';
 import { SeleccionarAlumnoComponent } from '../seleccionar-alumno/seleccionar-alumno.component';
-import { confirmacionUsuario } from '../../../../utils/sweet-alert';
+import { confirmacionUsuario, mensajeConfirmacion } from '../../../../utils/sweet-alert';
 
 @Component({
   selector: 'app-enviar-notificacion',
@@ -122,11 +122,12 @@ export class EnviarNotificacionComponent implements OnInit {
       if (!res.isConfirmed) {
         return;
       }
-      
+
       console.log(this.form.value);
-      this.acuService.enviarNotificacion(this.form.value).subscribe( res => console.log(res)
+      this.acuService.enviarNotificacion(this.form.value).subscribe( res =>
+        mensajeConfirmacion('Excelente!', `Se notificó al alumno ${ this.alumnoNombre}, exitosamente!`).then( () => this.dialogRef.close())
       );
-      
+
     });
   }
 

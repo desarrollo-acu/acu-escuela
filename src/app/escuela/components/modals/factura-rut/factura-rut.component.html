@@ -1,4 +1,4 @@
-<form [formGroup]="form" (ngSubmit)="facturar($event)">
+<form [formGroup]="form">
 
     <mat-toolbar color="primary">
         <h2 mat-dialog-title>Datos para la Facturación</h2>
@@ -12,8 +12,7 @@
                 <div class="col-xs-12">
                     <!-- <mat-form-field class="full-width"> -->
                     <!-- <mat-checkbox formControlName="factura" [(ngModel)]='facturaResponse.generaFactura' -->
-                    <mat-checkbox formControlName="factura" [(ngModel)]='facturaCheck'
-                        (change)="actualizarFormInvalid()">Factura</mat-checkbox>
+                    <mat-checkbox formControlName="factura" [(ngModel)]='facturaCheck' (change)="actualizarFormInvalid()">Factura</mat-checkbox>
                     <!-- </mat-form-field> -->
                 </div>
             </div>
@@ -22,9 +21,7 @@
                 <div class="col-xs-12">
                     <mat-form-field class="full-width">
                         <mat-label>Detalles</mat-label>
-                        <textarea matInput placeholder="Ej. No se genera factura por caso excepcional."
-                            formControlName="noFacMot" [(ngModel)]="facturaResponse.motivoNoFactura"
-                            (change)="actualizarFormInvalid()"></textarea>
+                        <textarea matInput placeholder="Ej. No se genera factura por caso excepcional." formControlName="noFacMot" [(ngModel)]="facturaResponse.motivoNoFactura" (change)="actualizarFormInvalid()"></textarea>
                         <!-- &&  noFacMotField.dirty && noFacMotField.errors  && !facturaCheck -->
                         <mat-error *ngIf="noFacMotInvalid">
                             Debe ingresar información o motivo por la <strong>no generación</strong> de la factura.
@@ -37,8 +34,7 @@
             <div class="row" *ngIf="facturaCheck">
                 <div class="col-xs-12">
                     <!-- <mat-checkbox formControlName="facturaConRUT" [(ngModel)]='facturaResponse.facturaConRUT' -->
-                    <mat-checkbox formControlName="facturaConRUT" [(ngModel)]='facturaConRUTCheck'
-                        (change)="actualizarFormInvalid()">Factura con RUT?
+                    <mat-checkbox formControlName="facturaConRUT" [(ngModel)]='facturaConRUTCheck' (change)="actualizarFormInvalid()">Factura con RUT?
                     </mat-checkbox>
                 </div>
 
@@ -47,8 +43,7 @@
 
                         <mat-form-field class="full-width">
                             <mat-label>RUT</mat-label>
-                            <input matInput placeholder=".." formControlName="RUT" [(ngModel)]="facturaResponse.RUT"
-                                (change)="actualizarFormInvalid()">
+                            <input matInput placeholder=".." formControlName="RUT" [(ngModel)]="facturaResponse.RUT" (change)="actualizarFormInvalid()">
                             <mat-error *ngIf="RUTField.value === '' ">
                                 · El RUT es <strong>requerido</strong>.
                             </mat-error>
@@ -64,9 +59,7 @@
                     <div class="col-xs-12">
                         <mat-form-field class="full-width">
                             <mat-label>Razón Social</mat-label>
-                            <input matInput placeholder="Automóvil Club del Uruguay"
-                                [(ngModel)]="facturaResponse.razonSocial" formControlName="razonSocial"
-                                (change)="actualizarFormInvalid()">
+                            <input matInput placeholder="Automóvil Club del Uruguay" [(ngModel)]="facturaResponse.razonSocial" formControlName="razonSocial" (change)="actualizarFormInvalid()">
                             <mat-error *ngIf=" razonSocialField.value === ''">
                                 El RUT es <strong>requerido</strong>.
                             </mat-error>
@@ -77,13 +70,10 @@
                 <div class="col-xs-12">
                     <mat-form-field class="full-width">
                         <mat-label>Descuento del curso a facturar</mat-label>
-                        <input matInput placeholder=".." formControlName="descuentoCurso"
-                            [(ngModel)]="facturaResponse.descuento" (change)="actualizarFormInvalid()">
-                        <mat-error
-                            *ngIf="descuentoCursoField.hasError('porcentaje_invalid') && descuentoCursoField.dirty && descuentoCursoField.errors">
+                        <input matInput placeholder=".." formControlName="descuentoCurso" [(ngModel)]="facturaResponse.descuento" (change)="actualizarFormInvalid()">
+                        <mat-error *ngIf="descuentoCursoField.hasError('porcentaje_invalid') && descuentoCursoField.dirty && descuentoCursoField.errors">
                             ATENCIÓN: el descuento no puede <strong>ser menor</strong> a 0% o <strong>ser
-                                mayor</strong>
-                            al 100%.
+                                mayor</strong> al 100%.
                         </mat-error>
                     </mat-form-field>
                 </div>
@@ -94,10 +84,9 @@
 
     <mat-dialog-actions align="end">
         <!-- [disabled]="form.invalid" -->
-        <button mat-raised-button type="submit" [disabled]="formInvalid" cdkFocusInitial
-            [mat-dialog-close]="facturaResponse" color="primary">Facturar</button>
-        <!-- <button mat-button mat-dialog-close (click)="onNoClick()">Cancelar</button> -->
-        <button mat-button (click)="onNoClick()">Cancelar</button>
+        <button mat-raised-button type="button" [disabled]="formInvalid" cdkFocusInitial (click)="facturar($event)" color="primary">Facturar</button>
+        <button mat-button (click)="onSalir()">Salir</button>
+        <button mat-button (click)="onNoClick()">Volver</button>
     </mat-dialog-actions>
 
 </form>

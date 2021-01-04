@@ -23,6 +23,16 @@ export function mensajeConfirmacion(title, text) {
         }
     });
 }
+export function mensajeWarning(title, text) {
+    return Swal.fire({
+        title,
+        text,
+        icon: 'warning',
+        timer: 5000,
+        showConfirmButton: false,
+        confirmButtonText: 'Confirmar'
+    });
+}
 
 export function errorMensaje(title, text) {
     return Swal.fire({

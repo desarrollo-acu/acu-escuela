@@ -47,17 +47,17 @@ export class FacturaRutComponent implements OnInit {
 
   facturar(event: Event) {
     event.preventDefault();
-    console.log('Submit, form valid: ', this.form.valid);
     this.actualizarFormInvalid();
-    console.log('Submit, formInvalid: ', this.formInvalid);
 
     if (this.formInvalid) {
       return;
     }
 
 
-
-    console.log('Submit, facturaResponse: ', this.facturaResponse);
+    this.dialogRef.close({
+      continuar: true,
+      factura: this.facturaResponse
+    });
 
   }
 
@@ -80,57 +80,47 @@ export class FacturaRutComponent implements OnInit {
     });
   }
 
+  onSalir(): void {
+    this.dialogRef.close({
+      salir: true
+    });
+  }
 
   onNoClick(): void {
-    confirmacionUsuario('Cancelar factura', 'Se cancelará el proceso de facturación. ¿Confirma continuar?').then(confirma => {
-      console.log('confirma: ', confirma);
+    // confirmacionUsuario('Cancelar factura', 'Se cancelará el proceso de facturación. ¿Confirma continuar?').then(confirma => {
 
-      if (confirma.isConfirmed) {
+    //   if (confirma.isConfirmed) {
         this.dialogRef.close();
-      }
-    });
+    //   }
+    // });
 
   }
 
   actualizarFormInvalid() {
-    console.log('actualizarFormInvalid');
-
-
-    console.log(' this.noFacMotField.value: ', this.noFacMotField.value);
 
     this.formInvalid = false;
     this.noFacMotInvalid = false;
 
     if (this.noFacMotField.value === '' && !this.facturaCheck) {
-      console.log(' 1)this.formInvalid ', this.formInvalid);
       this.formInvalid = true;
       this.noFacMotInvalid = true;
     } else {
 
-      console.log(' 2.0)this.facturaCheck ', this.facturaCheck);
-      console.log(' 2.1)this.facturaConRUTCheck ', this.facturaConRUTCheck);
       if (this.facturaCheck && this.facturaConRUTCheck) {
-        console.log(' 2)this.formInvalid ', this.formInvalid);
 
         if (this.RUTField.value === '' || this.razonSocialField.value === '' || this.RUTField.hasError('rut_invalid')) {
-          console.log(' 3)this.formInvalid ', this.formInvalid);
           this.formInvalid = true;
         }
 
-        console.log(' 4)this.formInvalid ', this.formInvalid);
 
       }
 
       if (!this.formInvalid) {
-        console.log(' 5)this.formInvalid ', this.formInvalid);
         if (this.descuentoCursoField.hasError('porcentaje_invalid')) {
-          console.log(' 6)this.formInvalid ', this.formInvalid);
           this.formInvalid = true;
         }
       }
     }
-    console.log(' 7)this.formInvalid ', this.formInvalid);
-    console.log(' 8)this.noFacMotInvalid ', this.noFacMotInvalid);
 
   }
 

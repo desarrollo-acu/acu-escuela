@@ -11,7 +11,7 @@ import { Inscripcion } from '../../../core/model/inscripcion.model';
 })
 export class SeleccionarInscripcionComponent   {
   inscripciones: Inscripcion[];
-  columnas = ['actions', 'Curso'];
+  columnas = ['actions', 'Curso', 'Fecha'];
 
   constructor(
     private inscripcionService: InscripcionService,

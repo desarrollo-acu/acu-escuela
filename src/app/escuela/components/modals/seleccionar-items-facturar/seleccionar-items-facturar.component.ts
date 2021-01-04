@@ -95,8 +95,17 @@ export class SeleccionarItemsFacturarComponent implements OnInit {
           prefactura: this.prefactura,
         };
 
-        this.dialogRef.close(resp);
+        this.dialogRef.close({
+          continuar: true,
+          itemFacturar: resp
+        });
       }
+    });
+  }
+
+  onSalir(): void {
+    this.dialogRef.close({
+      salir: true
     });
   }
 

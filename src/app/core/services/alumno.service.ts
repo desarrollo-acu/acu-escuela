@@ -82,11 +82,11 @@ export class AlumnoService {
     return this.http.post(`${environment.url_ws}/wsObtenerAlumnos`, {});
   }
 
-  obtenerAlumnos(pageSize: number, pageNumber: number, filtro: string) {
-    return this.http.get(
+  obtenerAlumnos = (pageSize: number, pageNumber: number, filtro: string)  =>  this.http.get(
       `${environment.url_ws}/wsGetAlumnos?PageSize=${pageSize}&PageNumber=${pageNumber}&Filtro=${filtro}`
     );
-  }
+
+  obtenerAlumnoByCI = ( ci: number ) => this.http.get( `${environment.url_ws}/wsGetAlumnoByCI?CI=${ci}`);
 
   gestionAlumno(mode: string, alumno: Alumno) {
     return this.http.post(`${environment.url_ws}/wsGestionAlumno`, {

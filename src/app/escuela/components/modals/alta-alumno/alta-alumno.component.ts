@@ -50,6 +50,11 @@ export class AltaAlumnoComponent {
     private fb: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
+    this.buildForm();
+  }
+
+  private buildForm(){
+
     this.alumnoForm = this.fb.group(
       {
         aluNro: [this.data.alumnoNumero],
@@ -84,7 +89,9 @@ export class AltaAlumnoComponent {
       }
     );
 
-    acuService.getDepartamentos().subscribe((res: any) => {
+    this.aluNroField.disable();
+
+    this.acuService.getDepartamentos().subscribe((res: any) => {
       this.departamentos = res.Departamentos;
     });
   }

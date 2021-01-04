@@ -10,7 +10,9 @@ export class AutenticacionService {
 
   constructor(private http: HttpClient) { }
 
+  setUserId = (userId: string) => localStorage.setItem('usrId', userId);
 
+  getUserId = () => localStorage.getItem('usrId');
 
   iniciarSesion(UsrId: string, Pass: string) {
     console.log('User: ', UsrId);

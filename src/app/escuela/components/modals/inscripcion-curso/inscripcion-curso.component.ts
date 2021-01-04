@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -39,16 +39,22 @@ import { InscripcionService } from '@core/services/inscripcion.service';
 import { CursoService } from '@core/services/curso.service';
 import { AlumnoService } from '@core/services/alumno.service';
 import { InstructorService } from '@core/services/instructor.service';
-import { confirmacionUsuario } from '../../../../utils/sweet-alert';
+import {
+  confirmacionUsuario,
+  mensajeWarning,
+} from '../../../../utils/sweet-alert';
 import { Prefactura } from '../../../../core/model/prefactura.model';
 import { openSamePDF } from '../../../../utils/utils-functions';
+import { Subscription } from 'rxjs';
+import { NullTemplateVisitor } from '@angular/compiler';
+import { ClaseEstimada } from '@core/model/clase-estimada.model';
 
 @Component({
   selector: 'app-inscripcion-curso',
   templateUrl: './inscripcion-curso.component.html',
   styleUrls: ['./inscripcion-curso.component.scss'],
 })
-export class InscripcionCursoComponent {
+export class InscripcionCursoComponent implements OnInit, OnDestroy {
   form: FormGroup;
   matcher = new MyErrorStateMatcher();
   selected = ' ';
@@ -80,6 +86,8 @@ export class InscripcionCursoComponent {
   fecha1: Date;
   fecha2: Date;
   fecha3: Date;
+
+  alumnoNumeroSubs: Subscription;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -116,9 +124,21 @@ export class InscripcionCursoComponent {
     this.buildForm();
     this.deshabilitarCampos();
   }
+  ngOnDestroy(): void {
+    this.alumnoNumeroSubs.unsubscribe();
+  }
+  ngOnInit(): void {
+    const input = document.getElementById('searchAlumno');
+
+    let timeout = null;
+
+    input.addEventListener('keyup', (e) => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => this.obtenerAlumno(), 1000);
+    });
+  }
 
   onNoClick(): void {
-    this.alumnoCIField;
     this.dialogRef.close();
   }
 
@@ -155,7 +175,7 @@ export class InscripcionCursoComponent {
           // ] // async validators
         ],
         alumnoNombre: [''],
-        alumnoCI: [''],
+        alumnoCI: [null],
         alumnoTelefono: [''],
         alumnoCelular: [''],
         sede: [''],
@@ -197,7 +217,8 @@ export class InscripcionCursoComponent {
     this.fechaClaseFiled.disable();
 
     // Campos deshabilitados del alumno
-    this.alumnoCIField.disable();
+    // this.alumnoCIField.disable();
+    this.alumnoNumeroField.disable();
     this.alumnoTelefonoField.disable();
     this.alumnoNombreField.disable();
     this.alumnoCelularField.disable();
@@ -298,6 +319,18 @@ export class InscripcionCursoComponent {
     this.openDialogAltaAlumnos();
   }
 
+  obtenerAlumno() {
+    this.alumnoService
+      .obtenerAlumnoByCI(this.alumnoCIField.value)
+      .subscribe((res: { Alumnos: Alumno[] }) =>
+        res.Alumnos.length === 0
+          ? mensajeWarning(
+              'Atención',
+              `El alumno con cedula ${this.alumnoCIField.value} no existe en el sistema, haga click en el botón "+" para darlo de alta.`
+            ).then()
+          : this.addInfoAlumnoAlForm(res.Alumnos[0])
+      );
+  }
   private openDialogAltaAlumnos() {
     this.alumnoService
       .getAlumnoNumero()
@@ -378,6 +411,7 @@ export class InscripcionCursoComponent {
     this.inscripcionCurso.escCurTe3 = this.escCurTe3Field.value;
     this.inscripcionCurso.fechaClaseEstimada = this.fechaInicioEstimadaField.value;
     this.inscripcionCurso.TipCurId = this.cursoIdField.value;
+
     this.instructorService
       .getClasesEstimadas(this.inscripcionCurso)
       .subscribe((clasesEstimadas) => {
@@ -392,48 +426,79 @@ export class InscripcionCursoComponent {
           }
         );
 
-        clasesEstimadasDialogRef.afterClosed().subscribe((result: any) => {
-          this.acuService.getPDFPlanDeClases(result).subscribe((pdf) => {
-            openSamePDF(pdf, 'PlanDeClases');
-          });
+        clasesEstimadasDialogRef
+          .afterClosed()
+          .subscribe(
+            (result: { continuar: boolean; claseEstimada: ClaseEstimada }) => {
+              console.log('clasesEstimadas afterClosed result:: ', result);
 
-          this.inscripcionCurso.ClasesEstimadas = result;
+              this.salir(result);
 
-          this.openDialogFacturaRUT();
-        });
+              if (!result.continuar) {
+                return;
+              }
+
+              this.acuService
+                .getPDFPlanDeClases(result.claseEstimada)
+                .subscribe((pdf) => {
+                  openSamePDF(pdf, 'PlanDeClases');
+                });
+
+              this.inscripcionCurso.ClasesEstimadas = result.claseEstimada;
+                console.log('openDialogFacturaRUT: ');
+
+              this.openDialogFacturaRUT();
+            }
+          );
       });
   }
 
   private openDialogFacturaRUT() {
+
+    console.log('openDialogFacturaRUT: 1');
     const facturaRUTDialogRef = this.dialog.open(FacturaRutComponent, {
       height: 'auto',
       width: '700px',
     });
 
+    console.log('openDialogFacturaRUT:2');
     facturaRUTDialogRef
       .afterClosed()
-      .subscribe((result: ResponseFacturaRUT) => {
-        this.inscripcionCurso.facturaEstadoPendiente = false;
-        if (result) {
-          this.inscripcionCurso.FacturaRut = result;
+      .subscribe(
+        (result: { continuar: boolean; factura: ResponseFacturaRUT }) => {
+          this.salir(result);
 
-          if (result.generaFactura) {
-            this.inscripcionCurso.facturaEstadoPendiente = true;
-            this.cursoService
-              .getItemsPorCurso(this.inscripcionCurso.TipCurId)
-              .subscribe((itemsCurso: any) => {
-                this.openDialogSeleccionarItemsFactura(
-                  result,
-                  itemsCurso.Items
-                );
-              });
+          console.log('openDialogFacturaRUT:3');
+          if (!(result && result.continuar)) {
+            this.clasesEstimadas();
+            return;
           } else {
-            this.generarInscripcion();
+            console.log('openDialogFacturaRUT:4');
+            this.inscripcionCurso.facturaEstadoPendiente = false;
+            if (result.factura) {
+              console.log('openDialogFacturaRUT:5');
+              this.inscripcionCurso.FacturaRut = result.factura;
+
+              if (result.factura.generaFactura) {
+                console.log('openDialogFacturaRUT:6');
+                this.inscripcionCurso.facturaEstadoPendiente = true;
+                this.cursoService
+                  .getItemsPorCurso(this.inscripcionCurso.TipCurId)
+                  .subscribe((itemsCurso: any) => {
+                    this.openDialogSeleccionarItemsFactura(
+                      result.factura,
+                      itemsCurso.Items
+                    );
+                  });
+              } else {
+                this.generarInscripcion();
+              }
+            } else {
+              this.generarInscripcion();
+            }
           }
-        } else {
-          this.generarInscripcion();
         }
-      });
+      );
   }
 
   private openDialogSeleccionarItemsFactura(
@@ -447,6 +512,7 @@ export class InscripcionCursoComponent {
       UsrId: this.inscripcionCurso.UsrId,
     };
 
+    console.log('openDialogFacturaRUT:7');
     const seleccionarItemsFactura = this.dialog.open(
       SeleccionarItemsFacturarComponent,
       {
@@ -462,22 +528,34 @@ export class InscripcionCursoComponent {
       }
     );
 
-    seleccionarItemsFactura.afterClosed().subscribe((result) => {
-      this.inscripcionCurso.facturaEstadoPendiente = true;
-      if (result) {
-        this.inscripcionCurso.SeleccionarItemsFactura = {
-          TipCurId: result.TipCurId,
-          EscItemCod: result.EscItemCod,
-          EscItemDesc: result.EscItemDesc,
-          EscCurIteClaAdi: result.EscCurIteClaAdi,
-        };
+    console.log('openDialogFacturaRUT:8');
+    seleccionarItemsFactura
+      .afterClosed()
+      .subscribe((result: { continuar: boolean; itemFacturar: any }) => {
+        console.log('openDialogFacturaRUT:9');
+        this.salir(result);
+        if (!(result || result.continuar)) {
+          this.openDialogFacturaRUT();
+          return;
+        } else {
 
-        this.inscripcionCurso.facturaEstadoPendiente = false;
-        this.generarInscripcion();
-      } else {
-        this.generarInscripcion();
-      }
-    });
+          console.log('openDialogFacturaRUT:10');
+          this.inscripcionCurso.facturaEstadoPendiente = true;
+          if (result && result.itemFacturar) {
+            this.inscripcionCurso.SeleccionarItemsFactura = {
+              TipCurId: result.itemFacturar.TipCurId,
+              EscItemCod: result.itemFacturar.EscItemCod,
+              EscItemDesc: result.itemFacturar.EscItemDesc,
+              EscCurIteClaAdi: result.itemFacturar.EscCurIteClaAdi,
+            };
+
+            this.inscripcionCurso.facturaEstadoPendiente = false;
+            this.generarInscripcion();
+          } else {
+            this.generarInscripcion();
+          }
+        }
+      });
   }
 
   changeLicenciaCedulaIdentidad(event: MatCheckboxChange) {
@@ -515,7 +593,7 @@ export class InscripcionCursoComponent {
     this.form.patchValue({
       alumnoNumero: result.AluNro,
       alumnoNombre: result.AluNomComp,
-      alumnoCI: formatCI(ci, dv),
+      alumnoCI: result.AluCI, //formatCI(ci, dv),
       alumnoTelefono: result.AluTel1,
       alumnoCelular: result.AluTel2,
     });
@@ -544,6 +622,8 @@ export class InscripcionCursoComponent {
     this.inscripcionCurso.fechaLicCedulaIdentidad = this.fechaLicCedulaIdentidadField.value;
     this.inscripcionCurso.fechaPagoLicencia = this.fechaPagoLicenciaField.value;
 
+
+    console.log('openDialogFacturaRUT:11');
     this.inscripcionService
       .generarInscripcion(this.inscripcionCurso)
       .subscribe((res: any) => {
@@ -551,6 +631,14 @@ export class InscripcionCursoComponent {
         mensajeConfirmacion('Excelente!', res.errorMensaje);
         this.dialogRef.close(this.inscripcionCurso);
       });
+  }
+
+  private salir(result) {
+    console.log('salir result: ', result);
+
+    if (result && result.salir) {
+      this.dialogRef.close();
+    }
   }
 
   get fechaClaseFiled() {
@@ -703,7 +791,7 @@ export class InscripcionCursoComponent {
   }
 
   generateHorasLibres() {
-    for (let i = 6; i < 21; i++) {
+    for (let i = 6; i < 20; i++) {
       const horaIni = i;
       const horaFin = i + 1;
       const o = {

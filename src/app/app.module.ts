@@ -11,7 +11,7 @@ import { SharedModule } from './shared/shared.module';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CoreModule } from './core/core.module';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 
 import { MatNativeDateModule, MAT_DATE_LOCALE, DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
@@ -24,6 +24,8 @@ import { ExisteAlumnoByCiValidatorDirective } from './utils/validators/existe-al
 // import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MAT_MOMENT_DATE_FORMATS } from '@angular/material-moment-adapter';
 
 registerLocaleData(localeEsUy, 'es-UY');
+import { BlockUIModule } from 'ng-block-ui';
+import { CargandoInterceptor } from './interceptos/cargando.interceptor';
 
 @NgModule({
   declarations: [
@@ -43,10 +45,21 @@ registerLocaleData(localeEsUy, 'es-UY');
     HttpClientModule,
     ReactiveFormsModule,
     MatNativeDateModule,
+
+    BlockUIModule.forRoot({
+      delayStop: 200,
+      message: 'Cargando',
+    }),
     SharedModule
   ],
 
   providers: [
+
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: CargandoInterceptor,
+      multi: true,
+    },
     { provide: LOCALE_ID, useValue: 'es' }
   ],
   bootstrap: [AppComponent]

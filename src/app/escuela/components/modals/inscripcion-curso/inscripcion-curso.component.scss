@@ -1,57 +1,63 @@
 .contenedor {
-  padding: 24px;
+    padding: 24px;
 }
 
 .full-width {
-  width: 100%;
-  padding-bottom: 10px;
+    width: 100%;
+    padding-bottom: 10px;
 }
 
 .shipping-card {
-  min-width: 120px;
-  margin: 20px auto;
+    min-width: 120px;
+    margin: 20px auto;
 }
 
 .mat-radio-button {
-  display: block;
-  margin: 5px 0;
+    display: block;
+    margin: 5px 0;
 }
 
 .row {
-  display: flex;
-  flex-direction: row;
+    display: flex;
+    flex-direction: row;
 }
 
 .col {
-  flex: 1;
-  margin-right: 20px;
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
+    flex: 1;
+    margin-right: 20px;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
 }
 
 .col:last-child {
-  margin-right: 0;
+    margin-right: 0;
 }
 
 .align-right {
-  margin-left: auto !important;
+    margin-left: auto !important;
 }
 
 .col button,
 .col a {
-  margin-right: 8px;
+    margin-right: 8px;
 }
 
 .btns-agendar {
-  margin: 20px 0;
+    margin: 20px 0;
 }
 
 mat-divider {
-  margin: 10px 0;
+    margin: 10px 0;
 }
 
 h4 {
-  margin: 0;
-  padding-top: 15px;
-  padding-right: 10px;
+    margin: 0;
+    padding-top: 15px;
+    padding-right: 10px;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }

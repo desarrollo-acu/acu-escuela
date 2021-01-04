@@ -14,6 +14,7 @@ import { DayToStringPipe } from './pipes/day-to-string.pipe';
 import { FechaStringPipe } from './pipes/fecha-string.pipe';
 import { SeleccionarCustomComponent } from './components/seleccionar-custom/seleccionar-custom.component';
 import { GestionCustomComponent } from './components/gestion-custom/gestion-custom.component';
+import { VerAgendaComponent } from './dialogs/ver-agenda/ver-agenda.component';
 
 
 
@@ -29,7 +30,8 @@ import { GestionCustomComponent } from './components/gestion-custom/gestion-cust
     DayToStringPipe,
     FechaStringPipe,
     SeleccionarCustomComponent,
-    GestionCustomComponent
+    GestionCustomComponent,
+    VerAgendaComponent
   ],
   imports: [
     CommonModule,

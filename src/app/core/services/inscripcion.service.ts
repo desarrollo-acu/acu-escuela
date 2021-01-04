@@ -9,6 +9,7 @@ import { map } from 'rxjs/operators';
 import { GenerarExamen } from '../model/generar-examen.model';
 import { ResponseSDTCustom } from '../model/response-sdt-custom.model';
 import { Examen } from '../model/examen.model';
+import { GenerarClaseAdicional } from '../model/generar-clase-adicional.model';
 
 @Injectable({
   providedIn: 'root',
@@ -33,6 +34,12 @@ export class InscripcionService {
   generarExamen = (generarExamen: GenerarExamen)  => this.http.post<ResponseSDTCustom>(`${environment.url_ws}/wsGenerarExamen`, {
       generarExamen,
     });
+
+  generarClaseAdicional = (claseAdicional: GenerarClaseAdicional)  => this.http.post<ResponseSDTCustom>(`${environment.url_ws}/wsGenerarClaseAdicional`, {
+      claseAdicional,
+    });
+
+    //wsGenerarClaseAdicional
 
   generarInscripcion(inscripcion: InscripcionCurso) {
     console.log('::::: inscripción: ', inscripcion);

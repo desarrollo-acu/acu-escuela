@@ -1,16 +1,11 @@
 import { Component, Inject } from '@angular/core';
-import {
-  MatBottomSheetRef,
-  MAT_BOTTOM_SHEET_DATA,
-} from '@angular/material/bottom-sheet';
+import { MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
 import { MatDialog } from '@angular/material/dialog';
 
 import Swal from 'sweetalert2';
-import {
-  AcuService,
-  LiberarParameters,
-} from 'src/app/core/services/acu.service';
+import { AcuService, LiberarParameters } from 'src/app/core/services/acu.service';
 import { CopiarMoverParameters } from 'src/app/core/model/copiarMoverParameters.model';
+import { AutenticacionService } from '../../../../core/services/autenticacion.service';
 
 @Component({
   selector: 'app-seleccionar-accion-agenda',
@@ -18,15 +13,13 @@ import { CopiarMoverParameters } from 'src/app/core/model/copiarMoverParameters.
   styleUrls: ['./seleccionar-accion-agenda.component.scss'],
 })
 export class SeleccionarAccionAgendaComponent {
-  animal: any;
   pegar: boolean;
   verOpciones: boolean;
   constructor(
     // tslint:disable-next-line: variable-name
-    private _bottomSheetRef: MatBottomSheetRef<
-      SeleccionarAccionAgendaComponent
-    >,
+    private _bottomSheetRef: MatBottomSheetRef<SeleccionarAccionAgendaComponent>,
     private acuService: AcuService,
+    private auth: AutenticacionService,
     public dialog: MatDialog,
     @Inject(MAT_BOTTOM_SHEET_DATA) public data: any
   ) {
@@ -50,8 +43,13 @@ export class SeleccionarAccionAgendaComponent {
       case 'abrir-clase':
         localStorage.setItem('abrirAgenda', tipoAgenda);
         break;
+
       case 'examen-clase':
         localStorage.setItem('abrirAgenda', `examen-${tipoAgenda}`);
+        break;
+
+      case 'clase-adicional':
+        localStorage.setItem('abrirAgenda', `clase-adicional-${tipoAgenda}`);
         break;
 
       case 'suspender-clase':
@@ -68,15 +66,13 @@ export class SeleccionarAccionAgendaComponent {
           accion: key === 'mover-clase' ? 'MOVER' : 'COPIAR',
           fechaOld: mainParameters.fecha,
           movilOld: mainParameters.movil,
+          escInsIdOld: mainParameters.instructor,
           horaOld: mainParameters.hora,
           classOld: mainParameters.class,
           textOld: mainParameters.text,
         };
 
-        localStorage.setItem(
-          'copiarMoverParameters',
-          JSON.stringify(copiarMoverParameters)
-        );
+        localStorage.setItem( 'copiarMoverParameters', JSON.stringify(copiarMoverParameters) );
 
         this.setPegarStorage();
         break;
@@ -110,9 +106,7 @@ export class SeleccionarAccionAgendaComponent {
         break;
 
       case 'pegar-clase':
-        const oldParameters = JSON.parse(
-          localStorage.getItem('copiarMoverParameters')
-        );
+        const oldParameters = JSON.parse( localStorage.getItem('copiarMoverParameters') );
 
         if (existe) {
           Swal.fire({
@@ -190,19 +184,27 @@ export class SeleccionarAccionAgendaComponent {
   }
 
   copiarMoverClase(oldParameters, mainParameters) {
+    console.log('oldParameters:: ', oldParameters);
+    console.log('mainParameters:: ', mainParameters);
+
     const params: CopiarMoverParameters = {
       accion: oldParameters.accion,
       fechaClaseOld: oldParameters.fechaOld,
       horaClaseOld: oldParameters.horaOld,
       movilOld: oldParameters.movilOld,
+      escInsIdOld: oldParameters.escInsIdOld,
       fechaClase: mainParameters.fecha,
       horaClase: mainParameters.hora,
       movil: mainParameters.movil,
+      escInsId: mainParameters.instructor,
+      esMovil:  mainParameters.esMovil,
+      userId: this.auth.getUserId()
     };
     console.log('params :::: ', params);
     if (oldParameters.accion === 'MOVER') {
       localStorage.setItem('limpiarCeldaOld', 'true');
     }
+    params.esMovil ?
     this.acuService.copiarMoverClase(params).subscribe((res: any) => {
       Swal.fire({
         icon: 'success',
@@ -214,7 +216,21 @@ export class SeleccionarAccionAgendaComponent {
       localStorage.setItem('classOld', oldParameters.classOld);
       localStorage.setItem('textOld', oldParameters.textOld);
       localStorage.setItem('refreshAgenda', 'true');
-    });
+    })
+    : this.acuService.copiarMoverInstructorClase(params).subscribe( (res:any) =>
+      {
+        Swal.fire({
+        icon: 'success',
+        title: res.Gx_msg,
+        showConfirmButton: false,
+        timer: 4000,
+      });
+
+      localStorage.setItem('classOld', oldParameters.classOld);
+      localStorage.setItem('textOld', oldParameters.textOld);
+      localStorage.setItem('refreshAgenda', 'true');
+    }
+      );
 
     this.setPegarStorage();
   }

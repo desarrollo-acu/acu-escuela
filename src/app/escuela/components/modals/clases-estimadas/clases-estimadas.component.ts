@@ -104,6 +104,21 @@ export class ClasesEstimadasComponent implements OnInit {
     });
   }
 
+  seleccionarEstimacion(claseEstimada: ClaseEstimada) {
+    this.dialogRef.close({
+      salir: false,
+      continuar: true,
+      claseEstimada
+    });
+
+  }
+
+  onSalir(): void {
+    this.dialogRef.close({
+      salir: true
+    });
+  }
+
   onNoClick(): void {
     this.dialogRef.close();
   }

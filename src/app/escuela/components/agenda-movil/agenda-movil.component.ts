@@ -14,6 +14,8 @@ import { ClasesEstimadasComponent } from '../modals/clases-estimadas/clases-esti
 import { SuspenderClaseComponent } from '../modals/suspender-clase/suspender-clase.component';
 import { GenerarExamenComponent } from '../modals/generar-examen/generar-examen.component';
 import { isMoment, Moment } from 'moment';
+import { VerAgendaComponent } from '@shared/dialogs/ver-agenda/ver-agenda.component';
+import { GenerarClaseAdicionalComponent } from '../../dialogs/generar-clase-adicional/generar-clase-adicional.component';
 
 export interface AgendaElement {
   Movil: string;
@@ -77,7 +79,7 @@ export interface Cell {
   templateUrl: './agenda-movil.component.html',
   styleUrls: ['./agenda-movil.component.scss'],
 })
-export class AgendaMovilComponent implements OnInit, AfterViewInit, OnDestroy {
+export class AgendaMovilComponent implements OnInit, OnDestroy {
   animal: string;
   name: string;
   sabadoODomingo: number;
@@ -174,6 +176,7 @@ export class AgendaMovilComponent implements OnInit, AfterViewInit, OnDestroy {
     const mainParameters = {
       fecha: this.fechaClase,
       movil,
+      esMovil: true,
       hora,
       class: celda.getAttribute('class'),
       text: celda.innerHTML,
@@ -192,6 +195,7 @@ export class AgendaMovilComponent implements OnInit, AfterViewInit, OnDestroy {
         verOpciones: lugar && lugar.AluId != 0,
       },
     });
+
     t.afterDismissed().subscribe((seleccionoOpcion) => {
       console.log('fin open sheet: ', seleccionoOpcion);
       if (seleccionoOpcion) {
@@ -201,7 +205,7 @@ export class AgendaMovilComponent implements OnInit, AfterViewInit, OnDestroy {
             this.acuService
               .getClaseAgenda(this.fechaClase, hora, movil)
               .subscribe((res: any) => {
-                const dialogRef = this.dialog.open(AgendarClaseComponent, {
+                const dialogRef = this.dialog.open(VerAgendaComponent, {
                   data: {
                     agendaClase: res.AgendaClase,
                   },
@@ -213,9 +217,13 @@ export class AgendaMovilComponent implements OnInit, AfterViewInit, OnDestroy {
               });
             break;
 
+          case 'clase-adicional-movil':
+            this.generarClaseAdicional(movil, hora);
+            break;
           case 'examen-movil':
             this.generarExamen(movil, hora);
             break;
+
           case 'suspender-movil':
             this.suspenderDuplicarClase(movil, hora, true);
             break;
@@ -285,11 +293,29 @@ export class AgendaMovilComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  generarClaseAdicional(movil: number, hora: number) {
+    this.acuService
+      .getClaseAgenda(this.fechaClase, hora, movil)
+      .subscribe((res: any) => {
+
+        const dialogRef = this.dialog.open(GenerarClaseAdicionalComponent, {
+          data: {
+            agendaClase: res.AgendaClase,
+          },
+        });
+
+        dialogRef.afterClosed().subscribe((result) => {
+          this.animal = result;
+
+          this.getAgenda(this.fecha);
+        });
+      });
+  }
+
   generarExamen(movil: number, hora: number) {
     this.acuService
       .getClaseAgenda(this.fechaClase, hora, movil)
       .subscribe((res: any) => {
-        console.log('resp suspender: ', res);
 
         const dialogRef = this.dialog.open(GenerarExamenComponent, {
           data: {
@@ -309,7 +335,6 @@ export class AgendaMovilComponent implements OnInit, AfterViewInit, OnDestroy {
     this.acuService
       .getClaseAgenda(this.fechaClase, hora, movil)
       .subscribe((res: any) => {
-        console.log('resp suspender: ', res);
 
         const dialogRef = this.dialog.open(SuspenderClaseComponent, {
           data: {
@@ -326,9 +351,6 @@ export class AgendaMovilComponent implements OnInit, AfterViewInit, OnDestroy {
       });
   }
 
-  ngAfterViewInit() {
-    // this.getAgenda(this.fecha);
-  }
 
   getPorcentaje(hora: number) {
     const item = this.horas.find((h) => h.Hora === hora);
@@ -425,7 +447,6 @@ export class AgendaMovilComponent implements OnInit, AfterViewInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log('cierro y recargo la agenda, result: ', result);
 
       this.animal = result;
       this.getAgenda(this.fecha);
@@ -446,7 +467,6 @@ export class AgendaMovilComponent implements OnInit, AfterViewInit, OnDestroy {
       this.acuService
         .liberarDiaAgenda(fechaSeleccionada)
         .subscribe((response: any) => {
-          console.log('liberarDiaAgenda: ', response);
 
           this.getAgenda(fechaSeleccionada);
 
@@ -594,12 +614,8 @@ export class AgendaMovilComponent implements OnInit, AfterViewInit, OnDestroy {
         this.agendaDataSource = this.makeDataSource(this.horas, this.moviles);
 
         this.agendaDisplayedColumns = ['Movil'];
-        this.agendaDisplayedColumns = this.agendaDisplayedColumns.concat(
-          this.columns
-        );
-        this.agendaDisplayedColumns = this.agendaDisplayedColumns.concat([
-          'MovilPorcentaje',
-        ]);
+        this.agendaDisplayedColumns = this.agendaDisplayedColumns.concat( this.columns );
+        this.agendaDisplayedColumns = this.agendaDisplayedColumns.concat([ 'MovilPorcentaje' ]);
         this.verAgenda = true;
       });
   }
