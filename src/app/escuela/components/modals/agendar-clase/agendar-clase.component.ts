@@ -239,6 +239,7 @@ export class AgendarClaseComponent implements OnInit {
   }
 
   seleccionarAlumno() {
+    console.log('0 openDialogAlumnos alumnos: ');
     this.alumnoService.getAlumnos().subscribe((res: any) => {
       this.openDialogAlumnos(res.Alumnos);
     });
@@ -270,6 +271,8 @@ export class AgendarClaseComponent implements OnInit {
     });
   }
   private openDialogAlumnos(alumnos) {
+    console.log('1 openDialogAlumnos alumnos: ', alumnos);
+
     const alumnosDialogRef = this.dialog.open(SeleccionarAlumnoComponent, {
       height: 'auto',
       width: '700px',
@@ -278,13 +281,19 @@ export class AgendarClaseComponent implements OnInit {
       },
     });
 
+    console.log('2 openDialogAlumnos');
+
     alumnosDialogRef.afterClosed().subscribe((alumno: Alumno) => {
+
+    console.log('3 openDialogAlumnos');
       this.alumno = alumno;
       this.form.patchValue({
         alumnoNombre: alumno.AluNomComp,
         alumnoNumero: alumno.AluNro,
       });
     });
+
+    console.log('4 openDialogAlumnos');
   }
 
   avisoAlumno() {

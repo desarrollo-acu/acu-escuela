@@ -60,25 +60,8 @@ export class SeleccionarAlumnoComponent implements OnInit { // , AfterViewInit, 
     this.cantidad = this.data.cantidad;
 
     this.length = this.data.cantidad;
-    // Assign the data to the data source for the table to render
 
   }
-  /*
-  ngAfterViewInit(): void {
-
-    setTimeout(() => {
-      this.dataSource.paginator.length = this.length;
-      this.paginator.length = this.length;
-      console.log(' 2) this.length: ', this.length);
-    });
-  }
-
-  ngAfterViewChecked() {
-    setTimeout(() => {
-      this.paginator.length = this.cantidad;
-    });
-  }
-  */
 
   ngOnInit() {
     this.ejecutoEvent(null);

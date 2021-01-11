@@ -1,4 +1,4 @@
-<form [formGroup]="form" (ngSubmit)="guardarClase($event)">
+<form [formGroup]="form">
 
 
     <mat-toolbar color="primary">
@@ -40,7 +40,8 @@
                 <div class="col-xs-4">
                     <div class="box">
                         <mat-form-field class="full-width">
-                            <input matInput placeholder="Número del alumno" formControlName="alumnoNumero" [errorStateMatcher]="matcher">
+                            <!-- [errorStateMatcher]="matcher" -->
+                            <input matInput placeholder="Número del alumno" formControlName="alumnoNumero">
                             <button mat-icon-button matSuffix [attr.aria-label]="'Hide password'" (click)='seleccionarAlumno()'>
                                 <mat-icon> search </mat-icon>
                             </button>
@@ -225,7 +226,7 @@
     </mat-dialog-content>
 
     <mat-dialog-actions align="end">
-        <button [disabled]="form.invalid" mat-raised-button type="submit" cdkFocusInitial color="primary">Guardar
+        <button [disabled]="form.invalid" mat-raised-button type="button" (click)="guardarClase($event)" cdkFocusInitial color="primary">Guardar
             Cambios</button>
         <button mat-button mat-dialog-close (click)="onNoClick()">Cancelar</button>
     </mat-dialog-actions>

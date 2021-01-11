@@ -148,8 +148,6 @@ export class VerAgendaComponent implements OnInit {
     this.deshabilitarCampos();
   }
   ngOnInit() {
-    console.log('movil 1: ', this.movil.toString());
-    console.log('movil 2: ', this.agendaClase.EscMovCod );
 
     // toISOString, es el formato que leyo bien la api.
     localStorage.setItem('fechaClase', this.fechaClase.toISOString());
@@ -294,7 +292,9 @@ export class VerAgendaComponent implements OnInit {
     });
   }
 
-  seleccionarAlumno = () => this.alumnoService.getAlumnos().subscribe((res: any) => this.openDialogAlumnos(res.Alumnos));
+
+
+  seleccionarAlumno = () => this.alumnoService.obtenerAlumnos(5, 1, '').subscribe((res: any) => this.openDialogAlumnos(res.Alumnos, res.Cantidad));
 
   seleccionarCurso = () => this.cursoService.getCursos().subscribe((res: any) => this.openDialogCursos(res));
 
@@ -315,23 +315,34 @@ export class VerAgendaComponent implements OnInit {
     });
   }
 
-  private openDialogAlumnos(alumnos) {
+
+  private openDialogAlumnos(alumnos, cantidad) {
+    console.log('1 openDialogAlumnos alumnos: ', alumnos);
+
     const alumnosDialogRef = this.dialog.open(SeleccionarAlumnoComponent, {
       height: 'auto',
       width: '700px',
       data: {
         alumnos,
+        cantidad
       },
     });
 
+    console.log('2 openDialogAlumnos');
+
     alumnosDialogRef.afterClosed().subscribe((alumno: Alumno) => {
+
+    console.log('3 openDialogAlumnos');
       this.alumno = alumno;
       this.form.patchValue({
         alumnoNombre: alumno.AluNomComp,
         alumnoNumero: alumno.AluNro,
       });
     });
+
+    console.log('4 openDialogAlumnos');
   }
+
 
   avisoAlumno() {
     this.avisar = 'Avisar';

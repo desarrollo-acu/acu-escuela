@@ -1,10 +1,6 @@
 <div class="example-container" [class.example-is-mobile]="mobileQuery.matches">
     <mat-toolbar color="primary" class="example-toolbar">
 
-        <!-- <div class="row"> -->
-        <!-- <div class="col-xs-3">
-            <div class="box"> -->
-
 
         <button mat-icon-button (click)="drawer.toggle()">
       <mat-icon>menu</mat-icon>
@@ -12,17 +8,12 @@
         <h1 class="example-app-name">ACU Web! </h1>
         <h1 class="title">{{title}}</h1>
 
-        <!-- </div>
-        </div> -->
+        <button type="button" mat-button (click)="logout()">
+          Logout
+          <mat-icon aria-label="Side nav toggle icon"> exit_to_app </mat-icon>
+        </button>
 
-        <!-- <div class="col-xs-9">
-            <div class="box">
 
-                <h1 class="title">{{title}}</h1>
-            </div>
-        </div> -->
-
-        <!-- </div> -->
     </mat-toolbar>
 
     <mat-sidenav-container class="sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
@@ -34,7 +25,8 @@
           movil</a>
                 <a mat-list-item routerLink="/escuela/agenda-instructor" (click)="changeTitle('/escuela/agenda-instructor')">Agenda por
           instructor</a>
-                <a mat-list-item routerLink="/escuela/gestion-inscripcion" (click)="changeTitle('/escuela/gestion-inscripcion')">Gestionar inscripciones</a>
+                <a mat-list-item routerLink="/escuela/gestion-inscripcion" (click)="changeTitle('/escuela/gestion-inscripcion')">Gestionar
+          inscripciones</a>
                 <a mat-list-item routerLink="/escuela/gestion-instructor" (click)="changeTitle('/escuela/gestion-instructor')">Gestionar
           instructores</a>
                 <a mat-list-item routerLink="/escuela/gestion-curso" (click)="changeTitle('/escuela/gestion-curso')">Gestionar
@@ -46,6 +38,9 @@
                 <a mat-list-item routerLink="/escuela/gestion-examen" (click)="changeTitle('/escuela/gestion-examen')">Gestionar
           examenes</a>
                 <a mat-list-item (click)="enviarNotificacion()">Enviar Notificación</a>
+
+                <a mat-list-item (click)="cambiarContrasenia()">Cambiar Contraseña</a>
+
             </mat-nav-list>
         </mat-sidenav>
 

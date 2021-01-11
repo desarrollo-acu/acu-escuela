@@ -4,10 +4,13 @@
 
 export const environment = {
   production: false,
-  url_ws: 'http://192.1.0.86/ACUWSv15/rest',
+  url_ws: 'http://192.1.0.86/ACUWSv15ACUTesting/rest',
 };
 
 /*
+
+  url_ws: 'http://192.1.0.86/ACUWSv15/rest',
+
 
 Url api net v16 SQLServer:
   url_ws: 'http://192.1.0.86/ACUWSv15/rest',

@@ -218,20 +218,14 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
     });
 
     t.afterDismissed().subscribe((seleccionoOpcion) => {
-      console.log('fin open sheet: ', seleccionoOpcion);
       if (seleccionoOpcion) {
 
         const abrirAgenda = localStorage.getItem('abrirAgenda');
-        console.log('  abrirAgenda: ', abrirAgenda);
         switch (abrirAgenda) {
           case 'instructor':
-            console.log('3)fechaClase: ', this.fechaClase);
-            console.log('4)hora: ', hora);
-            console.log('5)instructor: ', instructor);
             this.acuService.getInstructorAgenda(this.fechaClase, hora, instructor)
               .subscribe((res: any) => {
 
-                console.log('6)res: ', res);
                 const dialogRef = this.dialog.open(VerAgendaComponent, {
                   data: {
                     agendaCurso: res.AgendaCurso,
@@ -240,7 +234,6 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
                 });
 
                 dialogRef.afterClosed().subscribe(result => {
-                  console.log('cierro el dialog, resultado: ', result);
                   if (result) {
                     this.mensajeConfirmacion('Confirmado!', result.mensaje).then();
                     // cambiar la celda.

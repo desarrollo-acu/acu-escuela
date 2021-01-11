@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +9,7 @@ import { environment } from '@environments/environment';
 export class AutenticacionService {
 
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
   setUserId = (userId: string) => localStorage.setItem('usrId', userId);
 
@@ -37,6 +38,7 @@ export class AutenticacionService {
   }
 
 
+  logout = () => this.router.navigate(['/']).then( () => localStorage.clear());
 
   cambiarContrasenia(usrId: string, usrNuevaPass: string) {
 

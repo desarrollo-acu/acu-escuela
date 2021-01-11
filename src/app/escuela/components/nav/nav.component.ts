@@ -9,6 +9,8 @@ import { InscripcionCursoComponent } from '../modals/inscripcion-curso/inscripci
 import { MatDialog } from '@angular/material/dialog';
 import { formatDateToString } from '@utils/utils-functions';
 import { EnviarNotificacionComponent } from '../modals/enviar-notificacion/enviar-notificacion.component';
+import { AutenticacionService } from '../../../core/services/autenticacion.service';
+import { CambiarContraseniaComponent } from '../../dialogs/cambiar-contrasenia/cambiar-contrasenia.component';
 
 @Component({
   selector: 'app-nav',
@@ -42,6 +44,8 @@ export class NavComponent implements OnDestroy {
   title: string;
 
   constructor(
+
+    private auth: AutenticacionService,
     private breakpointObserver: BreakpointObserver,
     changeDetectorRef: ChangeDetectorRef,
     media: MediaMatcher,
@@ -90,6 +94,18 @@ export class NavComponent implements OnDestroy {
       }
     });
   }
+
+  cambiarContrasenia(){
+
+    const dialogRef = this.dialog.open(CambiarContraseniaComponent, {
+      width:'500'
+    });
+
+    dialogRef.afterClosed().subscribe();
+
+  }
+
+  logout = () => this.auth.logout();
 
   enviarNotificacion() {
     const dialogRef = this.dialog.open(EnviarNotificacionComponent);

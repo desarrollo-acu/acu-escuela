@@ -1,0 +1,63 @@
+<form [formGroup]="form">
+
+
+    <mat-toolbar color="primary">
+        <h2 mat-dialog-title> Cambiar Contraseña </h2>
+    </mat-toolbar>
+
+
+    <mat-dialog-content class="mat-typography">
+
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="box">
+                    <mat-form-field class="full-width">
+
+                        <input matInput [type]="hide ? 'password' : 'text'" placeholder="contraseña" formControlName="password">
+                        <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+              </button>
+
+                    </mat-form-field>
+
+
+                </div>
+            </div>
+
+            <div class="col-xs-12">
+                <div class="box">
+                    <mat-form-field class="full-width">
+
+                        <input matInput [type]="hideConfirm ? 'password' : 'text'" placeholder="Confirme vontraseña" formControlName="passwordConfirm">
+                        <button mat-icon-button matSuffix (click)="hideConfirm = !hideConfirm" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hideConfirm">
+                <mat-icon>{{hideConfirm ? 'visibility_off' : 'visibility'}}</mat-icon>
+              </button>
+
+                        <mat-error *ngIf="passwordConfirm.hasError('mustMatch')  && passwordConfirm.dirty && passwordConfirm.errors">
+                            La contraseña y su confirmación <strong>deben coincidir</strong>, verifique.
+                        </mat-error>
+                    </mat-form-field>
+
+
+                </div>
+            </div>
+        </div>
+        <div class="row center-xs">
+            <div class="col-xs-12">
+                <div class="box">
+
+                </div>
+            </div>
+        </div>
+
+
+
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+        <button mat-raised-button color="primary" style=" padding: 5px 20px; margin-top: 5px;" (click)="changePassword()" [disabled]="form.invalid">Cambiar contraseña <mat-icon> send</mat-icon> </button>
+    </mat-dialog-actions>
+
+
+
+</form>
