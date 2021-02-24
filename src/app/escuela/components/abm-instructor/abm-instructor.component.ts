@@ -17,11 +17,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { Instructor, InstructorItem } from '@core/model/instructor.model';
 import { EscuelaEstado } from '@core/model/escuela-estado.model';
 
-import {
-  MAT_MOMENT_DATE_FORMATS,
-  MomentDateAdapter,
-  MAT_MOMENT_DATE_ADAPTER_OPTIONS,
-} from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
@@ -29,19 +24,11 @@ import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { InstructorHorario } from '@core/model/instructor.model';
 
 
+
 @Component({
   selector: 'app-abm-instructor',
   templateUrl: './abm-instructor.component.html',
   styleUrls: ['./abm-instructor.component.scss'],
-  providers: [
-    { provide: MAT_DATE_LOCALE, useValue: 'es-ES' },
-    {
-      provide: DateAdapter,
-      useClass: MomentDateAdapter,
-      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
-    },
-    { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
-  ],
 })
 
 export class AbmInstructorComponent implements OnInit, OnDestroy {
@@ -94,7 +81,7 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
     private _adapter: DateAdapter<any>,
     private router: Router) {
 
-    this._adapter.setLocale('es');
+    // this._adapter.setLocale('es');
     this.buildForm();
   }
 
@@ -150,14 +137,14 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
       escInsConTel: [''],
 
       // Item
-      insLicIni: [null, Validators.required],
+      insLicIni: [null],
       insLicFin: [''],
       escEstId: [''],
       insLicObs: [''],
 
 
       // Horario
-      escInsDia: ['', Validators.required],
+      escInsDia: [''],
       escInsM1De: [0],
       escInsM1Ha: [0],
       escInsT1De: [0],
@@ -329,17 +316,18 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
     console.log('item: ', item);
     console.log('horario: ', horario);
     if (confirma) {
-      if (item !== null) {
+      if (item ) {
 
         switch (item.modo) {
           case 'INS':
             const aux: EscuelaEstado = this.escEstId.value;
+            debugger
             this.items = this.items.map(i => {
 
               if (i.InsLicIni === null) {
                 i.InsLicIni = this.insLicIni.value;
                 i.InsLicFin = this.insLicFin.value;
-                i.EscEstId = aux.ESCESTID;
+                i.EscEstId = aux.EscEstId;
                 i.InsLicObs = this.insLicObs.value;
                 i.EscEstDsc = this.estado.EscEstDsc;
                 i.EscuelaEstado = this.estado;
@@ -405,7 +393,7 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
         }
       }
 
-      if (horario !== null) {
+      if (horario ) {
 
         switch (horario.modo) {
           case 'INS':
@@ -484,7 +472,7 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
       }
 
     } else {
-      if (item !== null) {
+      if (item ) {
 
         switch (item.modo) {
           case 'INS':
@@ -519,7 +507,7 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
         }
 
       }
-      if (horario !== null) {
+      if (horario ) {
         switch (horario.modo) {
           case 'INS':
             const index = this.horarios.indexOf(this.horarios.find(i => i.EscInsDia === horario.EscInsDia));
@@ -682,6 +670,7 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
     console.log('Submit, event: ', event);
     console.log('Submit, form valid: ', this.instructorForm.valid);
     console.log('Submit, form value: ', this.instructorForm.value);
+    console.log('Submit, form: ', this.instructorForm);
 
     if (this.instructorForm.valid) {
       console.log('instructorForm.value: ', this.instructorForm.value);

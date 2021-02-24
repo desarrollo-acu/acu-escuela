@@ -47,6 +47,7 @@ export interface Inscripcion {
   DisponibilidadAlumno?: InscripcionDisponibilidadAlumno[];
   UsrId?: string;
   cantidadExamenes?: number;
+  numeroClases?: number;
   Curso?: string;
 }
 

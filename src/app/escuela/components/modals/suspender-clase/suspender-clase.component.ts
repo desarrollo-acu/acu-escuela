@@ -16,6 +16,7 @@ import {
 } from '@core/model/clase-estimada.model';
 import { InstructorHorasLibresComponent } from '../instructor-horas-libres/instructor-horas-libres.component';
 import { confirmacionUsuario, mensajeConfirmacion } from '@utils/sweet-alert';
+import { generateHorasLibres } from '@utils/utils-functions';
 
 @Component({
   selector: 'app-suspender-clase',
@@ -70,7 +71,7 @@ export class SuspenderClaseComponent implements OnInit {
     this.movil = this.agendaClase.EscMovCod;
     console.log('data: ', this.data);
 
-    this.generateHorasLibres();
+    this.horasLibres = generateHorasLibres();
     this.buildForm();
   }
 
@@ -217,21 +218,6 @@ export class SuspenderClaseComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  generateHorasLibres() {
-    for (let i = 6; i < 21; i++) {
-      const horaIni = i;
-      const horaFin = i + 1;
-      const o = {
-        value: `${horaIni * 100}-${horaFin * 100}`,
-        description: `${horaIni}:00 - ${horaFin}:00`,
-        horaIni: `${horaIni * 100}`,
-        horaFin: `${horaFin * 100}`,
-      };
-      this.horasLibres.push(o);
-    }
-
-    console.log('horas libres: ', this.horasLibres);
-  }
 
   get cursoId() {
     return this.form.get('cursoId');

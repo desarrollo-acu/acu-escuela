@@ -110,6 +110,8 @@ export class AbmAlumnoComponent implements OnInit, OnDestroy {
         this.titulo = 'Editar';
         this.setValuesForm(alumno);
       }
+
+      this.alumnoService.aluId = this.aluId;
       this.aluNroField.disable();
     });
   }
@@ -217,7 +219,7 @@ export class AbmAlumnoComponent implements OnInit, OnDestroy {
         AluDepId: depto.DepId,
         AluLocId: loc.LocId,
       };
-
+      debugger
       this.alumnoService
         .gestionAlumno(this.mode, alumno) // guardarAgendaInstructor(this.inscripcionCurso)
         .subscribe((res: any) => {

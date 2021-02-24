@@ -39,6 +39,8 @@ export class InscripcionService {
       claseAdicional,
     });
 
+    generarNuevoPlanClases = ( GenerarInscripcion: InscripcionCurso ) => this.http.post(`${environment.url_ws}/wsGuardarNuevoPlanClases`, {GenerarInscripcion});
+    //wsGuardarNuevoPlanClases
     //wsGenerarClaseAdicional
 
   generarInscripcion(inscripcion: InscripcionCurso) {
@@ -98,6 +100,12 @@ export class InscripcionService {
   obtenerInscripcion(aluId: number, cursoId: number) {
     return this.http.get(
       `${environment.url_ws}/wsGetInscripcion?AluId=${aluId}&TipCurId=${cursoId}`
+    );
+  }
+
+  obtenerInscripcionById(escAluCurId: number, aluId: number, cursoId: number) {
+    return this.http.get(
+      `${environment.url_ws}/wsGetInscripcionById?EscAluCurId=${escAluCurId}&AluId=${aluId}&TipCurId=${cursoId}`
     );
   }
 

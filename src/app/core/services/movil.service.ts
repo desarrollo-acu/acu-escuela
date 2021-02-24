@@ -18,7 +18,7 @@ export class MovilService {
 
   gestionMovil(mode: string, movil: Movil) {
     return this.http.post(`${environment.url_ws}/wsGestionMovil`, {
-      Curso: {
+      Movil: {
         Mode: mode,
         Movil: movil
       }

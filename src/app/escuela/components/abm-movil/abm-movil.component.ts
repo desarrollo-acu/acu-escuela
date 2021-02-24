@@ -72,7 +72,7 @@ export class AbmMovilComponent implements OnInit, OnDestroy {
       escVehEst: [''],
       escVehMot: [''],
       // escVehTpo: [''],
-      escVehBajFch: [''],
+      escVehBajFch: [null],
       // EscVehOrdPan: [''],
     });
 
@@ -98,6 +98,8 @@ export class AbmMovilComponent implements OnInit, OnDestroy {
     console.log('Submit, event: ', event);
     console.log('Submit, form valid: ', this.movilForm.valid);
     console.log('Submit, form value: ', this.movilForm.value);
+
+    console.log('Submit, form : ', this.movilForm);
 
     if (this.movilForm.valid) {
       console.log('movilForm.value: ', this.movilForm.value);
@@ -138,6 +140,8 @@ export class AbmMovilComponent implements OnInit, OnDestroy {
         });
 
 
+    } else {
+      return ;
     }
   }
 
@@ -149,7 +153,13 @@ export class AbmMovilComponent implements OnInit, OnDestroy {
     this.escVehEst.setValue(movil.EscVehEst);
     this.escVehMot.setValue(movil.EscVehMot);
     // this.escVehTpo.setValue(movil.EscVehTpo);
-    this.escVehBajFch.setValue(movil.EscVehBajFch);
+    console.log('movil.EscVehBajFch : ', movil.EscVehBajFch);
+    const fecha = (movil.EscVehBajFch  && movil.EscVehBajFch !== '0000-00-00') ? movil.EscVehBajFch : null;
+
+    console.log('movil.EscVehBajFch : ', movil.EscVehBajFch);
+    console.log('fecha : ', fecha);
+
+    this.escVehBajFch.setValue(fecha);
     // this.EscVehOrdPan.setValue(movil.EscVehOrdPan);
 
 

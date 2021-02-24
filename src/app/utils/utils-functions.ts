@@ -109,7 +109,7 @@ export function openPDF(pdf: any) {
 
 export function getPDF(pdf: any, fileName: string) {
 
-    /* Parameters: 
+    /* Parameters:
           blob: any
           fileName: string
     */
@@ -143,4 +143,25 @@ export function getPDF(pdf: any, fileName: string) {
         window.URL.revokeObjectURL(data);
         link.remove();
     }, 100);
+}
+
+
+export const generateHorasLibres = () =>  {
+
+  const horasLibres = [];
+  for (let i = 6; i < 21; i++) {
+    const horaIni = i;
+    const horaFin = i + 1;
+    const o = {
+      value: `${horaIni * 100}-${horaFin * 100}`,
+      description: `${horaIni}:00 - ${horaFin}:00`,
+      horaIni: `${horaIni * 100}`,
+      horaFin: `${horaFin * 100}`,
+    };
+     horasLibres.push(o);
+  }
+
+  console.log('horas libres: ',  horasLibres);
+
+  return horasLibres;
 }

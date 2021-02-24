@@ -30,7 +30,7 @@
                                                 <mat-form-field class="full-width">
                                                     <input matInput #codigoInstructor placeholder="Identificador" formControlName="escInsId" disabled>
                                                     <!-- <mat-hint align="end">Cantidad de carácteres:
-                                                        {{numeroAlumno.value.length}} / 7 maxlength="7" 
+                                                        {{numeroAlumno.value.length}} / 7 maxlength="7"
                                                     </mat-hint> -->
                                                 </mat-form-field>
                                             </div>
@@ -155,11 +155,11 @@
                                                 <div class="mat-elevation-z8">
                                                     <table mat-table [dataSource]="dataSource" matSort>
 
-                                                        <!-- 'actions-abm', 
-                                                            'EscItemCod', 
-                                                            'EscItemDesc', 
-                                                            'EscCurItemCur', 
-                                                            'EscCurIteClaAdi', 
+                                                        <!-- 'actions-abm',
+                                                            'EscItemCod',
+                                                            'EscItemDesc',
+                                                            'EscCurItemCur',
+                                                            'EscCurIteClaAdi',
                                                             'confirmar-cancelar'] -->
 
                                                         <ng-container matColumnDef="actions-abm">
@@ -186,7 +186,6 @@
                                                             <td mat-cell *matCellDef="let row">
                                                                 <ng-container *ngIf="row.InsLicIni !== null && row.modo !== 'UPD'  ; else elseTemplate">
                                                                     {{row.InsLicIni | fechaString}}
-                                                                    <!-- | date:'dd/MM/yyyy' }} -->
                                                                 </ng-container>
                                                                 <ng-template #elseTemplate>
 
@@ -248,7 +247,7 @@
 
                                                                     <mat-form-field appearance="legacy" style="padding-right: 10px;">
                                                                         <!-- [(ngModel)]="estadoSeleccionado" -->
-                                                                        <mat-select formControlName="escEstId" [(ngModel)]="estado" required>
+                                                                        <mat-select formControlName="escEstId" [(ngModel)]="estado">
                                                                             <mat-option *ngFor="let e of estados" [value]="e">
                                                                                 {{ e.EscEstDsc }}
                                                                             </mat-option>
@@ -589,8 +588,8 @@
                     </mat-card-content>
                     <mat-card-actions align="end">
 
-
-                        <button mat-raised-button color="primary" type="button" [disabled]="instructorForm.invalid" (click)="guardarInstructor($event)">Guardar curso</button>
+                        <!-- [disabled]="instructorForm.invalid"  -->
+                        <button mat-raised-button color="primary" type="button" (click)="guardarInstructor($event)">Guardar curso</button>
                         <button mat-raised-button (click)="onNoClick()">Cancelar</button>
                     </mat-card-actions>
                 </form>

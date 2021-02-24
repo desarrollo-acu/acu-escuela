@@ -62,6 +62,16 @@ export class InstructorService {
       }
     );
   }
+  getDisponibilidadInstructoresPorCantidad(inscripcion: InscripcionCurso, cantidad: number) {
+
+    return this.http.post(
+      `${environment.url_ws}/obtenerDisponibilidadInstructorPorCantidad`,
+      {
+        inscripcion,
+        countClasesEstimar: cantidad,
+      }
+    );
+  }
 
   gestionInstructor(mode: string, instructor: Instructor) {
     return this.http.post(`${environment.url_ws}/wsGestionInstructor`, {

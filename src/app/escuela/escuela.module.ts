@@ -67,6 +67,7 @@ import { GestionExamenComponent } from './pages/gestion-examen/gestion-examen.co
 import { AbmExamenComponent } from './pages/abm-examen/abm-examen.component';
 import { GenerarClaseAdicionalComponent } from './dialogs/generar-clase-adicional/generar-clase-adicional.component';
 import { CambiarContraseniaComponent } from './dialogs/cambiar-contrasenia/cambiar-contrasenia.component';
+import { GenerarNuevoPlanClasesComponent } from './dialogs/generar-nuevo-plan-clases/generar-nuevo-plan-clases.component';
 
 registerLocaleData(localeEsUy, 'es-UY');
 registerLocaleData(localeEs, 'es');
@@ -115,6 +116,7 @@ registerLocaleData(localeEs, 'es');
     AbmExamenComponent,
     GenerarClaseAdicionalComponent,
     CambiarContraseniaComponent,
+    GenerarNuevoPlanClasesComponent,
   ],
   imports: [
     CommonModule,

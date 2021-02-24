@@ -4,6 +4,6 @@ export interface Movil {
     EscVehEst?: string;
     EscVehMot?: string;
     EscVehTpo?: string;
-    EscVehBajFch?: Date;
+    EscVehBajFch?: any;
     EscVehOrdPan?: number;
 }

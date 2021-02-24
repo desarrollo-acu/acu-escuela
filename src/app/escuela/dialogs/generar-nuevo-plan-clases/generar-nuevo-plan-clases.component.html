@@ -1,0 +1,197 @@
+<form [formGroup]="form" (ngSubmit)="generarPlanClases($event)">
+
+    <mat-toolbar color="primary">
+        <h2 mat-dialog-title> Generar nuevo plan de clases </h2>
+    </mat-toolbar>
+
+
+    <mat-dialog-content class="mat-typography">
+        <div class="row">
+            <div class="col">
+                <div class="box">
+
+                    <mat-form-field class="full-width">
+
+                        <input matInput [matDatepicker]="picker" placeholder="Fecha" formControlName="fecha" disabled>
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-4">
+                <div class="box">
+                    <mat-form-field class="full-width">
+                        <input matInput placeholder="Número del alumno" formControlName="alumnoNumero">
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="col">
+                <div class="box">
+                    <mat-form-field class="full-width">
+                        <input matInput placeholder="Nombre del alumno" formControlName="alumnoNombre">
+
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-4">
+                <div class="box">
+                    <mat-form-field class="full-width">
+
+                        <input matInput placeholder="Código del curso" formControlName="cursoId">
+
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="col-xs">
+                <div class="box">
+                    <mat-form-field class="full-width">
+
+                        <input matInput placeholder="Nombre del curso" formControlName="cursoNombre">
+
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-4">
+                <div class="box">
+                    <mat-form-field class="full-width">
+                        <input matInput placeholder="Código del Instructor" formControlName="escInsId">
+                    </mat-form-field>
+
+                </div>
+            </div>
+            <div class="col">
+                <div class="box">
+                    <mat-form-field class="full-width">
+                        <input matInput placeholder="Nombre del Instructor" formControlName="escInsNom">
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+
+            <div class="col">
+                <div class="box">
+                    <mat-form-field class="full-width">
+                        <input matInput placeholder="Nº de Clases a la fecha" formControlName="numeroClase">
+                    </mat-form-field>
+                </div>
+            </div>
+
+
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="box">
+                    <mat-form-field class="full-width">
+
+                        <textarea matInput placeholder="Observaciones" formControlName="observaciones" required></textarea>
+                        <mat-error *ngIf="observaciones.hasError('required')">
+                            Las obvservaciones de la generación de un nuevo plan de clases son <strong>requeridas</strong>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <mat-divider></mat-divider>
+
+        <h3>Disponibilidad del alumno</h3>
+        <div class="row">
+            <div class="col">
+                <div class="box">
+                    <h4>Lunes</h4>
+                    <mat-form-field>
+                        <mat-label>Turnos libres</mat-label>
+                        <mat-select multiple formControlName="disponibilidadLunes">
+                            <mat-option *ngFor="let hora of horasLibres" [value]="hora.value">{{hora.description}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="col">
+                <div class="box">
+                    <h4>Martes</h4>
+                    <mat-form-field>
+                        <mat-label>Turnos libres</mat-label>
+                        <mat-select multiple formControlName="disponibilidadMartes">
+                            <mat-option *ngFor="let hora of horasLibres" [value]="hora.value">{{hora.description}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="col">
+                <div class="box">
+                    <h4>Miercoles</h4>
+                    <mat-form-field>
+                        <mat-label>Turnos libres</mat-label>
+                        <mat-select multiple formControlName="disponibilidadMiercoles">
+                            <mat-option *ngFor="let hora of horasLibres" [value]="hora.value">{{hora.description}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="box">
+                    <h4>Jueves</h4>
+                    <mat-form-field>
+                        <mat-label>Turnos libres</mat-label>
+                        <mat-select multiple formControlName="disponibilidadJueves">
+                            <mat-option *ngFor="let hora of horasLibres" [value]="hora.value">{{hora.description}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="col">
+                <div class="box">
+                    <h4>Viernes</h4>
+                    <mat-form-field>
+                        <mat-label>Turnos libres</mat-label>
+                        <mat-select multiple formControlName="disponibilidadViernes">
+                            <mat-option *ngFor="let hora of horasLibres" [value]="hora.value">{{hora.description}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="col">
+                <div class="box">
+                    <h4>Sabado</h4>
+                    <mat-form-field>
+                        <mat-label>Turnos libres</mat-label>
+                        <mat-select multiple formControlName="disponibilidadSabado">
+                            <mat-option *ngFor="let hora of horasLibres" [value]="hora.value">{{hora.description}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+
+        </div>
+
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+        <button mat-raised-button type="submit" cdkFocusInitial [disabled]="form.invalid" color="primary"> Generar nuevo plan de clases </button>
+        <button mat-button mat-dialog-close (click)="onNoClick()">Cancelar</button>
+    </mat-dialog-actions>
+</form>

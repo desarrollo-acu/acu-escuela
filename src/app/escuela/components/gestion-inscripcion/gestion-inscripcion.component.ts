@@ -6,6 +6,9 @@ import { InscripcionService } from '@core/services/inscripcion.service';
 import { Inscripcion } from '@core/model/inscripcion.model';
 import { Router } from '@angular/router';
 import { confirmacionUsuario, mensajeConfirmacion } from '@utils/sweet-alert';
+import { MatDialog } from '@angular/material/dialog';
+import { GenerarNuevoPlanClasesComponent } from '../../dialogs/generar-nuevo-plan-clases/generar-nuevo-plan-clases.component';
+import { AcuService } from '../../../core/services/acu.service';
 
 
 @Component({
@@ -34,6 +37,8 @@ export class GestionInscripcionComponent implements OnInit {
 
   constructor(
     private inscripcionService: InscripcionService,
+    private acuService: AcuService,
+    public dialog: MatDialog,
     private router: Router) {
     console.log('constructor gestion-inscripcion');
 
@@ -138,6 +143,25 @@ export class GestionInscripcionComponent implements OnInit {
 
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+
+
+  }
+
+  nuevoPlanClase({ EscAluCurId, AluId, TipCurId }: Inscripcion){
+    console.log( EscAluCurId, AluId, TipCurId );
+    this.inscripcionService.obtenerInscripcionById( EscAluCurId, AluId, TipCurId ).subscribe( inscripcion => {
+      const dialogRef = this.dialog.open(GenerarNuevoPlanClasesComponent, {
+        data: {
+           inscripcion
+        }
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+       console.log(result);
+
+      });
+
+    });
 
 
   }

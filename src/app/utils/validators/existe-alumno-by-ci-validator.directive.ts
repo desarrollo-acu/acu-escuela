@@ -24,6 +24,7 @@ import { Observable } from 'rxjs';
   ],
 })
 export class ExisteAlumnoByCiValidatorDirective implements AsyncValidator {
+
   constructor(private alumnoService: AlumnoService) {}
 
   validate(
@@ -39,12 +40,16 @@ export function existeAlumnoByCiValidator(
   return (
     control: AbstractControl
   ): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> => {
-    return alumnoService.existeAlumnoByCI(control.value).pipe(
+    console.log('existeAlumnoByCiValidator :: aluId: ', alumnoService.aluId);
+    const {aluId}= alumnoService;
+    console.log('existeAlumnoByCiValidator :: 22 aluId: ', aluId);
+
+    return alumnoService.existeAlumnoByCI(control.value, aluId).pipe(
       map((res: any) => {
         console.log('res: ', res);
         console.log('res.existe: ', res.existe);
         // tslint:disable-next-line: object-literal-key-quotes
-        return res.existe ? { existeAlumnoByCi: true } : null;
+        return res.existe && { existeAlumnoByCi: true };
       })
     );
   };

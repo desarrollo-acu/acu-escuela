@@ -8,6 +8,9 @@ import { Alumno } from '../model/alumno.model';
   providedIn: 'root',
 })
 export class AlumnoService {
+
+  aluId: number;
+
   private alumnoDataSource = new BehaviorSubject({
     modo: 'INS',
     alumno: {},
@@ -46,9 +49,9 @@ export class AlumnoService {
     });
   }
 
-  existeAlumnoByCI(aluCi: number) {
+  existeAlumnoByCI(aluCi: number, aluId: number) {
     return this.http.get(
-      `${environment.url_ws}/existeAlumnoByCi?aluCi=${aluCi}`
+      `${environment.url_ws}/existeAlumnoByCi?aluCi=${aluCi}&aluId=${aluId}`
     );
   }
 

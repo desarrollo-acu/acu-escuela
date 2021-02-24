@@ -13,7 +13,9 @@
                 <div class="box">
                     <mat-form-field class="full-width">
 
-                        <input matInput [type]="hide ? 'password' : 'text'" placeholder="contraseña" formControlName="password">
+                        <input matInput [type]="hide ? 'password' : 'text'" placeholder="Contraseña" formControlName="password" maxlength="10">
+                        <mat-hint align="end">Cant. de carácteres: {{password.value.length}} / 10
+                        </mat-hint>
                         <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
                 <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
               </button>
@@ -28,7 +30,9 @@
                 <div class="box">
                     <mat-form-field class="full-width">
 
-                        <input matInput [type]="hideConfirm ? 'password' : 'text'" placeholder="Confirme vontraseña" formControlName="passwordConfirm">
+                        <input matInput [type]="hideConfirm ? 'password' : 'text'" placeholder="Confirme vontraseña" formControlName="passwordConfirm" maxlength="10">
+                        <mat-hint align="end">Cant. de carácteres: {{password.value.length}} / 10
+                        </mat-hint>
                         <button mat-icon-button matSuffix (click)="hideConfirm = !hideConfirm" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hideConfirm">
                 <mat-icon>{{hideConfirm ? 'visibility_off' : 'visibility'}}</mat-icon>
               </button>
