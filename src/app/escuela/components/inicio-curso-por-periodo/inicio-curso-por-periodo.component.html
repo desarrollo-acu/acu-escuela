@@ -1,0 +1,171 @@
+<div class="row " style="margin-top: 20px;">
+
+    <div class="col-xs-offset-4 col-xs-4">
+        <div class="box">
+            <h1> Inicio de curso</h1>
+        </div>
+    </div>
+
+    <div class="col-xs-offset-1 col-xs-10">
+        <div class="box">
+            <form [formGroup]="form">
+                <mat-card class="example-card">
+                    <mat-card-header>
+
+                        <div class="row">
+
+                            <div class="col-xs-4">
+                                <mat-form-field class="full-width">
+                                    <input matInput [matDatepicker]="pickerFechaDesde" placeholder="Fecha Desde" formControlName="fechaDesde" (dateChange)="getDataInicioCurso()" required />
+
+
+
+                                    <mat-datepicker-toggle matSuffix [for]="pickerFechaDesde"></mat-datepicker-toggle>
+                                    <mat-datepicker #pickerFechaDesde></mat-datepicker>
+
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-xs-4">
+                                <mat-form-field class="full-width">
+                                    <input matInput [matDatepicker]="pickerFechaHasta" placeholder="Fecha Hasta" formControlName="fechaHasta" (dateChange)="getDataInicioCurso()" required />
+
+                                    <mat-datepicker-toggle matSuffix [for]="pickerFechaHasta"></mat-datepicker-toggle>
+                                    <mat-datepicker #pickerFechaHasta></mat-datepicker>
+
+                                    <mat-error *ngIf="fechaHasta.hasError('fechaPosteriorInvalid')  && fechaHasta.dirty && fechaHasta.errors">
+                                        La "fecha hasta" debe <strong>ser posterior</strong> a la "fecha desde".
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-xs-4">
+                                <button mat-raised-button type="button" (click)="generarReporte($event)" style="margin-top: 15px;" cdkFocusInitial [disabled]="form.invalid" color="primary">Generar Reporte</button>
+                            </div>
+                        </div>
+                    </mat-card-header>
+
+                    <mat-dialog-content class="mat-typography">
+
+                        <div class="table-container mat-elevation-z8">
+
+
+                            <table mat-table [dataSource]="dataSource" matSort>
+
+
+                                <!-- Nombre Column -->
+                                <ng-container matColumnDef="AluNom">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
+                                    <td mat-cell *matCellDef="let row"> {{row.AluNom}} </td>
+                                </ng-container>
+
+                                <!-- Apellido Column -->
+                                <ng-container matColumnDef="AluApe1">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Apellido </th>
+                                    <td mat-cell *matCellDef="let row"> {{row.AluApe1}} </td>
+                                </ng-container>
+
+                                <!-- Inicio Column -->
+                                <ng-container matColumnDef="EscCurIni">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Inicio </th>
+                                    <td mat-cell *matCellDef="let row"> {{ row.EscCurIni }} </td>
+                                </ng-container>
+
+                                <!-- Número Column -->
+                                <ng-container matColumnDef="AluNro">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Número </th>
+                                    <td mat-cell *matCellDef="let row"> {{row.AluNro}} </td>
+                                </ng-container>
+
+                                <!-- Curso Column -->
+                                <ng-container matColumnDef="TipCurNom">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Curso </th>
+                                    <td mat-cell *matCellDef="let row"> {{row.TipCurNom}} </td>
+                                </ng-container>
+
+                                <!-- Teléfono Column -->
+                                <ng-container matColumnDef="AluTel1">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Teléfono </th>
+                                    <td mat-cell *matCellDef="let row"> {{ row.AluTel1 }} </td>
+                                </ng-container>
+
+                                <!-- Celular Column -->
+                                <ng-container matColumnDef="AluTel2">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Celular </th>
+                                    <td mat-cell *matCellDef="let row"> {{row.AluTel2}} </td>
+                                </ng-container>
+
+                                <!-- Socio Column -->
+                                <ng-container matColumnDef="SocId">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Socio </th>
+                                    <td mat-cell *matCellDef="let row"> {{row.SocId}} </td>
+                                </ng-container>
+
+                                <!-- Dirección Column -->
+                                <ng-container matColumnDef="AluDir">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Dirección </th>
+                                    <td mat-cell *matCellDef="let row"> {{ row.AluDir }} </td>
+                                </ng-container>
+
+                                <!-- Localidad/Barrio Column -->
+                                <ng-container matColumnDef="AluLocNom">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Localidad/Barrio </th>
+                                    <td mat-cell *matCellDef="let row"> {{row.AluLocNom}} </td>
+                                </ng-container>
+
+                                <!-- Departamento Column -->
+                                <ng-container matColumnDef="AluDepNom">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Departamento </th>
+                                    <td mat-cell *matCellDef="let row"> {{row.AluDepNom}} </td>
+                                </ng-container>
+
+                                <!-- Fecha de Nacimiento Column -->
+                                <ng-container matColumnDef="AluFchNac">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de Nacimiento </th>
+                                    <td mat-cell *matCellDef="let row"> {{ row.AluFchNac }} </td>
+                                </ng-container>
+
+                                <!-- Mail Column -->
+                                <ng-container matColumnDef="AluMail">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Mail </th>
+                                    <td mat-cell *matCellDef="let row"> {{row.AluMail}} </td>
+                                </ng-container>
+
+                                <!-- Instructor Column -->
+                                <ng-container matColumnDef="Instructor">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Instructor </th>
+                                    <td mat-cell *matCellDef="let row"> {{row.Instructor}} </td>
+                                </ng-container>
+
+                                <!-- Inicio Real Column -->
+                                <ng-container matColumnDef="FchIniReal">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Inicio Real </th>
+                                    <td mat-cell *matCellDef="let row"> {{ row.FchIniReal }} </td>
+                                </ng-container>
+
+                                <!-- Ult. Cursado Column -->
+                                <ng-container matColumnDef="FchUltRealizado">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Ult. Cursado </th>
+                                    <td mat-cell *matCellDef="let row"> {{ row.FchUltRealizado }} </td>
+                                </ng-container>
+
+
+
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+
+                            </table>
+
+                            <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]">
+                            </mat-paginator>
+                        </div>
+
+                    </mat-dialog-content>
+
+                </mat-card>
+            </form>
+
+        </div>
+    </div>
+</div>

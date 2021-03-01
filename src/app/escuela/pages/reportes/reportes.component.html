@@ -1,0 +1,52 @@
+<div class="row center-xs margin-abm">
+    <div class="col-xs-12">
+        <div class="box">
+            <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
+                <mat-button-toggle (click)="tipo = 'facturacion-por-item'"> Facturación Por Código Ítem </mat-button-toggle>
+                <mat-button-toggle (click)="tipo = 'inicio-curso-periodo'"> Inicio de curso por período </mat-button-toggle>
+                <mat-button-toggle (click)="tipo = 'cantidad-clases-periodo'"> Cantidad de clases por período </mat-button-toggle>
+                <mat-button-toggle (click)="tipo = 'cantidad-clases-por-alumno-por-mes'"> Cantidad Clases por alumno y por mes </mat-button-toggle>
+            </mat-button-toggle-group>
+
+        </div>
+    </div>
+</div>
+
+
+
+<div class="row ">
+    <div class="col-xs-12">
+        <div class="box">
+            <div [ngSwitch]="tipo">
+                <div *ngSwitchCase="'facturacion-por-item'">
+
+                    <app-facturacion-por-item></app-facturacion-por-item>
+                </div>
+                <div *ngSwitchCase="'inicio-curso-periodo'">
+
+                    <app-inicio-curso-por-periodo></app-inicio-curso-por-periodo>
+                </div>
+                <div *ngSwitchCase="'cantidad-clases-periodo'">
+
+                    <app-cantidad-clases-por-periodo></app-cantidad-clases-por-periodo>
+                </div>
+                <div *ngSwitchCase="'cantidad-clases-por-alumno-por-mes'">
+
+                    <app-cantidad-clases-por-alumno-por-mes></app-cantidad-clases-por-alumno-por-mes>
+                </div>
+                <div *ngSwitchDefault>
+                    <div class="row " style="margin-top: 20px;">
+
+                        <div class="col-xs-offset-4 col-xs-4">
+                            <div class="box">
+                                <h1> Seleccione el reporte que desea visualizar con los botones de arriba.</h1>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

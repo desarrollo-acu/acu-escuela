@@ -9,6 +9,10 @@ import { confirmacionUsuario, mensajeConfirmacion } from '@utils/sweet-alert';
 
 import { MatSelectChange } from '@angular/material/select';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { downloadFile, base64ToBlob, downloadFileFromBase64 } from '../../../utils/utils-functions';
+
+
+import fileDownload from 'js-file-download';
 
 @Component({
   selector: 'app-gestion-curso',
@@ -140,4 +144,11 @@ export class GestionCursoComponent implements OnInit {
     };
     this.estados.push(estado2);
   }
+
+  getFile = () => this.cursoService.testExcel()
+     .subscribe( ({ dataBase64, filename}: any) => downloadFileFromBase64(dataBase64, filename));
+
+
+
+    ;
 }

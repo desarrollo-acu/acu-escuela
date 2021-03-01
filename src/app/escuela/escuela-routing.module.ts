@@ -18,6 +18,7 @@ import { GestionMovilComponent } from './components/gestion-movil/gestion-movil.
 import { TestComponent } from './components/test/test.component';
 import { GestionExamenComponent } from './pages/gestion-examen/gestion-examen.component';
 import { AbmExamenComponent } from './pages/abm-examen/abm-examen.component';
+import { ReportesComponent } from './pages/reportes/reportes.component';
 
 const routes: Routes = [
   {
@@ -91,6 +92,10 @@ const routes: Routes = [
       {
         path: 'test',
         component: TestComponent,
+      },
+      {
+        path: 'reportes',
+        component: ReportesComponent,
       },
     ],
   },

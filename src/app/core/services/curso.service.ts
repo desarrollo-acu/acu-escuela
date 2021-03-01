@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Curso } from '../model/curso.model';
@@ -54,5 +54,17 @@ export class CursoService {
     return this.http
       .get(`${environment.url_ws}/wsGetUltimoCursoId`)
       .pipe(map((curso: { Cursoid: number }) => Number(curso.Cursoid)));
+  }
+
+  testExcel() {
+    // window.open(`${environment.url_ws}/ExportWWTEscAgeInstructor`, "_blank");
+
+    const headers = new HttpHeaders();
+    headers.set('Aceppt', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    // {responseType: 'arraybuffer'}
+    return this.http.post(
+      `${environment.url_ws}/ExportWWTEscAgeInstructor`,
+      { UsrId: 'superviso2', Mes: 10, Anio: 2021 }
+    );
   }
 }

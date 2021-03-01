@@ -1,3 +1,7 @@
+import { Moment } from 'moment';
+import { Meses } from '../core/model/meses.enum';
+
+
 export function formatDateToString(fecha: Date): string {
     const day = fecha.getDate();
     const month = fecha.getMonth() + 1;
@@ -101,6 +105,64 @@ export function openSamePDF(pdf: any, fileName: string) {
     }
 }
 
+
+export function downloadFile(file: any, fileName: string, type: string, content_type: string ) {
+
+  /*
+   Parameters:
+        file: any
+        fileName: string
+        type (extension): string
+        content-type: string
+  */
+
+  const newBlob = new Blob([file], { type: content_type });
+
+  const data = window.URL.createObjectURL(newBlob);
+  if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+      window.navigator.msSaveOrOpenBlob(newBlob, data.split(':')[1] + '.zip');
+  } else {
+    window.open(data);
+  }
+
+
+  const link = document.createElement('a');
+  link.href = data;
+  link.download = `${fileName}_${Math.floor(Math.random() * 101)}.${type}`;
+  // this is necessary as link.click() does not work on the latest firefox
+  link.dispatchEvent(
+      new MouseEvent('click', {
+          bubbles: true,
+          cancelable: true,
+          view: window,
+      })
+  );
+
+  setTimeout(() => {
+      // For Firefox it is necessary to delay revoking the ObjectURL
+      window.URL.revokeObjectURL(data);
+      link.remove();
+  }, 100);
+}
+
+export const downloadFileFromBase64 = ( base64:string, filename: string) => {
+
+  const blob = base64ToBlob(base64);
+
+  const data = window.URL.createObjectURL(blob);
+
+  const link = document.createElement('a');
+  link.href = data;
+  link.download = filename;
+  link.dispatchEvent(
+      new MouseEvent('click', {
+          bubbles: true,
+          cancelable: true,
+          view: window,
+      })
+  );
+}
+
 export function openPDF(pdf: any) {
     const file = new Blob([pdf], { type: 'application/pdf' });
     const fileURL = URL.createObjectURL(file);
@@ -146,6 +208,23 @@ export function getPDF(pdf: any, fileName: string) {
 }
 
 
+
+export function base64ToBlob(b64Data, sliceSize=512) {
+  let byteCharacters = atob(b64Data); //data.file there
+  let byteArrays = [];
+  for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+      let slice = byteCharacters.slice(offset, offset + sliceSize);
+
+      let byteNumbers = new Array(slice.length);
+      for (var i = 0; i < slice.length; i++) {
+          byteNumbers[i] = slice.charCodeAt(i);
+      }
+      let byteArray = new Uint8Array(byteNumbers);
+      byteArrays.push(byteArray);
+  }
+  return new Blob(byteArrays, {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+  }
+
 export const generateHorasLibres = () =>  {
 
   const horasLibres = [];
@@ -165,3 +244,59 @@ export const generateHorasLibres = () =>  {
 
   return horasLibres;
 }
+
+export const getNumeroFromMes = (mes: string): number => {
+  switch (mes) {
+    case Meses.Enero:
+      return 1;
+    case Meses.Febrero:
+      return 2;
+    case Meses.Marzo:
+      return 3;
+    case Meses.Abril:
+      return 4;
+    case Meses.Mayo:
+      return 5;
+    case Meses.Junio:
+      return 6;
+    case Meses.Julio:
+      return 7;
+    case Meses.Agosto:
+      return 8;
+    case Meses.Septiembre:
+      return 9;
+    case Meses.Octubre:
+      return 10;
+    case Meses.Noviembre:
+      return 11;
+    case Meses.Diciembre:
+      return 12;
+  }
+}
+
+
+
+// export function formatMomentToString(fecha: Moment): string {
+
+//   const day = fecha.toDate();
+//   const month = fecha.getMonth() + 1;
+//   const year = fecha.getFullYear();
+
+//   let strDay;
+//   let strMonth;
+//   const strYear = year.toString();
+
+//   if (day < 10) {
+//       strDay = '0' + day.toString();
+//   } else {
+//       strDay = day.toString();
+//   }
+
+//   if (month < 10) {
+//       strMonth = '0' + month.toString();
+//   } else {
+//       strMonth = month.toString();
+//   }
+//   return `${strYear}-${strMonth}-${strDay}`;
+
+// }
