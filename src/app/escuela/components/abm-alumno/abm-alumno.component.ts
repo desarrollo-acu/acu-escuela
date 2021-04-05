@@ -219,7 +219,7 @@ export class AbmAlumnoComponent implements OnInit, OnDestroy {
         AluDepId: depto.DepId,
         AluLocId: loc.LocId,
       };
-      debugger
+
       this.alumnoService
         .gestionAlumno(this.mode, alumno) // guardarAgendaInstructor(this.inscripcionCurso)
         .subscribe((res: any) => {

@@ -275,7 +275,7 @@
         <ng-container matColumnDef="InstructorPorcentaje">
             <th mat-header-cell *matHeaderCellDef> Porcentaje </th>
             <td mat-cell class="cell cell-bold" *matCellDef="let element"> {{element.InstructorPorcentaje}} % </td>
-            <td mat-footer-cell *matFooterCellDef> ## </td>
+            <td mat-footer-cell *matFooterCellDef>[ {{ porcentajeGlobal }} % ]</td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="agendaDisplayedColumns"></tr>

@@ -9,6 +9,7 @@ import { confirmacionUsuario, mensajeConfirmacion } from '@utils/sweet-alert';
 import { MatDialog } from '@angular/material/dialog';
 import { InscripcionesAlumnoComponent } from '../modals/inscripciones-alumno/inscripciones-alumno.component';
 import { AgendaClase } from '../../../core/model/agenda-clase.model';
+import { environment } from '../../../../environments/environment.prod';
 
 @Component({
   selector: 'app-gestion-alumno',
@@ -31,7 +32,7 @@ export class GestionAlumnoComponent implements OnInit {
   // Test paginator
   pageEvent: PageEvent;
   pageIndex: number;
-  pageSize = 5;
+  pageSize = environment.pageSize;
   length: number;
   cantidad = 60000;
 

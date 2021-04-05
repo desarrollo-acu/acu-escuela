@@ -17,6 +17,7 @@ import { GenerarClaseAdicional } from '../model/generar-clase-adicional.model';
 export class InscripcionService {
   // esto va al inscripcionService
   private inscripcionDataSource = new BehaviorSubject({
+    modo: 'DSP',
     inscripcion: {},
     id: 0,
   });
@@ -24,10 +25,10 @@ export class InscripcionService {
 
   constructor(private http: HttpClient) {}
 
-  sendDataInscripcion(inscripcion: Inscripcion, id?: number) {
-    const data: { inscripcion: Inscripcion; id: number } = id
-      ? { inscripcion, id }
-      : { inscripcion, id: 0 };
+  sendDataInscripcion(modo: string, inscripcion: Inscripcion, id?: number) {
+    const data: { modo, inscripcion: Inscripcion; id: number } = id
+      ? { modo, inscripcion, id }
+      : { modo, inscripcion, id: 0 };
     this.inscripcionDataSource.next(data);
   }
 
@@ -39,9 +40,11 @@ export class InscripcionService {
       claseAdicional,
     });
 
-    generarNuevoPlanClases = ( GenerarInscripcion: InscripcionCurso ) => this.http.post(`${environment.url_ws}/wsGuardarNuevoPlanClases`, {GenerarInscripcion});
-    //wsGuardarNuevoPlanClases
-    //wsGenerarClaseAdicional
+  guardarNuevaDisponibilidad = ( GenerarInscripcion: InscripcionCurso ) => this.http.post<ResponseSDTCustom>(`${environment.url_ws}/wsGuardarNuevaDisponibilidad`, {GenerarInscripcion});
+
+  generarNuevoPlanClases = ( GenerarInscripcion: InscripcionCurso ) => this.http.post<ResponseSDTCustom>(`${environment.url_ws}/wsGuardarNuevoPlanClases`, {GenerarInscripcion});
+  //wsGuardarNuevoPlanClases
+  //wsGenerarClaseAdicional
 
   generarInscripcion(inscripcion: InscripcionCurso) {
     console.log('::::: inscripción: ', inscripcion);

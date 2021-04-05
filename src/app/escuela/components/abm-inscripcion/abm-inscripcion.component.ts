@@ -7,6 +7,7 @@ import { formatCI } from '@utils/utils-functions';
 import { InscripcionService } from '@core/services/inscripcion.service';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
+import { mensajeConfirmacion } from '@utils/sweet-alert';
 
 @Component({
   selector: 'app-abm-inscripcion',
@@ -21,6 +22,7 @@ export class AbmInscripcionComponent implements OnInit {
 
   horasLibres = [];
   sedes = [];
+  mode: string;
 
   private subscription: Subscription;
   primeraVez = false;
@@ -40,13 +42,14 @@ export class AbmInscripcionComponent implements OnInit {
 
     if (!this.primeraVez) {
 
-      this.subscription = this.inscripcionService.inscripcionCurrentData.subscribe((data) => {
-        console.log('abm data: ', data);
+      this.subscription = this.inscripcionService.inscripcionCurrentData.subscribe(({ modo, inscripcion }) => {
+        console.log(modo);
+
         this.primeraVez = true;
 
+        this.mode = modo;
 
-
-        this.setValuesForm(data.inscripcion);
+        this.setValuesForm(inscripcion);
 
       }); /// .currentMessage.subscribe(message => this.message = message)
     }
@@ -60,10 +63,10 @@ export class AbmInscripcionComponent implements OnInit {
     const disponibilidadJueves: string[] = [];
     const disponibilidadViernes: string[] = [];
     const disponibilidadSabado: string[] = [];
-    console.log('this.inscripcion.DisponibilidadAlumno> ', this.inscripcion.DisponibilidadAlumno);
+
 
     this.inscripcion.DisponibilidadAlumno.forEach(item => {
-      console.log('  item> ', item);
+
       switch (item.AluAgeDia) {
         case 'LUN':
           disponibilidadLunes.push(`${item.AluAgeHoraInicio}-${item.AluAgeHoraFin}`);
@@ -88,13 +91,9 @@ export class AbmInscripcionComponent implements OnInit {
 
     });
 
-    console.log('  disponibilidadLunes> ', disponibilidadLunes);
-    console.log('  disponibilidadMartes> ', disponibilidadMartes);
-    console.log('  disponibilidadMiercoles> ', disponibilidadMiercoles);
-    console.log('  disponibilidadJueves', disponibilidadJueves);
-    console.log('  disponibilidadViernes> ', disponibilidadViernes);
 
     this.fechaClase.setValue(this.fechaClase);
+    this.inscripcionId.setValue(this.inscripcion.EscAluCurId);
     this.cursoId.setValue(this.inscripcion.TipCurId);
     this.cursoNombre.setValue(this.inscripcion.TipCurNom);
     this.cursoClasesPracticas.setValue(this.inscripcion.TipCurClaPra);
@@ -142,8 +141,6 @@ export class AbmInscripcionComponent implements OnInit {
     this.sedes.push(sede2);
 
 
-
-    console.log('sedes: ', this.sedes);
   }
 
   generateHorasLibres() {
@@ -159,7 +156,6 @@ export class AbmInscripcionComponent implements OnInit {
       this.horasLibres.push(o);
     }
 
-    console.log('horas libres: ', this.horasLibres);
   }
 
   onNoClick(): void {
@@ -173,6 +169,7 @@ export class AbmInscripcionComponent implements OnInit {
 
     this.form = this.formBuilder.group({
       fechaClase: [''],
+      inscripcionId: [''],
       cursoId: [''],
       cursoNombre: [''],
       cursoClasesPracticas: [''],
@@ -214,6 +211,7 @@ export class AbmInscripcionComponent implements OnInit {
 
     // Campos deshabilitados del curso
 
+    this.inscripcionId.disable();
     this.cursoId.disable();
     this.cursoNombre.disable();
     this.cursoClasesPracticas.disable();
@@ -247,7 +245,33 @@ export class AbmInscripcionComponent implements OnInit {
 
 
   }
+  guardarDisponibilidad = (e: Event) =>{
+    e.preventDefault();
 
+
+    const inscripcion = {
+      AluId: this.inscripcion.AluId,
+      TipCurId: this.cursoId.value,
+      EscAluCurId: this.inscripcion.EscAluCurId,
+      disponibilidadLunes: this.disponibilidadLunes.value,
+      disponibilidadMartes: this.disponibilidadMartes.value,
+      disponibilidadMiercoles: this.disponibilidadMiercoles.value,
+      disponibilidadJueves: this.disponibilidadJueves.value,
+      disponibilidadViernes: this.disponibilidadViernes.value,
+      disponibilidadSabado: this.disponibilidadSabado.value,
+      usrId: localStorage.getItem('usrId')
+
+
+    }
+
+
+    this.inscripcionService.guardarNuevaDisponibilidad( inscripcion ).subscribe( ({ errorMensaje }) => {
+      mensajeConfirmacion('Excelente!', errorMensaje).then( () => this.router.navigate(['/escuela/gestion-inscripcion']) );
+
+    } );
+
+
+  }
   get observaciones() {
     return this.form.get('observaciones');
   }
@@ -284,6 +308,10 @@ export class AbmInscripcionComponent implements OnInit {
 
   get alumnoCelular() {
     return this.form.get('alumnoCelular');
+  }
+
+  get inscripcionId() {
+    return this.form.get('inscripcionId');
   }
 
   get cursoId() {

@@ -8,6 +8,7 @@ import { confirmacionUsuario, mensajeConfirmacion } from '@utils/sweet-alert';
 import { MatSelectChange } from '@angular/material/select';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Movil } from '@core/model/movil.model';
+import { environment } from '@environments/environment';
 
 @Component({
   selector: 'app-gestion-movil',
@@ -22,6 +23,8 @@ export class GestionMovilComponent implements OnInit {
 
   estados = [];
   form: FormGroup;
+
+  pageSize = environment.pageSize;
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;

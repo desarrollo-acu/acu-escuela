@@ -6,9 +6,7 @@
 
                 <mat-button-toggle-group>
                     <mat-button-toggle (click)="abmCurso('INS', null)">Agregar Curso</mat-button-toggle>
-                    <mat-button-toggle (click)="getFile()">PDF</mat-button-toggle>
-                    <!--      <mat-button-toggle (click)="openPdf()">open PDF</mat-button-toggle>
-                <mat-button-toggle (click)="openSamePdf()">openSame PDF</mat-button-toggle> -->
+                    <!-- <mat-button-toggle (click)="getFile()">PDF</mat-button-toggle> -->
                 </mat-button-toggle-group>
 
 
@@ -99,7 +97,7 @@
                         </tr>
                     </table>
 
-                    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]">
+                    <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 25, 100]">
                     </mat-paginator>
                 </div>
 

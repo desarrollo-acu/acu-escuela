@@ -3,10 +3,10 @@
     <div class="row" style="margin-top: 10px">
         <div class="col-xs-12" style="padding: 0px 30px;">
             <div class="box">
-                <!-- 
+                <!--
                 <mat-button-toggle-group>
                     <mat-button-toggle (click)="abmMovil('INS', null)">Agregar Móvil</mat-button-toggle>
-                    
+
                 </mat-button-toggle-group>
  -->
 
@@ -93,7 +93,7 @@
                         </tr>
                     </table>
 
-                    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+                    <mat-paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
                 </div>
 
             </div>

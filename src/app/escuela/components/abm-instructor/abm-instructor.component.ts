@@ -94,20 +94,18 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
     if (!this.primeraVez) {
 
       this.acuService.getEscuelaEstados().subscribe((estados: EscuelaEstado[]) => {
-        console.log('res estados escuela: ', estados);
         this.estados = estados;
-        console.log('2) res estados escuela: ', this.estados);
 
         this.subscription = this.instructorService.instructorCurrentData.subscribe((data) => {
-          console.log('abm data: ', data);
+
           this.primeraVez = true;
           this.mode = data.modo;
 
-
+          console.log('data:: ', data);
 
           this.changeForm(data.modo, data.instructor);
 
-        }); /// .currentMessage.subscribe(message => this.message = message)
+        });
 
       });
     }
@@ -129,8 +127,8 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
       escInsNom: ['', Validators.required],
       escInsDir: [''],
       escInsNomCor: [''],
+      escInsAct: ['S'],
       escInsTel: ['', Validators.required],
-      escInsAct: [''],
 
       escInsSocMed: [''],
       escInsConNom: [''],
@@ -158,7 +156,6 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
 
     this.rows = this.fb.array([]);
 
-    // this.tipCuItemDescValCur.disable();
 
   }
 
@@ -173,11 +170,8 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
 
 
       this.titulo = 'Editar';
-      console.log('datasource instructor: ', instructor);
-      console.log('datasource this.estados: ', this.estados);
-      console.log('datasource Items: ', instructor.Items);
-      console.log('datasource Items: ', instructor.Horario);
       this.items = instructor.Items.map((item) => {
+
         item.EscuelaEstado = this.estados.find(estado => (estado.EscEstId === item.EscEstId || estado.ESCESTID === item.EscEstId));
         return item;
       });
@@ -189,9 +183,6 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
         h.EscInsT1Ha = h.EscInsT1Ha;
         return h;
       });
-
-      console.log('datasource this.items: ', this.items);
-      console.log('datasource this.horarios: ', this.horarios);
 
       this.actualizarDataSource(this.items, this.horarios);
 
@@ -207,9 +198,8 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
     if (tipo === 'item') {
 
       const existe = this.items.find(i => i.InsLicIni === null);
-      console.log(`existe : ${existe} `);
+
       if (!existe) {
-        console.log(`no existe `);
         const item: InstructorItem = {
           InsLicIni: null,
           InsLicFin: null,
@@ -221,9 +211,7 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
         };
 
 
-        console.log('no existe; item:  ', item);
         this.items.unshift(item);
-        console.log('no existe; this.items:  ', this.items);
         const aux = new MatTableDataSource(this.items);
         this.dataSource = aux;
 
@@ -235,7 +223,7 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
     } else {
       const existe = this.horarios.find(h => h.EscInsDia === null);
       if (!existe) {
-        console.log(`no existe `);
+
         const horario: InstructorHorario = {
           EscInsDia: null,
           EscInsM1De: 0,
@@ -251,9 +239,7 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
         };
 
 
-        console.log('no existe; horario:  ', horario);
         this.horarios.unshift(horario);
-        console.log('no existe; this.horarios:  ', this.horarios);
         const aux = new MatTableDataSource(this.horarios);
         this.horarioDataSource = aux;
 
@@ -266,23 +252,17 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
   }
 
   validarFechaInicial(type: string, event: MatDatepickerInputEvent<Date>) {
-    // this.events.push(``);
-    console.log(`${type}: ${event.value}`);
     this.existeFecha(event.value);
   }
 
   existeFecha(fecha: Date): boolean {
-    console.log(`fecha :: ${fecha}`);
 
     const auxDate = new Date(fecha);
-    console.log(`auxDate :: ${auxDate}`);
     const month = (auxDate.getMonth() + 1 < 10) ? `0${auxDate.getMonth() + 1}` : `${auxDate.getMonth() + 1}`;
     const day = (auxDate.getDate() < 10) ? `0${auxDate.getDate()}` : `${auxDate.getDate()}`;
     const auxString = `${auxDate.getFullYear()}-${month}-${day}`;
-    console.log(`auxString :: ${auxString}`);
 
     const auxItem = this.items.find(i => {
-      console.log(`i.InsLicIni :: ${i.InsLicIni}`);
 
 
       if (auxString === i.InsLicIni) {
@@ -299,11 +279,8 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
   }
 
   existeDia(dia: string): boolean {
-    console.log('horarios:: ', this.horarios);
-    console.log('dia:: ', dia);
 
     const auxHorario = this.horarios.find(h => h.EscInsDia === dia);
-    console.log('auxHorario:: ', auxHorario);
     if (auxHorario) {
       errorMensaje('Error', 'El día ingresado ya existe. Elija otro.').then();
       return true;
@@ -312,251 +289,224 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
   }
 
   confirmar(confirma: boolean, item?: InstructorItem, horario?: InstructorHorario) {
-    console.log('confirma: ', confirma);
-    console.log('item: ', item);
-    console.log('horario: ', horario);
+
+    console.log(horario);
+
+
     if (confirma) {
-      if (item ) {
-
-        switch (item.modo) {
-          case 'INS':
-            const aux: EscuelaEstado = this.escEstId.value;
-            debugger
-            this.items = this.items.map(i => {
-
-              if (i.InsLicIni === null) {
-                i.InsLicIni = this.insLicIni.value;
-                i.InsLicFin = this.insLicFin.value;
-                i.EscEstId = aux.EscEstId;
-                i.InsLicObs = this.insLicObs.value;
-                i.EscEstDsc = this.estado.EscEstDsc;
-                i.EscuelaEstado = this.estado;
-
-
-                this.insLicIni.setValue(null);
-                this.insLicFin.setValue(null);
-                this.escEstId.setValue(0);
-                this.insLicObs.setValue('');
-                this.estado = null;
-
-                i.modo = false;
-
-              }
-
-              return i;
-            });
-
-            this.actualizarDataSource(this.items, this.horarios);
-            break;
-
-          case 'UPD':
-            this.items = this.items.map(i => {
-              if (i.InsLicIni === item.InsLicIni) {
-                const aux: InstructorItem = {
-                  InsLicIni: this.insLicIni.value,
-                  InsLicFin: this.insLicFin.value,
-                  EscEstId: this.escEstId.value.ESCESTID,
-                  InsLicObs: this.insLicObs.value,
-                  EscEstDsc: this.estado.EscEstDsc,
-                  EscuelaEstado: this.estado,
-                  modo: false
-
-                };
-                this.estado = null;
-                return aux;
-              }
-
-              return i;
-            });
-
-            this.actualizarDataSource(this.items, this.horarios);
-            break;
-
-          case 'DLT':
-
-            confirmacionUsuario(
-              'Confirmación de Usuario',
-              `Está seguro que desea eliminar el ausentismo con fecha de inicio: ${item.InsLicIni} del Instructor?`).then((confirm) => {
-                if (confirm.isConfirmed) {
-                  const index = this.items.indexOf(this.items.find(i => i.InsLicIni === item.InsLicIni));
-                  if (index > -1) {
-                    this.items.splice(index, 1);
-                  }
-
-                  console.log('items: ', this.items);
-
-                  this.actualizarDataSource(this.items, this.horarios);
-                }
-              });
-
-            break;
-        }
+      if ( item ) {
+          this.preABMItem( item );
       }
-
-      if (horario ) {
-
-        switch (horario.modo) {
-          case 'INS':
-
-            this.horarios = this.horarios.map(h => {
-
-              if (h.EscInsDia === null) {
-                h.EscInsDia = this.escInsDia.value;
-                h.EscInsM1De = this.escInsM1De.value;
-                h.EscInsM1Ha = this.escInsM1Ha.value;
-                h.EscInsT1De = this.escInsT1De.value;
-                h.EscInsT1Ha = this.escInsT1Ha.value;
-                h.EscInsMovMa = this.escInsMovMa.value;
-                h.EscInsMovTa = this.escInsMovTa.value;
-
-                this.limpiarCamposHorario();
-
-
-                h.modo = false;
-
-              }
-
-              return h;
-            });
-
-            this.actualizarDataSource(this.items, this.horarios);
-            break;
-
-          case 'UPD':
-            this.horarios = this.horarios.map(h => {
-              if (h.EscInsDia === horario.EscInsDia) {
-
-                const aux: InstructorHorario = {
-
-                  EscInsDia: this.escInsDia.value,
-                  EscInsM1De: this.escInsM1De.value,
-                  EscInsM1Ha: this.escInsM1Ha.value,
-                  EscInsT1De: this.escInsT1De.value,
-                  EscInsT1Ha: this.escInsT1Ha.value,
-                  EscInsMovMa: this.escInsMovMa.value,
-                  EscInsMovTa: this.escInsMovTa.value,
-
-                  modo: false
-
-                };
-                this.estado = null;
-                return aux;
-              }
-
-              return h;
-            });
-
-            this.actualizarDataSource(this.items, this.horarios);
-            break;
-
-          case 'DLT':
-
-            confirmacionUsuario(
-              'Confirmación de Usuario',
-              `Está seguro que desea eliminar el día: ${horario.EscInsDia} del Instructor?`).then((confirm) => {
-                if (confirm.isConfirmed) {
-                  const index = this.horarios.indexOf(this.horarios.find(h => h.EscInsDia === horario.EscInsDia));
-                  if (index > -1) {
-                    this.horarios.splice(index, 1);
-                  }
-
-                  console.log('horarios: ', this.horarios);
-
-                  this.actualizarDataSource(this.items, this.horarios);
-                }
-              });
-
-            break;
-        }
-
+      if ( horario ) {
+        this.preABMHorario( horario );
       }
-
     } else {
       if (item ) {
 
-        switch (item.modo) {
-          case 'INS':
-            const index = this.items.indexOf(this.items.find(i => i.InsLicIni === item.InsLicIni));
-            if (index > -1) {
-              this.items.splice(index, 1);
+        if( item.modo === 'INS'){
+          this.items = this.items.filter( i => i.InsLicIni !==  item.InsLicIni );
+        }else{
+          this.insLicIni.setValue(null);
+          this.insLicFin.setValue(null);
+          this.escEstId.setValue(0);
+          this.insLicObs.setValue('');
+
+          this.items = this.items.map(i => {
+            if (i.InsLicIni === item.InsLicIni) {
+              i.modo = false;
             }
 
-            console.log('items: ', this.items);
+            return i;
+          });
+        }
 
-            break;
-          default:
+
+      }
+      if (horario ) {
+
+        if(horario.modo === 'INS'){
+          this.horarios = this.horarios.filter( h => h.EscInsDia !==  horario.EscInsDia );
+        }else {
+
+          this.horarios = this.horarios.map(i => {
+            if (i.EscInsDia === horario.EscInsDia) {
+              i.modo = false;
+            }
+            return i;
+          });
+        }
+
+        this.limpiarCamposHorario();
+
+      }
+
+
+      this.actualizarDataSource(this.items, this.horarios);
+
+    }
+
+
+
+  }
+
+
+  preABMItem(item?: InstructorItem){
+
+    switch (item.modo) {
+      case 'INS':
+        const aux: EscuelaEstado = this.escEstId.value;
+        this.items = this.items.map(i => {
+
+          if (i.InsLicIni === null) {
+            i.InsLicIni = this.insLicIni.value;
+            i.InsLicFin = this.insLicFin.value;
+            i.EscEstId = aux.EscEstId;
+            i.InsLicObs = this.insLicObs.value;
+            i.EscEstDsc = this.estado.EscEstDsc;
+            i.EscuelaEstado = this.estado;
 
 
             this.insLicIni.setValue(null);
             this.insLicFin.setValue(null);
             this.escEstId.setValue(0);
             this.insLicObs.setValue('');
+            this.estado = null;
 
-            this.items = this.items.map(i => {
-              if (i.InsLicIni === item.InsLicIni) {
-                i.modo = false;
-              }
+            i.modo = false;
 
-              return i;
-            });
+          }
 
-            break;
+          return i;
+        });
+
+        this.actualizarDataSource(this.items, this.horarios);
+        break;
+
+      case 'UPD':
+
+        this.items = this.items.map(i => {
+          if (i.InsLicIni === item.InsLicIni) {
+            const aux: InstructorItem = {
+              InsLicIni: this.insLicIni.value,
+              InsLicFin: this.insLicFin.value,
+              EscEstId: this.escEstId.value.EscEstId,
+              InsLicObs: this.insLicObs.value,
+              EscEstDsc: this.estado.EscEstDsc,
+              EscuelaEstado: this.estado,
+              modo: false
+
+            };
+            this.estado = null;
+            return aux;
+          }
+
+          return i;
+        });
+
+        this.actualizarDataSource(this.items, this.horarios);
+        break;
+
+      case 'DLT':
+
+        confirmacionUsuario(
+          'Confirmación de Usuario',
+          `Está seguro que desea eliminar el ausentismo con fecha de inicio: ${item.InsLicIni} del Instructor?`).then((confirm) => {
+            if (confirm.isConfirmed) {
+              this.items = this.items.filter( i => i.InsLicIni !==  item.InsLicIni );
 
 
-
-        }
-
-      }
-      if (horario ) {
-        switch (horario.modo) {
-          case 'INS':
-            const index = this.horarios.indexOf(this.horarios.find(i => i.EscInsDia === horario.EscInsDia));
-            if (index > -1) {
-              this.horarios.splice(index, 1);
+              this.actualizarDataSource(this.items, this.horarios);
             }
+          });
 
-            console.log('horarios: ', this.horarios);
-
-            this.limpiarCamposHorario();
-            break;
-          default:
-
-            this.limpiarCamposHorario();
-
-            this.horarios = this.horarios.map(i => {
-              if (i.EscInsDia === horario.EscInsDia) {
-                i.modo = false;
-              }
-
-              return i;
-            });
-
-            break;
-
-
-
-        }
-
-      }
-      this.actualizarDataSource(this.items, this.horarios);
-
-
+        break;
     }
+  }
+
+  preABMHorario(horario?: InstructorHorario){
+    const {escInsDia,escInsM1De,escInsM1Ha,escInsT1De,escInsT1Ha,escInsMovMa,escInsMovTa} = this.instructorForm.value
 
 
-    console.log('items: ', this.items);
+    switch (horario.modo) {
+      case 'INS':
 
+        this.horarios = this.horarios.map(h => {
+
+          if (h.EscInsDia === null) {
+            h.EscInsDia = escInsDia;
+            h.EscInsM1De = escInsM1De;
+            h.EscInsM1Ha = escInsM1Ha;
+            h.EscInsT1De = escInsT1De;
+            h.EscInsT1Ha = escInsT1Ha;
+            h.EscInsMovMa = escInsMovMa;
+            h.EscInsMovTa = escInsMovTa;
+
+            this.limpiarCamposHorario();
+
+
+            h.modo = false;
+
+          }
+
+          return h;
+        });
+
+        this.actualizarDataSource(this.items, this.horarios);
+        break;
+
+      case 'UPD':
+        this.horarios = this.horarios.map(h => {
+          if (h.EscInsDia === horario.EscInsDia) {
+
+            const aux: InstructorHorario = {
+
+              EscInsDia: escInsDia,
+              EscInsM1De: escInsM1De,
+              EscInsM1Ha: escInsM1Ha,
+              EscInsT1De: escInsT1De,
+              EscInsT1Ha: escInsT1Ha,
+              EscInsMovMa: escInsMovMa,
+              EscInsMovTa: escInsMovTa,
+
+
+
+              modo: false
+
+            };
+            this.estado = null;
+            return aux;
+          }
+
+          return h;
+        });
+
+        this.actualizarDataSource(this.items, this.horarios);
+        break;
+
+      case 'DLT':
+
+        confirmacionUsuario(
+          'Confirmación de Usuario',
+          `Está seguro que desea eliminar el día: ${horario.EscInsDia} del Instructor?`).then((confirm) => {
+            if (confirm.isConfirmed) {
+              this.horarios = this.horarios.filter( h => h.EscInsDia !==  horario.EscInsDia );
+              this.actualizarDataSource(this.items, this.horarios);
+            }
+          });
+
+        break;
+    }
   }
 
   limpiarCamposHorario() {
 
     this.escInsDia.setValue(null);
-    this.escInsM1De.setValue('');
-    this.escInsM1Ha.setValue('');
-    this.escInsT1De.setValue('');
-    this.escInsT1Ha.setValue('');
-    this.escInsMovMa.setValue('');
-    this.escInsMovTa.setValue('');
+    this.escInsM1De.setValue(0);
+    this.escInsM1Ha.setValue(0);
+    this.escInsT1De.setValue(0);
+    this.escInsT1Ha.setValue(0);
+    this.escInsMovMa.setValue(0);
+    this.escInsMovTa.setValue(0);
   }
 
   actualizarDataSource(items: InstructorItem[], horario: InstructorHorario[]) {
@@ -577,7 +527,6 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
 
     switch (modo) {
       case 'INS':
-        console.log(`insert,  modo: ${modo}, item: ${item} `);
 
         this.addRow('item');
         break;
@@ -585,8 +534,6 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
 
         this.items = this.items.map(i => {
           if (i.InsLicIni === item.InsLicIni) {
-            // i.isUpdate = true;
-            // i.isInsert = false;
             this.estado = i.EscuelaEstado;
             i.isDelete = false;
             i.modo = modo;
@@ -596,7 +543,6 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
         });
 
         this.instructorForm.patchValue({
-          // socId: result.SocId,
           insLicIni: item.InsLicIni,
           insLicFin: item.InsLicFin,
           escEstId: item.EscEstId,
@@ -607,8 +553,6 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
       case 'DLT':
         this.items = this.items.map(i => {
           if (i.InsLicIni === item.InsLicIni) {
-            // i.isUpdate = true;
-            // i.isInsert = false;
             i.isDelete = true;
             i.modo = modo;
           }
@@ -624,7 +568,6 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
 
     switch (modo) {
       case 'INS':
-        console.log(`insert,  modo: ${modo}, horario: ${horario} `);
 
         this.addRow('horario');
         break;
@@ -666,33 +609,21 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
 
   guardarInstructor(event: Event) {
     event.preventDefault();
+    console.log('instructorForm:: ', this.instructorForm);
+    console.log('instructorForm.valid:: ', this.instructorForm.valid);
+    console.log('instructorForm.errors:: ', this.instructorForm.errors);
 
-    console.log('Submit, event: ', event);
-    console.log('Submit, form valid: ', this.instructorForm.valid);
-    console.log('Submit, form value: ', this.instructorForm.value);
-    console.log('Submit, form: ', this.instructorForm);
 
     if (this.instructorForm.valid) {
-      console.log('instructorForm.value: ', this.instructorForm.value);
 
       const instructor: Instructor = {
-        /*
-        EscInsId?: string;
-        EscInsNom?: string;
-        EscInsNomCor?: string;
-        EscInsTel?: string;
-        EscInsDir?: string;
-        EscInsAct?: string;
-        EscInsSocMed?: string;
-        EscInsConNom?: string;
-        EscInsConTel?: string;
-*/
+
         EscInsId: this.escInsId.value,
         EscInsNom: this.escInsNom.value,
-        EscInsNomCor: this.escInsNomCor.value,
-        EscInsTel: this.escInsTel.value,
         EscInsDir: this.escInsDir.value,
+        EscInsNomCor: this.escInsNomCor.value,
         EscInsAct: this.escInsAct.value,
+        EscInsTel: this.escInsTel.value,
         EscInsSocMed: this.escInsSocMed.value,
         EscInsConNom: this.escInsConNom.value,
         EscInsConTel: this.escInsConTel.value,
@@ -701,27 +632,15 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
         Horario: this.horarios
       };
 
-      console.log('instructor: ', instructor);
-      const log = JSON.stringify(instructor);
-      console.log('instructor og: ', log);
+
       this.instructorService.gestionInstructor(this.mode, instructor)
         .subscribe((res: any) => {
-          console.log('res: ', res);
 
           if (res.Instructor.ErrorCode === 0) {
-            mensajeConfirmacion('Confirmado!', res.Instructor.ErrorMessage).then((res2) => {
-
-              this.router.navigate(['/escuela/gestion-instructor']);
-
-            });
-
+            mensajeConfirmacion('Confirmado!', res.Instructor.ErrorMessage).then(() =>  this.router.navigate(['/escuela/gestion-instructor']));
 
           } else {
-            Swal.fire({
-              icon: 'error',
-              title: 'Error',
-              text: res.Instructor.ErrorMessage
-            });
+            errorMensaje('Error', res.Instructor.ErrorMessage)
           }
 
         });

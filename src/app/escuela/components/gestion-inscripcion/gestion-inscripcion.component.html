@@ -35,6 +35,9 @@
                     <ng-container matColumnDef="actions">
                         <th mat-header-cell *matHeaderCellDef> </th>
                         <td mat-cell *matCellDef="let row">
+                            <button mat-mini-fab matTooltip="Editar disponibilidad " matTooltipClass="tooltip-blue" class="button-editar" (click)="editar(row)">
+                                <mat-icon>edit</mat-icon>
+                            </button>
                             <button mat-mini-fab matTooltip="Ver detalle " matTooltipClass="tooltip-blue" class="button-editar" (click)="verDetalle(row)">
                                 <mat-icon>search</mat-icon>
                             </button>

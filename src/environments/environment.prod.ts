@@ -1,6 +1,7 @@
 export const environment = {
   production: true,
   url_ws: 'http://192.1.33.1/ACU-EscuelaConduccion-Backend-Prod/rest',
+  pageSize: 100
 };
 
 

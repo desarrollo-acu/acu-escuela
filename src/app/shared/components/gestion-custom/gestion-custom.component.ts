@@ -6,6 +6,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { confirmacionUsuario } from '@utils/sweet-alert';
 import { Actions } from '../../../core/model/actions.model';
 import { EliminarRow } from '../../../core/model/eliminiar-row.interface';
+import { environment } from '../../../../environments/environment.prod';
 
 @Component({
   selector: 'app-gestion-custom',
@@ -32,6 +33,10 @@ export class GestionCustomComponent implements OnInit {
 
   tooltipEditar: string;
   tooltipEliminar: string;
+
+  // Test paginator
+  pageSize = environment.pageSize;
+
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
