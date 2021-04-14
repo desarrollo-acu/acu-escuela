@@ -85,6 +85,8 @@ export interface Cell {
 })
 export class AgendaInstructorComponent implements OnInit, OnDestroy {
 
+  porcentajeGlobal: number = 0;
+
   animal: string;
   name: string;
   sabadoODomingo: number;
@@ -598,12 +600,22 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
         this.agendaDisplayedColumns = this.agendaDisplayedColumns.concat(this.columns);
         this.agendaDisplayedColumns = this.agendaDisplayedColumns.concat(['InstructorPorcentaje']);
         this.verAgenda = true;
+        const cantidadHoras = this.horas.length;
+        const cantidadInstructores = this.instructores.length;
+        const cantidadHorasTrabajadas = this.horaMovilPlano.length;
+        this.porcentajeGlobal = (cantidadHoras !==0 && cantidadInstructores !== 0)
+                                  ? Math.round((cantidadHorasTrabajadas * 100) / (cantidadInstructores * cantidadHoras ))
+                                  : 0;
+
 
       });
   }
 
   getPorcentaje(hora: number) {
+    console.log(this.horas);
+
     const item = this.horas.find(h => h.Hora === hora);
+    console.log(item);
 
 
     return item.HoraPorcentaje; // .map(t => t.cost).reduce((acc, value) => acc + value, 0);

@@ -155,12 +155,6 @@
                                                 <div class="mat-elevation-z8">
                                                     <table mat-table [dataSource]="dataSource" matSort>
 
-                                                        <!-- 'actions-abm',
-                                                            'EscItemCod',
-                                                            'EscItemDesc',
-                                                            'EscCurItemCur',
-                                                            'EscCurIteClaAdi',
-                                                            'confirmar-cancelar'] -->
 
                                                         <ng-container matColumnDef="actions-abm">
                                                             <th mat-header-cell *matHeaderCellDef> </th>
@@ -168,11 +162,11 @@
 
                                                                 <ng-container *ngIf="row.InsLicIni !== null || !(row.modo)">
 
-                                                                    <button mat-mini-fab matTooltip="Editar alumno" matTooltipClass="tooltip-blue" aria-label="Button that shows a red tooltip" class="button-editar" (click)="abmItem('UPD', row)">
+                                                                    <button mat-mini-fab matTooltip="Editar ausentismo" matTooltipClass="tooltip-blue" aria-label="Button that shows a red tooltip" class="button-editar" (click)="abmItem('UPD', row)">
                                                                         <mat-icon>edit</mat-icon>
                                                                     </button>
 
-                                                                    <button mat-mini-fab matTooltip="Eliminar alumno" matTooltipClass="tooltip-red" (click)="abmItem('DLT', row)" style="margin-left: 5px;">
+                                                                    <button mat-mini-fab matTooltip="Eliminar ausentismo" matTooltipClass="tooltip-red" (click)="abmItem('DLT', row)" style="margin-left: 5px;">
                                                                         <mat-icon>delete</mat-icon>
                                                                     </button>
                                                                 </ng-container>
@@ -351,11 +345,11 @@
 
                                                                 <ng-container *ngIf="row.EscInsDia !== null || !(row.modo)">
 
-                                                                    <button mat-mini-fab matTooltip="Editar alumno" matTooltipClass="tooltip-blue" aria-label="Button that shows a red tooltip" class="button-editar" (click)="abmHorario('UPD', row)">
+                                                                    <button mat-mini-fab matTooltip="Editar horario" matTooltipClass="tooltip-blue" aria-label="Button that shows a red tooltip" class="button-editar" (click)="abmHorario('UPD', row)">
                                                                         <mat-icon>edit</mat-icon>
                                                                     </button>
 
-                                                                    <button mat-mini-fab matTooltip="Eliminar alumno" matTooltipClass="tooltip-red" (click)="abmHorario('DLT', row)" style="margin-left: 5px;">
+                                                                    <button mat-mini-fab matTooltip="Eliminar horario" matTooltipClass="tooltip-red" (click)="abmHorario('DLT', row)" style="margin-left: 5px;">
                                                                         <mat-icon>delete</mat-icon>
                                                                     </button>
                                                                 </ng-container>
@@ -369,21 +363,18 @@
                                                             <td mat-cell *matCellDef="let row">
                                                                 <ng-container *ngIf="row.EscInsDia !== null && row.modo !== 'UPD'  ; else elseTemplate">
                                                                     {{row.EscInsDia }}
-                                                                    <!-- | date:'dd/MM/yyyy' }} -->
                                                                 </ng-container>
                                                                 <ng-template #elseTemplate>
 
                                                                     <mat-form-field class="table-form-field" appearance="legacy">
-                                                                        <!-- [(ngModel)]="estadoSeleccionado" -->
-
-                                                                        <mat-select formControlName="escInsDia" [(value)]="dia" (selectionChange)="existeDia(dia)" required>
+                                                                        <!-- [(value)]="dia" -->
+                                                                        <mat-select formControlName="escInsDia" (selectionChange)="existeDia(dia)">
                                                                             <mat-option *ngFor="let d of dias" [value]="d">
-                                                                                {{ d}}
+                                                                                {{d}}
                                                                             </mat-option>
                                                                         </mat-select>
                                                                         <mat-error *ngIf="escInsDia.hasError('required') && escInsDia.dirty && escInsDia.errors">
-                                                                            El día <strong>es
-                                                                                requerido.</strong>
+                                                                            El día <strong>es requerido.</strong>
                                                                         </mat-error>
                                                                     </mat-form-field>
 
@@ -406,7 +397,7 @@
                                                                 <ng-template #elseTemplate>
 
                                                                     <mat-form-field class="table-form-field" appearance="legacy">
-                                                                        <input matInput class="example-right-align" formControlName="escInsM1De">
+                                                                        <input matInput class="example-right-align" type="number" autocomplete="off" formControlName="escInsM1De">
                                                                         <span matSuffix>:00</span>
                                                                     </mat-form-field>
 
@@ -430,7 +421,7 @@
                                                                     <mat-form-field class="table-form-field" appearance="legacy">
                                                                         <!-- [(ngModel)]="estadoSeleccionado" -->
 
-                                                                        <input matInput class="example-right-align" formControlName="escInsM1Ha">
+                                                                        <input matInput class="example-right-align" type="number" autocomplete="off" formControlName="escInsM1Ha">
                                                                         <span matSuffix>:00</span>
 
                                                                     </mat-form-field>
@@ -457,7 +448,7 @@
 
                                                                     <mat-form-field class="table-form-field" appearance="legacy">
 
-                                                                        <input matInput class="example-right-align" formControlName="escInsT1De">
+                                                                        <input matInput class="example-right-align" type="number" autocomplete="off" formControlName="escInsT1De">
                                                                         <span matSuffix>:00</span>
 
                                                                     </mat-form-field>
@@ -484,7 +475,7 @@
 
                                                                     <mat-form-field class="table-form-field" appearance="legacy">
 
-                                                                        <input matInput class="example-right-align" formControlName="escInsT1Ha">
+                                                                        <input matInput class="example-right-align" type="number" autocomplete="off" formControlName="escInsT1Ha">
                                                                         <span matSuffix>:00</span>
 
                                                                     </mat-form-field>
@@ -510,9 +501,8 @@
 
 
                                                                     <mat-form-field class="table-form-field" appearance="legacy">
-                                                                        <!-- [(ngModel)]="estadoSeleccionado" -->
 
-                                                                        <input matInput class="example-right-align" formControlName="escInsMovMa">
+                                                                        <input matInput class="example-right-align" type="number" autocomplete="off" formControlName="escInsMovMa">
 
                                                                     </mat-form-field>
 
@@ -536,9 +526,8 @@
 
 
                                                                     <mat-form-field class="table-form-field" appearance="legacy">
-                                                                        <!-- [(ngModel)]="estadoSeleccionado" -->
 
-                                                                        <input matInput class="example-right-align" formControlName="escInsMovTa">
+                                                                        <input matInput class="example-right-align" type="number" autocomplete="off" formControlName="escInsMovTa">
 
 
                                                                     </mat-form-field>
@@ -589,7 +578,7 @@
                     <mat-card-actions align="end">
 
                         <!-- [disabled]="instructorForm.invalid"  -->
-                        <button mat-raised-button color="primary" type="button" (click)="guardarInstructor($event)">Guardar curso</button>
+                        <button mat-raised-button color="primary" type="button" (click)="guardarInstructor($event)">Guardar instructor</button>
                         <button mat-raised-button (click)="onNoClick()">Cancelar</button>
                     </mat-card-actions>
                 </form>

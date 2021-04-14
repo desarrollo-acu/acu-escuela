@@ -4,6 +4,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AcuService } from 'src/app/core/services/acu.service';
+import { environment } from '../../../../../environments/environment.prod';
 
 
 export interface SocioData {
@@ -31,7 +32,7 @@ export class SeleccionarSocioComponent implements AfterViewInit, OnInit, AfterVi
   pageEvent: PageEvent;
 
   // MatPaginator Inputs
-  pageSize = 10;
+  pageSize = environment.pageSize;
   pageSizeOptions: number[] = [5, 10, 25, 100];
   cantidad = 60000;
   length: number;
@@ -152,7 +153,7 @@ export class SeleccionarSocioComponent implements AfterViewInit, OnInit, AfterVi
     this.dataSource.sort = this.sort;
 
     /*
-    
+
 
     this.dataSource = data.Alumnos;
     // this.pageIndex =  pageIndex;

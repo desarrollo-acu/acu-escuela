@@ -14,6 +14,7 @@ import { confirmacionUsuario } from '@utils/sweet-alert';
 import { Prefactura } from '@core/model/prefactura.model';
 import { InscripcionService } from '@core/services/inscripcion.service';
 import { openSamePDF } from '../../../../utils/utils-functions';
+import { environment } from '../../../../../environments/environment.prod';
 
 export interface FacturaItemData {
   TipCurId: number;
@@ -37,7 +38,7 @@ export class SeleccionarItemsFacturarComponent implements OnInit {
   pageEvent: PageEvent;
 
   // MatPaginator Inputs
-  pageSize = 10;
+  pageSize = environment.pageSize;
   pageSizeOptions: number[] = [5, 10, 25, 100];
   cantidad = 60000;
   length: number;

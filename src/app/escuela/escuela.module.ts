@@ -68,6 +68,12 @@ import { AbmExamenComponent } from './pages/abm-examen/abm-examen.component';
 import { GenerarClaseAdicionalComponent } from './dialogs/generar-clase-adicional/generar-clase-adicional.component';
 import { CambiarContraseniaComponent } from './dialogs/cambiar-contrasenia/cambiar-contrasenia.component';
 import { GenerarNuevoPlanClasesComponent } from './dialogs/generar-nuevo-plan-clases/generar-nuevo-plan-clases.component';
+import { ReportesComponent } from './pages/reportes/reportes.component';
+import { FacturacionPorItemComponent } from './components/facturacion-por-item/facturacion-por-item.component';
+import { SeleccionarItemComponent } from './dialogs/seleccionar-item/seleccionar-item.component';
+import { CantidadClasesPorAlumnoPorMesComponent } from './components/cantidad-clases-por-alumno-por-mes/cantidad-clases-por-alumno-por-mes.component';
+import { CantidadClasesPorPeriodoComponent } from './components/cantidad-clases-por-periodo/cantidad-clases-por-periodo.component';
+import { InicioCursoPorPeriodoComponent } from './components/inicio-curso-por-periodo/inicio-curso-por-periodo.component';
 
 registerLocaleData(localeEsUy, 'es-UY');
 registerLocaleData(localeEs, 'es');
@@ -117,6 +123,12 @@ registerLocaleData(localeEs, 'es');
     GenerarClaseAdicionalComponent,
     CambiarContraseniaComponent,
     GenerarNuevoPlanClasesComponent,
+    ReportesComponent,
+    FacturacionPorItemComponent,
+    SeleccionarItemComponent,
+    CantidadClasesPorAlumnoPorMesComponent,
+    CantidadClasesPorPeriodoComponent,
+    InicioCursoPorPeriodoComponent,
   ],
   imports: [
     CommonModule,

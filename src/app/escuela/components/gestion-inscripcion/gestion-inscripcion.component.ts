@@ -9,6 +9,7 @@ import { confirmacionUsuario, mensajeConfirmacion } from '@utils/sweet-alert';
 import { MatDialog } from '@angular/material/dialog';
 import { GenerarNuevoPlanClasesComponent } from '../../dialogs/generar-nuevo-plan-clases/generar-nuevo-plan-clases.component';
 import { AcuService } from '../../../core/services/acu.service';
+import { environment } from '@environments/environment';
 
 
 @Component({
@@ -28,7 +29,7 @@ export class GestionInscripcionComponent implements OnInit {
   // Test paginator
   pageEvent: PageEvent;
   pageIndex: number;
-  pageSize = 5;
+  pageSize = environment.pageSize;
   length: number;
   cantidad = 60000;
 
@@ -74,7 +75,7 @@ export class GestionInscripcionComponent implements OnInit {
 
   verDetalle(inscripcion: Inscripcion) {
 
-    this.inscripcionService.sendDataInscripcion(inscripcion, 0);
+    this.inscripcionService.sendDataInscripcion('DSP',inscripcion, 0);
     this.router.navigate(['/escuela/abm-inscripcion']);
   }
 
@@ -144,6 +145,12 @@ export class GestionInscripcionComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
 
+
+  }
+
+  editar = (inscripcion: Inscripcion) => {
+    this.inscripcionService.sendDataInscripcion('UPD',inscripcion, 0);
+    this.router.navigate(['/escuela/abm-inscripcion']);
 
   }
 

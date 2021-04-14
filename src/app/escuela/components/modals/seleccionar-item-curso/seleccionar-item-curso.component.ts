@@ -12,6 +12,7 @@ import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material/dial
 
 import { ItemCurso } from '@core/model/item-curso.model';
 import { AbmCursoComponent } from '@escuela/components/abm-curso/abm-curso.component';
+import { environment } from '../../../../../environments/environment.prod';
 
 
 
@@ -31,7 +32,7 @@ export class SeleccionarItemCursoComponent implements OnInit {
   pageEvent: PageEvent;
 
   // MatPaginator Inputs
-  pageSize = 10;
+  pageSize = environment.pageSize;
   pageSizeOptions: number[] = [5, 10, 25, 100];
   cantidad = 60000;
   length: number;

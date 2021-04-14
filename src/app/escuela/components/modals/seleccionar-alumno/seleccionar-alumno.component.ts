@@ -11,6 +11,7 @@ import { AgendarClaseComponent } from '../agendar-clase/agendar-clase.component'
 import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AlumnoService } from 'src/app/core/services/alumno.service';
 import { Alumno } from '@core/model/alumno.model';
+import { environment } from '../../../../../environments/environment.prod';
 
 @Component({
   selector: 'app-seleccionar-alumno',
@@ -55,7 +56,7 @@ export class SeleccionarAlumnoComponent implements OnInit { // , AfterViewInit, 
     console.log('2) cantidad: ', this.data.cantidad);
 
     this.dataSource = this.data.alumnos;
-    this.pageSize = 5;
+    this.pageSize = environment.pageSize;
     this.filtro = this.data.filtro;
     this.cantidad = this.data.cantidad;
 

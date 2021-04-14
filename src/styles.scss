@@ -37,8 +37,9 @@ img {
     max-width: 100%;
 }
 
-
-/* test, luego borrar */
+.invisible {
+    display: none !important;
+}
 
 * {
     padding: 0;
@@ -266,4 +267,25 @@ body {
 
 table {
     width: 100%;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+
+/* Firefox */
+
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+.margin-bottom-10 {
+    margin-bottom: 10px;
+}
+
+.margin-left-5 {
+    margin-left: 5px !important;
 }

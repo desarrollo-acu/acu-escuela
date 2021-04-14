@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { CursoService } from '@core/services/curso.service';
@@ -9,6 +9,11 @@ import { confirmacionUsuario, mensajeConfirmacion } from '@utils/sweet-alert';
 
 import { MatSelectChange } from '@angular/material/select';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { downloadFile, base64ToBlob, downloadFileFromBase64 } from '../../../utils/utils-functions';
+
+
+import fileDownload from 'js-file-download';
+import { environment } from '../../../../environments/environment.prod';
 
 @Component({
   selector: 'app-gestion-curso',
@@ -28,6 +33,10 @@ export class GestionCursoComponent implements OnInit {
 
   estados = [];
   form: FormGroup;
+
+
+  // Test paginator
+  pageSize = environment.pageSize;
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -140,4 +149,10 @@ export class GestionCursoComponent implements OnInit {
     };
     this.estados.push(estado2);
   }
+
+  getFile = () => this.cursoService.testExcel()
+     .subscribe( ({ dataBase64, filename}: any) => downloadFileFromBase64(dataBase64, filename));
+
+
+
 }

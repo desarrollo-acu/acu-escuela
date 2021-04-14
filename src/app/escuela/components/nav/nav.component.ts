@@ -147,6 +147,9 @@ export class NavComponent implements OnDestroy {
       case '/escuela/abm-alumno':
         this.title = 'Gestión de alumnos';
         break;
+      case '/escuela/reportes':
+        this.title = 'Reportes';
+        break;
 
       default:
         break;

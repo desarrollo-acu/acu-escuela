@@ -9,6 +9,7 @@ import { Instructor } from '@core/model/instructor.model';
 import { filter } from 'rxjs/operators';
 import { MatSelectChange } from '@angular/material/select';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { environment } from '@environments/environment';
 
 @Component({
   selector: 'app-gestion-instructor',
@@ -26,6 +27,9 @@ export class GestionInstructorComponent implements OnInit {
   form: FormGroup;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
+
+
+  pageSize = environment.pageSize;
 
   constructor(
 
