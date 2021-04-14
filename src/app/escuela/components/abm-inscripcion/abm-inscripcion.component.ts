@@ -8,6 +8,7 @@ import { InscripcionService } from '@core/services/inscripcion.service';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { mensajeConfirmacion } from '@utils/sweet-alert';
+import { confirmacionUsuario } from '../../../utils/sweet-alert';
 
 @Component({
   selector: 'app-abm-inscripcion',
@@ -269,6 +270,24 @@ export class AbmInscripcionComponent implements OnInit {
       mensajeConfirmacion('Excelente!', errorMensaje).then( () => this.router.navigate(['/escuela/gestion-inscripcion']) );
 
     } );
+
+
+  }
+
+  limpiarDisponibilidades = () => {
+
+    confirmacionUsuario('Confirmación de usuario','Está seguro que desea limpiar todas las disponibilidades?')
+      .then( ({isConfirmed}) => {
+        if( isConfirmed ){
+          this.disponibilidadLunes.setValue([]);
+          this.disponibilidadMartes.setValue([]);
+          this.disponibilidadMiercoles.setValue([]);
+          this.disponibilidadJueves.setValue([]);
+          this.disponibilidadViernes.setValue([]);
+          this.disponibilidadSabado.setValue([]);
+
+        }
+      })
 
 
   }
