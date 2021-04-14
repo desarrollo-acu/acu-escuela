@@ -1,3 +1,4 @@
+import { Inscripcion } from '@core/model/inscripcion.model';
 import { Moment } from 'moment';
 import { Meses } from '../core/model/meses.enum';
 
@@ -275,28 +276,49 @@ export const getNumeroFromMes = (mes: string): number => {
 }
 
 
+export const getDisponibilidadFromInscripcion = ( inscripcion: Inscripcion) => {
 
-// export function formatMomentToString(fecha: Moment): string {
+    const disponibilidadLunes: string[] = [];
+    const disponibilidadMartes: string[] = [];
+    const disponibilidadMiercoles: string[] = [];
+    const disponibilidadJueves: string[] = [];
+    const disponibilidadViernes: string[] = [];
+    const disponibilidadSabado: string[] = [];
 
-//   const day = fecha.toDate();
-//   const month = fecha.getMonth() + 1;
-//   const year = fecha.getFullYear();
 
-//   let strDay;
-//   let strMonth;
-//   const strYear = year.toString();
+    inscripcion.DisponibilidadAlumno.forEach(item => {
 
-//   if (day < 10) {
-//       strDay = '0' + day.toString();
-//   } else {
-//       strDay = day.toString();
-//   }
+      switch (item.AluAgeDia) {
+        case 'LUN':
+          disponibilidadLunes.push(`${item.AluAgeHoraInicio}-${item.AluAgeHoraFin}`);
+          break;
+        case 'MAR':
+          disponibilidadMartes.push(`${item.AluAgeHoraInicio}-${item.AluAgeHoraFin}`);
+          break;
+        case 'MIÉ':
+          disponibilidadMiercoles.push(`${item.AluAgeHoraInicio}-${item.AluAgeHoraFin}`);
+          break;
+        case 'JUE':
+          disponibilidadJueves.push(`${item.AluAgeHoraInicio}-${item.AluAgeHoraFin}`);
+          break;
+        case 'VIE':
+          disponibilidadViernes.push(`${item.AluAgeHoraInicio}-${item.AluAgeHoraFin}`);
+          break;
+        case 'SÁB':
+          disponibilidadSabado.push(`${item.AluAgeHoraInicio}-${item.AluAgeHoraFin}`);
+          break;
 
-//   if (month < 10) {
-//       strMonth = '0' + month.toString();
-//   } else {
-//       strMonth = month.toString();
-//   }
-//   return `${strYear}-${strMonth}-${strDay}`;
+      }
 
-// }
+    });
+
+
+    return {
+      disponibilidadLunes,
+      disponibilidadMartes,
+      disponibilidadMiercoles,
+      disponibilidadJueves,
+      disponibilidadViernes,
+      disponibilidadSabado,
+    }
+}

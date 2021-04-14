@@ -15,7 +15,7 @@ import { InstructorService } from '@core/services/instructor.service';
 import { AgendaMovilComponent } from '@escuela/components/agenda-movil/agenda-movil.component';
 import { InstructorHorasLibresComponent } from '@escuela/components/modals/instructor-horas-libres/instructor-horas-libres.component';
 import { confirmacionUsuario, mensajeConfirmacion } from '@utils/sweet-alert';
-import { generateHorasLibres, openSamePDF } from '../../../utils/utils-functions';
+import { generateHorasLibres, getDisponibilidadFromInscripcion, openSamePDF } from '../../../utils/utils-functions';
 import { Inscripcion } from '../../../core/model/inscripcion.model';
 import { ClasesEstimadasComponent } from '../../components/modals/clases-estimadas/clases-estimadas.component';
 import { InscripcionService } from '@core/services/inscripcion.service';
@@ -69,6 +69,16 @@ export class GenerarNuevoPlanClasesComponent implements OnInit {
       AluNomComp,
     } = this.inscripcion;
 
+
+    const {
+      disponibilidadLunes,
+      disponibilidadMartes,
+      disponibilidadMiercoles,
+      disponibilidadJueves,
+      disponibilidadViernes,
+      disponibilidadSabado,
+    } = getDisponibilidadFromInscripcion( this.inscripcion );
+
     this.form = this.formBuilder.group({
       fecha:[new Date()],
       cursoId:[ TipCurId ],
@@ -78,12 +88,12 @@ export class GenerarNuevoPlanClasesComponent implements OnInit {
       escInsNom:[EscInsNom],
       alumnoNumero:[AluNro],
       alumnoNombre:[AluNomComp],
-      disponibilidadLunes:[null],
-      disponibilidadMartes:[null],
-      disponibilidadMiercoles:[null],
-      disponibilidadJueves:[null],
-      disponibilidadViernes:[null],
-      disponibilidadSabado:[null],
+      disponibilidadLunes:[disponibilidadLunes],
+      disponibilidadMartes:[disponibilidadMartes],
+      disponibilidadMiercoles:[disponibilidadMiercoles],
+      disponibilidadJueves:[disponibilidadJueves],
+      disponibilidadViernes:[disponibilidadViernes],
+      disponibilidadSabado:[disponibilidadSabado],
       observaciones:[null],
     });
 

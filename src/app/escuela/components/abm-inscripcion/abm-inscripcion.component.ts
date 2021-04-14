@@ -9,6 +9,7 @@ import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { mensajeConfirmacion } from '@utils/sweet-alert';
 import { confirmacionUsuario } from '../../../utils/sweet-alert';
+import { generateHorasLibres, getDisponibilidadFromInscripcion } from '../../../utils/utils-functions';
 
 @Component({
   selector: 'app-abm-inscripcion',
@@ -33,7 +34,7 @@ export class AbmInscripcionComponent implements OnInit {
     private formBuilder: FormBuilder,
     private router: Router) {
 
-    this.generateHorasLibres();
+    this.horasLibres = generateHorasLibres();
     this.generateSedes();
     this.buildForm();
     this.deshabilitarCampos();
@@ -57,40 +58,17 @@ export class AbmInscripcionComponent implements OnInit {
   }
 
   private setValuesForm(inscripcion: Inscripcion) {
+
     this.inscripcion = inscripcion;
-    const disponibilidadLunes: string[] = [];
-    const disponibilidadMartes: string[] = [];
-    const disponibilidadMiercoles: string[] = [];
-    const disponibilidadJueves: string[] = [];
-    const disponibilidadViernes: string[] = [];
-    const disponibilidadSabado: string[] = [];
 
-
-    this.inscripcion.DisponibilidadAlumno.forEach(item => {
-
-      switch (item.AluAgeDia) {
-        case 'LUN':
-          disponibilidadLunes.push(`${item.AluAgeHoraInicio}-${item.AluAgeHoraFin}`);
-          break;
-        case 'MAR':
-          disponibilidadMartes.push(`${item.AluAgeHoraInicio}-${item.AluAgeHoraFin}`);
-          break;
-        case 'MIÉ':
-          disponibilidadMiercoles.push(`${item.AluAgeHoraInicio}-${item.AluAgeHoraFin}`);
-          break;
-        case 'JUE':
-          disponibilidadJueves.push(`${item.AluAgeHoraInicio}-${item.AluAgeHoraFin}`);
-          break;
-        case 'VIE':
-          disponibilidadViernes.push(`${item.AluAgeHoraInicio}-${item.AluAgeHoraFin}`);
-          break;
-        case 'SÁB':
-          disponibilidadSabado.push(`${item.AluAgeHoraInicio}-${item.AluAgeHoraFin}`);
-          break;
-
-      }
-
-    });
+    const {
+      disponibilidadLunes,
+      disponibilidadMartes,
+      disponibilidadMiercoles,
+      disponibilidadJueves,
+      disponibilidadViernes,
+      disponibilidadSabado,
+    } = getDisponibilidadFromInscripcion( inscripcion );
 
 
     this.fechaClase.setValue(this.fechaClase);
@@ -144,20 +122,6 @@ export class AbmInscripcionComponent implements OnInit {
 
   }
 
-  generateHorasLibres() {
-    for (let i = 6; i < 21; i++) {
-      const horaIni = i;
-      const horaFin = i + 1;
-      const o = {
-        value: `${horaIni * 100}-${horaFin * 100}`,
-        description: `${horaIni}:00 - ${horaFin}:00`,
-        horaIni: `${horaIni * 100}`,
-        horaFin: `${horaFin * 100}`,
-      };
-      this.horasLibres.push(o);
-    }
-
-  }
 
   onNoClick(): void {
     // Me voy a la pantalla de gestión y elimino del Servicio

@@ -2,6 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { InscripcionesAlumnoComponent } from '../inscripciones-alumno/inscripciones-alumno.component';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { generateHorasLibres } from '../../../../utils/utils-functions';
 
 @Component({
   selector: 'app-disponibilidad-alumno',
@@ -23,7 +24,7 @@ export class DisponibilidadAlumnoComponent implements OnInit {
     this.titulo = `${this.data.inscripcion.AluNro} - ${this.data.inscripcion.AluNomApe}`;
 
 
-    this.generateHorasLibres();
+    this.horasLibres = generateHorasLibres();
     this.buildForm();
   }
 
@@ -45,21 +46,6 @@ export class DisponibilidadAlumnoComponent implements OnInit {
     });
   }
 
-  generateHorasLibres() {
-    for (let i = 6; i < 21; i++) {
-      const horaIni = i;
-      const horaFin = i + 1;
-      const o = {
-        value: `${horaIni * 100}-${horaFin * 100}`,
-        description: `${horaIni}:00 - ${horaFin}:00`,
-        horaIni: `${horaIni * 100}`,
-        horaFin: `${horaFin * 100}`,
-      };
-      this.horasLibres.push(o);
-    }
-
-    console.log('horas libres: ', this.horasLibres);
-  }
 
   onNoClick() {
     this.dialogRef.close();
