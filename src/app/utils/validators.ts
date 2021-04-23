@@ -15,7 +15,7 @@ export class MyValidators {
 
   static isPriceValid(control: AbstractControl) {
     const value = control.value;
-    console.log(value);
+
     if (value > 10000) {
       return { price_invalid: true };
     }
@@ -25,7 +25,7 @@ export class MyValidators {
 
   static isPorcentajeValid(control: AbstractControl) {
     const value = control.value;
-    console.log(value);
+
     if (value < 0 || value > 100) {
       return { porcentaje_invalid: true };
     }
@@ -34,9 +34,7 @@ export class MyValidators {
 
   static isRUTValid(control: AbstractControl) {
     const value = control.value;
-    console.log(value);
 
-    const isValid = validarRUC(value);
     if (!validarRUC(value)) {
       return { rut_invalid: true };
     }
@@ -46,7 +44,6 @@ export class MyValidators {
   static fechaPosteriorAHoy(control: AbstractControl) {
     const value = control.value;
     const hoy = new Date();
-    console.log(value);
 
     if (value > hoy) {
       return { fecha_invalid: true };
@@ -59,11 +56,6 @@ export class MyValidators {
     const hoy = new Date();
     hoy.setHours(0, 0, 0, 0);
     value.setHours(0, 0, 0, 0);
-    console.log('fechaAnteriorAHoy');
-    console.log(' value: ', value);
-    console.log(' hoy: ', hoy);
-    console.log(' value < hoy: ', value < hoy);
-
 
     if (value < hoy) {
       return { fecha_invalid: true };
@@ -73,8 +65,7 @@ export class MyValidators {
 
   static alumnoYaAsignado(control: AbstractControl, existe: boolean) {
     const value = control.value;
-    console.log('value: ', value);
-    console.log(value);
+
     if (false) {
       return { alumno_invalid: true };
     }
@@ -96,8 +87,7 @@ export class MyValidators {
 
   isAlumnoValido(control: AbstractControl, existe: boolean) {
     const value = control.value;
-    console.log('value: ', value);
-    console.log(value);
+
     this.existeAlumno(value);
 
     if (value > 10000 || !existe) {

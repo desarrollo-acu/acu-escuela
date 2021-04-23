@@ -50,9 +50,6 @@ export class AcuService {
     return this.http
       .post(`${environment.url_ws}/wsObtenerTablaAgenda`, {}, this.httpOptions)
       .subscribe((res: any) => {
-        console.log('res: ', res);
-        console.log('res.TablaAgenda', res.TablaAgenda);
-
         // return response.json();
       });
   }
@@ -250,7 +247,6 @@ export class AcuService {
     if (filtro) {
       url += `&Filtro=${filtro}`;
     }
-    console.log('url: ', url);
 
     return this.http.get(url);
   }
@@ -377,6 +373,6 @@ function xml2json(xml) {
     }
     return obj;
   } catch (e) {
-    console.log(e.message);
+    console.error(e.message);
   }
 }

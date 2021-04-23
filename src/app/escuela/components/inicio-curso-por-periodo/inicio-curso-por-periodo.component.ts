@@ -51,7 +51,6 @@ export class InicioCursoPorPeriodoComponent implements OnInit {
       return;
 
     this.reportesService.dataIniciosCursosPorPeriodo(fechaDesde, fechaHasta).subscribe((data:any) => {
-      console.log(data);
 
       // Assign the data to the data source for the table to render
       this.dataSource = new MatTableDataSource(data);
@@ -65,7 +64,6 @@ export class InicioCursoPorPeriodoComponent implements OnInit {
     e.preventDefault();
 
     const {fechaDesde, fechaHasta} = this.form.value;
-    console.log(this.form.value);
 
     this.reportesService.iniciosCursosPorPeriodo(fechaDesde, fechaHasta).subscribe(({ dataBase64, filename}: any) => downloadFileFromBase64(dataBase64, filename));
 

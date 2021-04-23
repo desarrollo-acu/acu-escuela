@@ -49,7 +49,6 @@ export class GenerarNuevoPlanClasesComponent implements OnInit {
     public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: { inscripcion: Inscripcion}
   ) {
-    console.log('data: ', this.data);
     this.inscripcion = this.data.inscripcion;
 
     this.horasLibres = generateHorasLibres();
@@ -109,7 +108,6 @@ export class GenerarNuevoPlanClasesComponent implements OnInit {
   generarPlanClases(event: Event) {
     event.preventDefault();
 
-    console.log('form.value: ', this.form.value);
     if (this.form.invalid) {
       return;
     }
@@ -157,7 +155,6 @@ export class GenerarNuevoPlanClasesComponent implements OnInit {
                 .afterClosed()
                 .subscribe(
                   (result: { continuar: boolean; claseEstimada: ClaseEstimada }) => {
-                    console.log('claseEstimada afterClosed result:: ', result);
                     const {claseEstimada} = result;
                     inscripcion.ClasesEstimadas = claseEstimada;
 

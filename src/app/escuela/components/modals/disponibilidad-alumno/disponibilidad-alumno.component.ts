@@ -20,7 +20,6 @@ export class DisponibilidadAlumnoComponent implements OnInit {
     public dialogRef: MatDialogRef<InscripcionesAlumnoComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) {
 
-    console.log('data: ', data);
     this.titulo = `${this.data.inscripcion.AluNro} - ${this.data.inscripcion.AluNomApe}`;
 
 

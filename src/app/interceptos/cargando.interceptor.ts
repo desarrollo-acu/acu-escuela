@@ -31,7 +31,7 @@ export class CargandoInterceptor implements HttpInterceptor {
 
         this.blockUI.stop();
         if (event instanceof HttpResponse) {
-          console.log('event:: ', event);
+          // console.log('event:: ', event);
 
         }
         return event;

@@ -6,6 +6,7 @@ import Swal from 'sweetalert2';
 import { AcuService, LiberarParameters } from 'src/app/core/services/acu.service';
 import { CopiarMoverParameters } from 'src/app/core/model/copiarMoverParameters.model';
 import { AutenticacionService } from '../../../../core/services/autenticacion.service';
+import { confirmacionUsuario } from '../../../../utils/sweet-alert';
 
 @Component({
   selector: 'app-seleccionar-accion-agenda',
@@ -28,7 +29,7 @@ export class SeleccionarAccionAgendaComponent {
   }
 
   openLink(event: MouseEvent, key: string): void {
-    console.log('estoy en openlink');
+
 
     const fechaClase = localStorage.getItem('fechaClase');
 
@@ -36,7 +37,6 @@ export class SeleccionarAccionAgendaComponent {
     const existe: boolean = JSON.parse(localStorage.getItem('existe'));
     const mainParameters = JSON.parse(localStorage.getItem('mainParameters'));
 
-    console.log('2)fechaClase: ', fechaClase);
     localStorage.removeItem('abrirAgenda');
     let continuar = true;
     switch (key) {
@@ -79,7 +79,7 @@ export class SeleccionarAccionAgendaComponent {
 
       case 'liberar-clase':
         continuar = false;
-        this.confirmacionUsuario(
+        confirmacionUsuario(
           'Confirmación de usuario',
           'ATENCIÓN: Se liberará la hora, perdiendose los datos actuales. ¿Confirma continuar?'
         ).then((result) => {
@@ -117,7 +117,7 @@ export class SeleccionarAccionAgendaComponent {
         } else {
           if (oldParameters.fechaOld > mainParameters.fecha) {
             continuar = false;
-            this.confirmacionUsuario(
+            confirmacionUsuario(
               'Confirmación de usuario',
               'ATENCIÓN: La fecha seleccionada es anterior a la actual. ¿Confirma continuar?'
             ).then((result) => {
@@ -154,38 +154,12 @@ export class SeleccionarAccionAgendaComponent {
     event.preventDefault();
   }
 
-  mensajeConfirmacion(title, text) {
-    return Swal.fire({
-      title,
-      text,
-      icon: 'success',
-      timer: 5000,
-      showConfirmButton: false,
-      onClose: () => {
-        console.log('Cieerro antes de timer');
-      },
-    });
-  }
-
-  confirmacionUsuario(title, text) {
-    return Swal.fire({
-      title,
-      text,
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Confirmar',
-      cancelButtonText: 'Cancelar',
-    });
-  }
-
   setPegarStorage() {
     this.pegar = !this.pegar;
     localStorage.setItem('pegar-clase', this.pegar.toString());
   }
 
   copiarMoverClase(oldParameters, mainParameters) {
-    console.log('oldParameters:: ', oldParameters);
-    console.log('mainParameters:: ', mainParameters);
 
     const params: CopiarMoverParameters = {
       accion: oldParameters.accion,
@@ -200,7 +174,7 @@ export class SeleccionarAccionAgendaComponent {
       esMovil:  mainParameters.esMovil,
       userId: this.auth.getUserId()
     };
-    console.log('params :::: ', params);
+
     if (oldParameters.accion === 'MOVER') {
       localStorage.setItem('limpiarCeldaOld', 'true');
     }

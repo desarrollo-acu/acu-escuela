@@ -120,7 +120,6 @@ export class VerAgendaComponent implements OnInit {
     public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    console.log('agenda: ', data);
 
     this.agendaClase = this.data.agendaClase;
     const day = Number(
@@ -317,7 +316,6 @@ export class VerAgendaComponent implements OnInit {
 
 
   private openDialogAlumnos(alumnos, cantidad) {
-    console.log('1 openDialogAlumnos alumnos: ', alumnos);
 
     const alumnosDialogRef = this.dialog.open(SeleccionarAlumnoComponent, {
       height: 'auto',
@@ -328,11 +326,9 @@ export class VerAgendaComponent implements OnInit {
       },
     });
 
-    console.log('2 openDialogAlumnos');
 
     alumnosDialogRef.afterClosed().subscribe((alumno: Alumno) => {
 
-    console.log('3 openDialogAlumnos');
       this.alumno = alumno;
       this.form.patchValue({
         alumnoNombre: alumno.AluNomComp,
@@ -340,7 +336,6 @@ export class VerAgendaComponent implements OnInit {
       });
     });
 
-    console.log('4 openDialogAlumnos');
   }
 
 
@@ -355,17 +350,13 @@ export class VerAgendaComponent implements OnInit {
 
   guardarClase(event: Event) {
     event.preventDefault();
-    console.log('Submit, form valid: ', this.form.valid);
-    console.log('Submit, form value: ', this.form.value);
-    console.log('Submit, form errors: ', this.form.errors);
-    console.log('Submit, form status: ', this.form.status);
-    console.log('Submit, form value.cursoId: ', this.form.value.cursoId);
+
 
     if (this.form.invalid) {
       return;
     }
 
-    console.log('form.value: ', this.form.value);
+
 
     const agendaClase: AgendaClase = {
       FechaClase: this.agendaClase.FechaClase,
@@ -390,19 +381,14 @@ export class VerAgendaComponent implements OnInit {
 
     this.acuService
       .guardarAgendaClase(this.agendaClase)
-      .subscribe((res: any) => {
-        console.log('res: ', res);
-        console.log('mensaje: ', res.mensaje);
-        //     this.agendaClase.mensaje = res.mensaje;
-        this.dialogRef.close(res);
-      });
+      .subscribe((res: any) => this.dialogRef.close(res));
   }
 
   obtenerCurso() {
     const cursoId = this.cursoId.value
     if (cursoId !== '') {
       this.cursoService.getCurso(cursoId).subscribe((res: any) => {
-        console.log('obtenerCurso - res: ', res);
+
         if (res.TipCurId === '0') {
           Swal.fire({
             icon: 'warning',

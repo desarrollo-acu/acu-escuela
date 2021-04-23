@@ -10,6 +10,6 @@ export class TestComponent implements OnInit {
   constructor(private acuService: AcuService) {}
 
   ngOnInit(): void {
-    this.acuService.testWsLogicsat().subscribe((res) => console.log(res));
+
   }
 }

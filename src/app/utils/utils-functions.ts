@@ -81,7 +81,6 @@ export function formatCI(value: string, digitoVerificador?: string): string {
             result += cadena[i] + '-';
         }
     }
-    console.log('result: ', result);
 
     return result + digitoVerificador;
 }
@@ -95,8 +94,6 @@ export function openSamePDF(pdf: any, fileName: string) {
     const file = new Blob([pdf], { type: 'application/pdf' });
     const fileURL = URL.createObjectURL(file);
     const popUp = window.open(fileURL, `${fileName}_${Math.floor(Math.random() * 101)}.pdf`, 'width=800,height=500');
-    console.log('popup> ', popUp);
-    console.log('popup.name> ', popUp.name);
 
     if (popUp === null || popUp.name === 'undefined' || typeof (popUp) === 'undefined') {
         alert('Por favor deshabilita el bloqueador de ventanas emergentes y vuelve a intentar.');
@@ -241,7 +238,6 @@ export const generateHorasLibres = () =>  {
      horasLibres.push(o);
   }
 
-  console.log('horas libres: ',  horasLibres);
 
   return horasLibres;
 }
@@ -321,4 +317,63 @@ export const getDisponibilidadFromInscripcion = ( inscripcion: Inscripcion) => {
       disponibilidadViernes,
       disponibilidadSabado,
     }
+}
+
+
+
+export function generateEstadosSiNo(): any[] {
+  const estados = [];
+  const estado0 = {
+    id: 0,
+    value: '-',
+    description: 'Todos'
+  };
+
+  estados.push(estado0);
+
+  const estado1 = {
+    id: 1,
+    value: 'S',
+    description: 'Si'
+  };
+  estados.push(estado1);
+
+  const estado2 = {
+    id: 2,
+    value: 'N',
+    description: 'No'
+  };
+  estados.push(estado2);
+
+
+
+  return estados;
+}
+
+export function generateEstadosActivoDeshabilitado(): any[] {
+  const estados = [];
+  const estado0 = {
+    id: 0,
+    value: '-',
+    description: 'Todos',
+  };
+
+  estados.push(estado0);
+
+  const estado1 = {
+    id: 1,
+    value: 'A',
+    description: 'Activo',
+  };
+  estados.push(estado1);
+
+  const estado2 = {
+    id: 2,
+    value: 'D',
+    description: 'Deshabilitado',
+  };
+  estados.push(estado2);
+
+  return estados;
+
 }

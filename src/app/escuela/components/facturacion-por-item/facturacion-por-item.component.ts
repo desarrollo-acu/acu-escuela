@@ -88,7 +88,6 @@ export class FacturacionPorItemComponent implements OnInit {
 
 
     const {fechaDesde, fechaHasta, itemDesde, itemHasta,} = this.form.value;
-    console.log(this.form.value);
 
     this.reportesService.facturacionPorItem(itemDesde, itemHasta, fechaDesde, fechaHasta).subscribe((pdf) => openSamePDF(pdf, 'FacturacionPorItem'));
 

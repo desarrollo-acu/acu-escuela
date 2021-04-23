@@ -50,7 +50,6 @@ export class SuspenderClaseComponent implements OnInit {
     this.esSuspender = this.data.esSuspender;
     this.titulo = this.data.esSuspender ? 'Suspender Clase' : 'Clase Doble';
 
-    console.log('this.agendaClase : ', this.agendaClase);
     const day = Number(
       this.agendaClase.FechaClase.substring(
         this.agendaClase.FechaClase.length - 2,
@@ -69,7 +68,7 @@ export class SuspenderClaseComponent implements OnInit {
       this.agendaClase.EsAgCuInsNom
     }`;
     this.movil = this.agendaClase.EscMovCod;
-    console.log('data: ', this.data);
+
 
     this.horasLibres = generateHorasLibres();
     this.buildForm();
@@ -82,7 +81,6 @@ export class SuspenderClaseComponent implements OnInit {
       this.agendaClase.Hora < 10
         ? `0${this.agendaClase.Hora}`
         : this.agendaClase.Hora;
-    console.log(hora);
 
     this.form = this.formBuilder.group({
       fechaClase: [this.fechaClase],
@@ -103,7 +101,7 @@ export class SuspenderClaseComponent implements OnInit {
       disponibilidadJueves: [this.data.agendaClase.disponibilidadJueves],
       disponibilidadViernes: [this.data.agendaClase.disponibilidadViernes],
       disponibilidadSabado: [this.data.agendaClase.disponibilidadSabado],
-      observaciones: [this.agendaClase.EsAgCuObs, Validators.required],
+      observaciones: [, Validators.required],
     });
 
     this.cursoId.disable();
@@ -125,7 +123,6 @@ export class SuspenderClaseComponent implements OnInit {
   suspenderClase(event: Event) {
     event.preventDefault();
 
-    console.log('form.value: ', this.form.value);
     if (this.form.invalid) {
       return;
     }
@@ -146,23 +143,17 @@ export class SuspenderClaseComponent implements OnInit {
 
         // Si es distinta a suspendida con cobro, se puede reagendar.
         if (this.estadoClase.value !== 'S') {
-          console.log('agendaClase: ', this.agendaClase);
+
           // Si no es suspender, entonces es una clase doble.
           const cantidad = this.esSuspender ? 1 : 2;
           this.instructorService
             .getDisponibilidadInstructor(this.agendaClase, cantidad)
             .subscribe((res: { ClasesEstimadas: ClaseEstimada[] }) => {
-              console.log('res.ClasesEstimadas: ', res.ClasesEstimadas);
               const arrayPlano: {
                 instructorCodigo?: string;
                 instructorNombre?: string;
                 detalle?: ClaseEstimadaDetalle[];
               } = {};
-              console.log(
-                'res.ClasesEstimadas.length: ',
-                res.ClasesEstimadas.length
-              );
-              console.log('res.ClasesEstimadas[1]: ', res.ClasesEstimadas[1]);
               arrayPlano.instructorCodigo = res.ClasesEstimadas[1].EscInsId;
               arrayPlano.instructorNombre = res.ClasesEstimadas[1].EscInsNom;
               arrayPlano.detalle = [];
@@ -170,7 +161,6 @@ export class SuspenderClaseComponent implements OnInit {
                 arrayPlano.detalle.push(...clase.Detalle);
               });
 
-              console.log('arrayPlano: ', arrayPlano);
 
               const clasesEstimadasDialogRef = this.dialog.open(
                 InstructorHorasLibresComponent,
@@ -185,13 +175,7 @@ export class SuspenderClaseComponent implements OnInit {
 
               clasesEstimadasDialogRef
                 .afterClosed()
-                .subscribe((nuevaClase: any) => {
-                  console.log('1.response: ' + nuevaClase);
-                  console.log('2.response: ' + JSON.stringify(nuevaClase));
-                  console.log(`2. response ${nuevaClase}`);
-
-                  this.finalizarSuspenderClase(nuevaClase);
-                });
+                .subscribe((nuevaClase?: any) => (nuevaClase) && this.finalizarSuspenderClase(nuevaClase));
             });
         } else {
           this.finalizarSuspenderClase();
@@ -207,7 +191,6 @@ export class SuspenderClaseComponent implements OnInit {
 
     suscription.subscribe(
       (res: { errorCode: number; errorMensaje: string }) => {
-        console.log('res: ', res);
         mensajeConfirmacion('Excelente!', res.errorMensaje);
         this.dialogRef.close();
       }

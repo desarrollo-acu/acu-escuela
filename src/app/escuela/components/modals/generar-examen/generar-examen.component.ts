@@ -67,7 +67,7 @@ export class GenerarExamenComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.agendaClase = this.data.agendaClase;
-    console.log('aaaa .agendaClase : ', this.agendaClase);
+
 
     if (this.agendaClase.AluId) {
       this.aluId = this.agendaClase.AluId;
@@ -171,7 +171,6 @@ export class GenerarExamenComponent implements OnInit {
 
   seleccionarMovil() {
     this.movilService.getMoviles().subscribe((moviles: Movil[]) => {
-      console.log('moviles: ', moviles);
 
       const auxMoviles = moviles.filter((movil) => movil.EscVehEst === 'A');
 
@@ -232,7 +231,7 @@ export class GenerarExamenComponent implements OnInit {
     // });
   }
   private openDialogInscripciones(inscripciones) {
-    console.log('respuesta inscripciones::: ', inscripciones);
+
 
     const dialogRef = this.dialog.open(SeleccionarInscripcionComponent, {
       height: 'auto',
@@ -261,13 +260,8 @@ export class GenerarExamenComponent implements OnInit {
   }
 
   seleccionarAlumno() {
-    this.alumnoService.obtenerAlumnos(5, 1, '').subscribe((res: any) => {
-      console.log('res: ', res);
-      console.log('res.Cantidad: ', res.Cantidad);
-      console.log('res.Alumnos: ', res.Alumnos);
-
-      this.openDialogAlumnos(res.Alumnos, res.Cantidad);
-    });
+    this.alumnoService.obtenerAlumnos(5, 1, '')
+    .subscribe((res: any) => this.openDialogAlumnos(res.Alumnos, res.Cantidad));
   }
 
   private openDialogAlumnos(alumnos, cantidad) {
@@ -281,8 +275,7 @@ export class GenerarExamenComponent implements OnInit {
     });
 
     alumnosDialogRef.afterClosed().subscribe((alumno) => {
-      console.log('1.alumno: ' + alumno);
-      console.log('2.alumno: ' + JSON.stringify(alumno));
+
       if (alumno) {
         this.aluId = alumno.AluId;
         this.obtenerInscripcion();
@@ -296,10 +289,10 @@ export class GenerarExamenComponent implements OnInit {
 
   obtenerCurso() {
     const cursoId = this.form.get('cursoId').value;
-    console.log('obtenerCurso - cursoId: ', cursoId);
+
     if (cursoId !== '') {
       this.cursoService.getCurso(cursoId).subscribe((curso: any) => {
-        console.log('obtenerCurso - curso: ', curso);
+
         if (curso.TipCurId === '0') {
           return Swal.fire({
             icon: 'warning',
@@ -323,10 +316,6 @@ export class GenerarExamenComponent implements OnInit {
   }
 
   obtenerInscripcion() {
-    console.log('estoy obtenerInscripcion::: ');
-
-    console.log(this.aluId);
-    console.log(this.tipCurId);
 
     if (this.aluId === null || this.tipCurId === null) {
       return;
@@ -335,7 +324,7 @@ export class GenerarExamenComponent implements OnInit {
     this.inscripcionService
       .obtenerInscripcion(this.aluId, this.tipCurId)
       .subscribe((inscripcion: Inscripcion) => {
-        console.log('inscripcion: ', inscripcion);
+
         this.mostrarExamen = true;
         this.examenConCosto = inscripcion.cantidadExamenes > 0;
         this.tituloExamen = this.examenConCosto ? 'con' : 'sin';
@@ -349,7 +338,6 @@ export class GenerarExamenComponent implements OnInit {
   }
 
   generarExamen(event: Event) {
-    console.log(event);
 
     if (this.form.invalid) {
       return;
@@ -362,9 +350,6 @@ export class GenerarExamenComponent implements OnInit {
         return;
       }
 
-      console.log(this.agendaClase.AluId);
-      console.log(this.aluId);
-      console.log(this.agendaClase);
 
       // Si reserva clase previa, evaluo si tiene clase anterior para la hora inmediatamente anterior
       if (this.reservarClasePrevia.value) {
@@ -440,7 +425,7 @@ export class GenerarExamenComponent implements OnInit {
       this.instructorService
         .getDisponibilidadInstructor(auxAgendaClase, 1)
         .subscribe((res: { ClasesEstimadas: ClaseEstimada[] }) => {
-          console.log('res.ClasesEstimadas: ', res.ClasesEstimadas);
+
           const arrayPlano: {
             instructorCodigo?: string;
             instructorNombre?: string;
@@ -506,12 +491,12 @@ export class GenerarExamenComponent implements OnInit {
       reservarClasePrevia: this.reservarClasePrevia.value,
       clasesAReagendar: this.clasesAReagendar,
     };
-    console.log(': clasesAReagendar: ', this.clasesAReagendar);
+
 
     this.inscripcionService
       .generarExamen(generarExamen)
       .subscribe((response: ResponseSDTCustom) => {
-        console.log(response);
+
         if (response.errorCode === 0) {
           mensajeConfirmacion('Excelente!', response.errorMensaje).then(() =>
             this.dialogRef.close()

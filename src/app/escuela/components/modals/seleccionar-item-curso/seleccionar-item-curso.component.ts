@@ -44,7 +44,6 @@ export class SeleccionarItemCursoComponent implements OnInit {
     public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: any) {
 
-    console.log('this.data: ', this.data);
 
 
     this.filtro = this.data.filtro;

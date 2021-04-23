@@ -23,25 +23,20 @@ export class SeleccionarItemComponent {
   }
 
   onSeleccionar(data: SeleccionarRow) {
-    console.log(data);
 
-    if (data.selected) {
-      // this.acuService
-      //   .getItem(data.id)
-      //   .subscribe((actividad) => this.dialogRef.close(actividad));
-    } else {
+    if (!data.selected) {
       this.dialogRef.close();
     }
   }
 
   getItems() {
     this.acuService.getItems().subscribe((itemsCurso: any) => {
-      console.log(itemsCurso);
 
       this.items = itemsCurso.map((item) => ({
         ...item,
         id: item.itemId,
       }));
+
     });
   }
 

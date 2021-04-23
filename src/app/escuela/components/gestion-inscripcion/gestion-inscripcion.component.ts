@@ -41,13 +41,9 @@ export class GestionInscripcionComponent implements OnInit {
     private acuService: AcuService,
     public dialog: MatDialog,
     private router: Router) {
-    console.log('constructor gestion-inscripcion');
-
-
-  }
+      }
 
   ngOnInit() {
-    console.log('ngoninit gestion-inscripcion');
     const event = this.ejecutoEvent(null);
 
 
@@ -90,7 +86,6 @@ export class GestionInscripcionComponent implements OnInit {
     this.inscripcionService.obtenerInscripciones(pageSize, pageNumber, filtro)
       .subscribe((res: any) => {
 
-        console.log('getInscripciones : ', res);
         this.length = res.Cantidad;
         this.actualizarDatasource(res, pageSize, pageNumber - 1);
 
@@ -101,10 +96,8 @@ export class GestionInscripcionComponent implements OnInit {
   ejecutoEvent(pageEvento: PageEvent) {
     this.pageEvent = pageEvento;
     const filter = (this.filtro) ? this.filtro : '';
-    console.log(`ejecuto Event: ${pageEvento}`);
 
     if (pageEvento) {
-      console.log(` 1) ejecuto Event: ${pageEvento}`);
       let index = pageEvento.pageIndex;
       this.pageSize = pageEvento.pageSize;
       index += 1;
@@ -116,19 +109,14 @@ export class GestionInscripcionComponent implements OnInit {
       this.getInscripciones(pageEvento.pageSize, index, filter);
 
     } else {
-      console.log(` 2) ejecuto Event: ${pageEvento}`);
       this.getInscripciones(this.pageSize, 1, '');
-
     }
     return pageEvento;
 
   }
 
   actualizarDatasource(data, size?, index?) {
-    console.log('Inscripciones: ', data);
-    console.log('Inscripciones: ', data.Inscripciones);
-    const inscripciones: Inscripcion[] = data.Inscripciones;
-    console.log('2 Inscripciones: ', inscripciones);
+
     this.dataSource = data.Inscripciones;
     this.verInscripciones = true;
 
@@ -155,7 +143,7 @@ export class GestionInscripcionComponent implements OnInit {
   }
 
   nuevoPlanClase({ EscAluCurId, AluId, TipCurId }: Inscripcion){
-    console.log( EscAluCurId, AluId, TipCurId );
+
     this.inscripcionService.obtenerInscripcionById( EscAluCurId, AluId, TipCurId ).subscribe( inscripcion => {
       const dialogRef = this.dialog.open(GenerarNuevoPlanClasesComponent, {
         data: {
@@ -163,10 +151,7 @@ export class GestionInscripcionComponent implements OnInit {
         }
       });
 
-      dialogRef.afterClosed().subscribe(result => {
-       console.log(result);
 
-      });
 
     });
 

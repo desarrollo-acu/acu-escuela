@@ -38,7 +38,6 @@ export class CantidadClasesPorAlumnoPorMesComponent implements OnInit {
     e.preventDefault();
 
     const {fechaDesde, fechaHasta} = this.form.value;
-    console.log(this.form.value);
 
     this.reportesService.alumnosEnCurso(fechaDesde, fechaHasta).subscribe(({ dataBase64, filename}: any) => downloadFileFromBase64(dataBase64, filename));
 

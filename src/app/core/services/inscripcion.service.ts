@@ -47,9 +47,7 @@ export class InscripcionService {
   //wsGenerarClaseAdicional
 
   generarInscripcion(inscripcion: InscripcionCurso) {
-    console.log('::::: inscripción: ', inscripcion);
-    console.log('::::: sede: ', inscripcion.sede);
-    console.log('::::: escCurFchIns: ', inscripcion.escCurFchIns);
+
 
     return this.http.post(`${environment.url_ws}/wsGenerarInscripcion`, {
       GenerarInscripcion: {

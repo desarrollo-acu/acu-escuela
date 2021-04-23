@@ -10,6 +10,7 @@ import { filter } from 'rxjs/operators';
 import { MatSelectChange } from '@angular/material/select';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { environment } from '@environments/environment';
+import { generateEstadosSiNo } from '../../../utils/utils-functions';
 
 @Component({
   selector: 'app-gestion-instructor',
@@ -45,7 +46,7 @@ export class GestionInstructorComponent implements OnInit {
 
     this.buildForm();
     this.getInstructores('S');
-    this.generateEstados();
+    this.estados = generateEstadosSiNo();
 
   }
 
@@ -56,16 +57,13 @@ export class GestionInstructorComponent implements OnInit {
     });
   }
   verActivos(event: MatSelectChange) {
-    console.log('event: ', event);
 
     const filterValue = event.value;
-    console.log('filterValue: ', filterValue);
     const instructores = (filterValue === '-')
       ? this.instructores
       : this.instructores.filter(instructor => instructor.EscInsAct === filterValue);
 
 
-    console.log('instructores: ', instructores);
     this.dataSource = new MatTableDataSource(instructores);
 
     this.dataSource.paginator = this.paginator;
@@ -101,13 +99,8 @@ export class GestionInstructorComponent implements OnInit {
           .then((confirm) => {
             if (confirm.isConfirmed) {
               this.instructorService.gestionInstructor(modo, instructor).subscribe((res: any) => {
-                console.log('res eli:', res);
 
-                mensajeConfirmacion('Ok', res.Instructor.ErrorMessage).then((res2) => {
-
-                  this.getInstructores(this.filtro);
-
-                });
+                mensajeConfirmacion('Ok', res.Instructor.ErrorMessage).then(() => this.getInstructores(this.filtro));
 
               });
             }
@@ -121,40 +114,12 @@ export class GestionInstructorComponent implements OnInit {
 
   }
 
-  generateEstados() {
-    const estado0 = {
-      id: 0,
-      value: '-',
-      description: 'Todos'
-    };
-
-    this.estados.push(estado0);
-
-    const estado1 = {
-      id: 1,
-      value: 'S',
-      description: 'Si'
-    };
-    this.estados.push(estado1);
-
-    const estado2 = {
-      id: 2,
-      value: 'N',
-      description: 'No'
-    };
-    this.estados.push(estado2);
-
-
-
-    console.log('estados: ', this.estados);
-  }
 
   getInstructores(EscInsAct?: string) {
 
     this.verInstructor = false;
     this.instructorService.getInstructores()
       .subscribe((instructores: Instructor[]) => {
-        console.log('instructores instructoinstructores: ', instructores);
 
 
         this.verInstructor = true;

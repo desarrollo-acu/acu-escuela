@@ -1,9 +1,19 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {
+  MatDialogRef,
+  MatDialog,
+  MAT_DIALOG_DATA,
+} from '@angular/material/dialog';
 import { AgendaClase } from '@core/model/agenda-clase.model';
-import { ClaseEstimada, ClaseEstimadaDetalle } from '@core/model/clase-estimada.model';
-import { GenerarExamenItems, GenerarExamen } from '@core/model/generar-examen.model';
+import {
+  ClaseEstimada,
+  ClaseEstimadaDetalle,
+} from '@core/model/clase-estimada.model';
+import {
+  GenerarExamenItems,
+  GenerarExamen,
+} from '@core/model/generar-examen.model';
 import { Inscripcion } from '@core/model/inscripcion.model';
 import { Instructor } from '@core/model/instructor.model';
 import { Movil } from '@core/model/movil.model';
@@ -20,7 +30,11 @@ import { SeleccionarAlumnoComponent } from '@escuela/components/modals/seleccion
 import { SeleccionarCursoComponent } from '@escuela/components/modals/seleccionar-curso/seleccionar-curso.component';
 import { SeleccionarInstructorComponent } from '@escuela/components/modals/seleccionar-instructor/seleccionar-instructor.component';
 import { SeleccionarMovilComponent } from '@escuela/components/modals/seleccionar-movil/seleccionar-movil.component';
-import { confirmacionUsuario, mensajeConfirmacion, errorMensaje } from '@utils/sweet-alert';
+import {
+  confirmacionUsuario,
+  mensajeConfirmacion,
+  errorMensaje,
+} from '@utils/sweet-alert';
 import Swal from 'sweetalert2';
 import { SeleccionarInscripcionComponent } from '../seleccionar-inscripcion/seleccionar-inscripcion.component';
 import { GenerarClaseAdicional } from '../../../core/model/generar-clase-adicional.model';
@@ -29,7 +43,7 @@ import { mensajeWarning } from '../../../utils/sweet-alert';
 @Component({
   selector: 'app-generar-clase-adicional',
   templateUrl: './generar-clase-adicional.component.html',
-  styleUrls: ['./generar-clase-adicional.component.scss']
+  styleUrls: ['./generar-clase-adicional.component.scss'],
 })
 export class GenerarClaseAdicionalComponent implements OnInit {
   form: FormGroup;
@@ -59,50 +73,76 @@ export class GenerarClaseAdicionalComponent implements OnInit {
     this.agendaClase = this.data.agendaClase;
     this.esInstructor = this.data.esInstructor;
 
-
     this.buildForm();
   }
 
   ngOnInit(): void {}
 
-  get fechaClase() { return this.form.get('fechaClase'); }
+  get fechaClase() {
+    return this.form.get('fechaClase');
+  }
 
-  get hora() { return this.form.get('hora'); }
+  get hora() {
+    return this.form.get('hora');
+  }
 
-  get movil() { return this.form.get('movil'); }
+  get movil() {
+    return this.form.get('movil');
+  }
 
-  get cursoId() { return this.form.get('cursoId'); }
+  get cursoId() {
+    return this.form.get('cursoId');
+  }
 
-  get cursoNombre() { return this.form.get('cursoNombre'); }
+  get cursoNombre() {
+    return this.form.get('cursoNombre');
+  }
 
-  get alumnoNumero() { return this.form.get('alumnoNumero'); }
+  get alumnoNumero() {
+    return this.form.get('alumnoNumero');
+  }
 
-  get alumnoNombre() { return this.form.get('alumnoNombre'); }
+  get alumnoNombre() {
+    return this.form.get('alumnoNombre');
+  }
 
-  get numeroClase() { return this.form.get('numeroClase'); }
+  get numeroClase() {
+    return this.form.get('numeroClase');
+  }
 
-  get estadoClase() { return this.form.get('estadoClase'); }
+  get estadoClase() {
+    return this.form.get('estadoClase');
+  }
 
-  get escInsId() { return this.form.get('escInsId'); }
+  get escInsId() {
+    return this.form.get('escInsId');
+  }
 
-  get escInsNom() { return this.form.get('escInsNom'); }
+  get escInsNom() {
+    return this.form.get('escInsNom');
+  }
 
-  get claseAdicional() { return this.form.get('claseAdicional'); }
+  get claseAdicional() {
+    return this.form.get('claseAdicional');
+  }
 
-  get tipoClase() { return this.form.get('tipoClase'); }
+  get tipoClase() {
+    return this.form.get('tipoClase');
+  }
 
-  get reservarClasePrevia() { return this.form.get('reservarClasePrevia'); }
+  get reservarClasePrevia() {
+    return this.form.get('reservarClasePrevia');
+  }
 
-  get observaciones() { return this.form.get('observaciones'); }
+  get observaciones() {
+    return this.form.get('observaciones');
+  }
 
   private buildForm() {
     const hora =
       this.agendaClase.Hora < 10
         ? `0${this.agendaClase.Hora}`
         : this.agendaClase.Hora;
-
-      console.log('EscInsId:: ', this.agendaClase.EscInsId);
-      console.log('EsAgCuInsId:: ', this.agendaClase.EsAgCuInsId);
 
     this.form = this.formBuilder.group({
       fechaClase: [this.agendaClase.FechaClase],
@@ -134,8 +174,6 @@ export class GenerarClaseAdicionalComponent implements OnInit {
 
     this.alumnoNombre.disable();
     this.escInsNom.disable();
-
-    console.log('this.escInsId:: ', this.escInsId.value);
   }
 
   seleccionarInstructor() {
@@ -170,12 +208,9 @@ export class GenerarClaseAdicionalComponent implements OnInit {
     this.inscripcionService
       .getInscripcionesByAlumno(this.aluId)
       .subscribe((res: any) => this.openDialogInscripciones(res.Inscripciones));
-
   }
 
   private openDialogInscripciones(inscripciones) {
-    console.log('respuesta inscripciones::: ', inscripciones);
-
     const dialogRef = this.dialog.open(SeleccionarInscripcionComponent, {
       height: 'auto',
       width: '700px',
@@ -184,19 +219,17 @@ export class GenerarClaseAdicionalComponent implements OnInit {
       },
     });
 
-    dialogRef.afterClosed().subscribe((inscripcion) => {
-      this.addInfoCursoToForm(inscripcion);
-    });
+    dialogRef
+      .afterClosed()
+      .subscribe((inscripcion) => this.addInfoCursoToForm(inscripcion));
   }
 
   seleccionarAlumno() {
-    this.alumnoService.obtenerAlumnos(5, 1, '').subscribe((res: any) => {
-      console.log('res: ', res);
-      console.log('res.Cantidad: ', res.Cantidad);
-      console.log('res.Alumnos: ', res.Alumnos);
-
-      this.openDialogAlumnos(res.Alumnos, res.Cantidad);
-    });
+    this.alumnoService
+      .obtenerAlumnos(5, 1, '')
+      .subscribe((res: any) =>
+        this.openDialogAlumnos(res.Alumnos, res.Cantidad)
+      );
   }
 
   private openDialogAlumnos(alumnos, cantidad) {
@@ -210,8 +243,6 @@ export class GenerarClaseAdicionalComponent implements OnInit {
     });
 
     alumnosDialogRef.afterClosed().subscribe((alumno) => {
-      console.log('1.alumno: ' + alumno);
-      console.log('2.alumno: ' + JSON.stringify(alumno));
       if (alumno) {
         this.aluId = alumno.AluId;
         this.obtenerInscripcion();
@@ -225,10 +256,8 @@ export class GenerarClaseAdicionalComponent implements OnInit {
 
   obtenerCurso() {
     const cursoId = this.form.get('cursoId').value;
-    console.log('obtenerCurso - cursoId: ', cursoId);
     if (cursoId !== '') {
       this.cursoService.getCurso(cursoId).subscribe((curso: any) => {
-        console.log('obtenerCurso - curso: ', curso);
         if (curso.TipCurId === '0') {
           return Swal.fire({
             icon: 'warning',
@@ -252,10 +281,6 @@ export class GenerarClaseAdicionalComponent implements OnInit {
   }
 
   obtenerInscripcion() {
-
-    console.log(this.aluId);
-    console.log(this.tipCurId);
-
     if (this.aluId === null || this.tipCurId === null) {
       return;
     }
@@ -263,7 +288,6 @@ export class GenerarClaseAdicionalComponent implements OnInit {
     this.inscripcionService
       .obtenerInscripcion(this.aluId, this.tipCurId)
       .subscribe((inscripcion: Inscripcion) => {
-        console.log('inscripcion: ', inscripcion);
         this.mostrarExamen = true;
         this.examenConCosto = inscripcion.cantidadExamenes > 0;
         this.tituloExamen = this.examenConCosto ? 'con' : 'sin';
@@ -277,7 +301,6 @@ export class GenerarClaseAdicionalComponent implements OnInit {
   }
 
   generarClaseAdicional(event: Event) {
-
     if (this.form.invalid) {
       return;
     }
@@ -289,39 +312,35 @@ export class GenerarClaseAdicionalComponent implements OnInit {
         return;
       }
 
+      const generarClaseAdicional: GenerarClaseAdicional = {
+        fecha: this.agendaClase.FechaClase,
+        hora: this.agendaClase.Hora,
+        movilSeleccionado: this.movil.value,
 
-    const generarClaseAdicional: GenerarClaseAdicional = {
-      fecha: this.agendaClase.FechaClase,
-      hora: this.agendaClase.Hora,
-      movilSeleccionado: this.movil.value,
+        alumnoClaseAdicional: this.aluId,
+        cursoClaseAdicional: this.tipCurId,
+        instructorSeleccionado: this.escInsId.value,
+        observacionesClaseAdicional: this.observaciones.value,
+        claseAnterior: this.agendaClase,
+        escAluCurId: this.escAluCurId,
+        usrId: localStorage.getItem('usrId'),
+      };
 
-      alumnoClaseAdicional: this.aluId,
-      cursoClaseAdicional: this.tipCurId,
-      instructorSeleccionado: this.escInsId.value,
-      observacionesClaseAdicional: this.observaciones.value,
-      claseAnterior: this.agendaClase,
-      escAluCurId: this.escAluCurId,
-      usrId: localStorage.getItem('usrId'),
-
-    };
-
-    this.inscripcionService
-      .generarClaseAdicional(generarClaseAdicional)
-      .subscribe((response: ResponseSDTCustom) => {
-        console.log(response);
-        if (response.errorCode === 0) {
-          mensajeConfirmacion('Excelente!', response.errorMensaje).then(() =>
-            this.dialogRef.close()
-          );
-        } else if(response.errorCode === 2){
-          mensajeWarning('Atención', response.errorMensaje ).then(() =>
-          this.dialogRef.close()
-        );
-        }else{
-          errorMensaje('Error', response.errorMensaje);
-        }
-      });
-
+      this.inscripcionService
+        .generarClaseAdicional(generarClaseAdicional)
+        .subscribe((response: ResponseSDTCustom) => {
+          if (response.errorCode === 0) {
+            mensajeConfirmacion('Excelente!', response.errorMensaje).then(() =>
+              this.dialogRef.close()
+            );
+          } else if (response.errorCode === 2) {
+            mensajeWarning('Atención', response.errorMensaje).then(() =>
+              this.dialogRef.close()
+            );
+          } else {
+            errorMensaje('Error', response.errorMensaje);
+          }
+        });
     });
   }
 
@@ -335,15 +354,11 @@ export class GenerarClaseAdicionalComponent implements OnInit {
     finExamen?: boolean
   ) {
     return new Promise((resolve, reject) => {
-      const auxAgendaClase: AgendaClase = {
-        ...agendaClase,
-        // EsAgCuInsId,
-      };
+      const auxAgendaClase: AgendaClase = { ...agendaClase };
 
       this.instructorService
         .getDisponibilidadInstructor(auxAgendaClase, 1)
         .subscribe((res: { ClasesEstimadas: ClaseEstimada[] }) => {
-          console.log('res.ClasesEstimadas: ', res.ClasesEstimadas);
           const arrayPlano: {
             instructorCodigo?: string;
             instructorNombre?: string;
@@ -377,10 +392,8 @@ export class GenerarClaseAdicionalComponent implements OnInit {
                 detalle: nuevaClase,
               };
               this.clasesAReagendar.push(claseAReagendar);
-
             });
         });
     });
   }
-
 }

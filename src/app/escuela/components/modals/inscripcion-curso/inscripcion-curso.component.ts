@@ -100,10 +100,7 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
     public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    console.log(
-      'Estoy en el constructor de agenda-curso, la res es: ',
-      this.data
-    );
+
     this.inscripcionCurso = this.data.inscripcionCurso;
 
     // tslint:disable-next-line: max-line-length
@@ -430,7 +427,7 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
           .afterClosed()
           .subscribe(
             (result: { continuar: boolean; claseEstimada: ClaseEstimada }) => {
-              console.log('clasesEstimadas afterClosed result:: ', result);
+
 
               this.salir(result);
 
@@ -445,7 +442,7 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
                 });
 
               this.inscripcionCurso.ClasesEstimadas = result.claseEstimada;
-                console.log('openDialogFacturaRUT: ');
+
 
               this.openDialogFacturaRUT();
             }
@@ -455,32 +452,27 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
 
   private openDialogFacturaRUT() {
 
-    console.log('openDialogFacturaRUT: 1');
+
     const facturaRUTDialogRef = this.dialog.open(FacturaRutComponent, {
       height: 'auto',
       width: '700px',
     });
 
-    console.log('openDialogFacturaRUT:2');
     facturaRUTDialogRef
       .afterClosed()
       .subscribe(
         (result: { continuar: boolean; factura: ResponseFacturaRUT }) => {
           this.salir(result);
 
-          console.log('openDialogFacturaRUT:3');
           if (!(result && result.continuar)) {
             this.clasesEstimadas();
             return;
           } else {
-            console.log('openDialogFacturaRUT:4');
             this.inscripcionCurso.facturaEstadoPendiente = false;
             if (result.factura) {
-              console.log('openDialogFacturaRUT:5');
               this.inscripcionCurso.FacturaRut = result.factura;
 
               if (result.factura.generaFactura) {
-                console.log('openDialogFacturaRUT:6');
                 this.inscripcionCurso.facturaEstadoPendiente = true;
                 this.cursoService
                   .getItemsPorCurso(this.inscripcionCurso.TipCurId)
@@ -512,7 +504,6 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
       UsrId: this.inscripcionCurso.UsrId,
     };
 
-    console.log('openDialogFacturaRUT:7');
     const seleccionarItemsFactura = this.dialog.open(
       SeleccionarItemsFacturarComponent,
       {
@@ -528,18 +519,15 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
       }
     );
 
-    console.log('openDialogFacturaRUT:8');
     seleccionarItemsFactura
       .afterClosed()
       .subscribe((result: { continuar: boolean; itemFacturar: any }) => {
-        console.log('openDialogFacturaRUT:9');
         this.salir(result);
         if (!(result || result.continuar)) {
           this.openDialogFacturaRUT();
           return;
         } else {
 
-          console.log('openDialogFacturaRUT:10');
           this.inscripcionCurso.facturaEstadoPendiente = true;
           if (result && result.itemFacturar) {
             this.inscripcionCurso.SeleccionarItemsFactura = {
@@ -623,7 +611,6 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
     this.inscripcionCurso.fechaPagoLicencia = this.fechaPagoLicenciaField.value;
 
 
-    console.log('openDialogFacturaRUT:11');
     this.inscripcionService
       .generarInscripcion(this.inscripcionCurso)
       .subscribe((res: any) => {
@@ -634,7 +621,6 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
   }
 
   private salir(result) {
-    console.log('salir result: ', result);
 
     if (result && result.salir) {
       this.dialogRef.close();

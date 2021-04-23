@@ -16,8 +16,6 @@ export class AutenticacionService {
   getUserId = () => localStorage.getItem('usrId');
 
   iniciarSesion(UsrId: string, Pass: string) {
-    console.log('User: ', UsrId);
-    console.log('Pass: ', Pass);
 
     return this.http.post(`${environment.url_ws}/wsAutenticacionUsuario`, {
       tipo: 'inicio-escuela',

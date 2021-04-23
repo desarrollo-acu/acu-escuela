@@ -60,12 +60,8 @@ export class AgendaCursoComponent implements OnInit, OnDestroy {
     public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    console.log(
-      'Estoy en el constructor de agenda-curso, la res es: ',
-      this.data
-    );
+
     this.agendaCurso = this.data.agendaCurso;
-    console.log('   this.agendaCurso es: ', this.agendaCurso);
     const day = Number(
       this.agendaCurso.FechaClase.substring(
         this.agendaCurso.FechaClase.length - 2,
@@ -139,15 +135,12 @@ export class AgendaCursoComponent implements OnInit, OnDestroy {
   }
 
   seleccionarCurso() {
-    this.cursoService.getCursos().subscribe((cursos: Curso[]) => {
-      console.log('Cursos: ', cursos);
-
-      this.openDialogCursos(cursos);
-    });
+    this.cursoService.getCursos()
+    .subscribe((cursos: Curso[]) => this.openDialogCursos(cursos));
   }
 
   private openDialogCursos(cursos: Curso[]) {
-    console.log('2 Cursos: ', cursos);
+
     const cursosDialogRef = this.dialog.open(SeleccionarCursoComponent, {
       height: 'auto',
       width: '700px',
@@ -179,12 +172,10 @@ export class AgendaCursoComponent implements OnInit, OnDestroy {
   }
 
   obtenerCurso() {
-    console.log('cursoId: ', this.cursoIdField.value);
     if (this.cursoIdField.value !== 0) {
       this.cursoService
         .getCurso(this.cursoIdField.value)
         .subscribe((res: any) => {
-          console.log('res: ', res);
           this.agendaCurso.TipCurId = res.TipCurId;
           this.cursoNombre = this.agendaCurso.TipCurNom = res.TipCurNom;
 
@@ -198,25 +189,17 @@ export class AgendaCursoComponent implements OnInit, OnDestroy {
 
   guardarClase(event: Event) {
     event.preventDefault();
-    console.log('Submit, form valid: ', this.form.valid);
-    console.log('Submit, form value: ', this.form.value);
-    console.log('Submit, form value.cursoId: ', this.form.value.cursoId);
 
     if (this.form.invalid) {
       return;
     }
 
-    const existe: boolean = JSON.parse(localStorage.getItem('existe'));
 
     if (this.form.valid) {
-      console.log('form.value: ', this.form.value);
       this.agendaCurso.UsrId = localStorage.getItem('usrId');
-      console.log('this.agendaCurso: ', this.agendaCurso);
       this.acuService
         .guardarAgendaInstructor(this.agendaCurso)
         .subscribe((res: any) => {
-          console.log('res: ', res);
-          console.log('mensaje: ', res.mensaje);
           this.agendaCurso.mensaje = res.mensaje;
           this.dialogRef.close(res);
         });

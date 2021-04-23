@@ -22,9 +22,7 @@ export class InstructorService {
 
   licenciaInstructor(insId: string) {
     const fechaClaseStr = localStorage.getItem('fechaClase');
-    console.log('fechastr: ', fechaClaseStr);
-    const fechaClase = Date.parse(fechaClaseStr);
-    console.log('fechaClase: ', fechaClase);
+
     return this.http.post(`${environment.url_ws}/wsLicenciaInstructor`, {
       NroInstructor: insId,
       FchClase: fechaClaseStr,
@@ -36,14 +34,9 @@ export class InstructorService {
     const horaClaseStr = localStorage.getItem('horaClase');
     const movilCodStr = localStorage.getItem('movilCod');
 
-    const fechaClase = Date.parse(fechaClaseStr);
     const horaClase = parseInt(horaClaseStr, 10);
     const movilCod = parseInt(movilCodStr, 10);
-    console.log('insId: ', insId);
-    console.log('fechaClaseStr: ', fechaClaseStr);
-    console.log('horaClase: ', horaClase);
-    console.log('movilCod: ', movilCod);
-    console.log('fechaClase: ', fechaClase);
+
     return this.http.post(`${environment.url_ws}/wsInstructorYaAsignado`, {
       NroInstructor: insId,
       FchClase: fechaClaseStr,
@@ -53,7 +46,7 @@ export class InstructorService {
   }
 
   getDisponibilidadInstructor(clase: AgendaClase, cantidad: number) {
-    console.log('clase: ', clase);
+
     return this.http.post(
       `${environment.url_ws}/obtenerDisponibilidadPorInstructor`,
       {
@@ -88,7 +81,7 @@ export class InstructorService {
   }
 
   getClasesEstimadas(inscripcion: InscripcionCurso) {
-    console.log('inscripción: ', inscripcion);
+
     return this.http.post(
       `${environment.url_ws}/obtenerDisponibilidadInstructor`,
       {

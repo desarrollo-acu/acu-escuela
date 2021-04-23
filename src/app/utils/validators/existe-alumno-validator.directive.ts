@@ -20,8 +20,6 @@ export function existeAlumnoValidator(
   ): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> => {
     return alumnoService.existeAlumno(control.value).pipe(
       map((res: any) => {
-        console.log('res: ', res);
-        console.log('res.existe: ', res.existe);
         // tslint:disable-next-line: object-literal-key-quotes
         return !res.existe ? { existeAlumno: true } : null;
       })

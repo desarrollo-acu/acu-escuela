@@ -46,8 +46,6 @@ export class InscripcionesAlumnoComponent implements OnInit {
 
   verDisponibilidad(inscripcion: AgendaClase) {
 
-    console.log('inscripcion: ', inscripcion);
-
     const disponibilidadDialogRef = this.dialog.open(DisponibilidadAlumnoComponent, {
       height: 'auto',
       width: '700px',
@@ -56,14 +54,9 @@ export class InscripcionesAlumnoComponent implements OnInit {
       }
     });
 
-    disponibilidadDialogRef.afterClosed().subscribe(result => {
-      console.log('result: ', result);
-
-    });
   }
 
   verPlanDeClases(inscripcion: AgendaClase) {
-    console.log('inscripcion: ', inscripcion);
 
     this.acuService.getPDFPlanDeClases(inscripcion.planDeClases).subscribe(pdf => {
       openSamePDF(pdf, 'PlanDeClases');

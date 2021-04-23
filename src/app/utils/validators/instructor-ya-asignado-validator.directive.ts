@@ -11,8 +11,6 @@ export function instructorYaAsignadoValidator(instructorService: InstructorServi
     return instructorService.instructorYaAsignado(control.value).pipe(
       map(
         (res: any) => {
-          console.log('res: ', res);
-          console.log('res.yaAsignado: ', res.yaAsignado);
           // tslint:disable-next-line: object-literal-key-quotes
           return res.yaAsignado ? { 'instructorYaAsignado': true } : null;
         })

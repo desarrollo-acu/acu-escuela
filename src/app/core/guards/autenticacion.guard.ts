@@ -21,17 +21,12 @@ export class AutenticacionGuard implements CanActivate {
     const usrId = localStorage.getItem('usrId');
     let infoUsuario: AutenticacionResponse = {};
 
-    this.autenticacionService.estaLogueado(usrId).subscribe((res: any) => {
-      const authResponse: AutenticacionResponse = res.authResponse;
-      console.log('authResponse: : ', authResponse);
-      console.log('authResponse: esta-loguedo: ', authResponse.estaLogueado);
-
+    this.autenticacionService.estaLogueado(usrId).subscribe(({authResponse}: any) => {
       localStorage.setItem('infoUsuario', JSON.stringify(authResponse));
     });
 
     infoUsuario = JSON.parse(localStorage.getItem('infoUsuario'));
-    console.log('guard-medico infoUsuario: ', infoUsuario);
-    console.log('guard-medico infoUsuario.estaLogueado: ', infoUsuario.estaLogueado);
+
     if (!(infoUsuario.estaLogueado)) {
       this.router.navigate(['/login']);
     }

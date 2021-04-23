@@ -44,7 +44,6 @@ export class InstructorHorasLibresComponent implements OnInit {
     public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    console.log('this.data.clasesEstimadas: ', this.data.clasesEstimadas);
     this.detalle = this.data.clasesEstimadas.detalle;
 
     // this.alumno = this.data.alumno ? this.data.alumno : '';
@@ -52,7 +51,7 @@ export class InstructorHorasLibresComponent implements OnInit {
     this.titulo = this.data.alumno
       ? `Seleccionar hora libre para: ${this.data.alumno}. `
       : '';
-    this.titulo += `Próximas horas libres de: ${this.data.clasesEstimadas.instructorCodigo} - 
+    this.titulo += `Próximas horas libres de: ${this.data.clasesEstimadas.instructorCodigo} -
     ${this.data.clasesEstimadas.instructorNombre}`;
 
     // Assign the data to the data source for the table to render
@@ -72,25 +71,6 @@ export class InstructorHorasLibresComponent implements OnInit {
     }
   }
 
-  verDetalle(detalle: ClaseEstimadaDetalle[]) {
-    console.log('detalle: ', detalle);
-
-    // const clasesEstimadasDialogRef = this.dialog.open(ClasesEstimadasDetalleComponent, {
-    //   height: 'auto',
-    //   width: '700px',
-    //   data: {
-    //     detalle
-    //   }
-    // });
-
-    // clasesEstimadasDialogRef.afterClosed().subscribe((result: any) => {
-    //   // this.alumno = result;
-    //   console.log('1.response: ' + result);
-    //   console.log('2.response: ' + JSON.stringify(result));
-    //   console.log(`2. response ${result}`);
-
-    // });
-  }
 
   onNoClick(): void {
     this.dialogRef.close();

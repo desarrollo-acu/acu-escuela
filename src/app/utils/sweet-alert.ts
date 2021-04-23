@@ -17,10 +17,7 @@ export function mensajeConfirmacion(title, text) {
         text,
         icon: 'success',
         timer: 5000,
-        showConfirmButton: false,
-        onClose: () => {
-            console.log('Cieerro antes de timer');
-        }
+        showConfirmButton: false
     });
 }
 export function mensajeWarning(title, text) {
@@ -41,8 +38,6 @@ export function errorMensaje(title, text) {
         icon: 'error',
         timer: 5000,
         showConfirmButton: false,
-        onClose: () => {
-        }
     });
 
 }
@@ -65,8 +60,6 @@ export function customMensaje(
         showConfirmButton,
         confirmButtonText,
         cancelButtonText,
-        onClose: () => {
-        }
     });
 
 }

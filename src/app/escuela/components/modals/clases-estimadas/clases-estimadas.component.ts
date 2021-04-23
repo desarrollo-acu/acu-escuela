@@ -49,11 +49,7 @@ export class ClasesEstimadasComponent implements OnInit {
     private acuService: AcuService,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    console.log('this.data.clasesEstimadas: ', this.data.clasesEstimadas);
-    console.log(
-      'this.data.clasesEstimadas.EscInsId: ',
-      this.data.clasesEstimadas.ClasesEstimadas
-    );
+
 
     // Assign the data to the data source for the table to render
     this.dataSource = new MatTableDataSource(
@@ -75,7 +71,6 @@ export class ClasesEstimadasComponent implements OnInit {
   }
 
   verPDF(claseEstimada: ClaseEstimada) {
-    console.log('claseEstimada: ', claseEstimada);
 
     this.acuService.getPDFPlanDeClases(claseEstimada).subscribe((pdf: any) => {
       openSamePDF(pdf, 'PlanDeClases');
@@ -83,7 +78,6 @@ export class ClasesEstimadasComponent implements OnInit {
   }
 
   verDetalle(detalle: ClaseEstimadaDetalle[]) {
-    console.log('detalle: ', detalle);
 
     const clasesEstimadasDialogRef = this.dialog.open(
       ClasesEstimadasDetalleComponent,
@@ -96,12 +90,6 @@ export class ClasesEstimadasComponent implements OnInit {
       }
     );
 
-    clasesEstimadasDialogRef.afterClosed().subscribe((result: any) => {
-      // this.alumno = result;
-      console.log('1.response: ' + result);
-      console.log('2.response: ' + JSON.stringify(result));
-      console.log(`2. response ${result}`);
-    });
   }
 
   seleccionarEstimacion(claseEstimada: ClaseEstimada) {

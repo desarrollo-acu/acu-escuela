@@ -45,7 +45,6 @@ export class AbmInscripcionComponent implements OnInit {
     if (!this.primeraVez) {
 
       this.subscription = this.inscripcionService.inscripcionCurrentData.subscribe(({ modo, inscripcion }) => {
-        console.log(modo);
 
         this.primeraVez = true;
 

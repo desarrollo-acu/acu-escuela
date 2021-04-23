@@ -60,7 +60,6 @@ export class AbmExamenComponent implements OnInit {
 
 
     this.route.queryParams.subscribe((param) => {
-      console.log('param:: ', param);
 
       this.examen = {
         ALUID: param.AluId,

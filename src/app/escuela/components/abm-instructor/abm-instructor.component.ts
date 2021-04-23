@@ -101,8 +101,6 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
           this.primeraVez = true;
           this.mode = data.modo;
 
-          console.log('data:: ', data);
-
           this.changeForm(data.modo, data.instructor);
 
         });
@@ -290,7 +288,6 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
 
   confirmar(confirma: boolean, item?: InstructorItem, horario?: InstructorHorario) {
 
-    console.log(horario);
 
 
     if (confirma) {
@@ -609,9 +606,6 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
 
   guardarInstructor(event: Event) {
     event.preventDefault();
-    console.log('instructorForm:: ', this.instructorForm);
-    console.log('instructorForm.valid:: ', this.instructorForm.valid);
-    console.log('instructorForm.errors:: ', this.instructorForm.errors);
 
 
     if (this.instructorForm.valid) {

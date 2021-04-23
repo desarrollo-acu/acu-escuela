@@ -108,7 +108,6 @@ export class SeleccionarSocioComponent implements AfterViewInit, OnInit, AfterVi
     this.pageEvent = pageEvento;
     const filter = (this.filtro) ? this.filtro : '';
 
-    console.log('ejecutoEvent, pageEvento: ', pageEvento);
     if (pageEvento) {
       let index = pageEvento.pageIndex;
       this.pageSize = pageEvento.pageSize;
@@ -118,7 +117,6 @@ export class SeleccionarSocioComponent implements AfterViewInit, OnInit, AfterVi
       if (pageEvento.previousPageIndex > pageEvento.pageIndex) {
         index -= 1;
       }
-      console.log('index: ', index);
 
       this.getSocios(pageEvento.pageSize, index, filter);
     }
@@ -149,29 +147,7 @@ export class SeleccionarSocioComponent implements AfterViewInit, OnInit, AfterVi
 
     this.dataSource = new MatTableDataSource(data);
     this.dataSource.paginator = this.paginator;
-    // this.dataSource.paginator.length = cantidad;
     this.dataSource.sort = this.sort;
 
-    /*
-
-
-    this.dataSource = data.Alumnos;
-    // this.pageIndex =  pageIndex;
-    if (size) {
-      this.pageSize = size;
-    }
-    console.log('cantidad: ', data.Cantidad);
-
-    this.length = data.Cantidad;
-    console.log('this.length: ', this.length);
-
-    // this.dataSource = new MatTableDataSource(data);
-    if (index) {
-      this.pageIndex = index;
-    }
-    this.dataSource.paginator = this.paginator;
-    // this.dataSource.paginator.length = cantidad;
-    this.dataSource.sort = this.sort;
-    */
   }
 }

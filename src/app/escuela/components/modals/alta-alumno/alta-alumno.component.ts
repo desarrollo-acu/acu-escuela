@@ -160,7 +160,6 @@ export class AltaAlumnoComponent {
 
   obtenerSocio() {
     this.acuService.getSocio(this.socIdField.value).subscribe((result: any) => {
-      console.log('result: ', result);
 
       if (result) {
         this.socio = result;

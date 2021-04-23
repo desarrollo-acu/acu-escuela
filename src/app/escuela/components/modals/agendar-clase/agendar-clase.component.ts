@@ -65,7 +65,6 @@ export class AgendarClaseComponent implements OnInit {
     public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    console.log('agenda: ', data);
 
     this.agendaClase = this.data.agendaClase;
     const day = Number(
@@ -89,8 +88,7 @@ export class AgendarClaseComponent implements OnInit {
     this.alumno.AluId = this.agendaClase.AluId;
 
     this.horaString = `${this.agendaClase.Hora}:00`;
-    // this.instructorAsignado = `${this.agendaClase.EsAgCuInsId.toString().trim()} ${this.agendaClase.EsAgCuInsNom}`;
-    // this.movil = this.agendaClase.EscMovCod;
+
     this.buildForm();
     this.deshabilitarCampos();
   }
@@ -239,18 +237,13 @@ export class AgendarClaseComponent implements OnInit {
   }
 
   seleccionarAlumno() {
-    console.log('0 openDialogAlumnos alumnos: ');
-    this.alumnoService.getAlumnos().subscribe((res: any) => {
-      this.openDialogAlumnos(res.Alumnos);
-    });
+    this.alumnoService.getAlumnos()
+    .subscribe((res: any) => this.openDialogAlumnos(res.Alumnos));
   }
 
   seleccionarCurso() {
-    this.cursoService.getCursos().subscribe((res: any) => {
-      console.log('Cursos: ', res);
-
-      this.openDialogCursos(res);
-    });
+    this.cursoService.getCursos()
+    .subscribe((res: any) =>  this.openDialogCursos(res));
   }
 
   private openDialogCursos(cursos) {
@@ -263,7 +256,6 @@ export class AgendarClaseComponent implements OnInit {
     });
 
     cursosDialogRef.afterClosed().subscribe((result) => {
-      console.log('result: ', result);
       this.curso = result;
       this.agendaClase.TipCurId = result.TipCurId;
       this.agendaClase.TipCurNom = result.TipCurNom;
@@ -271,7 +263,6 @@ export class AgendarClaseComponent implements OnInit {
     });
   }
   private openDialogAlumnos(alumnos) {
-    console.log('1 openDialogAlumnos alumnos: ', alumnos);
 
     const alumnosDialogRef = this.dialog.open(SeleccionarAlumnoComponent, {
       height: 'auto',
@@ -281,11 +272,9 @@ export class AgendarClaseComponent implements OnInit {
       },
     });
 
-    console.log('2 openDialogAlumnos');
 
     alumnosDialogRef.afterClosed().subscribe((alumno: Alumno) => {
 
-    console.log('3 openDialogAlumnos');
       this.alumno = alumno;
       this.form.patchValue({
         alumnoNombre: alumno.AluNomComp,
@@ -293,7 +282,6 @@ export class AgendarClaseComponent implements OnInit {
       });
     });
 
-    console.log('4 openDialogAlumnos');
   }
 
   avisoAlumno() {
@@ -308,15 +296,13 @@ export class AgendarClaseComponent implements OnInit {
 
   guardarClase(event: Event) {
     event.preventDefault();
-    console.log('Submit, form valid: ', this.form.valid);
-    console.log('Submit, form value: ', this.form.value);
-    console.log('Submit, form value.cursoId: ', this.form.value.cursoId);
+
 
     if (this.form.invalid) {
       return;
     }
 
-    console.log('form.value: ', this.form.value);
+
 
     const agendaClase: AgendaClase = {
       FechaClase: this.agendaClase.FechaClase,
@@ -341,29 +327,18 @@ export class AgendarClaseComponent implements OnInit {
 
     this.acuService
       .guardarAgendaClase(this.agendaClase)
-      .subscribe((res: any) => {
-        console.log('res: ', res);
-        console.log('mensaje: ', res.mensaje);
-        //     this.agendaClase.mensaje = res.mensaje;
-        this.dialogRef.close(res);
-      });
+      .subscribe((res: any) => this.dialogRef.close(res));
   }
 
   obtenerCurso() {
     const cursoId = this.form.get('cursoId').value;
-    console.log('obtenerCurso - cursoId: ', cursoId);
     if (cursoId !== '') {
       this.cursoService.getCurso(cursoId).subscribe((res: any) => {
-        console.log('obtenerCurso - res: ', res);
         if (res.TipCurId === '0') {
           Swal.fire({
             icon: 'warning',
             title: 'No encontrado!',
             text: 'El código del curso no existe, seleccione un existente.',
-          }).then((res2) => {
-            if (res2.dismiss === Swal.DismissReason.timer) {
-              console.log('Cierro  con ela timer');
-            }
           });
         }
 

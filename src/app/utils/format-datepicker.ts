@@ -5,8 +5,7 @@ import { MatDateFormats, NativeDateAdapter } from '@angular/material/core';
 export class AppDateAdapter extends NativeDateAdapter {
     // tslint:disable-next-line: ban-types
     format(date: Date, displayFormat: Object): string {
-        console.log('date: ', date);
-        console.log('displayFormat: ', displayFormat);
+
 
         if (displayFormat === 'input') {
             let day: string = date.getDate().toString();

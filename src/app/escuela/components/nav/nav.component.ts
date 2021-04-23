@@ -57,7 +57,6 @@ export class NavComponent implements OnDestroy {
     // tslint:disable-next-line: deprecation
     this.mobileQuery.addListener(this.mobileQueryListener);
 
-    console.log('url: ', this.router.url);
     this.changeTitle(this.router.url);
   }
 
@@ -86,7 +85,6 @@ export class NavComponent implements OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log('cierro y recargo la agenda, result: ', result);
       if (result) {
         // Ir a gestionar inscripciones.
         this.changeTitle('/escuela/gestion-inscripcion');
