@@ -9,7 +9,7 @@ import {
 import { Observable, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
-import { map, catchError } from 'rxjs/operators';
+import { map, catchError, tap, finalize } from 'rxjs/operators';
 
 @Injectable()
 export class CargandoInterceptor implements HttpInterceptor {
@@ -29,7 +29,6 @@ export class CargandoInterceptor implements HttpInterceptor {
       map((event: HttpEvent<any>) => {
 
 
-        this.blockUI.stop();
         if (event instanceof HttpResponse) {
           // console.log('event:: ', event);
 
@@ -42,6 +41,7 @@ export class CargandoInterceptor implements HttpInterceptor {
         }
         return throwError(err);
       })
+      ,finalize( () => this.blockUI.stop() )
     );
   }
 }
