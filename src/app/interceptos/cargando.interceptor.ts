@@ -18,12 +18,10 @@ export class CargandoInterceptor implements HttpInterceptor {
   @BlockUI() blockUI: NgBlockUI;
   constructor(
     private router: Router,
-    // private blockUI: BlockUIService
   ) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
 
-    // this.blockUI.start(BLOCKUI_DEFAULT);
     this.blockUI.start();
     return next.handle(request).pipe(
       map((event: HttpEvent<any>) => {
