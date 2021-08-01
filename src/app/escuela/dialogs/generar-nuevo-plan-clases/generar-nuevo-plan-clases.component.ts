@@ -39,6 +39,7 @@ export class GenerarNuevoPlanClasesComponent implements OnInit {
   hoy = new Date();
   titulo: string;
   inscripcion: Inscripcion;
+  verLimiteClases = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -94,6 +95,8 @@ export class GenerarNuevoPlanClasesComponent implements OnInit {
       disponibilidadViernes:[disponibilidadViernes],
       disponibilidadSabado:[disponibilidadSabado],
       observaciones:[null],
+      limitarClases: [false],
+      limiteClases: [3],
     });
 
     this.cursoId.disable();
@@ -130,6 +133,8 @@ export class GenerarNuevoPlanClasesComponent implements OnInit {
           disponibilidadViernes: this.disponibilidadViernes.value,
           disponibilidadSabado: this.disponibilidadSabado.value,
           fechaClaseEstimada: this.fecha.value,
+          limitarClases: this.limitarClases.value,
+          limiteClases: this.limiteClases.value,
           ClasesEstimadas: {},
           usrId: localStorage.getItem('usrId')
 
@@ -183,6 +188,14 @@ export class GenerarNuevoPlanClasesComponent implements OnInit {
 
   onNoClick(): void {
     this.dialogRef.close();
+  }
+
+  get limiteClases() {
+    return this.form.get('limiteClases');
+  }
+
+  get limitarClases() {
+    return this.form.get('limitarClases');
   }
 
   get fecha() {

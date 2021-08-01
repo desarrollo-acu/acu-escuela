@@ -49,6 +49,8 @@ export interface Inscripcion {
   cantidadExamenes?: number;
   numeroClases?: number;
   Curso?: string;
+  limitarClases?: boolean;
+  limiteClases?: number;
 }
 
 export interface InscripcionLinea1 {

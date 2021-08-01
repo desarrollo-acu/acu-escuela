@@ -19,6 +19,9 @@ export interface LiberarParameters {
   fechaClase: Date;
   horaClase: number;
   movil: number;
+  escInsId?: string;
+  usrId?: string;
+  esMovil?: boolean;
 }
 
 export interface DuplicarDiaParameters {
@@ -186,6 +189,9 @@ export class AcuService {
         FchClase: params.fechaClase,
         HorClase: params.horaClase,
         Movil: params.movil,
+        EscInsId: params.escInsId,
+        usrId: params.usrId,
+        esMovil: params.esMovil,
       },
       this.httpOptions
     );

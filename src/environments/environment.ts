@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  url_ws: 'http://192.1.0.86/ACUWSv15ACUProd/rest',
+  url_ws: 'http://192.1.0.86/ACUWS_EscuelaConduccionACUProd/rest',
   pageSize: 100
 };
 

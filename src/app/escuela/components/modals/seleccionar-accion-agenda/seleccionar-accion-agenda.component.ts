@@ -79,6 +79,7 @@ export class SeleccionarAccionAgendaComponent {
 
       case 'liberar-clase':
         continuar = false;
+
         confirmacionUsuario(
           'Confirmación de usuario',
           'ATENCIÓN: Se liberará la hora, perdiendose los datos actuales. ¿Confirma continuar?'
@@ -88,17 +89,22 @@ export class SeleccionarAccionAgendaComponent {
               fechaClase: mainParameters.fecha,
               horaClase: mainParameters.hora,
               movil: mainParameters.movil,
+              escInsId: mainParameters.instructor,
+              usrId: this.auth.getUserId(),
+              esMovil: mainParameters.esMovil,
             };
             this.acuService
               .liberarClase(liberarParameters)
               .subscribe((res: any) => {
                 Swal.fire({
                   icon: 'success',
-                  title: res.Gx_msg,
+                  title: res.Msg,
                   showConfirmButton: false,
                   timer: 4000,
                 });
                 localStorage.setItem('refreshLiberaAgenda', 'true');
+
+              this.cerrarBottomSheet(true, event);
               });
           }
         });

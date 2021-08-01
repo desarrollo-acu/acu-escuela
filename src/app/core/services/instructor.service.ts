@@ -10,7 +10,6 @@ import { InscripcionCurso } from '../model/inscripcion-curso.model';
   providedIn: 'root',
 })
 export class InstructorService {
-  // esto va al instructorService
   private instructorDataSource = new BehaviorSubject({
     modo: 'INS',
     instructor: {},
@@ -76,7 +75,6 @@ export class InstructorService {
   }
 
   getInstructores() {
-    // return this.http.post(`${environment.url_ws}/wsObtenerInstructores`, {});
     return this.http.get(`${environment.url_ws}/wsGetInstructores`);
   }
 
@@ -85,23 +83,11 @@ export class InstructorService {
     return this.http.post(
       `${environment.url_ws}/obtenerDisponibilidadInstructor`,
       {
-        GenerarInscripcion: {
-          FacturaRUT: inscripcion.FacturaRut,
-          SeleccionarItemsFactura: inscripcion.SeleccionarItemsFactura,
-          AluId: inscripcion.AluId,
-          TipCurId: inscripcion.TipCurId,
-          TipCurNom: inscripcion.TipCurNom,
-          EscCurDet: inscripcion.EscAgeInsObservaciones,
-          disponibilidadLunes: inscripcion.disponibilidadLunes,
-          disponibilidadMartes: inscripcion.disponibilidadMartes,
-          disponibilidadMiercoles: inscripcion.disponibilidadMiercoles,
-          disponibilidadJueves: inscripcion.disponibilidadJueves,
-          disponibilidadViernes: inscripcion.disponibilidadViernes,
-          disponibilidadSabado: inscripcion.disponibilidadSabado,
-          fechaClaseEstimada: inscripcion.fechaClaseEstimada,
-        },
+        GenerarInscripcion: inscripcion
       }
+
     );
+
   }
 
   sendDataInstructor(modo: string, instructor: Instructor, id?: number) {

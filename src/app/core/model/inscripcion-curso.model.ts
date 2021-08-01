@@ -43,6 +43,8 @@ export interface InscripcionCurso {
 
   sede?: string;
   irABuscarAlAlumno?: boolean;
+  limitarClases?: boolean;
+  limiteClases?: number;
   escCurIni?: Date;
   escCurFchIns?: Date;
 

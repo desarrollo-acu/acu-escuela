@@ -12,7 +12,7 @@
 
                     <mat-form-field class="full-width">
 
-                        <input matInput [matDatepicker]="picker" placeholder="Fecha" formControlName="fecha" disabled>
+                        <input matInput [matDatepicker]="picker" placeholder="Fecha" formControlName="fecha">
                         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                         <mat-datepicker #picker></mat-datepicker>
                     </mat-form-field>
@@ -101,6 +101,26 @@
                     </mat-form-field>
                 </div>
             </div>
+        </div>
+
+        <div class="row">
+          <div class="col-xs-4">
+            <div id="limitarClases" style="margin-top: 20px">
+              <mat-checkbox formControlName="limitarClases" color="primary" #limitarClasesCheck (click)="verLimiteClases = !verLimiteClases" >
+                Limitar clases semanales?
+              </mat-checkbox>
+            </div>
+          </div>
+          <div class="col-xs-6" *ngIf="verLimiteClases" >
+            <mat-form-field class="full-width">
+              <input
+                matInput
+                type="number"
+                placeholder="Limite de clases"
+                formControlName="limiteClases"
+              />
+            </mat-form-field>
+          </div>
         </div>
 
 

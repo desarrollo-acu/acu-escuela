@@ -65,15 +65,7 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
   instructorAsignado = '';
   cursoNombre: string;
   hoy = new Date();
-  toppings = new FormControl();
-  toppingList: string[] = [
-    'Extra cheese',
-    'Mushroom',
-    'Onion',
-    'Pepperoni',
-    'Sausage',
-    'Tomato',
-  ];
+  verLimiteClases = false;
   horasLibres = [];
   sedes = [];
 
@@ -177,6 +169,8 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
         alumnoCelular: [''],
         sede: [''],
         irABuscarAlAlumno: [false],
+        limitarClases: [false],
+        limiteClases: [0],
 
         documentosEntregadosYFirmados: [false],
         reglamentoEscuela: [false],
@@ -409,6 +403,9 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
     this.inscripcionCurso.fechaClaseEstimada = this.fechaInicioEstimadaField.value;
     this.inscripcionCurso.TipCurId = this.cursoIdField.value;
 
+    this.inscripcionCurso.limitarClases = this.limitarClases.value;
+    this.inscripcionCurso.limiteClases = this.limiteClases.value;
+
     this.instructorService
       .getClasesEstimadas(this.inscripcionCurso)
       .subscribe((clasesEstimadas) => {
@@ -622,9 +619,18 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
 
   private salir(result) {
 
+
     if (result && result.salir) {
       this.dialogRef.close();
     }
+  }
+
+  get limitarClases() {
+    return this.form.get('limitarClases');
+  }
+
+  get limiteClases() {
+    return this.form.get('limiteClases');
   }
 
   get fechaClaseFiled() {
