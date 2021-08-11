@@ -1,36 +1,44 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
+import {
+  CanActivate,
+  ActivatedRouteSnapshot,
+  RouterStateSnapshot,
+  UrlTree,
+  Router,
+  CanActivateChild,
+} from '@angular/router';
 import { Observable } from 'rxjs';
 import { AutenticacionService } from '../services/autenticacion.service';
 import { AutenticacionResponse } from '../model/autenticacion-response.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-export class AutenticacionGuard implements CanActivate {
-
+export class AutenticacionGuard implements CanActivate, CanActivateChild {
   constructor(
     private autenticacionService: AutenticacionService,
     private router: Router
-  ) { }
+  ) {}
+
+  canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
+    return this.canActivate(childRoute, state);
+  }
 
   canActivate(
     next: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-
+    state: RouterStateSnapshot
+  ):
+    | Observable<boolean | UrlTree>
+    | Promise<boolean | UrlTree>
+    | boolean
+    | UrlTree {
     const usrId = localStorage.getItem('usrId');
-    let infoUsuario: AutenticacionResponse = {};
 
-    this.autenticacionService.estaLogueado(usrId).subscribe(({authResponse}: any) => {
-      localStorage.setItem('infoUsuario', JSON.stringify(authResponse));
-    });
+    const estaLogeado = !(usrId === null || usrId === undefined || usrId === '');
 
-    infoUsuario = JSON.parse(localStorage.getItem('infoUsuario'));
-
-    if (!(infoUsuario.estaLogueado)) {
+    if (!estaLogeado) {
       this.router.navigate(['/login']);
     }
-    return infoUsuario.estaLogueado;
+    return estaLogeado;
   }
-
 }

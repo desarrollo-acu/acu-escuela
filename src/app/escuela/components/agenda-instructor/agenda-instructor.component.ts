@@ -278,6 +278,8 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
     this.acuService
       .getInstructorAgenda(this.fechaClase, hora, instructor)
       .subscribe((res: any) => {
+        console.log(res);
+
         const dialogRef = this.dialog.open(component, {
           data: {
             agendaCurso: res.AgendaCurso,

@@ -19,6 +19,7 @@ import { TestComponent } from './components/test/test.component';
 import { GestionExamenComponent } from './pages/gestion-examen/gestion-examen.component';
 import { AbmExamenComponent } from './pages/abm-examen/abm-examen.component';
 import { ReportesComponent } from './pages/reportes/reportes.component';
+import { AutenticacionGuard } from '../core/guards/autenticacion.guard';
 
 const routes: Routes = [
   {
@@ -27,7 +28,7 @@ const routes: Routes = [
     children: [
       {
         path: 'agenda-movil',
-        component: AgendaMovilComponent,
+        component: AgendaMovilComponent
       },
       {
         path: 'agenda-instructor',
@@ -98,6 +99,7 @@ const routes: Routes = [
         component: ReportesComponent,
       },
     ],
+    canActivateChild: [ AutenticacionGuard ]
   },
 ];
 
