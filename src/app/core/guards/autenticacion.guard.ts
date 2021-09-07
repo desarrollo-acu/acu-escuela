@@ -37,6 +37,7 @@ export class AutenticacionGuard implements CanActivate, CanActivateChild {
     const estaLogeado = !(usrId === null || usrId === undefined || usrId === '');
 
     if (!estaLogeado) {
+      localStorage.clear();
       this.router.navigate(['/login']);
     }
     return estaLogeado;

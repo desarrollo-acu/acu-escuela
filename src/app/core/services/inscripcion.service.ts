@@ -104,9 +104,13 @@ export class InscripcionService {
     );
   }
 
-  obtenerInscripcionById(escAluCurId: number, aluId: number, cursoId: number) {
+  obtenerInscripcionById(escAluCurId: number, aluId: number, cursoId: number, fecha?: string) {
+    let parameters = `EscAluCurId=${escAluCurId}&AluId=${aluId}&TipCurId=${cursoId}`;
+    if(fecha){
+      parameters += `&fecha=${fecha}`;
+    }
     return this.http.get(
-      `${environment.url_ws}/wsGetInscripcionById?EscAluCurId=${escAluCurId}&AluId=${aluId}&TipCurId=${cursoId}`
+      `${environment.url_ws}/wsGetInscripcionById?${parameters}`
     );
   }
 

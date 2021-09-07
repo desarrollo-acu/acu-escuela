@@ -78,6 +78,10 @@ export class InstructorService {
     return this.http.get(`${environment.url_ws}/wsGetInstructores`);
   }
 
+  getInstructoresActivos() {
+    return this.http.get(`${environment.url_ws}/wsGetInstructoresActivos`);
+  }
+
   getClasesEstimadas(inscripcion: InscripcionCurso) {
 
     return this.http.post(

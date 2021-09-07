@@ -178,7 +178,7 @@ export class GenerarClaseAdicionalComponent implements OnInit {
 
   seleccionarInstructor() {
     this.instructorService
-      .getInstructores()
+      .getInstructoresActivos()
       .subscribe((instructores: Instructor[]) => {
         this.openDialogInstructores(instructores);
       });

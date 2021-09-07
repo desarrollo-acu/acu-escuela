@@ -189,14 +189,14 @@ export class GenerarExamenComponent implements OnInit {
 
     movilesDialogRef.afterClosed().subscribe((movil) => {
       this.form.patchValue({
-        escInsId: movil.MovCod,
+        movil: movil.MovCod,
       });
     });
   }
 
   seleccionarInstructor() {
     this.instructorService
-      .getInstructores()
+      .getInstructoresActivos()
       .subscribe((instructores: Instructor[]) => {
         this.openDialogInstructores(instructores);
       });

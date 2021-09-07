@@ -15,11 +15,17 @@ import { InstructorService } from '@core/services/instructor.service';
 import { AgendaMovilComponent } from '@escuela/components/agenda-movil/agenda-movil.component';
 import { InstructorHorasLibresComponent } from '@escuela/components/modals/instructor-horas-libres/instructor-horas-libres.component';
 import { confirmacionUsuario, mensajeConfirmacion } from '@utils/sweet-alert';
-import { generateHorasLibres, getDisponibilidadFromInscripcion, openSamePDF } from '../../../utils/utils-functions';
+import {
+  generateHorasLibres,
+  getDisponibilidadFromInscripcion,
+  openSamePDF,
+} from '../../../utils/utils-functions';
 import { Inscripcion } from '../../../core/model/inscripcion.model';
 import { ClasesEstimadasComponent } from '../../components/modals/clases-estimadas/clases-estimadas.component';
 import { InscripcionService } from '@core/services/inscripcion.service';
 import { GestionInscripcionComponent } from '../../components/gestion-inscripcion/gestion-inscripcion.component';
+import { Moment } from 'moment';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-generar-nuevo-plan-clases',
@@ -48,7 +54,7 @@ export class GenerarNuevoPlanClasesComponent implements OnInit {
     private instructorService: InstructorService,
     private inscripcionService: InscripcionService,
     public dialog: MatDialog,
-    @Inject(MAT_DIALOG_DATA) public data: { inscripcion: Inscripcion}
+    @Inject(MAT_DIALOG_DATA) public data: { inscripcion: Inscripcion }
   ) {
     this.inscripcion = this.data.inscripcion;
 
@@ -69,7 +75,6 @@ export class GenerarNuevoPlanClasesComponent implements OnInit {
       AluNomComp,
     } = this.inscripcion;
 
-
     const {
       disponibilidadLunes,
       disponibilidadMartes,
@@ -77,24 +82,24 @@ export class GenerarNuevoPlanClasesComponent implements OnInit {
       disponibilidadJueves,
       disponibilidadViernes,
       disponibilidadSabado,
-    } = getDisponibilidadFromInscripcion( this.inscripcion );
+    } = getDisponibilidadFromInscripcion(this.inscripcion);
 
     this.form = this.formBuilder.group({
-      fecha:[new Date()],
-      cursoId:[ TipCurId ],
-      cursoNombre:[ TipCurNom ],
-      numeroClase:[numeroClases],
-      escInsId:[EscInsId],
-      escInsNom:[EscInsNom],
-      alumnoNumero:[AluNro],
-      alumnoNombre:[AluNomComp],
-      disponibilidadLunes:[disponibilidadLunes],
-      disponibilidadMartes:[disponibilidadMartes],
-      disponibilidadMiercoles:[disponibilidadMiercoles],
-      disponibilidadJueves:[disponibilidadJueves],
-      disponibilidadViernes:[disponibilidadViernes],
-      disponibilidadSabado:[disponibilidadSabado],
-      observaciones:[null],
+      fecha: [new Date()],
+      cursoId: [TipCurId],
+      cursoNombre: [TipCurNom],
+      numeroClase: [numeroClases],
+      escInsId: [EscInsId],
+      escInsNom: [EscInsNom],
+      alumnoNumero: [AluNro],
+      alumnoNombre: [AluNomComp],
+      disponibilidadLunes: [disponibilidadLunes],
+      disponibilidadMartes: [disponibilidadMartes],
+      disponibilidadMiercoles: [disponibilidadMiercoles],
+      disponibilidadJueves: [disponibilidadJueves],
+      disponibilidadViernes: [disponibilidadViernes],
+      disponibilidadSabado: [disponibilidadSabado],
+      observaciones: [null],
       limitarClases: [false],
       limiteClases: [3],
     });
@@ -106,6 +111,18 @@ export class GenerarNuevoPlanClasesComponent implements OnInit {
     this.numeroClase.disable();
     this.escInsId.disable();
     this.escInsNom.disable();
+  }
+
+  getInscripcion() {
+    const { EscAluCurId, AluId, TipCurId } = this.inscripcion;
+    const fecha = moment(this.fecha.value).toISOString();
+
+    this.inscripcionService
+      .obtenerInscripcionById(EscAluCurId, AluId, TipCurId, fecha)
+      .subscribe((inscripcion) => {
+        this.inscripcion = inscripcion;
+        this.numeroClase.setValue( this.inscripcion.numeroClases );
+      });
   }
 
   generarPlanClases(event: Event) {
@@ -120,7 +137,8 @@ export class GenerarNuevoPlanClasesComponent implements OnInit {
       '¿Confirma la generación del nuevo plan de clases ?'
     ).then((confirm) => {
       if (confirm.isConfirmed) {
-        const cantidad = this.inscripcion.TipCurClaPra - this.inscripcion.numeroClases;
+        const cantidad =
+          this.inscripcion.TipCurClaPra - this.inscripcion.numeroClases;
         const inscripcion = {
           AluId: this.inscripcion.AluId,
           TipCurId: this.cursoId.value,
@@ -136,52 +154,54 @@ export class GenerarNuevoPlanClasesComponent implements OnInit {
           limitarClases: this.limitarClases.value,
           limiteClases: this.limiteClases.value,
           ClasesEstimadas: {},
-          usrId: localStorage.getItem('usrId')
+          usrId: localStorage.getItem('usrId'),
+        };
 
-
-        }
-
-
-
-        this.instructorService.getDisponibilidadInstructoresPorCantidad(inscripcion, cantidad)
+        this.instructorService
+          .getDisponibilidadInstructoresPorCantidad(inscripcion, cantidad)
           .subscribe((clasesEstimadas) => {
-              const clasesEstimadasDialogRef = this.dialog.open(
-                ClasesEstimadasComponent,
-                {
-                  height: 'auto',
-                  width: '700px',
-                  data: {
-                    clasesEstimadas,
-                  },
+            const clasesEstimadasDialogRef = this.dialog.open(
+              ClasesEstimadasComponent,
+              {
+                height: 'auto',
+                width: '700px',
+                data: {
+                  clasesEstimadas,
+                },
+              }
+            );
+
+            clasesEstimadasDialogRef
+              .afterClosed()
+              .subscribe(
+                (result: {
+                  continuar: boolean;
+                  claseEstimada: ClaseEstimada;
+                }) => {
+                  const { claseEstimada } = result;
+                  inscripcion.ClasesEstimadas = claseEstimada;
+
+                  if (!result.continuar) {
+                    return;
+                  }
+
+                  this.acuService
+                    .getPDFPlanDeClases(claseEstimada)
+                    .subscribe((pdf) => {
+                      openSamePDF(pdf, 'PlanDeClases');
+                    });
+
+                  this.inscripcionService
+                    .generarNuevoPlanClases(inscripcion)
+                    .subscribe(
+                      (res: { errorCode: number; errorMensaje: string }) => {
+                        mensajeConfirmacion('Excelente!', res.errorMensaje);
+                        this.dialogRef.close();
+                      }
+                    );
                 }
               );
-
-              clasesEstimadasDialogRef
-                .afterClosed()
-                .subscribe(
-                  (result: { continuar: boolean; claseEstimada: ClaseEstimada }) => {
-                    const {claseEstimada} = result;
-                    inscripcion.ClasesEstimadas = claseEstimada;
-
-                    if (!result.continuar) {
-                      return;
-                    }
-
-                    this.acuService
-                      .getPDFPlanDeClases(claseEstimada)
-                      .subscribe((pdf) => {
-                        openSamePDF(pdf, 'PlanDeClases');
-                      });
-
-                    this.inscripcionService.generarNuevoPlanClases( inscripcion ).subscribe( (res: { errorCode: number; errorMensaje: string }) => {
-
-                      mensajeConfirmacion('Excelente!', res.errorMensaje);
-                      this.dialogRef.close();
-                    } );
-
-                  }
-                );
-            });
+          });
       }
     });
   }

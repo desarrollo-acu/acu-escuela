@@ -238,8 +238,8 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
         dialogRef
           .afterClosed()
           .subscribe(
-            ({ mensaje }: any) =>
-              mensaje && mensajeConfirmacion('Confirmado!', mensaje)
+            (resp: any) =>
+              resp?.mensaje && mensajeConfirmacion('Confirmado!', resp?.mensaje)
           );
       });
   }
@@ -290,8 +290,8 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
 
         dialogRef
           .afterClosed()
-          .subscribe(({ mensaje }: any) =>
-            this.obtenerAgendaYConfirmarUsuario(mensaje)
+          .subscribe((resp: any) =>
+            this.obtenerAgendaYConfirmarUsuario(resp?.mensaje)
           );
       });
   }
@@ -370,8 +370,8 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
                 fechaNueva: fechaSeleccionada,
                 EsAgCuAviso,
               })
-              .subscribe(({ mensaje }: any) =>
-                this.obtenerAgendaYConfirmarUsuario(mensaje)
+              .subscribe((resp: any) =>
+                this.obtenerAgendaYConfirmarUsuario(resp?.mensaje)
               );
 
             break;
@@ -382,8 +382,8 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
                 fechaNueva: fechaSeleccionada,
                 EsAgCuAviso,
               })
-              .subscribe(({ mensaje }: any) =>
-                this.obtenerAgendaYConfirmarUsuario(mensaje)
+              .subscribe((resp: any) =>
+                this.obtenerAgendaYConfirmarUsuario(resp?.mensaje)
               );
 
             break;
@@ -433,6 +433,7 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
   }
 
   getAgenda(fecha: Date) {
+
     this.verAgenda = false;
     const strFecha = this.formatDateToString(fecha);
     this.acuService
