@@ -63,7 +63,6 @@ export class MyValidators {
 
   static fechaAnteriorOIgualAHoy(control: AbstractControl) {
     const { value, hoy } = MyValidators.getFechasWithHoursZeros(control);
-    console.log({control, value, hoy});
 
     if (value <= hoy) {
       return { fecha_invalid: true };
