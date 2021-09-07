@@ -211,6 +211,17 @@
               La Fecha de Inicio propuesta por el Alumno
               <strong>es requerida.</strong>
             </mat-error>
+
+            <mat-error
+              *ngIf="
+                fechaInicioEstimadaField.hasError('fecha_invalid') &&
+                fechaInicioEstimadaField.dirty &&
+                fechaInicioEstimadaField.errors
+              "
+            >
+            La Fecha de Inicio propuesta por el Alumno tiene que ser
+            <strong>mayor</strong> al dia de hoy.
+            </mat-error>
           </mat-form-field>
         </div>
       </div>
@@ -233,7 +244,6 @@
           </div>
         </div>
       </div>
-
 
       <mat-divider></mat-divider>
       <h3>Clases Teóricas</h3>
@@ -574,12 +584,16 @@
       <div class="row">
         <div class="col-xs-4">
           <div id="limitarClases" style="margin-top: 20px">
-            <mat-checkbox formControlName="limitarClases" color="primary"  (click)="verLimiteClases = !verLimiteClases" >
+            <mat-checkbox
+              formControlName="limitarClases"
+              color="primary"
+              (click)="verLimiteClases = !verLimiteClases"
+            >
               Limitar clases semanales?
             </mat-checkbox>
           </div>
         </div>
-        <div class="col-xs-6" *ngIf="verLimiteClases" >
+        <div class="col-xs-6" *ngIf="verLimiteClases">
           <mat-form-field class="full-width">
             <input
               matInput

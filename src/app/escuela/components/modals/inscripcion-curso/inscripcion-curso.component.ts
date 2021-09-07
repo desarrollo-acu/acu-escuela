@@ -149,7 +149,7 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
         cursoClasesTeoricas: [''],
         cursoExamenPractico: [''],
         cursoExamenTeorico: [''],
-        fechaInicioEstimada: ['', Validators.required],
+        fechaInicioEstimada: ['', [Validators.required, MyValidators.fechaAnteriorOIgualAHoy]],
         escCurTe1: [''],
         escCurTe2: [''],
         escCurTe3: [''],

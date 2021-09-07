@@ -63,6 +63,20 @@ export class MyValidators {
     return null;
   }
 
+  static fechaAnteriorOIgualAHoy(control: AbstractControl) {
+    const value = new Date(control.value);
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+    value.setHours(0, 0, 0, 0);
+
+    console.log({control, value, hoy});
+
+    if (value <= hoy) {
+      return { fecha_invalid: true };
+    }
+    return null;
+  }
+
   static alumnoYaAsignado(control: AbstractControl, existe: boolean) {
     const value = control.value;
 
