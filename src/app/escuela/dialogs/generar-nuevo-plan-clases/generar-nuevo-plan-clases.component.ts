@@ -116,7 +116,6 @@ export class GenerarNuevoPlanClasesComponent implements OnInit {
       getInscripcion() {
         const { EscAluCurId, AluId, TipCurId } = this.inscripcion;
         const fecha = moment(this.fecha.value).toISOString();
-            console.log('aaa')
         this.inscripcionService
           .obtenerInscripcionById(EscAluCurId, AluId, TipCurId, fecha)
           .subscribe((inscripcion) => {

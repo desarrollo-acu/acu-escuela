@@ -42,8 +42,8 @@ export class MyValidators {
   }
 
   static fechaPosteriorAHoy(control: AbstractControl) {
-    const value = control.value;
-    const hoy = new Date();
+
+    const { value, hoy } = MyValidators.getFechasWithHoursZeros(control);
 
     if (value > hoy) {
       return { fecha_invalid: true };
@@ -52,10 +52,8 @@ export class MyValidators {
   }
 
   static fechaAnteriorAHoy(control: AbstractControl) {
-    const value = new Date(control.value);
-    const hoy = new Date();
-    hoy.setHours(0, 0, 0, 0);
-    value.setHours(0, 0, 0, 0);
+
+    const { value, hoy } = MyValidators.getFechasWithHoursZeros(control);
 
     if (value < hoy) {
       return { fecha_invalid: true };
@@ -64,11 +62,7 @@ export class MyValidators {
   }
 
   static fechaAnteriorOIgualAHoy(control: AbstractControl) {
-    const value = new Date(control.value);
-    const hoy = new Date();
-    hoy.setHours(0, 0, 0, 0);
-    value.setHours(0, 0, 0, 0);
-
+    const { value, hoy } = MyValidators.getFechasWithHoursZeros(control);
     console.log({control, value, hoy});
 
     if (value <= hoy) {
@@ -76,6 +70,16 @@ export class MyValidators {
     }
     return null;
   }
+
+  private static getFechasWithHoursZeros = ( control: AbstractControl ) => {
+
+    const value = new Date(control.value);
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+    value.setHours(0, 0, 0, 0);
+
+    return { value, hoy}
+  };
 
   static alumnoYaAsignado(control: AbstractControl, existe: boolean) {
     const value = control.value;
