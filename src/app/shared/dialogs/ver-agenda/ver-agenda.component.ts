@@ -109,6 +109,10 @@ export class VerAgendaComponent implements OnInit {
     return this.form.get('cursoNombre');
   }
 
+  get usuarioAltaNombre() {
+    return this.form.get('usuarioAltaNombre');
+  }
+
 
   constructor(
     private formBuilder: FormBuilder,
@@ -197,6 +201,7 @@ export class VerAgendaComponent implements OnInit {
         ],
         detalle: [this.agendaClase.EsAgCuDet],
         estadoClase: [this.agendaClase.EsAgCuEst],
+        usuarioAltaNombre: [this.agendaClase.UsuarioAltaNombre],
         observaciones: [this.agendaClase.EsAgCuObs],
         aviso: [this.agendaClase.EsAgCuDetAviso],
       });
@@ -233,6 +238,7 @@ export class VerAgendaComponent implements OnInit {
         instructorNombre: [''],
         detalle: [''],
         estadoClase: [''],
+        usuarioAltaNombre: [''],
         observaciones: [''],
         aviso: [''],
       });
@@ -259,6 +265,7 @@ export class VerAgendaComponent implements OnInit {
     this.instructorNombre.disable();
     this.avisoInstructor.disable();
 
+    this.usuarioAltaNombre.disable();
     this.estadoClase.disable();
   }
 
@@ -293,7 +300,7 @@ export class VerAgendaComponent implements OnInit {
 
 
 
-  seleccionarAlumno = () => this.alumnoService.obtenerAlumnos(5, 1, '').subscribe((res: any) => this.openDialogAlumnos(res.Alumnos, res.Cantidad));
+  seleccionarAlumno = () => this.alumnoService.obtenerAlumnos(5, 1, '').subscribe((res: any) => this.openDialogAlumnos(res.alumnos, res.cantidad));
 
   seleccionarCurso = () => this.cursoService.getCursos().subscribe((res: any) => this.openDialogCursos(res));
 

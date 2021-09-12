@@ -20,6 +20,7 @@ import { GestionExamenComponent } from './pages/gestion-examen/gestion-examen.co
 import { AbmExamenComponent } from './pages/abm-examen/abm-examen.component';
 import { ReportesComponent } from './pages/reportes/reportes.component';
 import { AutenticacionGuard } from '../core/guards/autenticacion.guard';
+import { CuentaCorrienteComponent } from './pages/cuenta-corriente/cuenta-corriente.component';
 
 const routes: Routes = [
   {
@@ -97,6 +98,10 @@ const routes: Routes = [
       {
         path: 'reportes',
         component: ReportesComponent,
+      },
+      {
+        path: 'cuenta-corriente',
+        component: CuentaCorrienteComponent,
       },
     ],
     canActivateChild: [ AutenticacionGuard ]

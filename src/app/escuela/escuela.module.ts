@@ -74,6 +74,9 @@ import { SeleccionarItemComponent } from './dialogs/seleccionar-item/seleccionar
 import { CantidadClasesPorAlumnoPorMesComponent } from './components/cantidad-clases-por-alumno-por-mes/cantidad-clases-por-alumno-por-mes.component';
 import { CantidadClasesPorPeriodoComponent } from './components/cantidad-clases-por-periodo/cantidad-clases-por-periodo.component';
 import { InicioCursoPorPeriodoComponent } from './components/inicio-curso-por-periodo/inicio-curso-por-periodo.component';
+import { CuentaCorrienteComponent } from './pages/cuenta-corriente/cuenta-corriente.component';
+import { IngresarClaveAccionesComponent } from './dialogs/ingresar-clave-acciones/ingresar-clave-acciones.component';
+
 
 registerLocaleData(localeEsUy, 'es-UY');
 registerLocaleData(localeEs, 'es');
@@ -129,6 +132,8 @@ registerLocaleData(localeEs, 'es');
     CantidadClasesPorAlumnoPorMesComponent,
     CantidadClasesPorPeriodoComponent,
     InicioCursoPorPeriodoComponent,
+    CuentaCorrienteComponent,
+    IngresarClaveAccionesComponent,
   ],
   imports: [
     CommonModule,

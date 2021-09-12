@@ -34,7 +34,7 @@ import { mensajeConfirmacion } from '@utils/sweet-alert';
 
 import { Alumno } from '@core/model/alumno.model';
 import { AlumnoYaAsignadoValidatorDirective } from '@utils/validators/alumno-ya-asignado.directive';
-import { formatCI } from '@utils/utils-functions';
+import { formatCI, generateHorasLibres } from '@utils/utils-functions';
 import { InscripcionService } from '@core/services/inscripcion.service';
 import { CursoService } from '@core/services/curso.service';
 import { AlumnoService } from '@core/services/alumno.service';
@@ -44,7 +44,7 @@ import {
   mensajeWarning,
 } from '../../../../utils/sweet-alert';
 import { Prefactura } from '../../../../core/model/prefactura.model';
-import { openSamePDF } from '../../../../utils/utils-functions';
+import { openSamePDF, generateSedes } from '../../../../utils/utils-functions';
 import { Subscription } from 'rxjs';
 import { NullTemplateVisitor } from '@angular/compiler';
 import { ClaseEstimada } from '@core/model/clase-estimada.model';
@@ -108,8 +108,9 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
     this.fechaClase.setDate(day);
     this.fechaClase.setMonth(month - 1);
     this.fechaClase.setFullYear(year);
-    this.generateHorasLibres();
-    this.generateSedes();
+    this.horasLibres = generateHorasLibres();
+
+    this.sedes = [ ...generateSedes() ];
     this.buildForm();
     this.deshabilitarCampos();
   }
@@ -302,7 +303,7 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
 
   seleccionarAlumno() {
     this.alumnoService.obtenerAlumnos(5, 1, '').subscribe((res: any) => {
-      this.openDialogAlumnos(res.Alumnos, res.Cantidad);
+      this.openDialogAlumnos(res.alumnos, res.cantidad);
     });
   }
 
@@ -766,33 +767,4 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
     return this.form.get('disponibilidadSabado');
   }
 
-  generateSedes() {
-    const sede1 = {
-      id: 1,
-      value: 'Colonia y Yi',
-      description: 'Colonia y Yi',
-    };
-    this.sedes.push(sede1);
-
-    const sede2 = {
-      id: 2,
-      value: 'BASE-CARRASCO',
-      description: 'BASE CARRASCO',
-    };
-    this.sedes.push(sede2);
-  }
-
-  generateHorasLibres() {
-    for (let i = 6; i < 20; i++) {
-      const horaIni = i;
-      const horaFin = i + 1;
-      const o = {
-        value: `${horaIni * 100}-${horaFin * 100}`,
-        description: `${horaIni}:00 - ${horaFin}:00`,
-        horaIni: `${horaIni * 100}`,
-        horaFin: `${horaFin * 100}`,
-      };
-      this.horasLibres.push(o);
-    }
-  }
 }

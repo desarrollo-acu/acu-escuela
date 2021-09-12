@@ -120,10 +120,10 @@
 
             <section id="Movimientos" *ngIf="dataSource">
               <div class="mat-elevation-z8">
-                <table mat-table [dataSource]="dataSource" matSort>
+                <table mat-table [dataSource]="dataSource" >
                   <ng-container matColumnDef="fecha">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                      fecha
+                    <th mat-header-cell *matHeaderCellDef>
+                      Fecha
                     </th>
                     <td
                       mat-cell
@@ -140,8 +140,8 @@
                   </ng-container>
 
                   <ng-container matColumnDef="hora">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                      hora
+                    <th mat-header-cell *matHeaderCellDef>
+                      Hora
                     </th>
                     <td
                       mat-cell
@@ -158,7 +158,7 @@
                   </ng-container>
 
                   <ng-container matColumnDef="detalles">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <th mat-header-cell *matHeaderCellDef>
                       Detalles
                     </th>
                     <td
@@ -176,8 +176,8 @@
                   </ng-container>
 
                   <ng-container matColumnDef="debe">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                      debe
+                    <th mat-header-cell *matHeaderCellDef>
+                      Debe
                     </th>
                     <td
                       mat-cell
@@ -194,8 +194,8 @@
                   </ng-container>
 
                   <ng-container matColumnDef="haber">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                      haber
+                    <th mat-header-cell *matHeaderCellDef>
+                      Haber
                     </th>
                     <td
                       mat-cell
@@ -212,8 +212,8 @@
                   </ng-container>
 
                   <ng-container matColumnDef="factura">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                      factura
+                    <th mat-header-cell *matHeaderCellDef>
+                      Factura
                     </th>
                     <td
                       mat-cell
@@ -235,19 +235,50 @@
                     *matRowDef="let row; columns: displayedColumns"
                   ></tr>
 
-                  <!-- Row shown when there is no matching data. -->
-                  <tr class="mat-row" *matNoDataRow>
-                    <td class="mat-cell" colspan="4">
-                      No data matching the filter
-                    </td>
-                  </tr>
                 </table>
 
-                <mat-paginator
-                  [pageSizeOptions]="[5, 10, 20, 100]"
-                  showFirstLastButtons
-                >
-                </mat-paginator>
+              </div>
+
+            </section>
+
+            <mat-divider></mat-divider>
+
+            <section id="Totales">
+
+
+              <div class="row">
+                <div class="col-xs-4">
+
+                  <mat-form-field class="full-width">
+                    <input
+                      matInput
+                      placeholder="Debitos"
+                      formControlName="totalDebitos"
+                    />
+                  </mat-form-field>
+
+                </div>
+                <div class="col-xs-4">
+
+                  <mat-form-field class="full-width">
+                    <input
+                      matInput
+                      placeholder="Haberes"
+                      formControlName="totalHaberes"
+                    />
+                  </mat-form-field>
+
+                </div>
+                <div class="col-xs-4">
+
+                  <mat-form-field class="full-width">
+                    <input
+                      matInput
+                      placeholder="SALDO"
+                      formControlName="totalSaldo"
+                    />
+                  </mat-form-field>
+                </div>
               </div>
             </section>
           </mat-card-content>

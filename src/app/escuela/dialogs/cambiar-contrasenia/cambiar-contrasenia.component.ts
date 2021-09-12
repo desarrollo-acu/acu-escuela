@@ -60,7 +60,7 @@ export class CambiarContraseniaComponent implements OnInit {
           mensajeConfirmacion(
             'Excelente!',
             res.authResponse.LoginEscuela.Mensaje
-          ).then(() => this.router.navigate(['/escuela/agenda-movil']));
+          ).then(() => this.router.navigate(['/escuela/agenda-instructor']));
         } else {
           errorMensaje(
             'Ocurrió un problema',
