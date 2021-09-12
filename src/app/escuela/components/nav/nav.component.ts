@@ -148,6 +148,9 @@ export class NavComponent implements OnDestroy {
       case '/escuela/reportes':
         this.title = 'Reportes';
         break;
+      case '/escuela/cuenta-corriente':
+        this.title = 'Trabajar con Cuentas Corrientes';
+        break;
 
       default:
         break;

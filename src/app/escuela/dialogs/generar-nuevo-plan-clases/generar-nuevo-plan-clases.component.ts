@@ -26,6 +26,7 @@ import { InscripcionService } from '@core/services/inscripcion.service';
 import { GestionInscripcionComponent } from '../../components/gestion-inscripcion/gestion-inscripcion.component';
 import { Moment } from 'moment';
 import * as moment from 'moment';
+import { MyValidators } from '@utils/validators';
 
 @Component({
   selector: 'app-generar-nuevo-plan-clases',
@@ -85,7 +86,7 @@ export class GenerarNuevoPlanClasesComponent implements OnInit {
     } = getDisponibilidadFromInscripcion(this.inscripcion);
 
     this.form = this.formBuilder.group({
-      fecha: [new Date()],
+      fecha: [new Date(), MyValidators.fechaAnteriorOIgualAHoy],
       cursoId: [TipCurId],
       cursoNombre: [TipCurNom],
       numeroClase: [numeroClases],

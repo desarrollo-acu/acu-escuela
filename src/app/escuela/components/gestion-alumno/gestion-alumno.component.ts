@@ -138,7 +138,7 @@ export class GestionAlumnoComponent implements OnInit {
     this.alumnoService
       .obtenerAlumnos(pageSize, pageNumber, filtro)
       .subscribe((res: any) => {
-        this.length = res.Cantidad;
+        this.length = res.cantidad;
         this.actualizarDatasource(res, pageSize, pageNumber - 1);
       });
   }
@@ -164,14 +164,14 @@ export class GestionAlumnoComponent implements OnInit {
   }
 
   actualizarDatasource(data, size?, index?) {
-    this.dataSource = data.Alumnos;
+    this.dataSource = data.alumnos;
     this.verAlumnos = true;
 
     if (size) {
       this.pageSize = size;
     }
 
-    this.length = data.Cantidad;
+    this.length = data.cantidad;
 
     if (index) {
       this.pageIndex = index;

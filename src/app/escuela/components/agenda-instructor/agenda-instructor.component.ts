@@ -19,6 +19,8 @@ import {
 
 import { isMoment, Moment } from 'moment';
 import { AgendaElement, DataAgenda, Cell } from '@core/model/interfaces';
+import { IngresarClaveAccionesComponent } from '@escuela/dialogs/ingresar-clave-acciones/ingresar-clave-acciones.component';
+import { errorMensaje } from '@utils/sweet-alert';
 
 @Component({
   selector: 'app-agenda-instructor',
@@ -145,80 +147,98 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
     t.afterDismissed().subscribe((seleccionoOpcion) => {
       if (seleccionoOpcion) {
         const abrirAgenda = localStorage.getItem('abrirAgenda');
-        switch (abrirAgenda) {
-          case 'instructor':
-            this.abrirAgenda(instructor, hora);
-            break;
 
-          case 'clase-adicional-instructor':
-            this.generarClaseAdicional(instructor, hora);
-            break;
-          case 'examen-instructor':
-            this.generarExamen(instructor, hora);
-            break;
+        if( abrirAgenda === 'instructor' ){
+          this.abrirAgenda(instructor, hora);
 
-          case 'suspender-instructor':
-            this.suspenderDuplicarClase(instructor, hora, true);
-            break;
-          case 'duplicar-instructor':
-            this.suspenderDuplicarClase(instructor, hora, false);
-            break;
+        }else{
 
-          default:
-            const refreshAgenda = localStorage.getItem('refreshAgenda');
-            const refreshLiberaAgenda = localStorage.getItem(
-              'refreshLiberaAgenda'
-            );
+          const dialogRef = this.dialog.open( IngresarClaveAccionesComponent, {
+            height: 'auto',
+            width: 'auto',
+          });
 
-            if (refreshLiberaAgenda) {
-              localStorage.removeItem('refreshLiberaAgenda');
-              celda.removeAttribute('class');
-              celda.innerHTML = '';
-              celda.classList.add(
-                'cdk-cell',
-                'mat-cell',
-                `cdk-column-${hora}`,
-                `mat-column-${hora}`,
-                'cell',
-                'ng-star-inserted'
-              );
-            }
 
-            if (refreshAgenda) {
-              const classOld = localStorage.getItem('classOld');
-              const textOld = localStorage.getItem('textOld');
 
-              if (localStorage.getItem('limpiarCeldaOld')) {
-                const oldParameters = JSON.parse(
-                  localStorage.getItem('copiarMoverParameters')
-                );
-                const celdaOld = document.getElementById(
-                  `${oldParameters.movilOld}${oldParameters.horaOld}`
-                );
-                celdaOld.removeAttribute('class');
-                celdaOld.innerHTML = '';
-                celdaOld.classList.add(
-                  'cdk-cell',
-                  'mat-cell',
-                  `cdk-column-${oldParameters.horaOld}`,
-                  `mat-column-${oldParameters.horaOld}`,
-                  'cell',
-                  'ng-star-inserted'
-                );
-                localStorage.removeItem('copiarMoverParameters');
-                localStorage.removeItem('limpiarCeldaOld');
+          dialogRef.afterClosed().subscribe(({claveValida}) => {
+            if(claveValida){
+              switch (abrirAgenda) {
+
+                case 'clase-adicional-instructor':
+                  this.generarClaseAdicional(instructor, hora);
+                  break;
+                case 'examen-instructor':
+                  this.generarExamen(instructor, hora);
+                  break;
+
+                case 'suspender-instructor':
+                  this.suspenderDuplicarClase(instructor, hora, true);
+                  break;
+                case 'duplicar-instructor':
+                  this.suspenderDuplicarClase(instructor, hora, false);
+                  break;
+
+                default:
+                  const refreshAgenda = localStorage.getItem('refreshAgenda');
+                  const refreshLiberaAgenda = localStorage.getItem(
+                    'refreshLiberaAgenda'
+                  );
+
+                  if (refreshLiberaAgenda) {
+                    localStorage.removeItem('refreshLiberaAgenda');
+                    celda.removeAttribute('class');
+                    celda.innerHTML = '';
+                    celda.classList.add(
+                      'cdk-cell',
+                      'mat-cell',
+                      `cdk-column-${hora}`,
+                      `mat-column-${hora}`,
+                      'cell',
+                      'ng-star-inserted'
+                    );
+                  }
+
+                  if (refreshAgenda) {
+                    const classOld = localStorage.getItem('classOld');
+                    const textOld = localStorage.getItem('textOld');
+
+                    if (localStorage.getItem('limpiarCeldaOld')) {
+                      const oldParameters = JSON.parse(
+                        localStorage.getItem('copiarMoverParameters')
+                      );
+                      const celdaOld = document.getElementById(
+                        `${oldParameters.movilOld}${oldParameters.horaOld}`
+                      );
+                      celdaOld.removeAttribute('class');
+                      celdaOld.innerHTML = '';
+                      celdaOld.classList.add(
+                        'cdk-cell',
+                        'mat-cell',
+                        `cdk-column-${oldParameters.horaOld}`,
+                        `mat-column-${oldParameters.horaOld}`,
+                        'cell',
+                        'ng-star-inserted'
+                      );
+                      localStorage.removeItem('copiarMoverParameters');
+                      localStorage.removeItem('limpiarCeldaOld');
+                    }
+                    const arrayClass: string[] = classOld.split(' ');
+                    localStorage.removeItem('classOld');
+                    localStorage.removeItem('textOld');
+
+                    localStorage.removeItem('refreshLiberaAgenda');
+                    celda.removeAttribute('class');
+                    celda.innerHTML = textOld;
+                    arrayClass.forEach((element) => celda.classList.add(element));
+                  }
+
+                  break;
               }
-              const arrayClass: string[] = classOld.split(' ');
-              localStorage.removeItem('classOld');
-              localStorage.removeItem('textOld');
-
-              localStorage.removeItem('refreshLiberaAgenda');
-              celda.removeAttribute('class');
-              celda.innerHTML = textOld;
-              arrayClass.forEach((element) => celda.classList.add(element));
+            }else{
+              errorMensaje('Error','La clave ingresada no es correcta. Comuniquese con el supervisor o administrador.').then()
             }
+          });
 
-            break;
         }
       }
     });

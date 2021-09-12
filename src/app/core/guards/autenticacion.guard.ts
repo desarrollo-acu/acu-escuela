@@ -39,6 +39,8 @@ export class AutenticacionGuard implements CanActivate, CanActivateChild {
     if (!estaLogeado) {
       localStorage.clear();
       this.router.navigate(['/login']);
+    } else {
+
     }
     return estaLogeado;
   }

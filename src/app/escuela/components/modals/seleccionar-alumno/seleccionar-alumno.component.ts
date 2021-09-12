@@ -99,7 +99,7 @@ export class SeleccionarAlumnoComponent implements OnInit { // , AfterViewInit, 
     this.alumnoService.obtenerAlumnos(pageSize, pageNumber, filtro)
       .subscribe((res: any) => {
 
-        this.length = res.Cantidad;
+        this.length = res.cantidad;
         this.actualizarDatasource(res, pageSize, pageNumber - 1);
 
 
@@ -128,12 +128,12 @@ export class SeleccionarAlumnoComponent implements OnInit { // , AfterViewInit, 
 
   actualizarDatasource(data, size?, index?) {
 
-    this.dataSource = data.Alumnos;
+    this.dataSource = data.alumnos;
     if (size) {
       this.pageSize = size;
     }
 
-    this.length = data.Cantidad;
+    this.length = data.cantidad;
     if (index) {
       this.pageIndex = index;
     }

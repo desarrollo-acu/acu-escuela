@@ -228,7 +228,7 @@ export class GenerarClaseAdicionalComponent implements OnInit {
     this.alumnoService
       .obtenerAlumnos(5, 1, '')
       .subscribe((res: any) =>
-        this.openDialogAlumnos(res.Alumnos, res.Cantidad)
+        this.openDialogAlumnos(res.alumnos, res.cantidad)
       );
   }
 

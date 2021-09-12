@@ -13,6 +13,10 @@ export interface Alumno {
     AluMail?: string;
     AluPar?: string;
     SOCID?: number;
+    SocId?: number;
+    SocNombre?: string;
+    SocMesPgo?: string;
+    SocAnoPgo?: string;
     AluConTel?: string;
     AluConNom?: string;
     AluConPar?: string;

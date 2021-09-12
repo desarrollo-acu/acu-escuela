@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
 import { Router } from '@angular/router';
-
+interface ValidarClaveAcciones {
+  claveValida: boolean
+}
 @Injectable({
   providedIn: 'root'
 })
@@ -32,7 +34,6 @@ export class AutenticacionService {
       usrId
     });
 
-
   }
 
 
@@ -46,8 +47,9 @@ export class AutenticacionService {
       usrPass: usrNuevaPass
     });
 
-
   }
+
+  verificarClaveAcciones = ( password: string ) => this.http.post<ValidarClaveAcciones>(`${environment.url_ws}/wsVerificarClaveAcciones`, { password })
 
 
 }

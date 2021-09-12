@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { mensajeConfirmacion } from '@utils/sweet-alert';
 import { confirmacionUsuario } from '../../../utils/sweet-alert';
-import { generateHorasLibres, getDisponibilidadFromInscripcion } from '../../../utils/utils-functions';
+import { generateHorasLibres, getDisponibilidadFromInscripcion, generateSedes } from '../../../utils/utils-functions';
 
 @Component({
   selector: 'app-abm-inscripcion',
@@ -35,7 +35,7 @@ export class AbmInscripcionComponent implements OnInit {
     private router: Router) {
 
     this.horasLibres = generateHorasLibres();
-    this.generateSedes();
+    this.sedes = [ ...generateSedes() ];
     this.buildForm();
     this.deshabilitarCampos();
   }
@@ -100,23 +100,6 @@ export class AbmInscripcionComponent implements OnInit {
     this.disponibilidadViernes.setValue(disponibilidadViernes);
     this.disponibilidadSabado.setValue(disponibilidadSabado);
     this.observaciones.setValue(this.inscripcion.EscAluCurObs);
-
-
-  }
-  generateSedes() {
-    const sede1 = {
-      id: 1,
-      value: 'Colonia y Yi',
-      description: 'Colonia y Yi'
-    };
-    this.sedes.push(sede1);
-
-    const sede2 = {
-      id: 2,
-      value: 'BASE-CARRASCO',
-      description: 'BASE CARRASCO'
-    };
-    this.sedes.push(sede2);
 
 
   }

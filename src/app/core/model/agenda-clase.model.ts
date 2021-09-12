@@ -42,5 +42,6 @@ export interface AgendaClase {
   planDeClases?: ClaseEstimada;
 
   UsrId?: string;
+  UsuarioAltaNombre?: string;
   existeClaseAgenda?: boolean;
 }

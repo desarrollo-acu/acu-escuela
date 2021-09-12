@@ -377,3 +377,29 @@ export function generateEstadosActivoDeshabilitado(): any[] {
   return estados;
 
 }
+
+
+
+export const generateSedes = () => {
+  const sedes = [];
+
+  sedes.push({
+    id: 1,
+    value: 'Colonia y Yi',
+    description: 'Colonia y Yi'
+  });
+
+  sedes.push({
+    id: 2,
+    value: 'BASE-CARRASCO',
+    description: 'BASE CARRASCO'
+  });
+
+  sedes.push({
+    id: 2,
+    value: 'CAR-ONE',
+    description: 'CAR ONE'
+  });
+
+  return sedes;
+}

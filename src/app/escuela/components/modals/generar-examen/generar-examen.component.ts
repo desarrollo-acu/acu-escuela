@@ -261,7 +261,7 @@ export class GenerarExamenComponent implements OnInit {
 
   seleccionarAlumno() {
     this.alumnoService.obtenerAlumnos(5, 1, '')
-    .subscribe((res: any) => this.openDialogAlumnos(res.Alumnos, res.Cantidad));
+    .subscribe((res: any) => this.openDialogAlumnos(res.alumnos, res.cantidad));
   }
 
   private openDialogAlumnos(alumnos, cantidad) {
