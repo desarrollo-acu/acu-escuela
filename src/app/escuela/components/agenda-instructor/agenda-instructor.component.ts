@@ -145,100 +145,92 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
     });
 
     t.afterDismissed().subscribe((seleccionoOpcion) => {
+
       if (seleccionoOpcion) {
         const abrirAgenda = localStorage.getItem('abrirAgenda');
 
-        if( abrirAgenda === 'instructor' ){
-          this.abrirAgenda(instructor, hora);
+        switch (abrirAgenda) {
+          case 'instructor':
+            this.abrirAgenda(instructor, hora);
+            break;
 
-        }else{
+          case 'clase-adicional-instructor':
+            this.generarClaseAdicional(instructor, hora);
+            break;
+          case 'examen-instructor':
+            this.generarExamen(instructor, hora);
+            break;
 
-          const dialogRef = this.dialog.open( IngresarClaveAccionesComponent, {
-            height: 'auto',
-            width: 'auto',
-          });
+          case 'suspender-instructor':
+            this.suspenderDuplicarClase(instructor, hora, true);
+            break;
+          case 'duplicar-instructor':
+            this.suspenderDuplicarClase(instructor, hora, false);
+            break;
 
+          default:
+            const refreshAgenda: boolean = Boolean(
+              JSON.parse(localStorage.getItem('refreshAgenda'))
+            );
+            const refreshLiberaAgenda: boolean = Boolean(
+              JSON.parse(localStorage.getItem('refreshLiberaAgenda'))
+            );
 
-
-          dialogRef.afterClosed().subscribe(({claveValida}) => {
-            if(claveValida){
-              switch (abrirAgenda) {
-
-                case 'clase-adicional-instructor':
-                  this.generarClaseAdicional(instructor, hora);
-                  break;
-                case 'examen-instructor':
-                  this.generarExamen(instructor, hora);
-                  break;
-
-                case 'suspender-instructor':
-                  this.suspenderDuplicarClase(instructor, hora, true);
-                  break;
-                case 'duplicar-instructor':
-                  this.suspenderDuplicarClase(instructor, hora, false);
-                  break;
-
-                default:
-                  const refreshAgenda = localStorage.getItem('refreshAgenda');
-                  const refreshLiberaAgenda = localStorage.getItem(
-                    'refreshLiberaAgenda'
-                  );
-
-                  if (refreshLiberaAgenda) {
-                    localStorage.removeItem('refreshLiberaAgenda');
-                    celda.removeAttribute('class');
-                    celda.innerHTML = '';
-                    celda.classList.add(
-                      'cdk-cell',
-                      'mat-cell',
-                      `cdk-column-${hora}`,
-                      `mat-column-${hora}`,
-                      'cell',
-                      'ng-star-inserted'
-                    );
-                  }
-
-                  if (refreshAgenda) {
-                    const classOld = localStorage.getItem('classOld');
-                    const textOld = localStorage.getItem('textOld');
-
-                    if (localStorage.getItem('limpiarCeldaOld')) {
-                      const oldParameters = JSON.parse(
-                        localStorage.getItem('copiarMoverParameters')
-                      );
-                      const celdaOld = document.getElementById(
-                        `${oldParameters.movilOld}${oldParameters.horaOld}`
-                      );
-                      celdaOld.removeAttribute('class');
-                      celdaOld.innerHTML = '';
-                      celdaOld.classList.add(
-                        'cdk-cell',
-                        'mat-cell',
-                        `cdk-column-${oldParameters.horaOld}`,
-                        `mat-column-${oldParameters.horaOld}`,
-                        'cell',
-                        'ng-star-inserted'
-                      );
-                      localStorage.removeItem('copiarMoverParameters');
-                      localStorage.removeItem('limpiarCeldaOld');
-                    }
-                    const arrayClass: string[] = classOld.split(' ');
-                    localStorage.removeItem('classOld');
-                    localStorage.removeItem('textOld');
-
-                    localStorage.removeItem('refreshLiberaAgenda');
-                    celda.removeAttribute('class');
-                    celda.innerHTML = textOld;
-                    arrayClass.forEach((element) => celda.classList.add(element));
-                  }
-
-                  break;
-              }
-            }else{
-              errorMensaje('Error','La clave ingresada no es correcta. Comuniquese con el supervisor o administrador.').then()
+            if (refreshLiberaAgenda) {
+              localStorage.removeItem('refreshLiberaAgenda');
+              celda.removeAttribute('class');
+              celda.innerHTML = '';
+              celda.classList.add(
+                'cdk-cell',
+                'mat-cell',
+                `cdk-column-${hora}`,
+                `mat-column-${hora}`,
+                'cell',
+                'ng-star-inserted'
+              );
             }
-          });
 
+            if (refreshAgenda) {
+              const classOld = localStorage.getItem('classOld');
+              const textOld = localStorage.getItem('textOld');
+
+              if (localStorage.getItem('limpiarCeldaOld')) {
+                const oldParameters = JSON.parse(
+                  localStorage.getItem('copiarMoverParameters')
+                );
+
+                const celdaOld = document.getElementById(
+                  `${oldParameters.escInsIdOld}${oldParameters.horaOld}`
+                );
+                celdaOld.removeAttribute('class');
+
+                celdaOld.innerHTML = '';
+                celdaOld.classList.add(
+                  'cdk-cell',
+                  'mat-cell',
+                  `cdk-column-${oldParameters.horaOld}`,
+                  `mat-column-${oldParameters.horaOld}`,
+                  'cell',
+                  'ng-star-inserted'
+                );
+                localStorage.removeItem('copiarMoverParameters');
+                localStorage.removeItem('limpiarCeldaOld');
+              }
+
+              const arrayClass: string[] = classOld?.split(' ');
+              localStorage.removeItem('classOld');
+              localStorage.removeItem('textOld');
+
+              localStorage.removeItem('refreshLiberaAgenda');
+              celda.removeAttribute('class');
+              celda.innerHTML = textOld;
+              arrayClass?.forEach((element) => celda.classList.add(element));
+              if( abrirAgenda === 'pegar-clase-ok'){
+                this.getAgenda(this.fecha);
+              }
+            }
+
+            break;
         }
       }
     });
@@ -248,6 +240,7 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
     this.acuService
       .getInstructorAgenda(this.fechaClase, hora, instructor)
       .subscribe((res: any) => {
+
         const dialogRef = this.dialog.open(VerAgendaComponent, {
           data: {
             agendaCurso: res.AgendaCurso,
@@ -298,7 +291,6 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
     this.acuService
       .getInstructorAgenda(this.fechaClase, hora, instructor)
       .subscribe((res: any) => {
-        console.log(res);
 
         const dialogRef = this.dialog.open(component, {
           data: {
@@ -453,9 +445,9 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
   }
 
   getAgenda(fecha: Date) {
-
     this.verAgenda = false;
     const strFecha = this.formatDateToString(fecha);
+
     this.acuService
       .getAgendaPorFecha(strFecha, 'instructor')
       .subscribe((res: any) => {

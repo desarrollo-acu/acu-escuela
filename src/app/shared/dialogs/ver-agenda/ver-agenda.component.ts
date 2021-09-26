@@ -164,6 +164,7 @@ export class VerAgendaComponent implements OnInit {
   }
 
   private buildForm() {
+
     if (this.agendaClase) {
       this.form = this.formBuilder.group({
         fecha: [this.fechaClase],

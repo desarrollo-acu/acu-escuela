@@ -84,9 +84,13 @@ export class GenerarNuevoPlanClasesComponent implements OnInit {
       disponibilidadViernes,
       disponibilidadSabado,
     } = getDisponibilidadFromInscripcion(this.inscripcion);
+    const today = new Date();
+    const tomorrow = new Date();
+    tomorrow.setDate(today.getDate() + 1);
+
 
     this.form = this.formBuilder.group({
-      fecha: [new Date(), MyValidators.fechaAnteriorOIgualAHoy],
+      fecha: [ tomorrow , MyValidators.fechaAnteriorOIgualAHoy],
       cursoId: [TipCurId],
       cursoNombre: [TipCurNom],
       numeroClase: [numeroClases],
