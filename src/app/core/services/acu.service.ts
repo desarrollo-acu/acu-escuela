@@ -158,7 +158,6 @@ export class AcuService {
     );
   }
 
-
   copiarMoverInstructorClase(params: CopiarMoverParameters) {
     return this.http.post(
       `${environment.url_ws}/wsCopiarMoverInstructorClase`,
@@ -181,6 +180,7 @@ export class AcuService {
       this.httpOptions
     );
   }
+
 
   liberarClase(params: LiberarParameters) {
     return this.http.post(
@@ -225,7 +225,6 @@ export class AcuService {
 
   getEscuelaEstados() {
     return this.http.get(`${environment.url_ws}/wsGetEscuelaEstados`);
-    // return this.http.post(`${environment.url_ws}/wsObtenerCursos`, {});
   }
 
   getDepartamentos() {
@@ -261,7 +260,6 @@ export class AcuService {
     return this.http.get(
       `${environment.url_ws}/wsGetCuotasSociales?SocId=${socId}`
     );
-    // return this.http.get(`${environment.url_ws}/wsGetFacturasPendientes?PageSize=${cantidad}&PageNumber=${page}&SocId=${socId}`);
   }
 
   facturarCuotasSociales(cuotasSociales: CuotaSocial) {
@@ -306,79 +304,7 @@ export class AcuService {
       envioNotificacion,
     });
   }
-  // test ws
 
-  testWsLogicsat() {
-    const headers = new HttpHeaders();
+  getTituloApp = () => this.http.get(`${environment.url_ws}/wsGetTituloApp`);
 
-    headers.set('Access-Control-Allow-Origin', '*');
-    headers.set('Access-Control-Allow-Methods', 'GET, POST');
-    headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    return this.http.post(
-      `http://api.logicsat.com/logicsat/rest/WSGetServicios`,
-      `
-    {
-    "WSAutorizacion": {
-        "Guid": "0a9ee8b9-8cf8-4e95-933c-35194d2f0559",
-        "Usuario": "api@acu.com",
-        "Password": "apiacu2020"
-    },
-    "WSSDTFiltroServicio": {
-        "Id": "",
-        "SuperiorId": "0",
-        "IdExterno": "",
-        "NroServicio": "",
-        "NroAsistencia": "",
-        "Estado": "",
-        "FechaLlamadaInicial": "15-09-2020 00:00:00",
-        "FechaLlamadaFinal": "16-09-2020 23:59:00",
-        "Procedencia": "",
-        "Prestador": "",
-        "Movil": "",
-        "Operador": "",
-        "Telefonista": "",
-        "Prestacion": "",
-        "Causa": "",
-        "SubCausa": "",
-        "Motivo": "",
-        "Pais": "",
-        "Departamento": "",
-        "Ciudad": "",
-        "Zona": "",
-        "NroTracking": ""
-    }
-}
-    `,
-      { headers }
-    );
-  }
-}
-
-function xml2json(xml) {
-  try {
-    let obj = {};
-    if (xml.children.length > 0) {
-      for (let i = 0; i < xml.children.length; i++) {
-        const item = xml.children.item(i);
-        const nodeName = item.nodeName;
-
-        if (typeof obj[nodeName] === 'undefined') {
-          obj[nodeName] = xml2json(item);
-        } else {
-          if (typeof obj[nodeName].push === 'undefined') {
-            const old = obj[nodeName];
-
-            obj[nodeName] = [];
-            obj[nodeName].push(old);
-          }
-          obj[nodeName].push(xml2json(item));
-        }
-      }
-    } else {
-      obj = xml.textContent;
-    }
-    return obj;
-  } catch (e) {
-    console.error(e.message);
-  }
 }

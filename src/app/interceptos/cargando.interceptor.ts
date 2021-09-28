@@ -37,6 +37,9 @@ export class CargandoInterceptor implements HttpInterceptor {
         if (err.status === 401) {
           this.router.navigate(['/login']);
         }
+
+        console.log(err);
+
         return throwError(err);
       })
       ,finalize( () => this.blockUI.stop() )

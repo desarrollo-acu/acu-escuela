@@ -14,7 +14,6 @@ import { CopiarMoverParameters } from 'src/app/core/model/copiarMoverParameters.
 import { AutenticacionService } from '../../../../core/services/autenticacion.service';
 import {
   confirmacionUsuario,
-  mensajeConfirmacion,
   errorMensaje,
 } from '../../../../utils/sweet-alert';
 import { SeleccionarMovilComponent } from '../seleccionar-movil/seleccionar-movil.component';
@@ -129,14 +128,10 @@ export class SeleccionarAccionAgendaComponent {
         );
 
         if (existe) {
-          Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'Ese turno ya esta ocupado, elegi otro!',
-          });
+          errorMensaje('Oops...','Ese turno ya esta ocupado, elegí otro!');
         } else {
+          continuar = false;
           if (oldParameters.fechaOld > mainParameters.fecha) {
-            continuar = false;
             confirmacionUsuario(
               'Confirmación de usuario',
               'ATENCIÓN: La fecha seleccionada es anterior a la actual. ¿Confirma continuar?'
@@ -166,9 +161,15 @@ export class SeleccionarAccionAgendaComponent {
     }
   }
 
-  cerrarBottomSheet(correcto?: boolean, event?: Event) {
+  copiarMoverClase(oldParameters, mainParameters, event){
+    localStorage.setItem('abrirAgenda','copiar-mover-clase');
+    this.setPegarStorage();
+    this.cerrarBottomSheet(true, event, {oldParameters, mainParameters, event});
+  }
 
-    this._bottomSheetRef.dismiss(correcto);
+  cerrarBottomSheet(correcto?: boolean, event?: Event, params?) {
+
+    this._bottomSheetRef.dismiss({seleccionoOpcion: correcto, params});
     event.preventDefault();
   }
 
@@ -177,6 +178,7 @@ export class SeleccionarAccionAgendaComponent {
     localStorage.setItem('pegar-clase', this.pegar.toString());
   }
 
+/*
   copiarMoverClase(oldParameters, mainParameters, event) {
     console.log({mainParameters});
 
@@ -281,4 +283,5 @@ export class SeleccionarAccionAgendaComponent {
     this.setPegarStorage();
     this.cerrarBottomSheet(true, event);
   }
+  */
 }

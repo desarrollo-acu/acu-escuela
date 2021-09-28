@@ -21,6 +21,10 @@ import { isMoment, Moment } from 'moment';
 import { AgendaElement, DataAgenda, Cell } from '@core/model/interfaces';
 import { IngresarClaveAccionesComponent } from '@escuela/dialogs/ingresar-clave-acciones/ingresar-clave-acciones.component';
 import { errorMensaje } from '@utils/sweet-alert';
+import { MovilService } from '@core/services/movil.service';
+import { AutenticacionService } from '@core/services/autenticacion.service';
+import { CopiarMoverParameters } from '@core/model/copiarMoverParameters.model';
+import { SeleccionarMovilComponent } from '@escuela/components/modals/seleccionar-movil/seleccionar-movil.component';
 
 @Component({
   selector: 'app-agenda-instructor',
@@ -50,6 +54,8 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
 
   constructor(
     private acuService: AcuService,
+    private movilService: MovilService,
+    private auth: AutenticacionService,
     public dialog: MatDialog,
     // tslint:disable-next-line: variable-name
     private _bottomSheet: MatBottomSheet
@@ -144,7 +150,8 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
       },
     });
 
-    t.afterDismissed().subscribe((seleccionoOpcion) => {
+    t.afterDismissed().subscribe(({seleccionoOpcion, params}) => {
+      console.log({seleccionoOpcion, params});
 
       if (seleccionoOpcion) {
         const abrirAgenda = localStorage.getItem('abrirAgenda');
@@ -166,6 +173,10 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
             break;
           case 'duplicar-instructor':
             this.suspenderDuplicarClase(instructor, hora, false);
+            break;
+          case 'copiar-mover-clase':
+            const {oldParameters, mainParameters} = params;
+            this.copiarMoverClase(oldParameters, mainParameters);
             break;
 
           default:
@@ -234,6 +245,102 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
         }
       }
     });
+  }
+
+  copiarMoverClase(oldParameters, mainParameters) {
+    console.log({ mainParameters });
+    if( mainParameters.instructor !== oldParameters.escInsIdOld){
+      return errorMensaje('Error', 'No es posible mover la clase de un instructor hacia otro instructor distinto.')
+    }
+    const params: CopiarMoverParameters = {
+      accion: oldParameters.accion,
+      fechaClaseOld: oldParameters.fechaOld,
+      horaClaseOld: oldParameters.horaOld,
+      movilOld: oldParameters.movilOld,
+      escInsIdOld: oldParameters.escInsIdOld,
+      fechaClase: mainParameters.fecha,
+      horaClase: mainParameters.hora,
+      movil: mainParameters.movil,
+      escInsId: mainParameters.instructor,
+      esMovil: mainParameters.esMovil,
+      userId: this.auth.getUserId(),
+    };
+
+    params.esMovil
+      ? this.acuService
+          .copiarMoverClase(params)
+          .subscribe((res: any) =>
+            this.finalizarCopiarMoverClase(
+              res,
+              oldParameters,
+              mainParameters,
+              params
+            )
+          )
+      : this.acuService
+          .copiarMoverInstructorClase(params)
+          .subscribe((res: any) =>
+            this.finalizarCopiarMoverClase(
+              res,
+              oldParameters,
+              mainParameters,
+              params
+            )
+          );
+  }
+
+  finalizarCopiarMoverClase(res, oldParameters, mainParameters, params) {
+    if (res.errorCode === 0) {
+      mensajeConfirmacion('Excelente!', res.Msg);
+      this.getAgenda(this.fecha);
+    } else {
+      if (res.elegirOtroMovil) {
+        errorMensaje('Oops...', res.Msg).then(() => {
+          this.movilService
+            .getMovilesDisponiblesPorFechaHora(
+              params.fechaClase,
+              params.horaClase
+            )
+            .subscribe((moviles) => {
+              const movilesDialogRef = this.dialog.open(
+                SeleccionarMovilComponent,
+                {
+                  height: 'auto',
+                  width: '700px',
+                  data: {
+                    moviles,
+                  },
+                }
+              );
+
+              movilesDialogRef.afterClosed().subscribe((movil) => {
+                console.log(movil);
+
+                if (movil) {
+                  this.copiarMoverClase(
+                    oldParameters,
+                    { ...mainParameters, movil: movil.MovCod }
+                  );
+                } else {
+                  this.getAgenda(this.fecha);
+                  this.salirCopiarMoverClase(oldParameters);
+                }
+              });
+            });
+        });
+        return;
+      } else {
+        errorMensaje('Oops...', res.Msg);
+      }
+    }
+    this.salirCopiarMoverClase(oldParameters);
+  }
+
+  salirCopiarMoverClase(oldParameters) {
+    localStorage.setItem('classOld', oldParameters.classOld);
+    localStorage.setItem('textOld', oldParameters.textOld);
+    localStorage.setItem('refreshAgenda', 'true');
+
   }
 
   abrirAgenda(instructor: string, hora: number) {
