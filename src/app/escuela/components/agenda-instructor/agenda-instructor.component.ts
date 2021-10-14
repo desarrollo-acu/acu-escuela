@@ -249,9 +249,9 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
 
   copiarMoverClase(oldParameters, mainParameters) {
     console.log({ mainParameters });
-    if( mainParameters.instructor !== oldParameters.escInsIdOld){
-      return errorMensaje('Error', 'No es posible mover la clase de un instructor hacia otro instructor distinto.')
-    }
+    // if( mainParameters.instructor !== oldParameters.escInsIdOld){
+    //   return errorMensaje('Error', 'No es posible mover la clase de un instructor hacia otro instructor distinto.')
+    // }
     const params: CopiarMoverParameters = {
       accion: oldParameters.accion,
       fechaClaseOld: oldParameters.fechaOld,

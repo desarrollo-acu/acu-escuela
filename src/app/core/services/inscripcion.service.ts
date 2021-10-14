@@ -26,29 +26,40 @@ export class InscripcionService {
   constructor(private http: HttpClient) {}
 
   sendDataInscripcion(modo: string, inscripcion: Inscripcion, id?: number) {
-    const data: { modo, inscripcion: Inscripcion; id: number } = id
+    const data: { modo; inscripcion: Inscripcion; id: number } = id
       ? { modo, inscripcion, id }
       : { modo, inscripcion, id: 0 };
     this.inscripcionDataSource.next(data);
   }
 
-  generarExamen = (generarExamen: GenerarExamen)  => this.http.post<ResponseSDTCustom>(`${environment.url_ws}/wsGenerarExamen`, {
+  generarExamen = (generarExamen: GenerarExamen) =>
+    this.http.post<ResponseSDTCustom>(`${environment.url_ws}/wsGenerarExamen`, {
       generarExamen,
     });
 
-  generarClaseAdicional = (claseAdicional: GenerarClaseAdicional)  => this.http.post<ResponseSDTCustom>(`${environment.url_ws}/wsGenerarClaseAdicional`, {
-      claseAdicional,
-    });
+  generarClaseAdicional = (claseAdicional: GenerarClaseAdicional) =>
+    this.http.post<ResponseSDTCustom>(
+      `${environment.url_ws}/wsGenerarClaseAdicional`,
+      {
+        claseAdicional,
+      }
+    );
 
-  guardarNuevaDisponibilidad = ( GenerarInscripcion: InscripcionCurso ) => this.http.post<ResponseSDTCustom>(`${environment.url_ws}/wsGuardarNuevaDisponibilidad`, {GenerarInscripcion});
+  guardarNuevaDisponibilidad = (GenerarInscripcion: InscripcionCurso) =>
+    this.http.post<ResponseSDTCustom>(
+      `${environment.url_ws}/wsGuardarNuevaDisponibilidad`,
+      { GenerarInscripcion }
+    );
 
-  generarNuevoPlanClases = ( GenerarInscripcion: InscripcionCurso ) => this.http.post<ResponseSDTCustom>(`${environment.url_ws}/wsGuardarNuevoPlanClases`, {GenerarInscripcion});
+  generarNuevoPlanClases = (GenerarInscripcion: InscripcionCurso) =>
+    this.http.post<ResponseSDTCustom>(
+      `${environment.url_ws}/wsGuardarNuevoPlanClases`,
+      { GenerarInscripcion }
+    );
   //wsGuardarNuevoPlanClases
   //wsGenerarClaseAdicional
 
   generarInscripcion(inscripcion: InscripcionCurso) {
-
-
     return this.http.post(`${environment.url_ws}/wsGenerarInscripcion`, {
       GenerarInscripcion: {
         FacturaRUT: inscripcion.FacturaRut,
@@ -80,13 +91,10 @@ export class InscripcionService {
         examenMedico: inscripcion.examenMedico,
         licenciaCedulaIdentidad: inscripcion.licenciaCedulaIdentidad,
         pagoDeLicencia: inscripcion.pagoDeLicencia,
-
         fechaLicCedulaIdentidad: inscripcion.fechaLicCedulaIdentidad,
         fechaPagoLicencia: inscripcion.fechaPagoLicencia,
         fechaExamenMedico: inscripcion.fechaExamenMedico,
-
         fechaClaseEstimada: inscripcion.fechaClaseEstimada,
-
         usrId: localStorage.getItem('usrId'),
       },
     });
@@ -104,9 +112,14 @@ export class InscripcionService {
     );
   }
 
-  obtenerInscripcionById(escAluCurId: number, aluId: number, cursoId: number, fecha?: string) {
+  obtenerInscripcionById(
+    escAluCurId: number,
+    aluId: number,
+    cursoId: number,
+    fecha?: string
+  ) {
     let parameters = `EscAluCurId=${escAluCurId}&AluId=${aluId}&TipCurId=${cursoId}`;
-    if(fecha){
+    if (fecha) {
       parameters += `&fecha=${fecha}`;
     }
     return this.http.get(
@@ -114,12 +127,20 @@ export class InscripcionService {
     );
   }
 
-  getInscripcionesByAlumno = (alumnoId: number) => this.http.get (`${environment.url_ws}/wsGetInscripcionesByAlumno?AluId=${alumnoId}`);
+  getInscripcionesByAlumno = (alumnoId: number) =>
+    this.http.get(
+      `${environment.url_ws}/wsGetInscripcionesByAlumno?AluId=${alumnoId}`
+    );
 
-  getExamenes  = () => this.http.get<Examen[]>(`${environment.url_ws}/wsGetExamenes`);
+  getExamenes = () =>
+    this.http.get<Examen[]>(`${environment.url_ws}/wsGetExamenes`);
 
-  getExamenById  = (examen: Examen) =>
-    this.http.get<Examen>(`${environment.url_ws}/wsGetExamenById?aluID=${examen.ALUID}&tipCurId=${examen.TIPCURID}&escAluCurId=${examen.EscAluCurId}&escAluCurExamenId=${examen.EscAluCurExamenId}`);
+  getExamenById = (examen: Examen) =>
+    this.http.get<Examen>(
+      `${environment.url_ws}/wsGetExamenById?aluID=${examen.ALUID}&tipCurId=${examen.TIPCURID}&escAluCurId=${examen.EscAluCurId}&escAluCurExamenId=${examen.EscAluCurExamenId}`
+    );
+
+    gestionExamen = (examen: Examen) => this.http.post<ResponseSDTCustom>(`${environment.url_ws}/wsGestionExamen`, {examen});
 
   getPDFPrefactura(preFactura: Prefactura) {
     const headers = new HttpHeaders();

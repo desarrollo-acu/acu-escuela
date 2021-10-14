@@ -14,6 +14,10 @@
                       formControlName="alumno"
                       required
                     />
+
+                    <mat-error *ngIf="alumno.hasError('required')">
+                      Alumno es <strong>requerido</strong>.
+                    </mat-error>
                   </mat-form-field>
                 </div>
               </div>
@@ -29,11 +33,14 @@
                       formControlName="curso"
                       required
                     />
+
+                    <mat-error *ngIf="curso.hasError('required')">
+                      Curso es <strong>requerido</strong>.
+                    </mat-error>
                   </mat-form-field>
                 </div>
               </div>
             </div>
-
 
             <div class="row">
               <div class="col-xs">
@@ -45,6 +52,12 @@
                       formControlName="escAluCurExamenObservaciones"
                       required
                     />
+
+                    <mat-error
+                      *ngIf="escAluCurExamenObservaciones.hasError('required')"
+                    >
+                      Las observaciones son <strong>requeridas</strong>.
+                    </mat-error>
                   </mat-form-field>
                 </div>
               </div>
@@ -62,6 +75,12 @@
                     <mat-datepicker-toggle matSuffix [for]="picker">
                     </mat-datepicker-toggle>
                     <mat-datepicker #picker></mat-datepicker>
+
+                    <mat-error
+                      *ngIf="escAluCurExamenFecha.hasError('required')"
+                    >
+                      Fecha es <strong>requerida</strong>.
+                    </mat-error>
                   </mat-form-field>
                 </div>
               </div>
@@ -92,6 +111,14 @@
                 <div class="box">
                   <mat-checkbox formControlName="escAluCurExamenAprueba">
                     Aprobo?
+                  </mat-checkbox>
+                </div>
+              </div>
+
+              <div class="col-xs">
+                <div class="box">
+                  <mat-checkbox formControlName="escAluCurExamenSuspendido">
+                    Examen suspendido?
                   </mat-checkbox>
                 </div>
               </div>

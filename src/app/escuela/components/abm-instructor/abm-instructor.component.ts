@@ -1,38 +1,40 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 
-
 import { Subscription } from 'rxjs';
 import { InstructorService } from '@core/services/instructor.service';
 import { AcuService } from '@core/services/acu.service';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { mensajeConfirmacion, confirmacionUsuario, errorMensaje } from '@utils/sweet-alert';
+import {
+  mensajeConfirmacion,
+  confirmacionUsuario,
+  errorMensaje,
+} from '@utils/sweet-alert';
 import Swal from 'sweetalert2';
 import { MatTableDataSource } from '@angular/material/table';
-
 
 import { MatDialog } from '@angular/material/dialog';
 
 import { Instructor, InstructorItem } from '@core/model/instructor.model';
 import { EscuelaEstado } from '@core/model/escuela-estado.model';
 
-import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import {
+  DateAdapter,
+  MAT_DATE_FORMATS,
+  MAT_DATE_LOCALE,
+} from '@angular/material/core';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { InstructorHorario } from '@core/model/instructor.model';
-
-
 
 @Component({
   selector: 'app-abm-instructor',
   templateUrl: './abm-instructor.component.html',
   styleUrls: ['./abm-instructor.component.scss'],
 })
-
 export class AbmInstructorComponent implements OnInit, OnDestroy {
-
   private subscription: Subscription;
 
   instructorForm: FormGroup;
@@ -42,11 +44,26 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
   items: InstructorItem[] = [];
   horarios: InstructorHorario[] = [];
   estados: EscuelaEstado[] = [];
-  dias: string[] = ['LUNES', 'MARTES', 'MIÉRCOLES', 'JUEVES', 'VIERNES', 'SÁBADO', 'DOMINGO'];
+  dias: string[] = [
+    'LUNES',
+    'MARTES',
+    'MIÉRCOLES',
+    'JUEVES',
+    'VIERNES',
+    'SÁBADO',
+    'DOMINGO',
+  ];
   dia: string;
   estado: EscuelaEstado;
 
-  displayedColumns: string[] = ['actions-abm', 'InsLicIni', 'InsLicFin', 'EscEstId', 'InsLicObs', 'confirmar-cancelar'];
+  displayedColumns: string[] = [
+    'actions-abm',
+    'InsLicIni',
+    'InsLicFin',
+    'EscEstId',
+    'InsLicObs',
+    'confirmar-cancelar',
+  ];
   horarioDisplayedColumns: string[] = [
     'actions-abm',
     'escInsDia',
@@ -56,8 +73,8 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
     'escInsT1Ha',
     'escInsMovMa',
     'escInsMovTa',
-    'confirmar-cancelar'];
-
+    'confirmar-cancelar',
+  ];
 
   dataSource: MatTableDataSource<InstructorItem>;
 
@@ -66,7 +83,8 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
 
   horarioDataSource: MatTableDataSource<InstructorHorario>;
 
-  @ViewChild('horarioPaginator', { static: true }) horarioPaginator: MatPaginator;
+  @ViewChild('horarioPaginator', { static: true })
+  horarioPaginator: MatPaginator;
   @ViewChild('horarioSort') horarioSort: MatSort;
 
   mode: string;
@@ -79,8 +97,8 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private dialog: MatDialog,
     private _adapter: DateAdapter<any>,
-    private router: Router) {
-
+    private router: Router
+  ) {
     // this._adapter.setLocale('es');
     this.buildForm();
   }
@@ -90,36 +108,29 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-
     if (!this.primeraVez) {
+      this.acuService
+        .getEscuelaEstados()
+        .subscribe((estados: EscuelaEstado[]) => {
+          this.estados = estados;
 
-      this.acuService.getEscuelaEstados().subscribe((estados: EscuelaEstado[]) => {
-        this.estados = estados;
+          this.subscription =
+            this.instructorService.instructorCurrentData.subscribe((data) => {
+              this.primeraVez = true;
+              this.mode = data.modo;
 
-        this.subscription = this.instructorService.instructorCurrentData.subscribe((data) => {
-
-          this.primeraVez = true;
-          this.mode = data.modo;
-
-          this.changeForm(data.modo, data.instructor);
-
+              this.changeForm(data.modo, data.instructor);
+            });
         });
-
-      });
     }
-
-
   }
-
 
   onNoClick(): void {
     // Me voy a la pantalla de gestión y elimino del Servicio
     this.router.navigate(['/escuela/gestion-instructor']);
   }
 
-
   private buildForm() {
-
     this.instructorForm = this.fb.group({
       escInsId: ['', Validators.required],
       escInsNom: ['', Validators.required],
@@ -138,7 +149,6 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
       escEstId: [''],
       insLicObs: [''],
 
-
       // Horario
       escInsDia: [''],
       escInsM1De: [0],
@@ -147,34 +157,26 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
       escInsT1Ha: [0],
       escInsMovMa: [0],
       escInsMovTa: [0],
-
-
     });
 
-
     this.rows = this.fb.array([]);
-
-
   }
 
-
   private changeForm(modo: string, instructor: Instructor) {
-
-
     if (modo === 'INS') {
       this.titulo = 'Agregar';
-
     } else {
-
-
       this.titulo = 'Editar';
       this.items = instructor.Items.map((item) => {
-
-        item.EscuelaEstado = this.estados.find(estado => (estado.EscEstId === item.EscEstId || estado.ESCESTID === item.EscEstId));
+        item.EscuelaEstado = this.estados.find(
+          (estado) =>
+            estado.EscEstId === item.EscEstId ||
+            estado.ESCESTID === item.EscEstId
+        );
         return item;
       });
 
-      this.horarios = instructor.Horario.map(h => {
+      this.horarios = instructor.Horario.map((h) => {
         h.EscInsM1De = h.EscInsM1De;
         h.EscInsM1Ha = h.EscInsM1Ha;
         h.EscInsT1De = h.EscInsT1De;
@@ -185,17 +187,12 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
       this.actualizarDataSource(this.items, this.horarios);
 
       this.setValuesForm(instructor);
-
-
     }
-
   }
-
 
   addRow(tipo: string) {
     if (tipo === 'item') {
-
-      const existe = this.items.find(i => i.InsLicIni === null);
+      const existe = this.items.find((i) => i.InsLicIni === null);
 
       if (!existe) {
         const item: InstructorItem = {
@@ -205,9 +202,8 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
           InsLicObs: '',
           isInsert: true,
           modo: 'INS',
-          isDelete: false
+          isDelete: false,
         };
-
 
         this.items.unshift(item);
         const aux = new MatTableDataSource(this.items);
@@ -219,9 +215,8 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
         this.insLicFin.setValue(null);
       }
     } else {
-      const existe = this.horarios.find(h => h.EscInsDia === null);
+      const existe = this.horarios.find((h) => h.EscInsDia === null);
       if (!existe) {
-
         const horario: InstructorHorario = {
           EscInsDia: null,
           EscInsM1De: 0,
@@ -233,9 +228,8 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
 
           isInsert: true,
           modo: 'INS',
-          isDelete: false
+          isDelete: false,
         };
-
 
         this.horarios.unshift(horario);
         const aux = new MatTableDataSource(this.horarios);
@@ -254,15 +248,16 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
   }
 
   existeFecha(fecha: Date): boolean {
-
     const auxDate = new Date(fecha);
-    const month = (auxDate.getMonth() + 1 < 10) ? `0${auxDate.getMonth() + 1}` : `${auxDate.getMonth() + 1}`;
-    const day = (auxDate.getDate() < 10) ? `0${auxDate.getDate()}` : `${auxDate.getDate()}`;
+    const month =
+      auxDate.getMonth() + 1 < 10
+        ? `0${auxDate.getMonth() + 1}`
+        : `${auxDate.getMonth() + 1}`;
+    const day =
+      auxDate.getDate() < 10 ? `0${auxDate.getDate()}` : `${auxDate.getDate()}`;
     const auxString = `${auxDate.getFullYear()}-${month}-${day}`;
 
-    const auxItem = this.items.find(i => {
-
-
+    const auxItem = this.items.find((i) => {
       if (auxString === i.InsLicIni) {
         this.insLicIni.setValue('');
         return i;
@@ -277,8 +272,7 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
   }
 
   existeDia(dia: string): boolean {
-
-    const auxHorario = this.horarios.find(h => h.EscInsDia === dia);
+    const auxHorario = this.horarios.find((h) => h.EscInsDia === dia);
     if (auxHorario) {
       errorMensaje('Error', 'El día ingresado ya existe. Elija otro.').then();
       return true;
@@ -286,29 +280,29 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
     return false;
   }
 
-  confirmar(confirma: boolean, item?: InstructorItem, horario?: InstructorHorario) {
-
-
-
+  confirmar(
+    confirma: boolean,
+    item?: InstructorItem,
+    horario?: InstructorHorario
+  ) {
     if (confirma) {
-      if ( item ) {
-          this.preABMItem( item );
+      if (item) {
+        this.preABMItem(item);
       }
-      if ( horario ) {
-        this.preABMHorario( horario );
+      if (horario) {
+        this.preABMHorario(horario);
       }
     } else {
-      if (item ) {
-
-        if( item.modo === 'INS'){
-          this.items = this.items.filter( i => i.InsLicIni !==  item.InsLicIni );
-        }else{
+      if (item) {
+        if (item.modo === 'INS') {
+          this.items = this.items.filter((i) => i.InsLicIni !== item.InsLicIni);
+        } else {
           this.insLicIni.setValue(null);
           this.insLicFin.setValue(null);
           this.escEstId.setValue(0);
           this.insLicObs.setValue('');
 
-          this.items = this.items.map(i => {
+          this.items = this.items.map((i) => {
             if (i.InsLicIni === item.InsLicIni) {
               i.modo = false;
             }
@@ -316,16 +310,14 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
             return i;
           });
         }
-
-
       }
-      if (horario ) {
-
-        if(horario.modo === 'INS'){
-          this.horarios = this.horarios.filter( h => h.EscInsDia !==  horario.EscInsDia );
-        }else {
-
-          this.horarios = this.horarios.map(i => {
+      if (horario) {
+        if (horario.modo === 'INS') {
+          this.horarios = this.horarios.filter(
+            (h) => h.EscInsDia !== horario.EscInsDia
+          );
+        } else {
+          this.horarios = this.horarios.map((i) => {
             if (i.EscInsDia === horario.EscInsDia) {
               i.modo = false;
             }
@@ -334,26 +326,17 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
         }
 
         this.limpiarCamposHorario();
-
       }
 
-
       this.actualizarDataSource(this.items, this.horarios);
-
     }
-
-
-
   }
 
-
-  preABMItem(item?: InstructorItem){
-
+  preABMItem(item?: InstructorItem) {
     switch (item.modo) {
       case 'INS':
         const aux: EscuelaEstado = this.escEstId.value;
-        this.items = this.items.map(i => {
-
+        this.items = this.items.map((i) => {
           if (i.InsLicIni === null) {
             i.InsLicIni = this.insLicIni.value;
             i.InsLicFin = this.insLicFin.value;
@@ -362,7 +345,6 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
             i.EscEstDsc = this.estado.EscEstDsc;
             i.EscuelaEstado = this.estado;
 
-
             this.insLicIni.setValue(null);
             this.insLicFin.setValue(null);
             this.escEstId.setValue(0);
@@ -370,7 +352,6 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
             this.estado = null;
 
             i.modo = false;
-
           }
 
           return i;
@@ -380,8 +361,7 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
         break;
 
       case 'UPD':
-
-        this.items = this.items.map(i => {
+        this.items = this.items.map((i) => {
           if (i.InsLicIni === item.InsLicIni) {
             const aux: InstructorItem = {
               InsLicIni: this.insLicIni.value,
@@ -390,8 +370,7 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
               InsLicObs: this.insLicObs.value,
               EscEstDsc: this.estado.EscEstDsc,
               EscuelaEstado: this.estado,
-              modo: false
-
+              modo: false,
             };
             this.estado = null;
             return aux;
@@ -404,31 +383,37 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
         break;
 
       case 'DLT':
-
         confirmacionUsuario(
           'Confirmación de Usuario',
-          `Está seguro que desea eliminar el ausentismo con fecha de inicio: ${item.InsLicIni} del Instructor?`).then((confirm) => {
-            if (confirm.isConfirmed) {
-              this.items = this.items.filter( i => i.InsLicIni !==  item.InsLicIni );
+          `Está seguro que desea eliminar el ausentismo con fecha de inicio: ${item.InsLicIni} del Instructor?`
+        ).then((confirm) => {
+          if (confirm.isConfirmed) {
+            this.items = this.items.filter(
+              (i) => i.InsLicIni !== item.InsLicIni
+            );
 
-
-              this.actualizarDataSource(this.items, this.horarios);
-            }
-          });
+            this.actualizarDataSource(this.items, this.horarios);
+          }
+        });
 
         break;
     }
   }
 
-  preABMHorario(horario?: InstructorHorario){
-    const {escInsDia,escInsM1De,escInsM1Ha,escInsT1De,escInsT1Ha,escInsMovMa,escInsMovTa} = this.instructorForm.value
-
+  preABMHorario(horario?: InstructorHorario) {
+    const {
+      escInsDia,
+      escInsM1De,
+      escInsM1Ha,
+      escInsT1De,
+      escInsT1Ha,
+      escInsMovMa,
+      escInsMovTa,
+    } = this.instructorForm.value;
 
     switch (horario.modo) {
       case 'INS':
-
-        this.horarios = this.horarios.map(h => {
-
+        this.horarios = this.horarios.map((h) => {
           if (h.EscInsDia === null) {
             h.EscInsDia = escInsDia;
             h.EscInsM1De = escInsM1De;
@@ -440,9 +425,7 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
 
             this.limpiarCamposHorario();
 
-
             h.modo = false;
-
           }
 
           return h;
@@ -452,11 +435,9 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
         break;
 
       case 'UPD':
-        this.horarios = this.horarios.map(h => {
+        this.horarios = this.horarios.map((h) => {
           if (h.EscInsDia === horario.EscInsDia) {
-
             const aux: InstructorHorario = {
-
               EscInsDia: escInsDia,
               EscInsM1De: escInsM1De,
               EscInsM1Ha: escInsM1Ha,
@@ -465,10 +446,7 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
               EscInsMovMa: escInsMovMa,
               EscInsMovTa: escInsMovTa,
 
-
-
-              modo: false
-
+              modo: false,
             };
             this.estado = null;
             return aux;
@@ -481,22 +459,23 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
         break;
 
       case 'DLT':
-
         confirmacionUsuario(
           'Confirmación de Usuario',
-          `Está seguro que desea eliminar el día: ${horario.EscInsDia} del Instructor?`).then((confirm) => {
-            if (confirm.isConfirmed) {
-              this.horarios = this.horarios.filter( h => h.EscInsDia !==  horario.EscInsDia );
-              this.actualizarDataSource(this.items, this.horarios);
-            }
-          });
+          `Está seguro que desea eliminar el día: ${horario.EscInsDia} del Instructor?`
+        ).then((confirm) => {
+          if (confirm.isConfirmed) {
+            this.horarios = this.horarios.filter(
+              (h) => h.EscInsDia !== horario.EscInsDia
+            );
+            this.actualizarDataSource(this.items, this.horarios);
+          }
+        });
 
         break;
     }
   }
 
   limpiarCamposHorario() {
-
     this.escInsDia.setValue(null);
     this.escInsM1De.setValue(0);
     this.escInsM1Ha.setValue(0);
@@ -507,7 +486,6 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
   }
 
   actualizarDataSource(items: InstructorItem[], horario: InstructorHorario[]) {
-
     this.dataSource = new MatTableDataSource(items);
 
     this.dataSource.paginator = this.paginator;
@@ -517,19 +495,15 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
 
     this.horarioDataSource.paginator = this.horarioPaginator;
     this.horarioDataSource.sort = this.horarioSort;
-
   }
 
   abmItem(modo: string, item: InstructorItem) {
-
     switch (modo) {
       case 'INS':
-
         this.addRow('item');
         break;
       case 'UPD':
-
-        this.items = this.items.map(i => {
+        this.items = this.items.map((i) => {
           if (i.InsLicIni === item.InsLicIni) {
             this.estado = i.EscuelaEstado;
             i.isDelete = false;
@@ -548,7 +522,7 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
         break;
 
       case 'DLT':
-        this.items = this.items.map(i => {
+        this.items = this.items.map((i) => {
           if (i.InsLicIni === item.InsLicIni) {
             i.isDelete = true;
             i.modo = modo;
@@ -558,19 +532,15 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
         });
         break;
     }
-
   }
 
   abmHorario(modo: string, horario: InstructorHorario) {
-
     switch (modo) {
       case 'INS':
-
         this.addRow('horario');
         break;
       case 'UPD':
-
-        this.horarios = this.horarios.map(h => {
+        this.horarios = this.horarios.map((h) => {
           if (h.EscInsDia === horario.EscInsDia) {
             h.isDelete = false;
             h.modo = modo;
@@ -591,7 +561,7 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
         break;
 
       case 'DLT':
-        this.horarios = this.horarios.map(h => {
+        this.horarios = this.horarios.map((h) => {
           if (h.EscInsDia === horario.EscInsDia) {
             h.isDelete = true;
             h.modo = modo;
@@ -601,17 +571,13 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
         });
         break;
     }
-
   }
 
   guardarInstructor(event: Event) {
     event.preventDefault();
 
-
     if (this.instructorForm.valid) {
-
       const instructor: Instructor = {
-
         EscInsId: this.escInsId.value,
         EscInsNom: this.escInsNom.value,
         EscInsDir: this.escInsDir.value,
@@ -623,30 +589,25 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
         EscInsConTel: this.escInsConTel.value,
 
         Items: this.items,
-        Horario: this.horarios
+        Horario: this.horarios,
       };
 
-
-      this.instructorService.gestionInstructor(this.mode, instructor)
+      this.instructorService
+        .gestionInstructor(this.mode, instructor)
         .subscribe((res: any) => {
-
           if (res.Instructor.ErrorCode === 0) {
-            mensajeConfirmacion('Confirmado!', res.Instructor.ErrorMessage).then(() =>  this.router.navigate(['/escuela/gestion-instructor']));
-
+            mensajeConfirmacion(
+              'Confirmado!',
+              res.Instructor.ErrorMessage
+            ).then(() => this.router.navigate(['/escuela/gestion-instructor']));
           } else {
-            errorMensaje('Error', res.Instructor.ErrorMessage)
+            errorMensaje('Error', res.Instructor.ErrorMessage);
           }
-
         });
-
-
     }
   }
 
-
   private setValuesForm(instructor: Instructor) {
-
-
     this.escInsId.setValue(instructor.EscInsId);
     this.escInsNom.setValue(instructor.EscInsNom);
     this.escInsNomCor.setValue(instructor.EscInsNomCor);
@@ -656,10 +617,7 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
     this.escInsSocMed.setValue(instructor.EscInsSocMed);
     this.escInsConNom.setValue(instructor.EscInsConNom);
     this.escInsConTel.setValue(instructor.EscInsConTel);
-
-
   }
-
 
   get escInsId() {
     return this.instructorForm.get('escInsId');
@@ -713,7 +671,6 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
     return this.instructorForm.get('insLicObs');
   }
 
-
   get escInsDia() {
     return this.instructorForm.get('escInsDia');
   }
@@ -741,7 +698,4 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
   get escInsMovTa() {
     return this.instructorForm.get('escInsMovTa');
   }
-
-
-
 }
