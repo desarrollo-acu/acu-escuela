@@ -127,6 +127,11 @@ export class InscripcionService {
     );
   }
 
+  eliminarPlanDeClase = (inscripcion: Inscripcion) =>
+    this.http.post(`${environment.url_ws}/wsEliminarPlanDeClasesAlumno`, {
+      inscripcion,
+    });
+
   getInscripcionesByAlumno = (alumnoId: number) =>
     this.http.get(
       `${environment.url_ws}/wsGetInscripcionesByAlumno?AluId=${alumnoId}`
@@ -140,7 +145,10 @@ export class InscripcionService {
       `${environment.url_ws}/wsGetExamenById?aluID=${examen.ALUID}&tipCurId=${examen.TIPCURID}&escAluCurId=${examen.EscAluCurId}&escAluCurExamenId=${examen.EscAluCurExamenId}`
     );
 
-    gestionExamen = (examen: Examen) => this.http.post<ResponseSDTCustom>(`${environment.url_ws}/wsGestionExamen`, {examen});
+  gestionExamen = (examen: Examen) =>
+    this.http.post<ResponseSDTCustom>(`${environment.url_ws}/wsGestionExamen`, {
+      examen,
+    });
 
   getPDFPrefactura(preFactura: Prefactura) {
     const headers = new HttpHeaders();

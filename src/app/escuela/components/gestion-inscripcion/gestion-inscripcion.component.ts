@@ -11,20 +11,24 @@ import { GenerarNuevoPlanClasesComponent } from '../../dialogs/generar-nuevo-pla
 import { AcuService } from '../../../core/services/acu.service';
 import { environment } from '@environments/environment';
 
-
 @Component({
   selector: 'app-gestion-inscripcion',
   templateUrl: './gestion-inscripcion.component.html',
-  styleUrls: ['./gestion-inscripcion.component.scss']
+  styleUrls: ['./gestion-inscripcion.component.scss'],
 })
 export class GestionInscripcionComponent implements OnInit {
-
-  displayedColumns: string[] = ['actions', 'Alumno', 'Instructor', 'Curso', 'FechaInscripcion', 'FechaInicio'];
+  displayedColumns: string[] = [
+    'actions',
+    'Alumno',
+    'Instructor',
+    'Curso',
+    'FechaInscripcion',
+    'FechaInicio',
+  ];
 
   dataSource: MatTableDataSource<Inscripcion>;
   verInscripciones: boolean;
   filtro: string;
-
 
   // Test paginator
   pageEvent: PageEvent;
@@ -40,12 +44,11 @@ export class GestionInscripcionComponent implements OnInit {
     private inscripcionService: InscripcionService,
     private acuService: AcuService,
     public dialog: MatDialog,
-    private router: Router) {
-      }
+    private router: Router
+  ) {}
 
   ngOnInit() {
     const event = this.ejecutoEvent(null);
-
 
     // Get the input box
     const input = document.getElementById('search');
@@ -62,40 +65,32 @@ export class GestionInscripcionComponent implements OnInit {
 
       // Make a new timeout set to go off in 1000ms (1 second)
       timeout = setTimeout(() => {
-
         this.getInscripciones(this.pageSize, 1, this.filtro);
       }, 500);
     });
-
   }
 
   verDetalle(inscripcion: Inscripcion) {
-
-    this.inscripcionService.sendDataInscripcion('DSP',inscripcion, 0);
+    this.inscripcionService.sendDataInscripcion('DSP', inscripcion, 0);
     this.router.navigate(['/escuela/abm-inscripcion']);
   }
 
-
   getInscripciones(pageSize, pageNumber, filtro) {
-
-
     if (pageNumber === 0) {
       pageNumber = 1;
     }
     this.verInscripciones = false;
-    this.inscripcionService.obtenerInscripciones(pageSize, pageNumber, filtro)
+    this.inscripcionService
+      .obtenerInscripciones(pageSize, pageNumber, filtro)
       .subscribe((res: any) => {
-
         this.length = res.Cantidad;
         this.actualizarDatasource(res, pageSize, pageNumber - 1);
-
-
       });
   }
 
   ejecutoEvent(pageEvento: PageEvent) {
     this.pageEvent = pageEvento;
-    const filter = (this.filtro) ? this.filtro : '';
+    const filter = this.filtro ? this.filtro : '';
 
     if (pageEvento) {
       let index = pageEvento.pageIndex;
@@ -107,16 +102,13 @@ export class GestionInscripcionComponent implements OnInit {
       }
 
       this.getInscripciones(pageEvento.pageSize, index, filter);
-
     } else {
       this.getInscripciones(this.pageSize, 1, '');
     }
     return pageEvento;
-
   }
 
   actualizarDatasource(data, size?, index?) {
-
     this.dataSource = data.Inscripciones;
     this.verInscripciones = true;
 
@@ -132,30 +124,35 @@ export class GestionInscripcionComponent implements OnInit {
 
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-
-
   }
 
   editar = (inscripcion: Inscripcion) => {
-    this.inscripcionService.sendDataInscripcion('UPD',inscripcion, 0);
+    this.inscripcionService.sendDataInscripcion('UPD', inscripcion, 0);
     this.router.navigate(['/escuela/abm-inscripcion']);
+  };
 
-  }
-
-  nuevoPlanClase({ EscAluCurId, AluId, TipCurId }: Inscripcion){
-
-    this.inscripcionService.obtenerInscripcionById( EscAluCurId, AluId, TipCurId ).subscribe( inscripcion => {
-      const dialogRef = this.dialog.open(GenerarNuevoPlanClasesComponent, {
-        data: {
-           inscripcion
-        }
+  nuevoPlanClase({ EscAluCurId, AluId, TipCurId }: Inscripcion) {
+    this.inscripcionService
+      .obtenerInscripcionById(EscAluCurId, AluId, TipCurId)
+      .subscribe((inscripcion) => {
+        const dialogRef = this.dialog.open(GenerarNuevoPlanClasesComponent, {
+          data: {
+            inscripcion,
+          },
+        });
       });
-
-
-
-    });
-
-
   }
 
+  eliminarPlanClase(inscripcion: Inscripcion) {
+    confirmacionUsuario(
+      'Confirmación de usuario',
+      '¿Está seguro que desea eliminar el plan de clases?'
+    ).then(
+      ({ isConfirmed }) =>
+        isConfirmed &&
+        this.inscripcionService
+          .eliminarPlanDeClase(inscripcion)
+          .subscribe(console.log)
+    );
+  }
 }
