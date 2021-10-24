@@ -10,6 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { GenerarNuevoPlanClasesComponent } from '../../dialogs/generar-nuevo-plan-clases/generar-nuevo-plan-clases.component';
 import { AcuService } from '../../../core/services/acu.service';
 import { environment } from '@environments/environment';
+import { AutenticacionService } from '@core/services/autenticacion.service';
 
 @Component({
   selector: 'app-gestion-inscripcion',
@@ -42,6 +43,7 @@ export class GestionInscripcionComponent implements OnInit {
 
   constructor(
     private inscripcionService: InscripcionService,
+    private autenticacionService: AutenticacionService,
     private acuService: AcuService,
     public dialog: MatDialog,
     private router: Router
@@ -151,7 +153,7 @@ export class GestionInscripcionComponent implements OnInit {
       ({ isConfirmed }) =>
         isConfirmed &&
         this.inscripcionService
-          .eliminarPlanDeClase(inscripcion)
+          .eliminarPlanDeClase({...inscripcion, UsrId: this.autenticacionService.getUserId()})
           .subscribe(console.log)
     );
   }
