@@ -68,7 +68,6 @@ export class GenerarExamenComponent implements OnInit {
   ) {
     this.agendaClase = this.data.agendaClase;
 
-
     if (this.agendaClase.AluId) {
       this.aluId = this.agendaClase.AluId;
     }
@@ -137,10 +136,15 @@ export class GenerarExamenComponent implements OnInit {
         ? `0${this.agendaClase.Hora}`
         : this.agendaClase.Hora;
 
+    const movil =
+      this.agendaClase.EscMovCod && this.agendaClase.EscMovCod !== 0
+        ? this.agendaClase.EscMovCod
+        : null;
+
     this.form = this.formBuilder.group({
       fechaClase: [this.agendaClase.FechaClase],
       hora: [`${hora}:00`],
-      movil: [this.agendaClase.EscMovCod, Validators.required],
+      movil: [movil, Validators.required],
       cursoId: [this.agendaClase.TipCurId, Validators.required],
       cursoNombre: [this.agendaClase.TipCurNom],
       numeroClase: [this.agendaClase.EsAgCuNroCla],
@@ -171,7 +175,6 @@ export class GenerarExamenComponent implements OnInit {
 
   seleccionarMovil() {
     this.movilService.getMoviles().subscribe((moviles: Movil[]) => {
-
       const auxMoviles = moviles.filter((movil) => movil.EscVehEst === 'A');
 
       this.openDialogMoviles(auxMoviles);
@@ -231,8 +234,6 @@ export class GenerarExamenComponent implements OnInit {
     // });
   }
   private openDialogInscripciones(inscripciones) {
-
-
     const dialogRef = this.dialog.open(SeleccionarInscripcionComponent, {
       height: 'auto',
       width: '700px',
@@ -260,8 +261,11 @@ export class GenerarExamenComponent implements OnInit {
   }
 
   seleccionarAlumno() {
-    this.alumnoService.obtenerAlumnos(5, 1, '')
-    .subscribe((res: any) => this.openDialogAlumnos(res.alumnos, res.cantidad));
+    this.alumnoService
+      .obtenerAlumnos(5, 1, '')
+      .subscribe((res: any) =>
+        this.openDialogAlumnos(res.alumnos, res.cantidad)
+      );
   }
 
   private openDialogAlumnos(alumnos, cantidad) {
@@ -275,7 +279,6 @@ export class GenerarExamenComponent implements OnInit {
     });
 
     alumnosDialogRef.afterClosed().subscribe((alumno) => {
-
       if (alumno) {
         this.aluId = alumno.AluId;
         this.obtenerInscripcion();
@@ -292,7 +295,6 @@ export class GenerarExamenComponent implements OnInit {
 
     if (cursoId !== '') {
       this.cursoService.getCurso(cursoId).subscribe((curso: any) => {
-
         if (curso.TipCurId === '0') {
           return Swal.fire({
             icon: 'warning',
@@ -316,7 +318,6 @@ export class GenerarExamenComponent implements OnInit {
   }
 
   obtenerInscripcion() {
-
     if (this.aluId === null || this.tipCurId === null) {
       return;
     }
@@ -324,7 +325,6 @@ export class GenerarExamenComponent implements OnInit {
     this.inscripcionService
       .obtenerInscripcion(this.aluId, this.tipCurId)
       .subscribe((inscripcion: Inscripcion) => {
-
         this.mostrarExamen = true;
         this.examenConCosto = inscripcion.cantidadExamenes > 0;
         this.tituloExamen = this.examenConCosto ? 'con' : 'sin';
@@ -338,10 +338,14 @@ export class GenerarExamenComponent implements OnInit {
   }
 
   generarExamen(event: Event) {
-
+    if (this.movil.value === 0) {
+      this.movil.setValue(null);
+    }
     if (this.form.invalid) {
       return;
     }
+    console.log(this.form.invalid);
+
     confirmacionUsuario(
       'Confirmar generación de examen',
       `Se generará un nuevo examen ${this.tituloExamen} costo para el alumno ${this.alumnoNombre.value}, ¿Desea continuar? `
@@ -349,7 +353,6 @@ export class GenerarExamenComponent implements OnInit {
       if (!res.isConfirmed) {
         return;
       }
-
 
       // Si reserva clase previa, evaluo si tiene clase anterior para la hora inmediatamente anterior
       if (this.reservarClasePrevia.value) {
@@ -371,10 +374,9 @@ export class GenerarExamenComponent implements OnInit {
               // tslint:disable-next-line: triple-equals
               clasePrevia.AluId != 0
             ) {
-              this.obtenerNuevaClase(
-                clasePrevia,
-                clasePrevia.EsAgCuInsId
-              ).then(() => this.evaluarClaseSeleccionada());
+              this.obtenerNuevaClase(clasePrevia, clasePrevia.EsAgCuInsId).then(
+                () => this.evaluarClaseSeleccionada()
+              );
             } else {
               this.evaluarClaseSeleccionada();
             }
@@ -424,7 +426,6 @@ export class GenerarExamenComponent implements OnInit {
       this.instructorService
         .getDisponibilidadInstructor(auxAgendaClase, 1)
         .subscribe((res: { ClasesEstimadas: ClaseEstimada[] }) => {
-
           const arrayPlano: {
             instructorCodigo?: string;
             instructorNombre?: string;
@@ -471,7 +472,8 @@ export class GenerarExamenComponent implements OnInit {
   finGenerarExamen() {
     // Si hay items en clasesAReagender, entonces reagenda clase.
     const reagendaClase: boolean = this.clasesAReagendar.length > 0;
-    const instructorSeleccionado: string = this.escInsId.value.toLocaleUpperCase();
+    const instructorSeleccionado: string =
+      this.escInsId.value.toLocaleUpperCase();
 
     const generarExamen: GenerarExamen = {
       alumnoVaADarExamen: this.aluId,
@@ -488,12 +490,13 @@ export class GenerarExamenComponent implements OnInit {
       clasesAReagendar: this.clasesAReagendar,
     };
 
-
     this.inscripcionService
       .generarExamen(generarExamen)
       .subscribe((response: ResponseSDTCustom) => {
         if (response.errorCode === 0) {
-          mensajeConfirmacion('Excelente!', response.errorMensaje).then(() => this.dialogRef.close() );
+          mensajeConfirmacion('Excelente!', response.errorMensaje).then(() =>
+            this.dialogRef.close()
+          );
         } else {
           errorMensaje('Error', response.errorMensaje);
         }

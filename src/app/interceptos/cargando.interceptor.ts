@@ -4,7 +4,8 @@ import {
   HttpHandler,
   HttpEvent,
   HttpInterceptor,
-  HttpResponse
+  HttpResponse,
+  HttpHeaders
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { Router } from '@angular/router';
@@ -37,6 +38,9 @@ export class CargandoInterceptor implements HttpInterceptor {
         if (err.status === 401) {
           this.router.navigate(['/login']);
         }
+
+        console.log(err);
+
         return throwError(err);
       })
       ,finalize( () => this.blockUI.stop() )

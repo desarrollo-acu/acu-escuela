@@ -17,7 +17,13 @@ export class GestionExamenComponent implements OnInit {
   constructor(private inscripcionService : InscripcionService, private router: Router, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    this.inscripcionService.getExamenes().subscribe(examenes => this.examenes = examenes);
+    console.log('entro aca');
+
+    this.inscripcionService.getExamenes().subscribe(examenes => {
+      console.log(examenes);
+
+      this.examenes = examenes
+    });
 
 
     this.actions = [

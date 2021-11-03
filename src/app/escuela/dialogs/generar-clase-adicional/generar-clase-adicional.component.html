@@ -41,9 +41,10 @@
               matInput
               placeholder="Número de Movil"
               formControlName="movil"
+              type="number"
             />
 
-            <mat-error *ngIf="movil.hasError('required')">
+            <mat-error *ngIf="movil.hasError('required')  || movil.value === 0">
               El móvil es <strong>requerido</strong>.
             </mat-error>
           </mat-form-field>

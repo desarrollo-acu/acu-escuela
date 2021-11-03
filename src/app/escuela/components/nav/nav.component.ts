@@ -11,6 +11,7 @@ import { formatDateToString } from '@utils/utils-functions';
 import { EnviarNotificacionComponent } from '../modals/enviar-notificacion/enviar-notificacion.component';
 import { AutenticacionService } from '../../../core/services/autenticacion.service';
 import { CambiarContraseniaComponent } from '../../dialogs/cambiar-contrasenia/cambiar-contrasenia.component';
+import { AcuService } from '../../../core/services/acu.service';
 
 @Component({
   selector: 'app-nav',
@@ -41,11 +42,13 @@ export class NavComponent implements OnDestroy {
 
   private mobileQueryListener: () => void;
 
+  titleApp: string;
   title: string;
 
   constructor(
 
     private auth: AutenticacionService,
+    private acuService: AcuService,
     private breakpointObserver: BreakpointObserver,
     changeDetectorRef: ChangeDetectorRef,
     media: MediaMatcher,
@@ -58,6 +61,7 @@ export class NavComponent implements OnDestroy {
     this.mobileQuery.addListener(this.mobileQueryListener);
 
     this.changeTitle(this.router.url);
+    this.acuService.getTituloApp().subscribe( ({titulo}:any) => this.titleApp = titulo );
   }
 
   ngOnDestroy(): void {

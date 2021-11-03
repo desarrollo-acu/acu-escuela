@@ -144,10 +144,15 @@ export class GenerarClaseAdicionalComponent implements OnInit {
         ? `0${this.agendaClase.Hora}`
         : this.agendaClase.Hora;
 
+    const movil =
+    this.agendaClase.EscMovCod && this.agendaClase.EscMovCod !== 0
+      ? this.agendaClase.EscMovCod
+      : null;
+
     this.form = this.formBuilder.group({
       fechaClase: [this.agendaClase.FechaClase],
       hora: [`${hora}:00`],
-      movil: [this.agendaClase.EscMovCod, Validators.required],
+      movil: [movil, Validators.required],
       cursoId: [this.agendaClase.TipCurId, Validators.required],
       cursoNombre: [this.agendaClase.TipCurNom],
       numeroClase: [this.agendaClase.EsAgCuNroCla],
@@ -301,6 +306,10 @@ export class GenerarClaseAdicionalComponent implements OnInit {
   }
 
   generarClaseAdicional(event: Event) {
+
+    if (this.movil.value === 0) {
+      this.movil.setValue(null);
+    }
     if (this.form.invalid) {
       return;
     }

@@ -1,93 +1,129 @@
-<!-- <div class="row" style="margin-top: 10px">
-    <div class="col-xs-12" style="padding: 0px 30px;">
-        <div class="box">
+<div class="row" style="width: 100%">
+  <div class="col-xs" style="padding: 10px 30px">
+    <div class="box">
+      <mat-form-field class="full-width" appearance="fill">
+        <mat-label>Buscar Inscripción...</mat-label>
+        <input matInput id="search" [(ngModel)]="filtro" #input />
+      </mat-form-field>
 
-            <mat-button-toggle-group>
-                <mat-button-toggle (click)="abmInscripcion('INS', null)">Agregar Inscripción</mat-button-toggle>
-            </mat-button-toggle-group>
-
-
+      <div class="mat-elevation-z8">
+        <div *ngIf="!verInscripciones" align="center">
+          <h2 class="example-h2">Cargando inscripciones...</h2>
+          <mat-progress-spinner
+            class="example-margin"
+            color="accent"
+            mode="indeterminate"
+            style="margin: 0px auto"
+          >
+          </mat-progress-spinner>
         </div>
+
+        <table
+          mat-table
+          [dataSource]="dataSource"
+          matSort
+          *ngIf="verInscripciones"
+        >
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let row">
+              <button
+                mat-mini-fab
+                matTooltip="Editar disponibilidad "
+                matTooltipClass="tooltip-blue"
+                class="margin-left-5 button-editar"
+                (click)="editar(row)"
+              >
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button
+                mat-mini-fab
+                matTooltip="Ver detalle "
+                matTooltipClass="tooltip-blue"
+                class="margin-left-5 button-editar"
+                (click)="verDetalle(row)"
+              >
+                <mat-icon>search</mat-icon>
+              </button>
+              <button
+                mat-mini-fab
+                class="margin-left-5"
+                matTooltip="Regenerar plan de curso a la fecha"
+                matTooltipClass="tooltip-red"
+                (click)="nuevoPlanClase(row)"
+              >
+                <mat-icon>today</mat-icon>
+              </button>
+              <button
+                mat-mini-fab
+                class="margin-left-5"
+                matTooltip="Eliminar plan de clases"
+                matTooltipClass="tooltip-red"
+                (click)="eliminarPlanClase(row)"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="Alumno">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Alumno</th>
+            <td mat-cell *matCellDef="let row">
+              {{ row.AluNro }} - {{ row.AluNomComp }} -
+              {{ row.AluCI | ci: row.AluDV }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="Instructor">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              Instructor
+            </th>
+            <td mat-cell *matCellDef="let row">
+              {{ row.EscInsId }} - {{ row.EscInsNom }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="Curso">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Curso</th>
+            <td mat-cell *matCellDef="let row">
+              {{ row.TipCurId }} - {{ row.TipCurNom }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="FechaInscripcion">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              Fecha de Inscripción
+            </th>
+            <td mat-cell *matCellDef="let row">{{ row.EscCurFchIns }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="FechaInicio">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              Inicio del curso
+            </th>
+            <td mat-cell *matCellDef="let row">{{ row.EscCurIni }}</td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">
+              No existen datos con el filtro: "{{ input.value }}"
+            </td>
+          </tr>
+        </table>
+
+        <mat-paginator
+          #paginator
+          [length]="length"
+          [pageIndex]="pageIndex"
+          [pageSize]="pageSize"
+          [pageSizeOptions]="[5, 10, 25, 100]"
+          (page)="pageEvent = ejecutoEvent($event)"
+        >
+        </mat-paginator>
+      </div>
     </div>
-</div> -->
-
-<div class="row" style="width: 100%;">
-    <div class="col-xs" style="padding: 10px 30px;">
-        <div class="box">
-
-            <mat-form-field class="full-width" appearance="fill">
-
-                <mat-label>Buscar Inscripción...</mat-label>
-                <input matInput id="search" [(ngModel)]="filtro" #input>
-            </mat-form-field>
-
-            <div class="mat-elevation-z8">
-
-                <div *ngIf="!verInscripciones" align="center">
-                    <h2 class="example-h2">Cargando inscripciones...</h2>
-                    <mat-progress-spinner class="example-margin" color="accent" mode="indeterminate" style="margin: 0px auto;">
-                    </mat-progress-spinner>
-
-                </div>
-
-                <table mat-table [dataSource]="dataSource" matSort *ngIf="verInscripciones">
-
-                    <ng-container matColumnDef="actions">
-                        <th mat-header-cell *matHeaderCellDef> </th>
-                        <td mat-cell *matCellDef="let row">
-                            <button mat-mini-fab matTooltip="Editar disponibilidad " matTooltipClass="tooltip-blue" class="margin-left-5 button-editar" (click)="editar(row)">
-                                <mat-icon>edit</mat-icon>
-                            </button>
-                            <button mat-mini-fab matTooltip="Ver detalle " matTooltipClass="tooltip-blue" class="margin-left-5 button-editar" (click)="verDetalle(row)">
-                                <mat-icon>search</mat-icon>
-                            </button>
-                            <button mat-mini-fab class="margin-left-5" matTooltip="Regenerar plan de curso a la fecha" matTooltipClass="tooltip-red" (click)="nuevoPlanClase( row)">
-                                <mat-icon>today</mat-icon>
-                            </button>
-
-                        </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="Alumno">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Alumno </th>
-                        <td mat-cell *matCellDef="let row"> {{row.AluNro}} - {{row.AluNomComp}} - {{row.AluCI | ci:row.AluDV}} </td>
-                    </ng-container>
-
-
-                    <ng-container matColumnDef="Instructor">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Instructor </th>
-                        <td mat-cell *matCellDef="let row"> {{row.EscInsId}} - {{row.EscInsNom}} </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="Curso">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Curso </th>
-                        <td mat-cell *matCellDef="let row"> {{row.TipCurId}} - {{row.TipCurNom}} </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="FechaInscripcion">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha de Inscripción </th>
-                        <td mat-cell *matCellDef="let row"> {{row.EscCurFchIns}} </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="FechaInicio">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Inicio del curso </th>
-                        <td mat-cell *matCellDef="let row"> {{row.EscCurIni}} </td>
-                    </ng-container>
-
-                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-
-                    <tr class="mat-row" *matNoDataRow>
-                        <td class="mat-cell" colspan="4">No existen datos con el filtro: "{{ input.value }}"</td>
-                    </tr>
-                </table>
-
-
-                <mat-paginator #paginator [length]="length" [pageIndex]="pageIndex" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 25, 100]" (page)="pageEvent = ejecutoEvent($event)">
-                </mat-paginator>
-            </div>
-
-        </div>
-    </div>
-
+  </div>
 </div>

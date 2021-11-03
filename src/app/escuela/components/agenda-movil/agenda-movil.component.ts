@@ -143,7 +143,7 @@ export class AgendaMovilComponent implements OnInit, OnDestroy {
       },
     });
 
-    t.afterDismissed().subscribe((seleccionoOpcion) => {
+    t.afterDismissed().subscribe(({seleccionoOpcion}) => {
       if (seleccionoOpcion) {
         const abrirAgenda = localStorage.getItem('abrirAgenda');
 
