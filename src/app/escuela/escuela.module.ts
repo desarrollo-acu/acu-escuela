@@ -76,6 +76,11 @@ import { CantidadClasesPorPeriodoComponent } from './components/cantidad-clases-
 import { InicioCursoPorPeriodoComponent } from './components/inicio-curso-por-periodo/inicio-curso-por-periodo.component';
 import { CuentaCorrienteComponent } from './pages/cuenta-corriente/cuenta-corriente.component';
 import { IngresarClaveAccionesComponent } from './dialogs/ingresar-clave-acciones/ingresar-clave-acciones.component';
+import { GestionFormulariosComponent } from './pages/gestion-formularios/gestion-formularios.component';
+import { DesperfectoMovilComponent } from './components/desperfecto-movil/desperfecto-movil.component';
+import { DiarioMovilComponent } from './components/diario-movil/diario-movil.component';
+import { EvaluacionAlumnoComponent } from './components/evaluacion-alumno/evaluacion-alumno.component';
+import { ResultadoExamenPracticoComponent } from './components/resultado-examen-practico/resultado-examen-practico.component';
 
 
 registerLocaleData(localeEsUy, 'es-UY');
@@ -134,6 +139,11 @@ registerLocaleData(localeEs, 'es');
     InicioCursoPorPeriodoComponent,
     CuentaCorrienteComponent,
     IngresarClaveAccionesComponent,
+    GestionFormulariosComponent,
+    DesperfectoMovilComponent,
+    DiarioMovilComponent,
+    EvaluacionAlumnoComponent,
+    ResultadoExamenPracticoComponent,
   ],
   imports: [
     CommonModule,

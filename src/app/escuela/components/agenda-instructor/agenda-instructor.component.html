@@ -67,7 +67,7 @@
     <table mat-table [(dataSource)]="agendaDataSource" class="mat-elevation-z8" *ngIf="verAgenda">
 
 
-        <ng-container matColumnDef="Instructor">
+        <ng-container matColumnDef="Instructor" [sticky]="true">
             <th mat-header-cell *matHeaderCellDef> Instructor </th>
             <td mat-cell class="cell" *matCellDef="let element"> {{element.Instructor}} </td>
             <td mat-footer-cell *matFooterCellDef> Porcentaje </td>
@@ -278,7 +278,7 @@
             <td mat-footer-cell *matFooterCellDef>[ {{ porcentajeGlobal }} % ]</td>
         </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="agendaDisplayedColumns"></tr>
+        <tr mat-header-row *matHeaderRowDef="agendaDisplayedColumns; sticky: true"></tr>
         <tr mat-row *matRowDef="let row; columns: agendaDisplayedColumns;"></tr>
         <tr mat-footer-row *matFooterRowDef="agendaDisplayedColumns"></tr>
 
