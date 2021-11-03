@@ -31,20 +31,6 @@ export class FormulariosService {
   }
 
   setFormularios( type:FormulariosType, formularios: any[]) {
-    // let state = {...this.getFormularios(), [type]: [...formularios]};
-    // switch (type) {
-    //   case 'desperfecto-movil':
-    //     state = {...state, desperfectoMovil: [...formularios]};
-    //     break;
-    //   case 'diario-movil':
-    //     state = {...state, diarioMovil: [...formularios]};
-    //     break;
-    //   case 'evaluacion-alumno':
-    //     state = {...state, evaluacionAlumno: [...formularios]};
-    //   case 'resultado-examen-practico':
-    //     state = {...state, resultadoExamenPractico: [...formularios]};
-    // }
-
     this.formularios.next({...this.getFormularios(), [type]: [...formularios]});
   }
 
