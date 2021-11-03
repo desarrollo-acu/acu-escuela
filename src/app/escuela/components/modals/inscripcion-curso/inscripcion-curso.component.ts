@@ -135,15 +135,10 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
   private buildForm() {
     this.form = this.formBuilder.group(
       {
-        fechaClase: [this.fechaClase, [MyValidators.fechaPosteriorAHoy]],
+        fechaClase: [this.fechaClase, [Validators.required]],
         cursoId: [
           '',
           [Validators.required], // sync validators
-          [
-            // existeAlumnoValidator(this.acuService),
-            // alumnoYaAsignadoValidator(this.acuService),
-            // alumnoTieneExcepcionValidator(this.acuService)
-          ], // async validators
         ],
         cursoNombre: [''],
         cursoClasesPracticas: [''],
@@ -156,19 +151,13 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
         escCurTe3: [''],
         escCurIni: [''],
         alumnoNumero: [
-          '',
-          [Validators.required], // sync validators
-          // [
-          //   existeAlumnoValidator(this.acuService),
-          //   alumnoYaAsignadoValidator(this.acuService),
-          //   alumnoTieneExcepcionValidator(this.acuService)
-          // ] // async validators
+          '',,
         ],
         alumnoNombre: [''],
-        alumnoCI: [null],
+        alumnoCI: [null, [Validators.required]],
         alumnoTelefono: [''],
         alumnoCelular: [''],
-        sede: [''],
+        sede: [null, Validators.required],
         irABuscarAlAlumno: [false],
         limitarClases: [false],
         limiteClases: [0],
@@ -209,14 +198,12 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
     this.fechaClaseFiled.disable();
 
     // Campos deshabilitados del alumno
-    // this.alumnoCIField.disable();
     this.alumnoNumeroField.disable();
     this.alumnoTelefonoField.disable();
     this.alumnoNombreField.disable();
     this.alumnoCelularField.disable();
 
     // Campos deshabilitados del curso
-
     this.cursoNombreField.disable();
     this.cursoClasesPracticasField.disable();
     this.cursoClasesTeoricasField.disable();
@@ -727,6 +714,10 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
 
   get cursoExamenTeoricoField() {
     return this.form.get('cursoExamenTeorico');
+  }
+
+  get sede() {
+    return this.form.get('sede');
   }
 
   get escCurTe1Field() {

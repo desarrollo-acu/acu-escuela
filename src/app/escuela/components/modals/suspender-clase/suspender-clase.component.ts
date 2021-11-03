@@ -15,8 +15,9 @@ import {
   ClaseEstimadaDetalle,
 } from '@core/model/clase-estimada.model';
 import { InstructorHorasLibresComponent } from '../instructor-horas-libres/instructor-horas-libres.component';
-import { confirmacionUsuario, mensajeConfirmacion } from '@utils/sweet-alert';
+import { confirmacionUsuario, errorMensaje, mensajeConfirmacion } from '@utils/sweet-alert';
 import { generateHorasLibres } from '@utils/utils-functions';
+import { IngresarClaveAccionesComponent } from '@escuela/dialogs/ingresar-clave-acciones/ingresar-clave-acciones.component';
 
 @Component({
   selector: 'app-suspender-clase',
@@ -126,6 +127,28 @@ export class SuspenderClaseComponent implements OnInit {
     if (this.form.invalid) {
       return;
     }
+
+    if( this.estadoClase.value === 'U'){
+      const dialogRef = this.dialog.open( IngresarClaveAccionesComponent, {
+        height: 'auto',
+        width: 'auto',
+      });
+
+      dialogRef.afterClosed().subscribe(({claveValida}) => {
+        if(claveValida){
+          this.iniciarSuspenderClase();
+        }else{
+          errorMensaje('Error','La clave ingresada no es correcta. Comuniquese con el supervisor o administrador.').then()
+        }
+      });
+    } else{
+      this.iniciarSuspenderClase();
+    }
+
+
+  }
+
+  iniciarSuspenderClase(){
 
     confirmacionUsuario(
       'Confirmación de Usuario',

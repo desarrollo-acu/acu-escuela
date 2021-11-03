@@ -147,7 +147,7 @@ export class GenerarClaseAdicionalComponent implements OnInit {
     this.form = this.formBuilder.group({
       fechaClase: [this.agendaClase.FechaClase],
       hora: [`${hora}:00`],
-      movil: [this.agendaClase.EscMovCod],
+      movil: [this.agendaClase.EscMovCod, Validators.required],
       cursoId: [this.agendaClase.TipCurId, Validators.required],
       cursoNombre: [this.agendaClase.TipCurNom],
       numeroClase: [this.agendaClase.EsAgCuNroCla],

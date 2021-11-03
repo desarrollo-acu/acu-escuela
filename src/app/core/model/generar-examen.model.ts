@@ -7,7 +7,7 @@ export interface GenerarExamen {
   observacionesExamen?: string;
   claseAnterior?: AgendaClase;
   examenConCosto?: boolean;
-  instructorSeleccionado?: number;
+  instructorSeleccionado?: string;
   movilSeleccionado?: number;
   nuevaFecha?: string;
   nuevaHoraInicio?: number;

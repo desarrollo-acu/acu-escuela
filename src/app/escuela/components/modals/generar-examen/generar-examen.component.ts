@@ -140,7 +140,7 @@ export class GenerarExamenComponent implements OnInit {
     this.form = this.formBuilder.group({
       fechaClase: [this.agendaClase.FechaClase],
       hora: [`${hora}:00`],
-      movil: [this.agendaClase.EscMovCod],
+      movil: [this.agendaClase.EscMovCod, Validators.required],
       cursoId: [this.agendaClase.TipCurId, Validators.required],
       cursoNombre: [this.agendaClase.TipCurNom],
       numeroClase: [this.agendaClase.EsAgCuNroCla],
@@ -419,7 +419,6 @@ export class GenerarExamenComponent implements OnInit {
     return new Promise((resolve, reject) => {
       const auxAgendaClase: AgendaClase = {
         ...agendaClase,
-        // EsAgCuInsId,
       };
 
       this.instructorService
@@ -459,7 +458,6 @@ export class GenerarExamenComponent implements OnInit {
                 detalle: nuevaClase,
               };
               this.clasesAReagendar.push(claseAReagendar);
-
               if (finExamen) {
                 resolve(this.finGenerarExamen());
               } else {
@@ -473,19 +471,17 @@ export class GenerarExamenComponent implements OnInit {
   finGenerarExamen() {
     // Si hay items en clasesAReagender, entonces reagenda clase.
     const reagendaClase: boolean = this.clasesAReagendar.length > 0;
+    const instructorSeleccionado: string = this.escInsId.value.toLocaleUpperCase();
 
     const generarExamen: GenerarExamen = {
       alumnoVaADarExamen: this.aluId,
       cursoParaExamen: this.tipCurId,
-
       observacionesExamen: this.observaciones.value,
       claseAnterior: this.agendaClase,
       examenConCosto: this.examenConCosto,
-      instructorSeleccionado: this.escInsId.value,
+      instructorSeleccionado,
       movilSeleccionado: this.movil.value,
-
       reagendaClase,
-
       EscAluCurId: this.escAluCurId,
       usrId: localStorage.getItem('usrId'),
       reservarClasePrevia: this.reservarClasePrevia.value,
@@ -496,11 +492,8 @@ export class GenerarExamenComponent implements OnInit {
     this.inscripcionService
       .generarExamen(generarExamen)
       .subscribe((response: ResponseSDTCustom) => {
-
         if (response.errorCode === 0) {
-          mensajeConfirmacion('Excelente!', response.errorMensaje).then(() =>
-            this.dialogRef.close()
-          );
+          mensajeConfirmacion('Excelente!', response.errorMensaje).then(() => this.dialogRef.close() );
         } else {
           errorMensaje('Error', response.errorMensaje);
         }

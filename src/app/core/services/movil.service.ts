@@ -29,6 +29,9 @@ export class MovilService {
     return this.http.get(`${environment.url_ws}/wsGetMoviles`);
   }
 
+  getMovilesDisponiblesPorFechaHora( fecha, hora) {
+    return this.http.get<Movil[]>(`${environment.url_ws}/wsGetMovilesDisponiblesPorFechaHora?fecha=${fecha}&hora=${hora}`);
+  }
   sendDataMovil(modo: string, movil: Movil, id?: number) {
 
     const data: { modo: string, movil: Movil, id: number } = (id) ? { modo, movil, id } : { modo, movil, id: 0 };
