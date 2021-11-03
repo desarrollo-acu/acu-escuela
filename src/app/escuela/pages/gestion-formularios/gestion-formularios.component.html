@@ -1,0 +1,53 @@
+<div class="row center-xs margin-abm">
+  <div class="col-xs-12">
+    <div class="box">
+      <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
+        <mat-button-toggle (click)="tipo = 'desperfacto-movil'">
+          Desperfecto Móvil
+        </mat-button-toggle>
+        <mat-button-toggle (click)="tipo = 'diario-movil'">
+          Diario Móvil
+        </mat-button-toggle>
+        <mat-button-toggle (click)="tipo = 'evaluacion-alumno'">
+          Evaluación Alumno
+        </mat-button-toggle>
+        <mat-button-toggle (click)="tipo = 'resultado-examen-practico'">
+          Resultado Examen Práctico
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-12">
+    <div class="box">
+      <ng-container [ngSwitch]="tipo">
+        <ng-container *ngSwitchCase="'desperfacto-movil'">
+          <app-desperfecto-movil></app-desperfecto-movil>
+        </ng-container>
+        <ng-container *ngSwitchCase="'diario-movil'">
+          <app-diario-movil></app-diario-movil>
+        </ng-container>
+        <ng-container *ngSwitchCase="'evaluacion-alumno'">
+          <app-evaluacion-alumno></app-evaluacion-alumno>
+        </ng-container>
+        <ng-container *ngSwitchCase="'resultado-examen-practico'">
+          <app-resultado-examen-practico></app-resultado-examen-practico>
+        </ng-container>
+        <ng-container *ngSwitchDefault>
+          <div class="row" style="margin-top: 20px">
+            <div class="col-xs-offset-4 col-xs-4">
+              <div class="box">
+                <h1>
+                  Seleccione el reporte que desea visualizar con los botones de
+                  arriba.
+                </h1>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </ng-container>
+    </div>
+  </div>
+</div>
