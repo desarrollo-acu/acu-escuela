@@ -11,7 +11,7 @@ import { Actions } from '@core/model/actions.model';
 export class DesperfectoMovilComponent implements OnInit {
 
   formularios: DesperfectoMovil[] = [];
-  columnas = ['movCod', 'escInsId', 'movilKilometraje', 'desperfecto']
+  columnas = ['movil', 'instructor', 'kilometraje', 'desperfecto', 'fecha']
   actionsHeader: Actions[] = [{
     title: 'Exportar a excel',
     callback: this.exportarExcel

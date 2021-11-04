@@ -1,7 +1,19 @@
+<div class="row" style="margin-top: 10px">
+  <div class="col-xs-12" style="padding: 0px 30px">
+    <div class="box">
+      <mat-button-toggle-group>
+        <mat-button-toggle (click)="exportarExcel()">
+          Exportar a Excel</mat-button-toggle
+        >
+      </mat-button-toggle-group>
+    </div>
+  </div>
+</div>
 <app-gestion-custom
   *ngIf="formularios"
   [dataInput]="formularios"
   [columns]="columnas"
   [actionsHeader]="actionsHeader"
-  >
+  (updatedDataInput)="changeData($event)"
+>
 </app-gestion-custom>

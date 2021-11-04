@@ -31,6 +31,8 @@ export class GestionCustomComponent implements OnInit {
 
   @Output() callback: EventEmitter<any> = new EventEmitter();
 
+  @Output() updatedDataInput: EventEmitter<any[]> = new EventEmitter();
+
   tooltipEditar: string;
   tooltipEliminar: string;
 
@@ -109,6 +111,8 @@ export class GestionCustomComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+
+    this.updatedDataInput.emit( this.dataSource.filteredData );
   }
 
   getActionsHeaderDefault = (): Actions[] => [
