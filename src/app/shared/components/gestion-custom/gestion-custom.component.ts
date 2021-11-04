@@ -111,9 +111,7 @@ export class GestionCustomComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
-    console.log( this.dataSource.filteredData);
-    console.log( this.dataSource.data);
-    
+
     this.updatedDataInput.emit( this.dataSource.filteredData );
   }
 
