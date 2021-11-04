@@ -66,6 +66,8 @@ export class FormulariosService {
       `${environment.apiFormularios}/diariomovil/instructor/${instructor}`
     );
 
+  getExcelDiarioMovil = (ids: number[]) => this.http.post(`${environment.apiFormularios}/diariomovil/excel`, ids);
+
   /** Evaluacion Alumno   **/
   getEvaluacionAlumno = () =>
     this.http.get<EvaluacionAlumno[]>(`${environment.apiFormularios}/evaluacionalumno`);

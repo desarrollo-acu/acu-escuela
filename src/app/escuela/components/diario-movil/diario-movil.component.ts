@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Actions } from '@core/model/actions.model';
 import { FormulariosService } from '@core/services/formularios.service';
+import { downloadFileFromBase64 } from '@utils/utils-functions';
 import { DiarioMovil } from '../../../core/model/formularios/diario-movil.model';
 
 @Component({
@@ -10,14 +11,9 @@ import { DiarioMovil } from '../../../core/model/formularios/diario-movil.model'
 })
 export class DiarioMovilComponent implements OnInit {
   formularios: DiarioMovil[] = [];
-  columnas = ['movCod', 'escInsId', 'movilKilometraje', 'observaciones'];
-  actionsHeader: Actions[] = [
-    {
-      title: 'Exportar a excel',
-      callback: this.exportarExcel,
-    },
-  ];
+  columnas = ['movil', 'instructor', 'kilometraje', 'observaciones'];
 
+  actionsHeader: Actions[] = [{}];
   constructor(private formulariosService: FormulariosService) {}
 
   ngOnInit(): void {
@@ -31,7 +27,19 @@ export class DiarioMovilComponent implements OnInit {
       );
   }
 
-  exportarExcel() {
-    console.log(' exportando ...');
+  changeData(formularios){
+    console.log(formularios);
+
+    setTimeout( () => this.formulariosService.setFormularios('diarioMovil', formularios), 500 )
   }
+
+  exportarExcel(){
+    console.log(' exportando ...');
+    this.formulariosService.getExcelDiarioMovil( this.formularios.map( f => f.id) ).subscribe( ({file}: any) => {
+      console.log(' aca paso ', file);
+
+      downloadFileFromBase64(file, 'diario-movil.xlsx');
+    });
+  }
+
 }

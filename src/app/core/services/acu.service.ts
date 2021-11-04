@@ -14,6 +14,7 @@ import { ClaseEstimada } from '../model/clase-estimada.model';
 import { Suspenderclase } from '../model/suspender-clase.model';
 import { map } from 'rxjs/operators';
 import { EnvioNotificacion } from '../model/envio-notificacion.model';
+import { AutenticacionService } from './autenticacion.service';
 
 export interface LiberarParameters {
   fechaClase: Date;
@@ -47,7 +48,7 @@ export class AcuService {
     }),
   };
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private authService: AutenticacionService) {}
 
   getTablaAgenda() {
     return this.http
@@ -271,11 +272,12 @@ export class AcuService {
   getPDFPlanDeClases(planDeClase: ClaseEstimada) {
     const headers = new HttpHeaders();
     headers.set('Aceppt', 'application/pdf;');
+    console.log( this.authService.getUserId() );
 
     return this.http.post(
       `${environment.url_ws}/wsPDFPlanDeClases`,
       {
-        PlanDeClase: planDeClase,
+        PlanDeClase: {...planDeClase, UsrId: this.authService.getUserId()},
       },
       {
         headers,

@@ -144,6 +144,7 @@ export function downloadFile(file: any, fileName: string, type: string, content_
 }
 
 export const downloadFileFromBase64 = ( base64:string, filename: string) => {
+  console.log(filename);
 
   const blob = base64ToBlob(base64);
 

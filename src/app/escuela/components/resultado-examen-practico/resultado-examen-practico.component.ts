@@ -11,7 +11,7 @@ import { ResultadoExamenPractico } from '../../../core/model/formularios/resulta
 export class ResultadoExamenPracticoComponent implements OnInit {
 
   formularios: ResultadoExamenPractico[] = [];
-  columnas = ['escInsId', 'alumnoNombreApellido', 'resultado']
+  columnas = ['instructor', 'alumno', 'resultado']
   actionsHeader: Actions[] = [{
     title: 'Exportar a excel',
     callback: this.exportarExcel

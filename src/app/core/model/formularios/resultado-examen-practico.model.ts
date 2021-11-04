@@ -9,4 +9,7 @@ export interface ResultadoExamenPractico {
   motivoReprobacionCalle: null;
   detalleMotivoPerdida:   null;
   fechaCreacion:          Date;
+  alumno?:                string;
+  instructor?:            string;
+  fecha?:                 Date;
 }

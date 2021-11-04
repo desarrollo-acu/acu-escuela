@@ -22,9 +22,14 @@ export class CargandoInterceptor implements HttpInterceptor {
   ) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-
+    const req = request.clone({
+      setHeaders: {
+        'Cache-Control': 'no-cache',
+        Pragma: 'no-cache'
+      }
+    });
     this.blockUI.start();
-    return next.handle(request).pipe(
+    return next.handle(req).pipe(
       map((event: HttpEvent<any>) => {
 
 

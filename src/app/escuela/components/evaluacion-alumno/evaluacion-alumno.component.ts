@@ -10,7 +10,7 @@ import { EvaluacionAlumno } from '../../../core/model/formularios/evaluacion-alu
 })
 export class EvaluacionAlumnoComponent implements OnInit {
   formularios: EvaluacionAlumno[] = [];
-  columnas = ['escInsId', 'alumnoNombreApellido', 'numeroClase' , 'observaciones'];
+  columnas = ['instructor', 'alumno', 'clase' , 'observaciones', 'fecha'];
   actionsHeader: Actions[] = [
     {
       title: 'Exportar a excel',
