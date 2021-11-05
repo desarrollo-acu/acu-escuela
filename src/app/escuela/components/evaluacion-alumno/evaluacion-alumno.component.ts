@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Actions } from '@core/model/actions.model';
 import { FormulariosService } from '@core/services/formularios.service';
+import { downloadFileFromBase64 } from '@utils/utils-functions';
+import * as moment from 'moment';
 import { EvaluacionAlumno } from '../../../core/model/formularios/evaluacion-alumno.model';
 
 @Component({
@@ -10,7 +12,20 @@ import { EvaluacionAlumno } from '../../../core/model/formularios/evaluacion-alu
 })
 export class EvaluacionAlumnoComponent implements OnInit {
   formularios: EvaluacionAlumno[] = [];
+  exportData: EvaluacionAlumno[] = [];
   columnas = ['instructor', 'alumno', 'clase' , 'observaciones', 'fecha'];
+
+  exportarExcel = () => {
+    this.formulariosService
+      .getExcelEvaluacionAlumno(this.exportData.map((f) => f.id))
+      .subscribe(({ file }: any) =>
+        downloadFileFromBase64(
+          file,
+          `evaluacion-alumno-${moment().toLocaleString()}.xlsx`
+        )
+      );
+  };
+
   actionsHeader: Actions[] = [
     {
       title: 'Exportar a excel',
@@ -21,12 +36,16 @@ export class EvaluacionAlumnoComponent implements OnInit {
   constructor(private formulariosService: FormulariosService) {}
 
   ngOnInit(): void {
-    this.formulariosService.formularios$.subscribe( ({evaluacionAlumno}) => this.formularios = evaluacionAlumno);
+    this.formulariosService.formularios$.subscribe( ({evaluacionAlumno}) => {
+      this.formularios = evaluacionAlumno;
+      this.exportData = evaluacionAlumno;
+    });
     this.formulariosService.getEvaluacionAlumno().subscribe( formularios => this.formulariosService.setFormularios( 'evaluacionAlumno', formularios));
   }
 
-  exportarExcel() {
-    console.log(' exportando ...');
+  changeData(formularios) {
+    this.exportData = formularios;
   }
+
 }
 

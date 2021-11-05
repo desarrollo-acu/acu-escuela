@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Actions } from '@core/model/actions.model';
 import { FormulariosService } from '@core/services/formularios.service';
+import { downloadFileFromBase64 } from '@utils/utils-functions';
+import * as moment from 'moment';
 import { ResultadoExamenPractico } from '../../../core/model/formularios/resultado-examen-practico.model';
 
 @Component({
@@ -11,7 +13,21 @@ import { ResultadoExamenPractico } from '../../../core/model/formularios/resulta
 export class ResultadoExamenPracticoComponent implements OnInit {
 
   formularios: ResultadoExamenPractico[] = [];
-  columnas = ['instructor', 'alumno', 'resultado']
+  exportData: ResultadoExamenPractico[] = [];
+  columnas = ['instructor', 'alumno', 'resultado'];
+
+  exportarExcel = () => {
+    console.log(' exportando ...');
+    this.formulariosService
+      .getExcelResultadoExamenPractico(this.exportData.map((f) => f.id))
+      .subscribe(({ file }: any) =>
+        downloadFileFromBase64(
+          file,
+          `resultado-examen-practico-${moment().toLocaleString()}.xlsx`
+        )
+      );
+  };
+
   actionsHeader: Actions[] = [{
     title: 'Exportar a excel',
     callback: this.exportarExcel
@@ -20,12 +36,14 @@ export class ResultadoExamenPracticoComponent implements OnInit {
   constructor(private formulariosService: FormulariosService) {}
 
   ngOnInit(): void {
-    this.formulariosService.formularios$.subscribe( ({resultadoExamenPractico}) => this.formularios = resultadoExamenPractico);
+    this.formulariosService.formularios$.subscribe( ({resultadoExamenPractico}) => {
+      this.formularios = resultadoExamenPractico;
+      this.exportData = resultadoExamenPractico;
+    });
     this.formulariosService.getResultadoExamenPractico().subscribe( formularios => this.formulariosService.setFormularios( 'resultadoExamenPractico', formularios));
-
   }
 
-  exportarExcel(){
-    console.log(' exportando ...');
+  changeData(formularios) {
+    this.exportData = formularios;
   }
 }

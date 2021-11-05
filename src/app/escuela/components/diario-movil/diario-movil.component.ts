@@ -15,15 +15,30 @@ export class DiarioMovilComponent implements OnInit {
   exportData: DiarioMovil[] = [];
   columnas = ['movil', 'instructor', 'kilometraje', 'observaciones'];
 
-  actionsHeader: Actions[] = [{}];
+  exportarExcel = () => {
+    this.formulariosService
+      .getExcelDiarioMovil(this.exportData.map((f) => f.id))
+      .subscribe(({ file }: any) =>
+        downloadFileFromBase64(
+          file,
+          `diario-movil-${moment().toLocaleString()}.xlsx`
+        )
+      );
+  };
+
+  actionsHeader: Actions[] = [
+    {
+      title: 'Exportar a excel',
+      callback: this.exportarExcel,
+    },
+  ];
   constructor(private formulariosService: FormulariosService) {}
 
   ngOnInit(): void {
-    this.formulariosService.formularios$.subscribe(
-      ({ diarioMovil }) => {
-        this.formularios = diarioMovil;
-        this.exportData = diarioMovil;
-      });
+    this.formulariosService.formularios$.subscribe(({ diarioMovil }) => {
+      this.formularios = diarioMovil;
+      this.exportData = diarioMovil;
+    });
     this.formulariosService
       .getDiarioMovil()
       .subscribe((formularios) =>
@@ -31,12 +46,7 @@ export class DiarioMovilComponent implements OnInit {
       );
   }
 
-  changeData(formularios){
+  changeData(formularios) {
     this.exportData = formularios;
   }
-
-  exportarExcel(){
-    this.formulariosService.getExcelDiarioMovil( this.exportData.map( f => f.id) ).subscribe( ({file}: any) =>  downloadFileFromBase64(file, `diario-movil-${moment().toLocaleString()}.xlsx`));
-  }
-
 }
