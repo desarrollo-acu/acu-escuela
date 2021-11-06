@@ -1,0 +1,142 @@
+<form [formGroup]="form">
+  <mat-toolbar color="primary">
+    <h2 mat-dialog-title>Bloquear horas de un día</h2>
+  </mat-toolbar>
+
+  <mat-dialog-content class="mat-typography">
+    <div class="row center-xs" >
+      <div class="col-xs">
+        <div class="box">
+
+          <mat-radio-group formControlName="tipo" class="full-width">
+            <mat-radio-button style="margin-right: 10px;" value="bloquear">Bloquear</mat-radio-button>
+            <mat-radio-button style="margin-left: 10px;" value="desbloquear">Desbloquear</mat-radio-button>
+          </mat-radio-group>
+
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs">
+        <div class="box">
+          <mat-form-field class="full-width">
+            <input
+              matInput
+              [matDatepicker]="picker"
+              placeholder="Fecha"
+              formControlName="fecha"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="picker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+
+            <mat-error *ngIf="fecha.hasError('required')">
+              La fecha es <strong>requerida</strong>
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xs">
+        <div class="box">
+          <mat-form-field class="full-width">
+            <mat-label>Horas a bloquear</mat-label>
+            <mat-select multiple formControlName="horas">
+              <mat-option *ngFor="let hora of horasLibres" [value]="hora.value"
+                >{{ hora.description }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="fecha.hasError('required')">
+              Las horas a bloquear son <strong>requeridas</strong>
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xs">
+        <div class="box">
+          <mat-checkbox formControlName="bloquearATodos" class="full-width">
+            Para todos los instructores?
+          </mat-checkbox>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <ng-container *ngIf="!bloquearATodos.value">
+        <div class="col-xs-4">
+          <div class="box">
+            <mat-form-field class="full-width">
+              <input
+                matInput
+                placeholder="Código del Instructor"
+                formControlName="escInsId"
+              />
+
+              <button
+                mat-icon-button
+                matSuffix
+                [attr.aria-label]="'Hide password'"
+                (click)="seleccionarInstructor()"
+              >
+                <mat-icon> search </mat-icon>
+              </button>
+
+              <mat-error *ngIf="escInsId.hasError('required')">
+                El instructor es <strong>requerido</strong>.
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xs">
+          <div class="box">
+            <mat-form-field class="full-width">
+              <input
+                matInput
+                placeholder="Nombre del Instructor"
+                formControlName="escInsNom"
+              />
+            </mat-form-field>
+          </div>
+        </div>
+      </ng-container>
+
+      <div class="col-xs-12">
+        <div class="box">
+          <mat-form-field class="full-width">
+            <textarea
+              matInput
+              placeholder="Observaciones"
+              formControlName="observaciones"
+              cdkAutosizeMinRows="2"
+              cdkAutosizeMaxRows="5"
+            ></textarea>
+            <mat-error *ngIf="observaciones.hasError('required')">
+              Las obvservaciones son <strong>requeridas</strong>
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button
+      mat-raised-button
+      type="button"
+      (click)="bloquearHoras($event)"
+      cdkFocusInitial
+      [disabled]="isFormInvalid()"
+      color="primary"
+    >
+      Bloquear Horas
+    </button>
+    <button mat-button mat-dialog-close (click)="onNoClick()">Cancelar</button>
+  </mat-dialog-actions>
+</form>

@@ -81,6 +81,7 @@ import { DesperfectoMovilComponent } from './components/desperfecto-movil/desper
 import { DiarioMovilComponent } from './components/diario-movil/diario-movil.component';
 import { EvaluacionAlumnoComponent } from './components/evaluacion-alumno/evaluacion-alumno.component';
 import { ResultadoExamenPracticoComponent } from './components/resultado-examen-practico/resultado-examen-practico.component';
+import { BloquearHorasComponent } from './dialogs/bloquear-horas/bloquear-horas.component';
 
 
 registerLocaleData(localeEsUy, 'es-UY');
@@ -144,6 +145,7 @@ registerLocaleData(localeEs, 'es');
     DiarioMovilComponent,
     EvaluacionAlumnoComponent,
     ResultadoExamenPracticoComponent,
+    BloquearHorasComponent
   ],
   imports: [
     CommonModule,

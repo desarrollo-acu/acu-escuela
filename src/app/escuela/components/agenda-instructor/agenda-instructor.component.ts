@@ -25,6 +25,7 @@ import { MovilService } from '@core/services/movil.service';
 import { AutenticacionService } from '@core/services/autenticacion.service';
 import { CopiarMoverParameters } from '@core/model/copiarMoverParameters.model';
 import { SeleccionarMovilComponent } from '@escuela/components/modals/seleccionar-movil/seleccionar-movil.component';
+import { BloquearHorasComponent } from '../../dialogs/bloquear-horas/bloquear-horas.component';
 
 @Component({
   selector: 'app-agenda-instructor',
@@ -103,11 +104,16 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
     };
     for (const h of this.horaMovilPlano) {
       if (h.Hora === hora.Hora && h.EscInsId === instructor.EscInsId) {
-        // tslint:disable-next-line: triple-equals
-        cell.value =
-          h.AluId != 0
-            ? `${h.AluNro} ${h.AluApe1}  ${h.TipCurId}`
-            : `${h.TipCurId} ${h.TipCurNom}`; // ${h.EscInsId}
+        // bloqueada
+        if (h.EsAgCuEst === 'B') {
+          cell.value = 'BLOQUEADA';
+        } else {
+          // tslint:disable-next-line: triple-equals
+          cell.value =
+            h.AluId != 0
+              ? `${h.AluNro} ${h.AluApe1}  ${h.TipCurId}`
+              : `${h.TipCurId} ${h.TipCurNom}`;
+        }
         cell.class = h.claseCelda;
         cell.existe = true;
       }
@@ -150,8 +156,8 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
       },
     });
 
-    t.afterDismissed().subscribe(({seleccionoOpcion, params}) => {
-      console.log({seleccionoOpcion, params});
+    t.afterDismissed().subscribe(({ seleccionoOpcion, params }) => {
+      console.log({ seleccionoOpcion, params });
 
       if (seleccionoOpcion) {
         const abrirAgenda = localStorage.getItem('abrirAgenda');
@@ -175,7 +181,7 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
             this.suspenderDuplicarClase(instructor, hora, false);
             break;
           case 'copiar-mover-clase':
-            const {oldParameters, mainParameters} = params;
+            const { oldParameters, mainParameters } = params;
             this.copiarMoverClase(oldParameters, mainParameters);
             break;
 
@@ -236,7 +242,7 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
               celda.removeAttribute('class');
               celda.innerHTML = textOld;
               arrayClass?.forEach((element) => celda.classList.add(element));
-              if( abrirAgenda === 'pegar-clase-ok'){
+              if (abrirAgenda === 'pegar-clase-ok') {
                 this.getAgenda(this.fecha);
               }
             }
@@ -317,10 +323,10 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
                 console.log(movil);
 
                 if (movil) {
-                  this.copiarMoverClase(
-                    oldParameters,
-                    { ...mainParameters, movil: movil.MovCod }
-                  );
+                  this.copiarMoverClase(oldParameters, {
+                    ...mainParameters,
+                    movil: movil.MovCod,
+                  });
                 } else {
                   this.getAgenda(this.fecha);
                   this.salirCopiarMoverClase(oldParameters);
@@ -340,14 +346,12 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
     localStorage.setItem('classOld', oldParameters.classOld);
     localStorage.setItem('textOld', oldParameters.textOld);
     localStorage.setItem('refreshAgenda', 'true');
-
   }
 
   abrirAgenda(instructor: string, hora: number) {
     this.acuService
       .getInstructorAgenda(this.fechaClase, hora, instructor)
       .subscribe((res: any) => {
-
         const dialogRef = this.dialog.open(VerAgendaComponent, {
           data: {
             agendaCurso: res.AgendaCurso,
@@ -398,7 +402,6 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
     this.acuService
       .getInstructorAgenda(this.fechaClase, hora, instructor)
       .subscribe((res: any) => {
-
         const dialogRef = this.dialog.open(component, {
           data: {
             agendaCurso: res.AgendaCurso,
@@ -623,4 +626,13 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
     }
     return `${strYear}-${strMonth}-${strDay}`;
   }
+
+  bloquearHoras = () => {
+    const fechaDialogRef = this.dialog.open(BloquearHorasComponent, {
+      height: 'auto',
+      width: '700px',
+    });
+
+    return fechaDialogRef.afterClosed().subscribe(() => this.getAgenda(this.fecha));
+  };
 }
