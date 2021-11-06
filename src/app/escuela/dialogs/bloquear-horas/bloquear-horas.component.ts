@@ -9,7 +9,10 @@ import { confirmacionUsuario } from '@utils/sweet-alert';
 import { generateHorasLibres } from '@utils/utils-functions';
 import { MyValidators } from '@utils/validators';
 import { AutenticacionService } from '../../../core/services/autenticacion.service';
-import { mensajeConfirmacion, mensajeWarning } from '../../../utils/sweet-alert';
+import {
+  mensajeConfirmacion,
+  mensajeWarning,
+} from '../../../utils/sweet-alert';
 
 @Component({
   selector: 'app-bloquear-horas',
@@ -101,7 +104,6 @@ export class BloquearHorasComponent implements OnInit {
 
   bloquearHoras(event: Event) {
     event.preventDefault();
-    console.log(this.form.value);
 
     if (this.isFormInvalid()) {
       return;
@@ -112,8 +114,6 @@ export class BloquearHorasComponent implements OnInit {
       '¿Confirma bloquear las horas seleccionadas?'
     ).then(({ isConfirmed }) => {
       if (isConfirmed) {
-        //TODO: bloquear horas en backend
-        console.log(this.form.value);
         const isBloquear = this.tipo.value === 'bloquear';
         this.instructorService
           .bloquearHoras({
@@ -121,14 +121,26 @@ export class BloquearHorasComponent implements OnInit {
             usrId: this.authService.getUserId(),
             isBloquear,
           })
-          .subscribe( ({mensajes}) => {
-
-            if(mensajes.length > 0){
-              const mensajesPlain = mensajes.reduce( (mensajeFinal , m) => `${mensajeFinal}<br/>${m}<br/>` );
-              console.log(mensajesPlain);
-              mensajeWarning('Ok', null , 10000, `Se ${ isBloquear ? 'bloquearon' : 'desbloquearon' } las horas seleccionadas ha excepción de: <br/>${mensajesPlain}`).then( () => this.dialogRef.close() );
-            }else{
-              mensajeConfirmacion('Excelente!', `Se ${ isBloquear ? 'bloquearon' : 'desbloquearon' } las horas seleccionadas, exitosamente!`).then( () => this.dialogRef.close() );
+          .subscribe(({ mensajes }) => {
+            if (mensajes.length > 0) {
+              const mensajesPlain = mensajes.reduce(
+                (mensajeFinal, m) => `${mensajeFinal}<br/>${m}<br/>`
+              );
+              mensajeWarning(
+                'Ok',
+                null,
+                10000,
+                `Se ${
+                  isBloquear ? 'bloquearon' : 'desbloquearon'
+                } las horas seleccionadas ha excepción de: <br/>${mensajesPlain}`
+              ).then(() => this.dialogRef.close());
+            } else {
+              mensajeConfirmacion(
+                'Excelente!',
+                `Se ${
+                  isBloquear ? 'bloquearon' : 'desbloquearon'
+                } las horas seleccionadas, exitosamente!`
+              ).then(() => this.dialogRef.close());
             }
           });
       }
