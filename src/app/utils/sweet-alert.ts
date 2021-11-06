@@ -20,14 +20,15 @@ export function mensajeConfirmacion(title, text) {
         showConfirmButton: false
     });
 }
-export function mensajeWarning(title, text) {
+export function mensajeWarning(title, text, timer = 5000, html = null) {
     return Swal.fire({
         title,
         text,
         icon: 'warning',
-        timer: 5000,
+        timer,
         showConfirmButton: false,
-        confirmButtonText: 'Confirmar'
+        confirmButtonText: 'Confirmar',
+        html
     });
 }
 

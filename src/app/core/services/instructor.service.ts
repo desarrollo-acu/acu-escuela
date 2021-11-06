@@ -5,6 +5,7 @@ import { BehaviorSubject } from 'rxjs';
 import { Instructor } from '../model/instructor.model';
 import { AgendaClase } from '../model/agenda-clase.model';
 import { InscripcionCurso } from '../model/inscripcion-curso.model';
+import { BloquearHoras } from '../model/bloquear-horas.model';
 
 @Injectable({
   providedIn: 'root',
@@ -45,7 +46,6 @@ export class InstructorService {
   }
 
   getDisponibilidadInstructor(clase: AgendaClase, cantidad: number) {
-
     return this.http.post(
       `${environment.url_ws}/obtenerDisponibilidadPorInstructor`,
       {
@@ -54,8 +54,10 @@ export class InstructorService {
       }
     );
   }
-  getDisponibilidadInstructoresPorCantidad(inscripcion: InscripcionCurso, cantidad: number) {
-
+  getDisponibilidadInstructoresPorCantidad(
+    inscripcion: InscripcionCurso,
+    cantidad: number
+  ) {
     return this.http.post(
       `${environment.url_ws}/obtenerDisponibilidadInstructorPorCantidad`,
       {
@@ -83,16 +85,16 @@ export class InstructorService {
   }
 
   getClasesEstimadas(inscripcion: InscripcionCurso) {
-
     return this.http.post(
       `${environment.url_ws}/obtenerDisponibilidadInstructor`,
       {
-        GenerarInscripcion: inscripcion
+        GenerarInscripcion: inscripcion,
       }
-
     );
-
   }
+
+  bloquearHoras = (bloquearHoras: BloquearHoras) =>
+    this.http.post<{mensajes: string[]}>(`${environment.url_ws}/wsBloquearHorasAgenda`, { bloquearHoras });
 
   sendDataInstructor(modo: string, instructor: Instructor, id?: number) {
     const data: { modo: string; instructor: Instructor; id: number } = id
