@@ -3,7 +3,7 @@
     <div class="box">
       <mat-form-field class="full-width" appearance="fill">
         <mat-label>Buscar Inscripción...</mat-label>
-        <input matInput id="search" [(ngModel)]="filtro" #input />
+        <input matInput id="search" (keyup.enter)="getInscripciones(pageSize, 1, filtro)" [(ngModel)]="filtro" #input />
       </mat-form-field>
 
       <div class="mat-elevation-z8">
