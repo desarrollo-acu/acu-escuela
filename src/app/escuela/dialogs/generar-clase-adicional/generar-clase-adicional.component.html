@@ -1,6 +1,6 @@
 <form [formGroup]="form">
   <mat-toolbar color="primary">
-    <h2 mat-dialog-title>Generar clase adicional</h2>
+    <h2 mat-dialog-title>{{ esClaseAdicional ? 'Generar clase adicional' : 'Generar evaluacion práctica'}}</h2>
   </mat-toolbar>
 
   <mat-dialog-content class="mat-typography">
@@ -194,7 +194,7 @@
       [disabled]="form.invalid"
       color="primary"
     >
-      Generar Clase Adicional
+    {{ esClaseAdicional ? 'Generar clase adicional' : 'Generar evaluacion práctica'}}
     </button>
     <button mat-button mat-dialog-close (click)="onNoClick()">Cancelar</button>
   </mat-dialog-actions>

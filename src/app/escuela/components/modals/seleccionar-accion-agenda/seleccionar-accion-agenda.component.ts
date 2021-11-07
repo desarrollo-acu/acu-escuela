@@ -60,6 +60,10 @@ export class SeleccionarAccionAgendaComponent {
         localStorage.setItem('abrirAgenda', `clase-adicional-${tipoAgenda}`);
         break;
 
+      case 'evaluacion-practica':
+        localStorage.setItem('abrirAgenda', `evaluacion-practica-${tipoAgenda}`);
+        break;
+
       case 'suspender-clase':
         localStorage.setItem('abrirAgenda', `suspender-${tipoAgenda}`);
         break;

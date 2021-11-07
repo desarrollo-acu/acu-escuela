@@ -100,6 +100,7 @@ export class AbmExamenComponent implements OnInit {
     this.escAluCurExamenId.setValue(examen.EscAluCurExamenId);
     this.escAluCurExamenFecha.setValue(examen.EscAluCurExamenFecha);
     this.escAluCurExamenAprueba.setValue(examen.EscAluCurExamenAprueba);
+    this.escAluCurExamenSuspendido.setValue(examen.EscAluCurExamenSuspendido);
     this.escAluCurExamenObservaciones.setValue(
       examen.EscAluCurExamenObservaciones
     );

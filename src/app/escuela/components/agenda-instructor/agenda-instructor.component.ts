@@ -167,6 +167,9 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
             this.abrirAgenda(instructor, hora);
             break;
 
+          case 'evaluacion-practica-instructor':
+            this.generarClaseAdicional(instructor, hora, false);
+            break;
           case 'clase-adicional-instructor':
             this.generarClaseAdicional(instructor, hora);
             break;
@@ -368,11 +371,13 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
       });
   }
 
-  generarClaseAdicional(instructor: string, hora: number) {
+  generarClaseAdicional(instructor: string, hora: number, esClaseAdicional = true) {
     this.getClaseAgendaAndOpenDialog(
       instructor,
       hora,
-      GenerarClaseAdicionalComponent
+      GenerarClaseAdicionalComponent,
+      false,
+      esClaseAdicional
     );
   }
 
@@ -397,7 +402,8 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
     instructor: string,
     hora: number,
     component: any,
-    esSuspender?: boolean
+    esSuspender?: boolean,
+    esClaseAdicional?: boolean
   ) {
     this.acuService
       .getInstructorAgenda(this.fechaClase, hora, instructor)
@@ -407,6 +413,7 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
             agendaCurso: res.AgendaCurso,
             agendaClase: res.AgendaCurso.AgendaClase,
             esSuspender,
+            esClaseAdicional,
           },
         });
 
