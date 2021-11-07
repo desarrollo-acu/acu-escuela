@@ -45,6 +45,14 @@ export class InscripcionService {
       }
     );
 
+  generarEvaluacionPractica = (evaluacionPractica: GenerarClaseAdicional) =>
+    this.http.post<ResponseSDTCustom>(
+      `${environment.url_ws}/wsGenerarEvaluacionPractica`,
+      {
+        evaluacionPractica,
+      }
+    );
+
   guardarNuevaDisponibilidad = (GenerarInscripcion: InscripcionCurso) =>
     this.http.post<ResponseSDTCustom>(
       `${environment.url_ws}/wsGuardarNuevaDisponibilidad`,

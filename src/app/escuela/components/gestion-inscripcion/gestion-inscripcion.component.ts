@@ -153,8 +153,16 @@ export class GestionInscripcionComponent implements OnInit {
       ({ isConfirmed }) =>
         isConfirmed &&
         this.inscripcionService
-          .eliminarPlanDeClase({...inscripcion, UsrId: this.autenticacionService.getUserId()})
-          .subscribe(console.log)
+          .eliminarPlanDeClase({
+            ...inscripcion,
+            UsrId: this.autenticacionService.getUserId(),
+          })
+          .subscribe(() =>
+            mensajeConfirmacion(
+              'Excelente',
+              'Se elimino el plan de clases, correctamente.'
+            ).then()
+          )
     );
   }
 }

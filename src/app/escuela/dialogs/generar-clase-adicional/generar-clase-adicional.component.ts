@@ -12,24 +12,18 @@ import {
 } from '@core/model/clase-estimada.model';
 import {
   GenerarExamenItems,
-  GenerarExamen,
 } from '@core/model/generar-examen.model';
 import { Inscripcion } from '@core/model/inscripcion.model';
 import { Instructor } from '@core/model/instructor.model';
-import { Movil } from '@core/model/movil.model';
 import { ResponseSDTCustom } from '@core/model/response-sdt-custom.model';
-import { AcuService } from '@core/services/acu.service';
 import { AlumnoService } from '@core/services/alumno.service';
 import { CursoService } from '@core/services/curso.service';
 import { InscripcionService } from '@core/services/inscripcion.service';
 import { InstructorService } from '@core/services/instructor.service';
-import { MovilService } from '@core/services/movil.service';
 import { AgendaMovilComponent } from '@escuela/components/agenda-movil/agenda-movil.component';
 import { InstructorHorasLibresComponent } from '@escuela/components/modals/instructor-horas-libres/instructor-horas-libres.component';
 import { SeleccionarAlumnoComponent } from '@escuela/components/modals/seleccionar-alumno/seleccionar-alumno.component';
-import { SeleccionarCursoComponent } from '@escuela/components/modals/seleccionar-curso/seleccionar-curso.component';
 import { SeleccionarInstructorComponent } from '@escuela/components/modals/seleccionar-instructor/seleccionar-instructor.component';
-import { SeleccionarMovilComponent } from '@escuela/components/modals/seleccionar-movil/seleccionar-movil.component';
 import {
   confirmacionUsuario,
   mensajeConfirmacion,
@@ -57,6 +51,7 @@ export class GenerarClaseAdicionalComponent implements OnInit {
   examenConCosto = false;
   escAluCurId: number;
   esInstructor: boolean;
+  esClaseAdicional: boolean;
 
   clasesAReagendar: GenerarExamenItems[] = [];
 
@@ -72,6 +67,7 @@ export class GenerarClaseAdicionalComponent implements OnInit {
   ) {
     this.agendaClase = this.data.agendaClase;
     this.esInstructor = this.data.esInstructor;
+    this.esClaseAdicional = this.data.esClaseAdicional;
 
     this.buildForm();
   }
@@ -335,22 +331,34 @@ export class GenerarClaseAdicionalComponent implements OnInit {
         usrId: localStorage.getItem('usrId'),
       };
 
-      this.inscripcionService
-        .generarClaseAdicional(generarClaseAdicional)
-        .subscribe((response: ResponseSDTCustom) => {
-          if (response.errorCode === 0) {
-            mensajeConfirmacion('Excelente!', response.errorMensaje).then(() =>
-              this.dialogRef.close()
-            );
-          } else if (response.errorCode === 2) {
-            mensajeWarning('Atención', response.errorMensaje).then(() =>
-              this.dialogRef.close()
-            );
-          } else {
-            errorMensaje('Error', response.errorMensaje);
-          }
-        });
+      console.log(generarClaseAdicional);
+
+
+      if(this.esClaseAdicional){
+        this.inscripcionService
+          .generarClaseAdicional(generarClaseAdicional)
+          .subscribe((response: ResponseSDTCustom) => this.finGeneracion(response));
+      }else {
+        this.inscripcionService
+          .generarEvaluacionPractica(generarClaseAdicional)
+          .subscribe((response: ResponseSDTCustom) => this.finGeneracion(response));
+      }
     });
+  }
+
+  finGeneracion( response: ResponseSDTCustom){
+    if (response.errorCode === 0) {
+      mensajeConfirmacion('Excelente!', response.errorMensaje).then(() =>
+        this.dialogRef.close()
+      );
+    } else if (response.errorCode === 2) {
+      mensajeWarning('Atención', response.errorMensaje).then(() =>
+        this.dialogRef.close()
+      );
+    } else {
+      errorMensaje('Error', response.errorMensaje);
+    }
+
   }
 
   onNoClick(): void {

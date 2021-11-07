@@ -46,7 +46,6 @@ export class NavComponent implements OnDestroy {
   title: string;
 
   constructor(
-
     private auth: AutenticacionService,
     private acuService: AcuService,
     private breakpointObserver: BreakpointObserver,
@@ -61,7 +60,9 @@ export class NavComponent implements OnDestroy {
     this.mobileQuery.addListener(this.mobileQueryListener);
 
     this.changeTitle(this.router.url);
-    this.acuService.getTituloApp().subscribe( ({titulo}:any) => this.titleApp = titulo );
+    this.acuService
+      .getTituloApp()
+      .subscribe(({ titulo }: any) => (this.titleApp = titulo));
   }
 
   ngOnDestroy(): void {
@@ -97,14 +98,12 @@ export class NavComponent implements OnDestroy {
     });
   }
 
-  cambiarContrasenia(){
-
+  cambiarContrasenia() {
     const dialogRef = this.dialog.open(CambiarContraseniaComponent, {
-      width:'500'
+      width: '500',
     });
 
     dialogRef.afterClosed().subscribe();
-
   }
 
   logout = () => this.auth.logout();
@@ -152,9 +151,13 @@ export class NavComponent implements OnDestroy {
       case '/escuela/reportes':
         this.title = 'Reportes';
         break;
-        case '/escuela/formularios':
-          this.title = 'Formularios';
-          break;
+      case '/escuela/gestion-examen':
+      case '/escuela/escuela/abm-examen':
+        this.title = 'Gestión de examenes';
+        break;
+      case '/escuela/formularios':
+        this.title = 'Formularios';
+        break;
       case '/escuela/cuenta-corriente':
         this.title = 'Trabajar con Cuentas Corrientes';
         break;

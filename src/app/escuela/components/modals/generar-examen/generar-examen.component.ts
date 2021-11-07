@@ -333,6 +333,7 @@ export class GenerarExamenComponent implements OnInit {
         this.form.patchValue({
           escInsId: inscripcion.EscInsId,
           escInsNom: inscripcion.EscInsNom,
+          movil: inscripcion.EscMovCod
         });
       });
   }
