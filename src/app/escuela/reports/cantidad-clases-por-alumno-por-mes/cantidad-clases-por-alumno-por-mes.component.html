@@ -1,0 +1,79 @@
+<div class="row" style="margin-top: 20px">
+  <div class="col-xs-offset-4 col-xs-4">
+    <div class="box">
+      <h1>Alumnos en cursos</h1>
+    </div>
+  </div>
+
+  <div class="col-xs-offset-3 col-xs-6">
+    <div class="box">
+      <form [formGroup]="form">
+        <mat-card class="example-card">
+          <mat-dialog-content class="mat-typography">
+            <div class="row">
+              <div class="col-xs-12">
+                <mat-form-field class="full-width">
+                  <input
+                    matInput
+                    [matDatepicker]="pickerFechaDesde"
+                    placeholder="Fecha Desde"
+                    formControlName="fechaDesde"
+                    required
+                  />
+
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="pickerFechaDesde"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #pickerFechaDesde></mat-datepicker>
+                </mat-form-field>
+              </div>
+
+              <div class="col-xs-12">
+                <mat-form-field class="full-width">
+                  <input
+                    matInput
+                    [matDatepicker]="pickerFechaHasta"
+                    placeholder="Fecha Hasta"
+                    formControlName="fechaHasta"
+                    required
+                  />
+
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="pickerFechaHasta"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #pickerFechaHasta></mat-datepicker>
+
+                  <mat-error
+                    *ngIf="
+                      fechaHasta.hasError('fechaPosteriorInvalid') &&
+                      fechaHasta.dirty &&
+                      fechaHasta.errors
+                    "
+                  >
+                    La "fecha hasta" debe <strong>ser posterior</strong> a la
+                    "fecha desde".
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+          </mat-dialog-content>
+
+          <mat-dialog-actions align="center">
+            <button
+              mat-raised-button
+              type="button"
+              (click)="generarReporte($event)"
+              cdkFocusInitial
+              [disabled]="form.invalid"
+              color="primary"
+            >
+              Generar Reporte
+            </button>
+          </mat-dialog-actions>
+        </mat-card>
+      </form>
+    </div>
+  </div>
+</div>

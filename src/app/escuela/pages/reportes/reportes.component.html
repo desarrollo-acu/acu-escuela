@@ -6,6 +6,7 @@
                 <mat-button-toggle (click)="tipo = 'inicio-curso-periodo'"> Inicio de curso por período </mat-button-toggle>
                 <mat-button-toggle (click)="tipo = 'cantidad-clases-periodo'"> Cantidad de clases por período </mat-button-toggle>
                 <mat-button-toggle (click)="tipo = 'cantidad-clases-por-alumno-por-mes'"> Cantidad Clases por alumno y por mes </mat-button-toggle>
+                <mat-button-toggle (click)="tipo = 'plan-clases-extendido'"> Plan de clases extendido </mat-button-toggle>
             </mat-button-toggle-group>
 
         </div>
@@ -32,6 +33,9 @@
                 <div *ngSwitchCase="'cantidad-clases-por-alumno-por-mes'">
 
                     <app-cantidad-clases-por-alumno-por-mes></app-cantidad-clases-por-alumno-por-mes>
+                </div>
+                <div *ngSwitchCase="'plan-clases-extendido'">
+                    <app-plan-de-clases-extendido></app-plan-de-clases-extendido>
                 </div>
                 <div *ngSwitchDefault>
                     <div class="row " style="margin-top: 20px;">

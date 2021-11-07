@@ -8,6 +8,7 @@ import { AgendaClase } from '@core/model/agenda-clase.model';
 import { DisponibilidadAlumnoComponent } from '../disponibilidad-alumno/disponibilidad-alumno.component';
 import { AcuService } from '@core/services/acu.service';
 import { openSamePDF } from '@utils/utils-functions';
+import { ReportesService } from '@core/services/reportes.service';
 
 @Component({
   selector: 'app-inscripciones-alumno',
@@ -26,7 +27,7 @@ export class InscripcionesAlumnoComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<GestionAlumnoComponent>,
     public dialog: MatDialog,
-    private acuService: AcuService,
+    private reportesService: ReportesService,
     @Inject(MAT_DIALOG_DATA) public data: any) {
     this.alumno = this.data.alumno;
 
@@ -58,7 +59,7 @@ export class InscripcionesAlumnoComponent implements OnInit {
 
   verPlanDeClases(inscripcion: AgendaClase) {
 
-    this.acuService.getPDFPlanDeClases(inscripcion.planDeClases).subscribe(pdf => {
+    this.reportesService.getPDFPlanDeClases(inscripcion.planDeClases).subscribe(pdf => {
       openSamePDF(pdf, 'PlanDeClases');
     });
 

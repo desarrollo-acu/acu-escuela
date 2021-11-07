@@ -27,6 +27,7 @@ import { GestionInscripcionComponent } from '../../components/gestion-inscripcio
 import { Moment } from 'moment';
 import * as moment from 'moment';
 import { MyValidators } from '@utils/validators';
+import { ReportesService } from '@core/services/reportes.service';
 
 @Component({
   selector: 'app-generar-nuevo-plan-clases',
@@ -51,7 +52,7 @@ export class GenerarNuevoPlanClasesComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<GestionInscripcionComponent>,
-    private acuService: AcuService,
+    private reportesService: ReportesService,
     private instructorService: InstructorService,
     private inscripcionService: InscripcionService,
     public dialog: MatDialog,
@@ -189,7 +190,7 @@ export class GenerarNuevoPlanClasesComponent implements OnInit {
                     return;
                   }
 
-                  this.acuService
+                  this.reportesService
                     .getPDFPlanDeClases(claseEstimada)
                     .subscribe((pdf) => {
                       openSamePDF(pdf, 'PlanDeClases');

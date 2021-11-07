@@ -269,22 +269,6 @@ export class AcuService {
     });
   }
 
-  getPDFPlanDeClases(planDeClase: ClaseEstimada) {
-    const headers = new HttpHeaders();
-    headers.set('Aceppt', 'application/pdf;');
-    console.log( this.authService.getUserId() );
-
-    return this.http.post(
-      `${environment.url_ws}/wsPDFPlanDeClases`,
-      {
-        PlanDeClase: {...planDeClase, UsrId: this.authService.getUserId()},
-      },
-      {
-        headers,
-        responseType: 'blob' as 'json',
-      }
-    );
-  }
 
   cleanStorageAgenda() {
     localStorage.removeItem('copiarMoverParameters');
@@ -303,9 +287,11 @@ export class AcuService {
 
   enviarNotificacion(envioNotificacion: EnvioNotificacion) {
     return this.http.post(`${environment.url_ws}/wsEnvioNotificacion`, {
-      envioNotificacion,
+      envioNotificacion: {...envioNotificacion, usrId: this.authService.getUserId()},
     });
   }
+
+  obtenerNotificaciones = () => this.http.get<EnvioNotificacion[]>(`${environment.url_ws}/obtenerNotificaciones`);
 
   getTituloApp = () => this.http.get(`${environment.url_ws}/wsGetTituloApp`);
 

@@ -1,7 +1,9 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { ClaseEstimada } from '@core/model/clase-estimada.model';
 import { environment } from '@environments/environment';
 import { formatDateToString } from '@utils/utils-functions';
+import { AutenticacionService } from './autenticacion.service';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +13,7 @@ export class ReportesService {
 
   options;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private authService: AutenticacionService) {
     this.headers.set('Aceppt', 'application/pdf;');
     this.options = {
       headers: this.headers,
@@ -53,4 +55,22 @@ export class ReportesService {
       fechaDesde,
       fechaHasta,
     });
+
+
+  getPDFPlanDeClases(planDeClase: ClaseEstimada, path = 'wsPDFPlanDeClases') {
+    const headers = new HttpHeaders();
+    headers.set('Aceppt', 'application/pdf;');
+    console.log( this.authService.getUserId() );
+
+    return this.http.post(
+      `${environment.url_ws}/${path}`,
+      {
+        PlanDeClase: {...planDeClase, UsrId: this.authService.getUserId()},
+      },
+      {
+        headers,
+        responseType: 'blob' as 'json',
+      }
+    );
+  }
 }
