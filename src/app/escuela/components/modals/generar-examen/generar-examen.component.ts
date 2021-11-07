@@ -229,9 +229,6 @@ export class GenerarExamenComponent implements OnInit {
     this.inscripcionService
       .getInscripcionesByAlumno(this.aluId)
       .subscribe((res: any) => this.openDialogInscripciones(res.Inscripciones));
-    // this.cursoService.getCursos().subscribe((res: any) => {
-    //   this.openDialogCursos(res);
-    // });
   }
   private openDialogInscripciones(inscripciones) {
     const dialogRef = this.dialog.open(SeleccionarInscripcionComponent, {

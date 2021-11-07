@@ -69,19 +69,21 @@ import { GenerarClaseAdicionalComponent } from './dialogs/generar-clase-adiciona
 import { CambiarContraseniaComponent } from './dialogs/cambiar-contrasenia/cambiar-contrasenia.component';
 import { GenerarNuevoPlanClasesComponent } from './dialogs/generar-nuevo-plan-clases/generar-nuevo-plan-clases.component';
 import { ReportesComponent } from './pages/reportes/reportes.component';
-import { FacturacionPorItemComponent } from './components/facturacion-por-item/facturacion-por-item.component';
+import { FacturacionPorItemComponent } from './reports/facturacion-por-item/facturacion-por-item.component';
 import { SeleccionarItemComponent } from './dialogs/seleccionar-item/seleccionar-item.component';
-import { CantidadClasesPorAlumnoPorMesComponent } from './components/cantidad-clases-por-alumno-por-mes/cantidad-clases-por-alumno-por-mes.component';
-import { CantidadClasesPorPeriodoComponent } from './components/cantidad-clases-por-periodo/cantidad-clases-por-periodo.component';
-import { InicioCursoPorPeriodoComponent } from './components/inicio-curso-por-periodo/inicio-curso-por-periodo.component';
+import { CantidadClasesPorAlumnoPorMesComponent } from './reports/cantidad-clases-por-alumno-por-mes/cantidad-clases-por-alumno-por-mes.component';
+import { CantidadClasesPorPeriodoComponent } from './reports/cantidad-clases-por-periodo/cantidad-clases-por-periodo.component';
+import { InicioCursoPorPeriodoComponent } from './reports/inicio-curso-por-periodo/inicio-curso-por-periodo.component';
 import { CuentaCorrienteComponent } from './pages/cuenta-corriente/cuenta-corriente.component';
 import { IngresarClaveAccionesComponent } from './dialogs/ingresar-clave-acciones/ingresar-clave-acciones.component';
 import { GestionFormulariosComponent } from './pages/gestion-formularios/gestion-formularios.component';
-import { DesperfectoMovilComponent } from './components/desperfecto-movil/desperfecto-movil.component';
-import { DiarioMovilComponent } from './components/diario-movil/diario-movil.component';
-import { EvaluacionAlumnoComponent } from './components/evaluacion-alumno/evaluacion-alumno.component';
-import { ResultadoExamenPracticoComponent } from './components/resultado-examen-practico/resultado-examen-practico.component';
 import { BloquearHorasComponent } from './dialogs/bloquear-horas/bloquear-horas.component';
+import { PlanDeClasesExtendidoComponent } from './reports/plan-de-clases-extendido/plan-de-clases-extendido.component';
+import { EvaluacionAlumnoComponent } from './formularios/evaluacion-alumno/evaluacion-alumno.component';
+import { DiarioMovilComponent } from './formularios/diario-movil/diario-movil.component';
+import { DesperfectoMovilComponent } from './formularios/desperfecto-movil/desperfecto-movil.component';
+import { ResultadoExamenPracticoComponent } from './formularios/resultado-examen-practico/resultado-examen-practico.component';
+import { GestionNotificacionesComponent } from './pages/gestion-notificaciones/gestion-notificaciones.component';
 
 
 registerLocaleData(localeEsUy, 'es-UY');
@@ -141,11 +143,14 @@ registerLocaleData(localeEs, 'es');
     CuentaCorrienteComponent,
     IngresarClaveAccionesComponent,
     GestionFormulariosComponent,
+    BloquearHorasComponent,
+    PlanDeClasesExtendidoComponent,
     DesperfectoMovilComponent,
     DiarioMovilComponent,
     EvaluacionAlumnoComponent,
     ResultadoExamenPracticoComponent,
-    BloquearHorasComponent
+    GestionNotificacionesComponent,
+
   ],
   imports: [
     CommonModule,

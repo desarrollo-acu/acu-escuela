@@ -22,6 +22,7 @@ import { ReportesComponent } from './pages/reportes/reportes.component';
 import { AutenticacionGuard } from '../core/guards/autenticacion.guard';
 import { CuentaCorrienteComponent } from './pages/cuenta-corriente/cuenta-corriente.component';
 import { GestionFormulariosComponent } from './pages/gestion-formularios/gestion-formularios.component';
+import { GestionNotificacionesComponent } from './pages/gestion-notificaciones/gestion-notificaciones.component';
 
 const routes: Routes = [
   {
@@ -103,6 +104,10 @@ const routes: Routes = [
       {
         path: 'formularios',
         component: GestionFormulariosComponent,
+      },
+      {
+        path: 'notificaciones',
+        component: GestionNotificacionesComponent,
       },
       {
         path: 'cuenta-corriente',

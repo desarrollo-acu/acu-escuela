@@ -1,4 +1,5 @@
 import { ClaseEstimada } from './clase-estimada.model';
+import { Inscripcion } from '@core/model/inscripcion.model';
 export interface AgendaClase {
   // FechaClase: string;
   Modo?: string;
@@ -44,4 +45,5 @@ export interface AgendaClase {
   UsrId?: string;
   UsuarioAltaNombre?: string;
   existeClaseAgenda?: boolean;
+  inscripcion?: Inscripcion;
 }

@@ -108,12 +108,6 @@ export class NavComponent implements OnDestroy {
 
   logout = () => this.auth.logout();
 
-  enviarNotificacion() {
-    const dialogRef = this.dialog.open(EnviarNotificacionComponent);
-
-    dialogRef.afterClosed().subscribe();
-  }
-
   changeTitle(title: string) {
     switch (title) {
       case '/escuela/agenda-movil':
@@ -157,6 +151,9 @@ export class NavComponent implements OnDestroy {
         break;
       case '/escuela/formularios':
         this.title = 'Formularios';
+        break;
+      case '/escuela/notificaciones':
+        this.title = 'Notificaciones';
         break;
       case '/escuela/cuenta-corriente':
         this.title = 'Trabajar con Cuentas Corrientes';

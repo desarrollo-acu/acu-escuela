@@ -6,6 +6,16 @@ export interface EnvioNotificacion {
   mensaje?: string;
   asunto?: string;
   tipoNotificacion?: TipoNotificacion[];
+  usrId?: string;
+  tipo?: number;
+  fecha?: Date;
+  esAgInsFch?: Date;
+  agInsHorIni?: number;
+  escInsId?: number;
+  escAluCurId?: number;
+  tipCurId?: number;
+  periodicidad?: string;
+  tipoDescripcion?: string;
 }
 
 export interface TipoNotificacion {

@@ -33,6 +33,9 @@ import Swal from 'sweetalert2';
 import { SeleccionarInscripcionComponent } from '../seleccionar-inscripcion/seleccionar-inscripcion.component';
 import { GenerarClaseAdicional } from '../../../core/model/generar-clase-adicional.model';
 import { mensajeWarning } from '../../../utils/sweet-alert';
+import { SeleccionarMovilComponent } from '@escuela/components/modals/seleccionar-movil/seleccionar-movil.component';
+import { Movil } from '@core/model/movil.model';
+import { MovilService } from '@core/services/movil.service';
 
 @Component({
   selector: 'app-generar-clase-adicional',
@@ -60,6 +63,7 @@ export class GenerarClaseAdicionalComponent implements OnInit {
     public dialogRef: MatDialogRef<AgendaMovilComponent>,
     private instructorService: InstructorService,
     private inscripcionService: InscripcionService,
+    private movilService: MovilService,
     private alumnoService: AlumnoService,
     private cursoService: CursoService,
     public dialog: MatDialog,
@@ -224,6 +228,29 @@ export class GenerarClaseAdicionalComponent implements OnInit {
       .afterClosed()
       .subscribe((inscripcion) => this.addInfoCursoToForm(inscripcion));
   }
+  seleccionarMovil() {
+    this.movilService.getMoviles().subscribe((moviles: Movil[]) => {
+      const auxMoviles = moviles.filter((movil) => movil.EscVehEst === 'A');
+
+      this.openDialogMoviles(auxMoviles);
+    });
+  }
+
+  private openDialogMoviles(moviles: Movil[]) {
+    const movilesDialogRef = this.dialog.open(SeleccionarMovilComponent, {
+      height: 'auto',
+      width: '700px',
+      data: {
+        moviles,
+      },
+    });
+
+    movilesDialogRef.afterClosed().subscribe((movil) => {
+      this.form.patchValue({
+        movil: movil.MovCod,
+      });
+    });
+  }
 
   seleccionarAlumno() {
     this.alumnoService
@@ -297,6 +324,7 @@ export class GenerarClaseAdicionalComponent implements OnInit {
         this.form.patchValue({
           escInsId: inscripcion.EscInsId,
           escInsNom: inscripcion.EscInsNom,
+          movil: inscripcion.EscMovCod
         });
       });
   }

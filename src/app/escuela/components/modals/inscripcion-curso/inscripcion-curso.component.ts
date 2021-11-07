@@ -48,6 +48,7 @@ import { openSamePDF, generateSedes } from '../../../../utils/utils-functions';
 import { Subscription } from 'rxjs';
 import { NullTemplateVisitor } from '@angular/compiler';
 import { ClaseEstimada } from '@core/model/clase-estimada.model';
+import { ReportesService } from '@core/services/reportes.service';
 
 @Component({
   selector: 'app-inscripcion-curso',
@@ -84,7 +85,7 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
   constructor(
     private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<AgendaMovilComponent>,
-    private acuService: AcuService,
+    private reportesService: ReportesService,
     private inscripcionService: InscripcionService,
     private instructorService: InstructorService,
     private cursoService: CursoService,
@@ -420,7 +421,7 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
                 return;
               }
 
-              this.acuService
+              this.reportesService
                 .getPDFPlanDeClases(result.claseEstimada)
                 .subscribe((pdf) => {
                   openSamePDF(pdf, 'PlanDeClases');

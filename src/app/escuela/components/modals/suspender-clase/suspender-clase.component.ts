@@ -16,7 +16,7 @@ import {
 } from '@core/model/clase-estimada.model';
 import { InstructorHorasLibresComponent } from '../instructor-horas-libres/instructor-horas-libres.component';
 import { confirmacionUsuario, errorMensaje, mensajeConfirmacion } from '@utils/sweet-alert';
-import { generateHorasLibres } from '@utils/utils-functions';
+import { generateHorasLibres, getDisponibilidadFromInscripcion } from '@utils/utils-functions';
 import { IngresarClaveAccionesComponent } from '@escuela/dialogs/ingresar-clave-acciones/ingresar-clave-acciones.component';
 
 @Component({
@@ -82,6 +82,16 @@ export class SuspenderClaseComponent implements OnInit {
       this.agendaClase.Hora < 10
         ? `0${this.agendaClase.Hora}`
         : this.agendaClase.Hora;
+    console.log(this.agendaClase);
+
+    const {
+      disponibilidadLunes,
+      disponibilidadMartes,
+      disponibilidadMiercoles,
+      disponibilidadJueves,
+      disponibilidadViernes,
+      disponibilidadSabado,
+    } = getDisponibilidadFromInscripcion(this.agendaClase.inscripcion);
 
     this.form = this.formBuilder.group({
       fechaClase: [this.fechaClase],
@@ -96,14 +106,15 @@ export class SuspenderClaseComponent implements OnInit {
       escInsNom: [this.agendaClase.EsAgCuInsNom],
       alumnoNumero: [this.agendaClase.AluNro],
       alumnoNombre: [this.agendaClase.AluNomApe],
-      disponibilidadLunes: [this.data.agendaClase.disponibilidadLunes],
-      disponibilidadMartes: [this.data.agendaClase.disponibilidadMartes],
-      disponibilidadMiercoles: [this.data.agendaClase.disponibilidadMiercoles],
-      disponibilidadJueves: [this.data.agendaClase.disponibilidadJueves],
-      disponibilidadViernes: [this.data.agendaClase.disponibilidadViernes],
-      disponibilidadSabado: [this.data.agendaClase.disponibilidadSabado],
+      disponibilidadLunes: [disponibilidadLunes],
+      disponibilidadMartes: [disponibilidadMartes],
+      disponibilidadMiercoles: [disponibilidadMiercoles],
+      disponibilidadJueves: [disponibilidadJueves],
+      disponibilidadViernes: [disponibilidadViernes],
+      disponibilidadSabado: [disponibilidadSabado],
       observaciones: [, Validators.required],
     });
+
 
     this.cursoId.disable();
     this.hora.disable();

@@ -44,7 +44,16 @@
               type="number"
             />
 
-            <mat-error *ngIf="movil.hasError('required')  || movil.value === 0">
+            <button
+              mat-icon-button
+              matSuffix
+              [attr.aria-label]="'Hide password'"
+              (click)="seleccionarMovil()"
+            >
+              <mat-icon> search </mat-icon>
+            </button>
+
+            <mat-error *ngIf="movil.hasError('required') || movil.value === 0">
               El móvil es <strong>requerido</strong>.
             </mat-error>
           </mat-form-field>

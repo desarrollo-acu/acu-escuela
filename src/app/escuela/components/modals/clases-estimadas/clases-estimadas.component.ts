@@ -24,6 +24,7 @@ import {
   ClaseEstimadaDetalle,
 } from '@core/model/clase-estimada.model';
 import { openSamePDF } from '../../../../utils/utils-functions';
+import { ReportesService } from '@core/services/reportes.service';
 
 @Component({
   selector: 'app-clases-estimadas',
@@ -46,7 +47,7 @@ export class ClasesEstimadasComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<InscripcionCursoComponent>,
     public dialog: MatDialog,
-    private acuService: AcuService,
+    private reportesService: ReportesService,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
 
@@ -72,7 +73,7 @@ export class ClasesEstimadasComponent implements OnInit {
 
   verPDF(claseEstimada: ClaseEstimada) {
 
-    this.acuService.getPDFPlanDeClases(claseEstimada).subscribe((pdf: any) => {
+    this.reportesService.getPDFPlanDeClases(claseEstimada).subscribe((pdf: any) => {
       openSamePDF(pdf, 'PlanDeClases');
     });
   }
