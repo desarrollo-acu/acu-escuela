@@ -1,88 +1,100 @@
-<div class="row" style="margin-top: 10px; ">
-    <div class="col-xs-offset-1 col-xs-10">
-        <div class="box">
+<div class="row" style="margin-top: 10px">
+  <div class="col-xs-offset-1 col-xs-10">
+    <div class="box">
+      <mat-card>
+        <form [formGroup]="movilForm">
+          <mat-card-content>
+            <div class="row">
+              <div class="col-xs">
+                <div class="box">
+                  <div class="row">
+                    <div class="col-xs-6">
+                      <div class="box">
+                        <mat-form-field class="full-width">
+                          <input
+                            matInput
+                            #codigoMovil
+                            placeholder="Código del Móvil"
+                            formControlName="movCod"
+                          />
+                        </mat-form-field>
+                      </div>
+                    </div>
 
-            <mat-card>
+                    <div class="col-xs-6">
+                      <div class="box">
+                        <mat-form-field class="full-width">
+                          <input
+                            matInput
+                            placeholder="Código del Movil en la Escuela"
+                            formControlName="escMovId"
+                          />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
 
-                <form [formGroup]="movilForm">
+                  <div class="row">
+                    <div class="col-xs-6">
+                      <div class="box">
+                        <mat-form-field class="full-width">
+                          <mat-label>Estado</mat-label>
+                          <mat-select formControlName="escVehEst">
+                            <mat-option value="A">Activo</mat-option>
+                            <mat-option value="D">Deshabilitado</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xs-6">
+                      <div class="box">
+                        <mat-form-field class="full-width">
+                          <input
+                            matInput
+                            [matDatepicker]="picker"
+                            placeholder="Fecha de Baja"
+                            formControlName="escVehBajFch"
+                          />
+                          <mat-datepicker-toggle matSuffix [for]="picker">
+                          </mat-datepicker-toggle>
+                          <mat-datepicker #picker></mat-datepicker>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
 
-
-                    <mat-card-content>
-                        <div class="row">
-                            <div class="col-xs">
-                                <div class="box">
-                                    <div class="row">
-                                        <div class="col-xs-6">
-                                            <div class="box">
-
-                                                <mat-form-field class="full-width">
-                                                    <input matInput #codigoMovil placeholder="Código del Móvil" formControlName="movCod" disabled>
-                                                </mat-form-field>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-xs-6">
-                                            <div class="box">
-
-                                                <mat-form-field class="full-width">
-                                                    <input matInput placeholder="Código del Movil en la Escuela" formControlName="escMovId" disabled>
-                                                </mat-form-field>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="row">
-
-                                        <div class="col-xs-6">
-                                            <div class="box">
-
-                                                <mat-form-field class="full-width">
-                                                    <mat-label>Estado</mat-label>
-                                                    <mat-select formControlName="escVehEst">
-                                                        <mat-option value="A">Activo</mat-option>
-                                                        <mat-option value="D">Deshabilitado</mat-option>
-                                                    </mat-select>
-                                                </mat-form-field>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-6">
-                                            <div class="box">
-                                                <mat-form-field class="full-width">
-                                                    <input matInput [matDatepicker]="picker" placeholder="Fecha de Baja" formControlName="escVehBajFch">
-                                                    <mat-datepicker-toggle matSuffix [for]="picker">
-                                                    </mat-datepicker-toggle>
-                                                    <mat-datepicker #picker></mat-datepicker>
-                                                </mat-form-field>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-xs">
-                                            <div class="box">
-
-                                                <mat-form-field class="full-width">
-                                                    <input matInput placeholder="Motivo de la deshabilitación" formControlName="escVehMot">
-                                                </mat-form-field>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-
-                                </div>
-                            </div>
-                        </div>
-                    </mat-card-content>
-                    <mat-card-actions align="end">
-
-                        <!-- [disabled]="movilForm.invalid" -->
-                        <button mat-raised-button color="primary" type="button" [disabled]="movilForm.invalid" (click)="guardarMovil($event)">Guardar móvil</button>
-                        <button mat-raised-button (click)="onNoClick()">Cancelar</button>
-                    </mat-card-actions>
-                </form>
-            </mat-card>
-        </div>
+                  <div class="row">
+                    <div class="col-xs">
+                      <div class="box">
+                        <mat-form-field class="full-width">
+                          <input
+                            matInput
+                            placeholder="Motivo de la deshabilitación"
+                            formControlName="escVehMot"
+                          />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+          <mat-card-actions align="end">
+            <!-- [disabled]="movilForm.invalid" -->
+            <button
+              mat-raised-button
+              color="primary"
+              type="button"
+              [disabled]="movilForm.invalid"
+              (click)="guardarMovil($event)"
+            >
+              Guardar móvil
+            </button>
+            <button mat-raised-button (click)="onNoClick()">Cancelar</button>
+          </mat-card-actions>
+        </form>
+      </mat-card>
     </div>
+  </div>
 </div>

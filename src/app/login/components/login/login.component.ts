@@ -30,15 +30,17 @@ export class LoginComponent implements OnInit {
     this.showSppiner = true;
     this.autenticacionService
       .iniciarSesion(this.userField.value, this.passwordField.value)
-      .subscribe((res: any) => {
+      .subscribe( async (res: any) => {
         this.showSppiner = false;
+
         if (res.authResponse.LoginEscuela.LoginOk) {
           localStorage.setItem('usrId', this.userField.value);
           localStorage.setItem('infoUsuario', JSON.stringify(res.authResponse));
-          mensajeConfirmacion(
+          await mensajeConfirmacion(
             'Excelente!',
             res.authResponse.LoginEscuela.Mensaje
-          ).then(() => this.router.navigate(['/escuela/agenda-instructor']));
+          );
+          this.router.navigate(['/escuela/agenda-instructor']);
         } else {
           errorMensaje(
             'Ocurrió un problema',

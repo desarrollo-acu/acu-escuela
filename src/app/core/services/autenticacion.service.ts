@@ -37,7 +37,7 @@ export class AutenticacionService {
   }
 
 
-  logout = () => this.router.navigate(['/']).then( () => localStorage.clear());
+  logout = () => this.router.navigate(['/login']).then( () => localStorage.clear());
 
   cambiarContrasenia(usrId: string, usrNuevaPass: string) {
 

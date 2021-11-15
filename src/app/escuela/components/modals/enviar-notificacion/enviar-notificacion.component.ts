@@ -10,6 +10,7 @@ import { AlumnoService } from '@core/services/alumno.service';
 import { CursoService } from '@core/services/curso.service';
 import { SeleccionarAlumnoComponent } from '../seleccionar-alumno/seleccionar-alumno.component';
 import { confirmacionUsuario, mensajeConfirmacion, errorMensaje } from '../../../../utils/sweet-alert';
+import { AutenticacionService } from '../../../../core/services/autenticacion.service';
 
 @Component({
   selector: 'app-enviar-notificacion',
@@ -28,6 +29,7 @@ export class EnviarNotificacionComponent implements OnInit {
     public dialogRef: MatDialogRef<any>,
     private alumnoService: AlumnoService,
     private acuService: AcuService,
+    private authService: AutenticacionService,
     private cursoService: CursoService,
     public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: any

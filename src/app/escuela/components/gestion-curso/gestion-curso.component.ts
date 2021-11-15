@@ -13,7 +13,7 @@ import { downloadFile, base64ToBlob, downloadFileFromBase64 } from '../../../uti
 
 
 import fileDownload from 'js-file-download';
-import { environment } from '../../../../environments/environment.prod';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-gestion-curso',

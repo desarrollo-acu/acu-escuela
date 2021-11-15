@@ -76,9 +76,6 @@ export class AbmMovilComponent implements OnInit, OnDestroy {
       // EscVehOrdPan: [''],
     });
 
-    this.movCod.disable();
-    this.escMovId.disable();
-
   }
 
   private changeForm(modo: string, movil: Movil) {
@@ -86,6 +83,9 @@ export class AbmMovilComponent implements OnInit, OnDestroy {
     if (modo === 'INS') {
       this.titulo = 'Agregar';
     } else {
+
+      this.movCod.disable();
+      this.escMovId.disable();
       this.titulo = 'Editar';
       this.setValuesForm(movil);
     }

@@ -6,7 +6,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { confirmacionUsuario } from '@utils/sweet-alert';
 import { Actions } from '../../../core/model/actions.model';
 import { EliminarRow } from '../../../core/model/eliminiar-row.interface';
-import { environment } from '../../../../environments/environment.prod';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-gestion-custom',
