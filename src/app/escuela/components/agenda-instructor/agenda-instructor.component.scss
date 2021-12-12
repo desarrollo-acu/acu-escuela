@@ -81,6 +81,13 @@ mat-toolbar {
     border: 1px solid grey;
 }
 
+.red-white {
+  background-color: rgba(255, 0, 0, 0.836);;
+  color: rgba(255, 255, 255, 0.836);
+  border-radius: 1px;
+  border: 1px solid rgba(126, 121, 121, 0.801);
+}
+
 .black-red {
     background-color: rgba(60, 60, 60, 0.685);
     color: rgba(255, 0, 0, 0.836);

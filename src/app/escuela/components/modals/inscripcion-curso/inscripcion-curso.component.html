@@ -72,6 +72,13 @@
             >
               El alumno es <strong>requerido </strong>
             </mat-error>
+            <mat-error
+              *ngIf="
+                alumnoCIField.hasError('tiene-facturas-pendientes-de-pago')
+              "
+            >
+              El alumno tiene facturas <strong> pendientes de pago </strong> anteriores al dia de hoy, verifique.
+            </mat-error>
           </mat-form-field>
         </div>
         <div class="col">

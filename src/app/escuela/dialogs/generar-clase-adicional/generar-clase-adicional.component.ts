@@ -36,6 +36,7 @@ import { mensajeWarning } from '../../../utils/sweet-alert';
 import { SeleccionarMovilComponent } from '@escuela/components/modals/seleccionar-movil/seleccionar-movil.component';
 import { Movil } from '@core/model/movil.model';
 import { MovilService } from '@core/services/movil.service';
+import { MyValidatorsService } from '@utils/my-validators.service';
 
 @Component({
   selector: 'app-generar-clase-adicional',
@@ -65,6 +66,7 @@ export class GenerarClaseAdicionalComponent implements OnInit {
     private inscripcionService: InscripcionService,
     private movilService: MovilService,
     private alumnoService: AlumnoService,
+    private myValidatorsService: MyValidatorsService,
     private cursoService: CursoService,
     public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: any
@@ -273,6 +275,8 @@ export class GenerarClaseAdicionalComponent implements OnInit {
     alumnosDialogRef.afterClosed().subscribe((alumno) => {
       if (alumno) {
         this.aluId = alumno.AluId;
+        const { AluId, AluNomComp } = alumno;
+        this.myValidatorsService.alumnoTieneFacturasPendientes(AluId, AluNomComp, this.alumnoNumero);
         this.obtenerInscripcion();
         this.form.patchValue({
           alumnoNumero: alumno.AluNro,

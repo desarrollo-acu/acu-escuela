@@ -1,19 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
 import { ReportesService } from '@core/services/reportes.service';
-import { openSamePDF } from '@utils/utils-functions';
-import {
-  downloadFile,
-  downloadFileFromBase64,
-} from '../../../utils/utils-functions';
+import { downloadFileFromBase64 } from '@utils/utils-functions';
 
 @Component({
-  selector: 'app-cantidad-clases-por-alumno-por-mes',
-  templateUrl: './cantidad-clases-por-alumno-por-mes.component.html',
-  styleUrls: ['./cantidad-clases-por-alumno-por-mes.component.scss'],
+  selector: 'app-alumnos-pendientes-de-pago',
+  templateUrl: './alumnos-pendientes-de-pago.component.html',
+  styleUrls: ['./alumnos-pendientes-de-pago.component.scss']
 })
-export class CantidadClasesPorAlumnoPorMesComponent {
+export class AlumnosPendientesDePagoComponent  {
   form: FormGroup;
 
   get fechaDesde() {
@@ -43,7 +38,7 @@ export class CantidadClasesPorAlumnoPorMesComponent {
     const { fechaDesde, fechaHasta } = this.form.value;
 
     this.reportesService
-      .alumnosEnCurso(fechaDesde, fechaHasta)
+      .alumnosPendientesDePago(fechaDesde, fechaHasta)
       .subscribe(({ dataBase64, filename }: any) =>
         downloadFileFromBase64(dataBase64, filename)
       );

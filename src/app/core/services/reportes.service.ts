@@ -49,9 +49,16 @@ export class ReportesService {
 
   cantidadClasesPorPeriodo = (usrId, mes, anio) =>
     this.http.post(`${environment.url_ws}/PEscConClases`, { usrId, mes, anio });
-  // REscClasesAlumHora
+
   alumnosEnCurso = (fechaDesde, fechaHasta) =>
-    this.http.post(`${environment.url_ws}/REscClasesAlumHora`, {
+  this.http.post(`${environment.url_ws}/REscClasesAlumHora`, {
+    fechaDesde,
+    fechaHasta,
+  });
+
+  // REscClasesAlumHora
+  alumnosPendientesDePago = (fechaDesde, fechaHasta) =>
+    this.http.post(`${environment.url_ws}/reporteAlumnosPendientesDePago`, {
       fechaDesde,
       fechaHasta,
     });

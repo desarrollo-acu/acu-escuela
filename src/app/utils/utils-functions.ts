@@ -385,7 +385,7 @@ export const generateSedes = () => {
   sedes.push({
     id: 1,
     value: 'Colonia y Yi',
-    description: 'Colonia y Yi'
+    description: 'Colonia-y-Yi'
   });
 
   sedes.push({

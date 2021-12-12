@@ -3,6 +3,7 @@ import { AbstractControl, ValidatorFn, AsyncValidatorFn, ValidationErrors } from
 import { AlumnoService } from '@core/services/alumno.service';
 
 import { FormGroup } from '@angular/forms';
+import { errorMensaje } from './sweet-alert';
 
 export class MyValidators {
 
@@ -97,6 +98,7 @@ export class MyValidators {
     }
     return null;
   }
+
 
 
 

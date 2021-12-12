@@ -35,6 +35,7 @@ import { InstructorHorasLibresComponent } from '../instructor-horas-libres/instr
 import { SeleccionarInscripcionComponent } from '../../../dialogs/seleccionar-inscripcion/seleccionar-inscripcion.component';
 import { ResponseSDTCustom } from '../../../../core/model/response-sdt-custom.model';
 import { errorMensaje } from '../../../../utils/sweet-alert';
+import { MyValidatorsService } from '@utils/my-validators.service';
 @Component({
   selector: 'app-generar-examen',
   templateUrl: './generar-examen.component.html',
@@ -61,6 +62,7 @@ export class GenerarExamenComponent implements OnInit {
     private instructorService: InstructorService,
     private inscripcionService: InscripcionService,
     private alumnoService: AlumnoService,
+    private myValidatorsService: MyValidatorsService,
     private acuService: AcuService,
     private cursoService: CursoService,
     public dialog: MatDialog,
@@ -278,6 +280,8 @@ export class GenerarExamenComponent implements OnInit {
     alumnosDialogRef.afterClosed().subscribe((alumno) => {
       if (alumno) {
         this.aluId = alumno.AluId;
+        const { AluId, AluNomComp } = alumno;
+        this.myValidatorsService.alumnoTieneFacturasPendientes(AluId, AluNomComp, this.alumnoNumero);
         this.obtenerInscripcion();
         this.form.patchValue({
           alumnoNumero: alumno.AluNro,

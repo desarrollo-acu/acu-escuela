@@ -84,6 +84,7 @@ import { DiarioMovilComponent } from './formularios/diario-movil/diario-movil.co
 import { DesperfectoMovilComponent } from './formularios/desperfecto-movil/desperfecto-movil.component';
 import { ResultadoExamenPracticoComponent } from './formularios/resultado-examen-practico/resultado-examen-practico.component';
 import { GestionNotificacionesComponent } from './pages/gestion-notificaciones/gestion-notificaciones.component';
+import { AlumnosPendientesDePagoComponent } from './reports/alumnos-pendientes-de-pago/alumnos-pendientes-de-pago.component';
 
 
 registerLocaleData(localeEsUy, 'es-UY');
@@ -150,6 +151,7 @@ registerLocaleData(localeEs, 'es');
     EvaluacionAlumnoComponent,
     ResultadoExamenPracticoComponent,
     GestionNotificacionesComponent,
+    AlumnosPendientesDePagoComponent,
 
   ],
   imports: [

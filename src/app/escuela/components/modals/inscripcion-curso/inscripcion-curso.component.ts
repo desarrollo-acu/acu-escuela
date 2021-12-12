@@ -49,6 +49,8 @@ import { Subscription } from 'rxjs';
 import { NullTemplateVisitor } from '@angular/compiler';
 import { ClaseEstimada } from '@core/model/clase-estimada.model';
 import { ReportesService } from '@core/services/reportes.service';
+import { errorMensaje } from '../../../../utils/sweet-alert';
+import { MyValidatorsService } from '../../../../utils/my-validators.service';
 
 @Component({
   selector: 'app-inscripcion-curso',
@@ -90,10 +92,10 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
     private instructorService: InstructorService,
     private cursoService: CursoService,
     private alumnoService: AlumnoService,
+    private myValidatorsService: MyValidatorsService,
     public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-
     this.inscripcionCurso = this.data.inscripcionCurso;
 
     // tslint:disable-next-line: max-line-length
@@ -111,7 +113,7 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
     this.fechaClase.setFullYear(year);
     this.horasLibres = generateHorasLibres();
 
-    this.sedes = [ ...generateSedes() ];
+    this.sedes = [...generateSedes()];
     this.buildForm();
     this.deshabilitarCampos();
   }
@@ -146,14 +148,15 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
         cursoClasesTeoricas: [''],
         cursoExamenPractico: [''],
         cursoExamenTeorico: [''],
-        fechaInicioEstimada: ['', [Validators.required, MyValidators.fechaAnteriorOIgualAHoy]],
+        fechaInicioEstimada: [
+          '',
+          [Validators.required, MyValidators.fechaAnteriorOIgualAHoy],
+        ],
         escCurTe1: [''],
         escCurTe2: [''],
         escCurTe3: [''],
         escCurIni: [''],
-        alumnoNumero: [
-          '',,
-        ],
+        alumnoNumero: ['', ,],
         alumnoNombre: [''],
         alumnoCI: [null, [Validators.required]],
         alumnoTelefono: [''],
@@ -354,12 +357,18 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
     }
 
     if (this.form.valid) {
-      this.inscripcionCurso.disponibilidadLunes = this.disponibilidadLunesField.value;
-      this.inscripcionCurso.disponibilidadMartes = this.disponibilidadMartesField.value;
-      this.inscripcionCurso.disponibilidadMiercoles = this.disponibilidadMiercolesField.value;
-      this.inscripcionCurso.disponibilidadJueves = this.disponibilidadJuevesField.value;
-      this.inscripcionCurso.disponibilidadViernes = this.disponibilidadViernesField.value;
-      this.inscripcionCurso.disponibilidadSabado = this.disponibilidadSabadoField.value;
+      this.inscripcionCurso.disponibilidadLunes =
+        this.disponibilidadLunesField.value;
+      this.inscripcionCurso.disponibilidadMartes =
+        this.disponibilidadMartesField.value;
+      this.inscripcionCurso.disponibilidadMiercoles =
+        this.disponibilidadMiercolesField.value;
+      this.inscripcionCurso.disponibilidadJueves =
+        this.disponibilidadJuevesField.value;
+      this.inscripcionCurso.disponibilidadViernes =
+        this.disponibilidadViernesField.value;
+      this.inscripcionCurso.disponibilidadSabado =
+        this.disponibilidadSabadoField.value;
     }
 
     if (
@@ -379,17 +388,24 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
   }
 
   clasesEstimadas() {
-    this.inscripcionCurso.disponibilidadLunes = this.disponibilidadLunesField.value;
-    this.inscripcionCurso.disponibilidadMartes = this.disponibilidadMartesField.value;
-    this.inscripcionCurso.disponibilidadMiercoles = this.disponibilidadMiercolesField.value;
-    this.inscripcionCurso.disponibilidadJueves = this.disponibilidadJuevesField.value;
-    this.inscripcionCurso.disponibilidadViernes = this.disponibilidadViernesField.value;
-    this.inscripcionCurso.disponibilidadSabado = this.disponibilidadSabadoField.value;
+    this.inscripcionCurso.disponibilidadLunes =
+      this.disponibilidadLunesField.value;
+    this.inscripcionCurso.disponibilidadMartes =
+      this.disponibilidadMartesField.value;
+    this.inscripcionCurso.disponibilidadMiercoles =
+      this.disponibilidadMiercolesField.value;
+    this.inscripcionCurso.disponibilidadJueves =
+      this.disponibilidadJuevesField.value;
+    this.inscripcionCurso.disponibilidadViernes =
+      this.disponibilidadViernesField.value;
+    this.inscripcionCurso.disponibilidadSabado =
+      this.disponibilidadSabadoField.value;
 
     this.inscripcionCurso.escCurTe1 = this.escCurTe1Field.value;
     this.inscripcionCurso.escCurTe2 = this.escCurTe2Field.value;
     this.inscripcionCurso.escCurTe3 = this.escCurTe3Field.value;
-    this.inscripcionCurso.fechaClaseEstimada = this.fechaInicioEstimadaField.value;
+    this.inscripcionCurso.fechaClaseEstimada =
+      this.fechaInicioEstimadaField.value;
     this.inscripcionCurso.TipCurId = this.cursoIdField.value;
 
     this.inscripcionCurso.limitarClases = this.limitarClases.value;
@@ -413,8 +429,6 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
           .afterClosed()
           .subscribe(
             (result: { continuar: boolean; claseEstimada: ClaseEstimada }) => {
-
-
               this.salir(result);
 
               if (!result.continuar) {
@@ -429,7 +443,6 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
 
               this.inscripcionCurso.ClasesEstimadas = result.claseEstimada;
 
-
               this.openDialogFacturaRUT();
             }
           );
@@ -437,8 +450,6 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
   }
 
   private openDialogFacturaRUT() {
-
-
     const facturaRUTDialogRef = this.dialog.open(FacturaRutComponent, {
       height: 'auto',
       width: '700px',
@@ -513,7 +524,6 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
           this.openDialogFacturaRUT();
           return;
         } else {
-
           this.inscripcionCurso.facturaEstadoPendiente = true;
           if (result && result.itemFacturar) {
             this.inscripcionCurso.SeleccionarItemsFactura = {
@@ -558,6 +568,8 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
 
   addInfoAlumnoAlForm(result: Alumno) {
     this.inscripcionCurso.AluId = result.AluId;
+    const { AluId, AluNomComp } = result;
+    this.myValidatorsService.alumnoTieneFacturasPendientes(AluId, AluNomComp, this.alumnoCIField);
 
     const ci =
       typeof result.AluCI === 'string' ? result.AluCI : result.AluCI.toString();
@@ -585,17 +597,19 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
 
     this.inscripcionCurso.condicionesCurso = this.condicionesCursoField.value;
     this.inscripcionCurso.reglamentoEscuela = this.reglamentoEscuelaField.value;
-    this.inscripcionCurso.documentosEntregadosYFirmados = this.documentosEntregadosYFirmadosField.value;
+    this.inscripcionCurso.documentosEntregadosYFirmados =
+      this.documentosEntregadosYFirmadosField.value;
     this.inscripcionCurso.eLearning = this.eLearningField.value;
 
     this.inscripcionCurso.examenMedico = this.examenMedicoField.value;
-    this.inscripcionCurso.licenciaCedulaIdentidad = this.licenciaCedulaIdentidadField.value;
+    this.inscripcionCurso.licenciaCedulaIdentidad =
+      this.licenciaCedulaIdentidadField.value;
     this.inscripcionCurso.pagoDeLicencia = this.pagoDeLicenciaField.value;
 
     this.inscripcionCurso.fechaExamenMedico = this.fechaExamenMedicoField.value;
-    this.inscripcionCurso.fechaLicCedulaIdentidad = this.fechaLicCedulaIdentidadField.value;
+    this.inscripcionCurso.fechaLicCedulaIdentidad =
+      this.fechaLicCedulaIdentidadField.value;
     this.inscripcionCurso.fechaPagoLicencia = this.fechaPagoLicenciaField.value;
-
 
     this.inscripcionService
       .generarInscripcion(this.inscripcionCurso)
@@ -607,8 +621,6 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
   }
 
   private salir(result) {
-
-
     if (result && result.salir) {
       this.dialogRef.close();
     }
@@ -758,5 +770,4 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
   get disponibilidadSabadoField() {
     return this.form.get('disponibilidadSabado');
   }
-
 }

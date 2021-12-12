@@ -108,4 +108,6 @@ export class AlumnoService {
   }
 
   getCuentaCorriente = (alumnoNumero: number) => this.http.get<CuentaCorriente[]>(`${environment.url_ws}/wsGetCuentaCorriente?alumnoNumero=${alumnoNumero}`);
+
+  tieneFacturaPendienteAnteriorAHoy = (aluId: number) => this.http.get<{tieneFacturaPendienteAnteriorAHoy: boolean}>(`${environment.url_ws}/tieneFacturaPendienteAnteriorAHoy?&aluId=${aluId}`)
 }
