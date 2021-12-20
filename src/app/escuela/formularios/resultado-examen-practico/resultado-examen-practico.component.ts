@@ -17,7 +17,7 @@ export class ResultadoExamenPracticoComponent implements OnInit {
   columnas = ['instructor', 'alumno', 'resultado'];
 
   exportarExcel = () => {
-    console.log(' exportando ...');
+    console.log(' exportando ...', this.exportData.map((f) => f.id));
     this.formulariosService
       .getExcelResultadoExamenPractico(this.exportData.map((f) => f.id))
       .subscribe(({ file }: any) =>
