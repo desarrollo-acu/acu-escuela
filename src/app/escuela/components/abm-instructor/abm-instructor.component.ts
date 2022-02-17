@@ -28,6 +28,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { InstructorHorario } from '@core/model/instructor.model';
+import { generateHorasLibres } from '@utils/utils-functions';
 
 @Component({
   selector: 'app-abm-instructor',
@@ -41,6 +42,7 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
   rows: FormArray;
   itemForm: FormGroup;
 
+  horasLibres = [];
   items: InstructorItem[] = [];
   horarios: InstructorHorario[] = [];
   estados: EscuelaEstado[] = [];
@@ -60,6 +62,8 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
     'actions-abm',
     'InsLicIni',
     'InsLicFin',
+    'InsLicParcial',
+    'HorasParciales',
     'EscEstId',
     'InsLicObs',
     'confirmar-cancelar',
@@ -100,6 +104,7 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
     private router: Router
   ) {
     // this._adapter.setLocale('es');
+    this.horasLibres = generateHorasLibres();
     this.buildForm();
   }
 
@@ -148,6 +153,8 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
       insLicFin: [''],
       escEstId: [''],
       insLicObs: [''],
+      insLicParcial: [''],
+      horasParciales: [null],
 
       // Horario
       escInsDia: [''],
@@ -172,6 +179,9 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
           (estado) =>
             estado.EscEstId === item.EscEstId ||
             estado.ESCESTID === item.EscEstId
+        );
+        item.HorasParciales = item.SDTHorasParciales.map(
+          (h) => `${h.EscInsHoraInicio}-${h.EscInsHoraFin}`
         );
         return item;
       });
@@ -203,6 +213,8 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
           isInsert: true,
           modo: 'INS',
           isDelete: false,
+          InsLicParcial: null,
+          HorasParciales: null,
         };
 
         this.items.unshift(item);
@@ -285,6 +297,8 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
     item?: InstructorItem,
     horario?: InstructorHorario
   ) {
+    console.log(confirma, item);
+
     if (confirma) {
       if (item) {
         this.preABMItem(item);
@@ -344,11 +358,15 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
             i.InsLicObs = this.insLicObs.value;
             i.EscEstDsc = this.estado.EscEstDsc;
             i.EscuelaEstado = this.estado;
+            i.InsLicParcial = this.insLicParcial.value;
+            i.HorasParciales = this.horasParciales.value;
 
             this.insLicIni.setValue(null);
             this.insLicFin.setValue(null);
             this.escEstId.setValue(0);
             this.insLicObs.setValue('');
+            this.insLicParcial.setValue(null);
+            this.horasParciales.setValue(null);
             this.estado = null;
 
             i.modo = false;
@@ -361,6 +379,7 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
         break;
 
       case 'UPD':
+        console.log(item, this.horasParciales.value);
         this.items = this.items.map((i) => {
           if (i.InsLicIni === item.InsLicIni) {
             const aux: InstructorItem = {
@@ -370,6 +389,8 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
               InsLicObs: this.insLicObs.value,
               EscEstDsc: this.estado.EscEstDsc,
               EscuelaEstado: this.estado,
+              InsLicParcial: this.insLicParcial.value,
+              HorasParciales: this.horasParciales.value,
               modo: false,
             };
             this.estado = null;
@@ -378,6 +399,7 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
 
           return i;
         });
+        console.log(this.items);
 
         this.actualizarDataSource(this.items, this.horarios);
         break;
@@ -503,6 +525,8 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
         this.addRow('item');
         break;
       case 'UPD':
+        console.log(item);
+
         this.items = this.items.map((i) => {
           if (i.InsLicIni === item.InsLicIni) {
             this.estado = i.EscuelaEstado;
@@ -518,6 +542,10 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
           insLicFin: item.InsLicFin,
           escEstId: item.EscEstId,
           insLicObs: item.InsLicObs,
+          insLicParcial: item.InsLicParcial,
+          horasParciales: item.SDTHorasParciales?.map(
+            (h) => `${h.EscInsHoraInicio}-${h.EscInsHoraFin}`
+          ),
         });
         break;
 
@@ -592,6 +620,8 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
         Horario: this.horarios,
       };
 
+      console.log(instructor);
+
       this.instructorService
         .gestionInstructor(this.mode, instructor)
         .subscribe((res: any) => {
@@ -601,7 +631,7 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
               res.Instructor.ErrorMessage
             ).then(() => this.router.navigate(['/escuela/gestion-instructor']));
           } else {
-            errorMensaje('Error', res.Instructor.ErrorMessage);
+            errorMensaje('Error', res.Instructor.ErrorMessage, 10000);
           }
         });
     }
@@ -661,6 +691,14 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
 
   get insLicFin() {
     return this.instructorForm.get('insLicFin');
+  }
+
+  get insLicParcial() {
+    return this.instructorForm.get('insLicParcial');
+  }
+
+  get horasParciales() {
+    return this.instructorForm.get('horasParciales');
   }
 
   get escEstId() {

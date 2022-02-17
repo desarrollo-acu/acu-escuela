@@ -1,16 +1,10 @@
 import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  FormControl,
-  FormGroupDirective,
-  NgForm,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   MatDialogRef,
   MAT_DIALOG_DATA,
   MatDialog,
+  throwMatDialogContentAlreadyAttachedError,
 } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
@@ -24,7 +18,6 @@ import { AltaAlumnoComponent } from '../alta-alumno/alta-alumno.component';
 import { FacturaRutComponent } from '../factura-rut/factura-rut.component';
 import { SeleccionarItemsFacturarComponent } from '../seleccionar-items-facturar/seleccionar-items-facturar.component';
 import { AgendaMovilComponent } from '../../agenda-movil/agenda-movil.component';
-import { AcuService } from 'src/app/core/services/acu.service';
 import { ResponseFacturaRUT } from 'src/app/core/model/responseFacturaRUT.model';
 import { ValidateFechaPosterior } from 'src/app/utils/custom-validator';
 import { MyValidators } from 'src/app/utils/validators';
@@ -33,23 +26,20 @@ import { ClasesEstimadasComponent } from '../clases-estimadas/clases-estimadas.c
 import { mensajeConfirmacion } from '@utils/sweet-alert';
 
 import { Alumno } from '@core/model/alumno.model';
-import { AlumnoYaAsignadoValidatorDirective } from '@utils/validators/alumno-ya-asignado.directive';
-import { formatCI, generateHorasLibres } from '@utils/utils-functions';
+import {
+  generateHorasLibres,
+  getDisponibilidadFromInscripcion,
+} from '@utils/utils-functions';
 import { InscripcionService } from '@core/services/inscripcion.service';
 import { CursoService } from '@core/services/curso.service';
 import { AlumnoService } from '@core/services/alumno.service';
 import { InstructorService } from '@core/services/instructor.service';
-import {
-  confirmacionUsuario,
-  mensajeWarning,
-} from '../../../../utils/sweet-alert';
+import { mensajeWarning } from '../../../../utils/sweet-alert';
 import { Prefactura } from '../../../../core/model/prefactura.model';
 import { openSamePDF, generateSedes } from '../../../../utils/utils-functions';
 import { Subscription } from 'rxjs';
-import { NullTemplateVisitor } from '@angular/compiler';
 import { ClaseEstimada } from '@core/model/clase-estimada.model';
 import { ReportesService } from '@core/services/reportes.service';
-import { errorMensaje } from '../../../../utils/sweet-alert';
 import { MyValidatorsService } from '../../../../utils/my-validators.service';
 
 @Component({
@@ -162,6 +152,7 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
         alumnoTelefono: [''],
         alumnoCelular: [''],
         sede: [null, Validators.required],
+        sedeFacturacion: [null, Validators.required],
         irABuscarAlAlumno: [false],
         limitarClases: [false],
         limiteClases: [0],
@@ -566,22 +557,40 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
     return this.fechaPagoLicenciaField.setValue('');
   }
 
-  addInfoAlumnoAlForm(result: Alumno) {
+  async addInfoAlumnoAlForm(result: Alumno) {
     this.inscripcionCurso.AluId = result.AluId;
     const { AluId, AluNomComp } = result;
-    this.myValidatorsService.alumnoTieneFacturasPendientes(AluId, AluNomComp, this.alumnoCIField);
+    this.myValidatorsService.alumnoTieneFacturasPendientes(
+      AluId,
+      AluNomComp,
+      this.alumnoCIField
+    );
 
-    const ci =
-      typeof result.AluCI === 'string' ? result.AluCI : result.AluCI.toString();
-    const dv =
-      typeof result.AluDV === 'string' ? result.AluDV : result.AluDV.toString();
+    const inscripcion = await this.alumnoService
+      .obtenerDisponibilidadPorAlumno(AluId)
+      .toPromise();
+
+    const {
+      disponibilidadLunes,
+      disponibilidadMartes,
+      disponibilidadMiercoles,
+      disponibilidadJueves,
+      disponibilidadViernes,
+      disponibilidadSabado,
+    } = getDisponibilidadFromInscripcion(inscripcion);
 
     this.form.patchValue({
       alumnoNumero: result.AluNro,
       alumnoNombre: result.AluNomComp,
-      alumnoCI: result.AluCI, //formatCI(ci, dv),
+      alumnoCI: result.AluCI,
       alumnoTelefono: result.AluTel1,
       alumnoCelular: result.AluTel2,
+      disponibilidadLunes,
+      disponibilidadMartes,
+      disponibilidadMiercoles,
+      disponibilidadJueves,
+      disponibilidadViernes,
+      disponibilidadSabado,
     });
   }
 
@@ -593,6 +602,7 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
     this.inscripcionCurso.escCurTe3 = this.escCurTe3Field.value;
 
     this.inscripcionCurso.sede = this.sedeField.value;
+    this.inscripcionCurso.sedeFacturacion = this.sedeFacturacion.value;
     this.inscripcionCurso.irABuscarAlAlumno = this.irABuscarAlAlumnoField.value;
 
     this.inscripcionCurso.condicionesCurso = this.condicionesCursoField.value;
@@ -731,6 +741,10 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
 
   get sede() {
     return this.form.get('sede');
+  }
+
+  get sedeFacturacion() {
+    return this.form.get('sedeFacturacion');
   }
 
   get escCurTe1Field() {

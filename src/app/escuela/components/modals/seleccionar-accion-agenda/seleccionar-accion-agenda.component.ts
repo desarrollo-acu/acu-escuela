@@ -18,6 +18,7 @@ import {
 } from '../../../../utils/sweet-alert';
 import { SeleccionarMovilComponent } from '../seleccionar-movil/seleccionar-movil.component';
 import { MovilService } from '@core/services/movil.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-seleccionar-accion-agenda',
@@ -25,8 +26,11 @@ import { MovilService } from '@core/services/movil.service';
   styleUrls: ['./seleccionar-accion-agenda.component.scss'],
 })
 export class SeleccionarAccionAgendaComponent {
+  today = new Date(moment().toDate().setHours(0,0,0,0));
   pegar: boolean;
   verOpciones: boolean;
+  fechaClase: Date;
+
   constructor(
     // tslint:disable-next-line: variable-name
     private _bottomSheetRef: MatBottomSheetRef<SeleccionarAccionAgendaComponent>,
@@ -36,6 +40,11 @@ export class SeleccionarAccionAgendaComponent {
     public dialog: MatDialog,
     @Inject(MAT_BOTTOM_SHEET_DATA) public data: any
   ) {
+    this.fechaClase = moment(this.data.fechaClase).toDate();
+    console.log(this.fechaClase);
+    console.log(this.today);
+    console.log(this.data.verOpciones);
+
     this.verOpciones = this.data.verOpciones;
     this.pegar = JSON.parse(localStorage.getItem('pegar-clase'));
   }
@@ -90,40 +99,6 @@ export class SeleccionarAccionAgendaComponent {
         );
 
         this.setPegarStorage();
-        break;
-
-      case 'liberar-clase':
-        continuar = false;
-
-        confirmacionUsuario(
-          'Confirmación de usuario',
-          'ATENCIÓN: Se liberará la hora, perdiendose los datos actuales. ¿Confirma continuar?'
-        ).then((result) => {
-          if (result.value) {
-            const liberarParameters: LiberarParameters = {
-              fechaClase: mainParameters.fecha,
-              horaClase: mainParameters.hora,
-              movil: mainParameters.movil,
-              escInsId: mainParameters.instructor,
-              usrId: this.auth.getUserId(),
-              esMovil: mainParameters.esMovil,
-            };
-            this.acuService
-              .liberarClase(liberarParameters)
-              .subscribe((res: any) => {
-                Swal.fire({
-                  icon: 'success',
-                  title: res.Msg,
-                  showConfirmButton: false,
-                  timer: 4000,
-                });
-                localStorage.setItem('refreshLiberaAgenda', 'true');
-
-                this.cerrarBottomSheet(true, event);
-              });
-          }
-        });
-
         break;
 
       case 'pegar-clase':
@@ -182,110 +157,4 @@ export class SeleccionarAccionAgendaComponent {
     localStorage.setItem('pegar-clase', this.pegar.toString());
   }
 
-/*
-  copiarMoverClase(oldParameters, mainParameters, event) {
-    console.log({mainParameters});
-
-    const params: CopiarMoverParameters = {
-      accion: oldParameters.accion,
-      fechaClaseOld: oldParameters.fechaOld,
-      horaClaseOld: oldParameters.horaOld,
-      movilOld: oldParameters.movilOld,
-      escInsIdOld: oldParameters.escInsIdOld,
-      fechaClase: mainParameters.fecha,
-      horaClase: mainParameters.hora,
-      movil: mainParameters.movil,
-      escInsId: mainParameters.instructor,
-      esMovil: mainParameters.esMovil,
-      userId: this.auth.getUserId(),
-    };
-
-    if (oldParameters.accion === 'MOVER') {
-      localStorage.setItem('limpiarCeldaOld', 'true');
-    }
-    params.esMovil
-      ? this.acuService
-          .copiarMoverClase(params)
-          .subscribe((res: any) =>
-            this.finalizarCopiarMoverClase(
-              res,
-              oldParameters,
-              mainParameters,
-              event,
-              params
-            )
-          )
-      : this.acuService
-          .copiarMoverInstructorClase(params)
-          .subscribe((res: any) =>
-            this.finalizarCopiarMoverClase(
-              res,
-              oldParameters,
-              mainParameters,
-              event,
-              params
-            )
-          );
-  }
-
-  finalizarCopiarMoverClase(res, oldParameters, mainParameters, event, params) {
-    if (res.errorCode === 0) {
-      mensajeConfirmacion('Excelente!', res.Msg);
-      localStorage.setItem('abrirAgenda', `pegar-clase-ok`);
-    } else {
-      if (res.elegirOtroMovil) {
-        errorMensaje('Oops...', res.Msg).then(() => {
-          this.movilService
-            .getMovilesDisponiblesPorFechaHora(
-              params.fechaClase,
-              params.horaClase
-            )
-            .subscribe((moviles) => {
-              const movilesDialogRef = this.dialog.open(
-                SeleccionarMovilComponent,
-                {
-                  height: 'auto',
-                  width: '700px',
-                  data: {
-                    moviles,
-                  },
-                }
-              );
-
-              movilesDialogRef.afterClosed().subscribe((movil) => {
-
-                console.log(movil);
-
-
-                if (movil) {
-                  this.copiarMoverClase(
-                    oldParameters,
-                    { ...mainParameters, movil: movil.MovCod },
-                    event
-                  );
-                } else {
-                  localStorage.setItem('abrirAgenda', `pegar-clase-ok`);
-                  this.salirCopiarMoverClase(oldParameters, event);
-                }
-              });
-            });
-        });
-        return;
-      } else {
-        errorMensaje('Oops...', res.Msg);
-      }
-    }
-    this.salirCopiarMoverClase(oldParameters, event);
-  }
-
-  salirCopiarMoverClase(oldParameters, event) {
-
-    localStorage.setItem('classOld', oldParameters.classOld);
-    localStorage.setItem('textOld', oldParameters.textOld);
-    localStorage.setItem('refreshAgenda', 'true');
-
-    this.setPegarStorage();
-    this.cerrarBottomSheet(true, event);
-  }
-  */
 }

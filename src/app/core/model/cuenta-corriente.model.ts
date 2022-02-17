@@ -1,3 +1,4 @@
+import { CuentaCorrienteEstado } from './enum/cuenta-corriente-estado.enum';
 export interface CuentaCorriente {
   ctaCteMovId?:   number;
   fecha?:         Date;
@@ -15,5 +16,5 @@ export interface CuentaCorriente {
   ctaCteMovTpo?:  string;
   anulado?:       boolean;
   ctaCteFacCod?:  string;
-  ctaCteEst?:     string;
+  ctaCteEst?:     CuentaCorrienteEstado;
 }

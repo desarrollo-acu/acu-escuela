@@ -77,7 +77,9 @@
                 alumnoCIField.hasError('tiene-facturas-pendientes-de-pago')
               "
             >
-              El alumno tiene facturas <strong> pendientes de pago </strong> anteriores al dia de hoy, verifique.
+              El alumno tiene facturas
+              <strong> pendientes de pago </strong> anteriores al dia de hoy,
+              verifique.
             </mat-error>
           </mat-form-field>
         </div>
@@ -624,6 +626,32 @@
               placeholder="Limite de clases"
               formControlName="limiteClases"
             />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <h3>Sede donde se va a facturar</h3>
+      <div class="row">
+        <div class="col-xs-6">
+          <mat-form-field class="full-width">
+            <mat-label>Sede de facturación</mat-label>
+            <mat-select formControlName="sedeFacturacion">
+              <mat-option *ngFor="let sede of sedes" [value]="sede.value"
+                >{{ sede.description }}
+              </mat-option>
+            </mat-select>
+
+            <mat-error
+              *ngIf="
+                sedeFacturacion.hasError('required') &&
+                sedeFacturacion.dirty &&
+                sedeFacturacion.errors
+              "
+            >
+              La sede de facturación es <strong> requerida </strong>.
+            </mat-error>
           </mat-form-field>
         </div>
       </div>

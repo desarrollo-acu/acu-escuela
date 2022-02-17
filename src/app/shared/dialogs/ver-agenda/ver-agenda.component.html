@@ -131,6 +131,31 @@
             <mat-form-field class="full-width">
               <input
                 matInput
+                placeholder="Teléfono del alumno"
+                formControlName="alumnoTelefono"
+              />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xs-8">
+          <div class="box">
+            <mat-form-field class="full-width">
+              <input
+                matInput
+                placeholder="Celular del alumno"
+                formControlName="alumnoCelular"
+              />
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-xs-4">
+          <div class="box">
+            <mat-form-field class="full-width">
+              <input
+                matInput
                 placeholder="Curso"
                 formControlName="cursoId"
                 (keyup)="obtenerCurso()"
@@ -289,6 +314,8 @@
                 <mat-option value="A">Asignada</mat-option>
                 <mat-option value="S">Suspendida Con Cobro</mat-option>
                 <mat-option value="U">Suspendida Sin Cobro</mat-option>
+                <mat-option value="I">Ausencia del Instructor</mat-option>
+                <mat-option value="B">Bloqueada</mat-option>
               </mat-select>
             </mat-form-field>
           </div>
@@ -326,12 +353,6 @@
         </div>
       </div>
       <div class="row">
-        <!-- <div class="col-xs-2 btns-agendar" align="center">
-          <div class="box"></div>
-          <button mat-raised-button cdkFocusInitial (click)="avisoAlumno()">
-            {{ avisar }}
-          </button>
-        </div> -->
         <div class="col-xs">
           <div class="box">
             <mat-form-field class="full-width">
@@ -354,13 +375,10 @@
       (click)="guardarClase($event)"
       cdkFocusInitial
       color="primary"
+      *ngIf="estadoClase.value !== 'I' && estadoClase.value !== 'B'"
     >
       Guardar Cambios
     </button>
     <button mat-button mat-dialog-close (click)="onNoClick()">Cancelar</button>
   </mat-dialog-actions>
 </form>
-
-<!-- Copyright 2019 Google LLC. All Rights Reserved.
-  Use of this source code is governed by an MIT-style license that
-  can be found in the LICENSE file at http://angular.io/license -->

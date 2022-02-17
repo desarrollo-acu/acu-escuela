@@ -13,7 +13,10 @@ export class ReportesService {
 
   options;
 
-  constructor(private http: HttpClient, private authService: AutenticacionService) {
+  constructor(
+    private http: HttpClient,
+    private authService: AutenticacionService
+  ) {
     this.headers.set('Aceppt', 'application/pdf;');
     this.options = {
       headers: this.headers,
@@ -51,10 +54,10 @@ export class ReportesService {
     this.http.post(`${environment.url_ws}/PEscConClases`, { usrId, mes, anio });
 
   alumnosEnCurso = (fechaDesde, fechaHasta) =>
-  this.http.post(`${environment.url_ws}/REscClasesAlumHora`, {
-    fechaDesde,
-    fechaHasta,
-  });
+    this.http.post(`${environment.url_ws}/REscClasesAlumHora`, {
+      fechaDesde,
+      fechaHasta,
+    });
 
   // REscClasesAlumHora
   alumnosPendientesDePago = (fechaDesde, fechaHasta) =>
@@ -63,16 +66,15 @@ export class ReportesService {
       fechaHasta,
     });
 
-
   getPDFPlanDeClases(planDeClase: ClaseEstimada, path = 'wsPDFPlanDeClases') {
     const headers = new HttpHeaders();
     headers.set('Aceppt', 'application/pdf;');
-    console.log( this.authService.getUserId() );
+    console.log(this.authService.getUserId());
 
     return this.http.post(
       `${environment.url_ws}/${path}`,
       {
-        PlanDeClase: {...planDeClase, UsrId: this.authService.getUserId()},
+        PlanDeClase: { ...planDeClase, UsrId: this.authService.getUserId() },
       },
       {
         headers,
@@ -80,4 +82,9 @@ export class ReportesService {
       }
     );
   }
+
+  facturasPorAlumno = (aluId) =>
+    this.http.post(`${environment.url_ws}/reporteFacturasPorAlumno`, {
+      aluId,
+    });
 }

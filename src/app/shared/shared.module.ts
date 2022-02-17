@@ -15,6 +15,7 @@ import { FechaStringPipe } from './pipes/fecha-string.pipe';
 import { SeleccionarCustomComponent } from './components/seleccionar-custom/seleccionar-custom.component';
 import { GestionCustomComponent } from './components/gestion-custom/gestion-custom.component';
 import { VerAgendaComponent } from './dialogs/ver-agenda/ver-agenda.component';
+import { HorasArrayToStringPipe } from './pipes/horas-array-to-string.pipe';
 
 
 
@@ -31,7 +32,8 @@ import { VerAgendaComponent } from './dialogs/ver-agenda/ver-agenda.component';
     FechaStringPipe,
     SeleccionarCustomComponent,
     GestionCustomComponent,
-    VerAgendaComponent
+    VerAgendaComponent,
+    HorasArrayToStringPipe
   ],
   imports: [
     CommonModule,
@@ -49,7 +51,8 @@ import { VerAgendaComponent } from './dialogs/ver-agenda/ver-agenda.component';
     HoraNumericStringPipe,
     FechaStringPipe,
     SeleccionarCustomComponent,
-    GestionCustomComponent
+    GestionCustomComponent,
+    HorasArrayToStringPipe
 
   ],
 })

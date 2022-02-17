@@ -1,6 +1,12 @@
 <form [formGroup]="form">
   <mat-toolbar color="primary">
-    <h2 mat-dialog-title>{{ esClaseAdicional ? 'Generar clase adicional' : 'Generar evaluacion práctica'}}</h2>
+    <h2 mat-dialog-title>
+      {{
+        esClaseAdicional
+          ? "Generar clase adicional"
+          : "Generar evaluacion práctica"
+      }}
+    </h2>
   </mat-toolbar>
 
   <mat-dialog-content class="mat-typography">
@@ -192,6 +198,45 @@
         </div>
       </div>
     </div>
+
+    <div class="row">
+      <div class="col-xs-6">
+        <mat-form-field class="full-width">
+          <mat-label>Sede de la clase</mat-label>
+          <mat-select formControlName="sede">
+            <mat-option *ngFor="let sede of sedes" [value]="sede.value"
+              >{{ sede.description }}
+            </mat-option>
+          </mat-select>
+
+          <mat-error
+            *ngIf="sede.hasError('required') && sede.dirty && sede.errors"
+          >
+            La sede de la clase es <strong> requerida </strong>.
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-xs-6">
+        <mat-form-field class="full-width">
+          <mat-label>Sede de facturación</mat-label>
+          <mat-select formControlName="sedeFacturacion">
+            <mat-option *ngFor="let sede of sedes" [value]="sede.value"
+              >{{ sede.description }}
+            </mat-option>
+          </mat-select>
+
+          <mat-error
+            *ngIf="
+              sedeFacturacion.hasError('required') &&
+              sedeFacturacion.dirty &&
+              sedeFacturacion.errors
+            "
+          >
+            La sede de facturación es <strong> requerida </strong>.
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
   </mat-dialog-content>
 
   <mat-dialog-actions align="end">
@@ -203,7 +248,11 @@
       [disabled]="form.invalid"
       color="primary"
     >
-    {{ esClaseAdicional ? 'Generar clase adicional' : 'Generar evaluacion práctica'}}
+      {{
+        esClaseAdicional
+          ? "Generar clase adicional"
+          : "Generar evaluacion práctica"
+      }}
     </button>
     <button mat-button mat-dialog-close (click)="onNoClick()">Cancelar</button>
   </mat-dialog-actions>

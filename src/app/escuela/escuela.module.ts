@@ -85,6 +85,7 @@ import { DesperfectoMovilComponent } from './formularios/desperfecto-movil/despe
 import { ResultadoExamenPracticoComponent } from './formularios/resultado-examen-practico/resultado-examen-practico.component';
 import { GestionNotificacionesComponent } from './pages/gestion-notificaciones/gestion-notificaciones.component';
 import { AlumnosPendientesDePagoComponent } from './reports/alumnos-pendientes-de-pago/alumnos-pendientes-de-pago.component';
+import { FacturasPorAlumnoComponent } from './reports/facturas-por-alumno/facturas-por-alumno.component';
 
 
 registerLocaleData(localeEsUy, 'es-UY');
@@ -152,6 +153,7 @@ registerLocaleData(localeEs, 'es');
     ResultadoExamenPracticoComponent,
     GestionNotificacionesComponent,
     AlumnosPendientesDePagoComponent,
+    FacturasPorAlumnoComponent,
 
   ],
   imports: [

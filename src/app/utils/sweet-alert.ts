@@ -32,12 +32,12 @@ export function mensajeWarning(title, text, timer = 5000, html = null) {
     });
 }
 
-export function errorMensaje(title, text) {
+export function errorMensaje(title, text, timer=5000) {
     return Swal.fire({
         title,
         text,
         icon: 'error',
-        timer: 5000,
+        timer,
         showConfirmButton: false,
     });
 

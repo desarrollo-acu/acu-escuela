@@ -1,49 +1,47 @@
 <mat-nav-list>
-    <div *ngIf="!pegar">
-        <a mat-list-item (click)="openLink($event, 'abrir-clase')">
-            <span mat-line>Abrir</span>
+  <div *ngIf="!pegar">
+    <a mat-list-item (click)="openLink($event, 'abrir-clase')">
+      <span mat-line>Abrir</span>
+    </a>
+    <ng-container *ngIf="fechaClase >= today">
+      <a mat-list-item (click)="openLink($event, 'examen-clase')">
+        <span mat-line>Generar examen</span>
+      </a>
+      <a
+        mat-list-item
+        (click)="openLink($event, 'clase-adicional')"
+        *ngIf="!verOpciones"
+      >
+        <span mat-line>Generar clase adicional</span>
+      </a>
+      <a
+        mat-list-item
+        (click)="openLink($event, 'evaluacion-practica')"
+        *ngIf="!verOpciones"
+      >
+        <span mat-line>Generar evaluacion práctica</span>
+      </a>
+      <ng-container *ngIf="verOpciones">
+        <a mat-list-item (click)="openLink($event, 'suspender-clase')">
+          <span mat-line>Suspender Clase</span>
         </a>
-        <a mat-list-item (click)="openLink($event, 'examen-clase')">
-            <span mat-line>Generar examen</span>
+
+        <a mat-list-item (click)="openLink($event, 'duplicar-clase')">
+          <span mat-line>Generar Clase Doble</span>
         </a>
-        <a mat-list-item (click)="openLink($event, 'clase-adicional')" *ngIf="!verOpciones">
-            <span mat-line>Generar clase adicional</span>
+
+        <a mat-list-item (click)="openLink($event, 'mover-clase')">
+          <span mat-line>Mover Clase</span>
         </a>
-        <a mat-list-item (click)="openLink($event, 'evaluacion-practica')" *ngIf="!verOpciones">
-            <span mat-line>Generar evaluacion práctica</span>
-        </a>
-        <ng-container *ngIf="verOpciones">
-            <a mat-list-item (click)="openLink($event, 'suspender-clase')">
-                <span mat-line>Suspender Clase</span>
-            </a>
-
-            <a mat-list-item (click)="openLink($event, 'duplicar-clase')">
-                <span mat-line>Generar Clase Doble</span>
-            </a>
-            <!-- <a mat-list-item (click)="openLink($event, 'copiar-clase')">
-                <span mat-line>Copiar Clase</span>
-            </a> -->
-
-            <a mat-list-item (click)="openLink($event, 'mover-clase')">
-                <span mat-line>Mover Clase</span>
-            </a>
-
-
-            <a mat-list-item (click)="openLink($event, 'liberar-clase')">
-                <span mat-line>Liberar Clase</span>
-            </a>
-        </ng-container>
-
-
-    </div>
-    <div *ngIf="pegar">
-        <a mat-list-item (click)="openLink($event, 'pegar-clase')" *ngIf="pegar">
-            <span mat-line>Pegar Clase</span>
-        </a>
-        <a mat-list-item (click)="openLink($event, 'cancelar')" *ngIf="pegar">
-            <span mat-line>Cancelar</span>
-        </a>
-    </div>
-
-
+      </ng-container>
+    </ng-container>
+  </div>
+  <div *ngIf="pegar">
+    <a mat-list-item (click)="openLink($event, 'pegar-clase')" *ngIf="pegar">
+      <span mat-line>Pegar Clase</span>
+    </a>
+    <a mat-list-item (click)="openLink($event, 'cancelar')" *ngIf="pegar">
+      <span mat-line>Cancelar</span>
+    </a>
+  </div>
 </mat-nav-list>

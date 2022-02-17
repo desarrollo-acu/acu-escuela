@@ -10,9 +10,7 @@ import {
   ClaseEstimada,
   ClaseEstimadaDetalle,
 } from '@core/model/clase-estimada.model';
-import {
-  GenerarExamenItems,
-} from '@core/model/generar-examen.model';
+import { GenerarExamenItems } from '@core/model/generar-examen.model';
 import { Inscripcion } from '@core/model/inscripcion.model';
 import { Instructor } from '@core/model/instructor.model';
 import { ResponseSDTCustom } from '@core/model/response-sdt-custom.model';
@@ -37,6 +35,7 @@ import { SeleccionarMovilComponent } from '@escuela/components/modals/selecciona
 import { Movil } from '@core/model/movil.model';
 import { MovilService } from '@core/services/movil.service';
 import { MyValidatorsService } from '@utils/my-validators.service';
+import { generateSedes } from '@utils/utils-functions';
 
 @Component({
   selector: 'app-generar-clase-adicional',
@@ -56,6 +55,7 @@ export class GenerarClaseAdicionalComponent implements OnInit {
   escAluCurId: number;
   esInstructor: boolean;
   esClaseAdicional: boolean;
+  sedes = [...generateSedes()];
 
   clasesAReagendar: GenerarExamenItems[] = [];
 
@@ -74,7 +74,6 @@ export class GenerarClaseAdicionalComponent implements OnInit {
     this.agendaClase = this.data.agendaClase;
     this.esInstructor = this.data.esInstructor;
     this.esClaseAdicional = this.data.esClaseAdicional;
-
     this.buildForm();
   }
 
@@ -140,6 +139,14 @@ export class GenerarClaseAdicionalComponent implements OnInit {
     return this.form.get('observaciones');
   }
 
+  get sede() {
+    return this.form.get('sede');
+  }
+
+  get sedeFacturacion() {
+    return this.form.get('sedeFacturacion');
+  }
+
   private buildForm() {
     const hora =
       this.agendaClase.Hora < 10
@@ -147,9 +154,9 @@ export class GenerarClaseAdicionalComponent implements OnInit {
         : this.agendaClase.Hora;
 
     const movil =
-    this.agendaClase.EscMovCod && this.agendaClase.EscMovCod !== 0
-      ? this.agendaClase.EscMovCod
-      : null;
+      this.agendaClase.EscMovCod && this.agendaClase.EscMovCod !== 0
+        ? this.agendaClase.EscMovCod
+        : null;
 
     this.form = this.formBuilder.group({
       fechaClase: [this.agendaClase.FechaClase],
@@ -173,6 +180,8 @@ export class GenerarClaseAdicionalComponent implements OnInit {
       disponibilidadViernes: [this.data.agendaClase.disponibilidadViernes],
       disponibilidadSabado: [this.data.agendaClase.disponibilidadSabado],
       observaciones: [''],
+      sede: [null, Validators.required],
+      sedeFacturacion: [null, Validators.required],
     });
 
     this.fechaClase.disable();
@@ -276,7 +285,11 @@ export class GenerarClaseAdicionalComponent implements OnInit {
       if (alumno) {
         this.aluId = alumno.AluId;
         const { AluId, AluNomComp } = alumno;
-        this.myValidatorsService.alumnoTieneFacturasPendientes(AluId, AluNomComp, this.alumnoNumero);
+        this.myValidatorsService.alumnoTieneFacturasPendientes(
+          AluId,
+          AluNomComp,
+          this.alumnoNumero
+        );
         this.obtenerInscripcion();
         this.form.patchValue({
           alumnoNumero: alumno.AluNro,
@@ -328,13 +341,12 @@ export class GenerarClaseAdicionalComponent implements OnInit {
         this.form.patchValue({
           escInsId: inscripcion.EscInsId,
           escInsNom: inscripcion.EscInsNom,
-          movil: inscripcion.EscMovCod
+          movil: inscripcion.EscMovCod,
         });
       });
   }
 
   generarClaseAdicional(event: Event) {
-
     if (this.movil.value === 0) {
       this.movil.setValue(null);
     }
@@ -361,24 +373,29 @@ export class GenerarClaseAdicionalComponent implements OnInit {
         claseAnterior: this.agendaClase,
         escAluCurId: this.escAluCurId,
         usrId: localStorage.getItem('usrId'),
+        sedeFacturacion: this.sedeFacturacion.value,
+        sede: this.sede.value,
       };
 
       console.log(generarClaseAdicional);
 
-
-      if(this.esClaseAdicional){
+      if (this.esClaseAdicional) {
         this.inscripcionService
           .generarClaseAdicional(generarClaseAdicional)
-          .subscribe((response: ResponseSDTCustom) => this.finGeneracion(response));
-      }else {
+          .subscribe((response: ResponseSDTCustom) =>
+            this.finGeneracion(response)
+          );
+      } else {
         this.inscripcionService
           .generarEvaluacionPractica(generarClaseAdicional)
-          .subscribe((response: ResponseSDTCustom) => this.finGeneracion(response));
+          .subscribe((response: ResponseSDTCustom) =>
+            this.finGeneracion(response)
+          );
       }
     });
   }
 
-  finGeneracion( response: ResponseSDTCustom){
+  finGeneracion(response: ResponseSDTCustom) {
     if (response.errorCode === 0) {
       mensajeConfirmacion('Excelente!', response.errorMensaje).then(() =>
         this.dialogRef.close()
@@ -390,7 +407,6 @@ export class GenerarClaseAdicionalComponent implements OnInit {
     } else {
       errorMensaje('Error', response.errorMensaje);
     }
-
   }
 
   onNoClick(): void {

@@ -20,14 +20,11 @@ export class InstructorService {
 
   constructor(private http: HttpClient) {}
 
-  licenciaInstructor(insId: string) {
-    const fechaClaseStr = localStorage.getItem('fechaClase');
-
-    return this.http.post(`${environment.url_ws}/wsLicenciaInstructor`, {
+  licenciaInstructor = (insId: string) =>
+    this.http.post(`${environment.url_ws}/wsLicenciaInstructor`, {
       NroInstructor: insId,
-      FchClase: fechaClaseStr,
+      FchClase: localStorage.getItem('fechaClase'),
     });
-  }
 
   instructorYaAsignado(insId: string) {
     const fechaClaseStr = localStorage.getItem('fechaClase').substring(0, 10);
@@ -45,56 +42,49 @@ export class InstructorService {
     });
   }
 
-  getDisponibilidadInstructor(clase: AgendaClase, cantidad: number) {
-    return this.http.post(
-      `${environment.url_ws}/obtenerDisponibilidadPorInstructor`,
-      {
-        AgendaClase: clase,
-        countClasesEstimar: cantidad,
-      }
-    );
-  }
-  getDisponibilidadInstructoresPorCantidad(
+  getDisponibilidadInstructor = (clase: AgendaClase, cantidad: number) =>
+    this.http.post(`${environment.url_ws}/obtenerDisponibilidadPorInstructor`, {
+      AgendaClase: clase,
+      countClasesEstimar: cantidad,
+    });
+
+  getDisponibilidadInstructoresPorCantidad = (
     inscripcion: InscripcionCurso,
     cantidad: number
-  ) {
-    return this.http.post(
+  ) =>
+    this.http.post(
       `${environment.url_ws}/obtenerDisponibilidadInstructorPorCantidad`,
       {
         inscripcion,
         countClasesEstimar: cantidad,
       }
     );
-  }
 
-  gestionInstructor(mode: string, instructor: Instructor) {
-    return this.http.post(`${environment.url_ws}/wsGestionInstructor`, {
+  gestionInstructor = (mode: string, instructor: Instructor) =>
+    this.http.post(`${environment.url_ws}/wsGestionInstructor`, {
       Instructor: {
         Mode: mode,
         Instructor: instructor,
+        usrId: localStorage.getItem('usrId'),
       },
     });
-  }
 
-  getInstructores() {
-    return this.http.get(`${environment.url_ws}/wsGetInstructores`);
-  }
+  getInstructores = () =>
+    this.http.get(`${environment.url_ws}/wsGetInstructores`);
 
-  getInstructoresActivos() {
-    return this.http.get(`${environment.url_ws}/wsGetInstructoresActivos`);
-  }
+  getInstructoresActivos = () =>
+    this.http.get(`${environment.url_ws}/wsGetInstructoresActivos`);
 
-  getClasesEstimadas(inscripcion: InscripcionCurso) {
-    return this.http.post(
-      `${environment.url_ws}/obtenerDisponibilidadInstructor`,
-      {
-        GenerarInscripcion: inscripcion,
-      }
-    );
-  }
+  getClasesEstimadas = (inscripcion: InscripcionCurso) =>
+    this.http.post(`${environment.url_ws}/obtenerDisponibilidadInstructor`, {
+      GenerarInscripcion: inscripcion,
+    });
 
   bloquearHoras = (bloquearHoras: BloquearHoras) =>
-    this.http.post<{mensajes: string[]}>(`${environment.url_ws}/wsBloquearHorasAgenda`, { bloquearHoras });
+    this.http.post<{ mensajes: string[] }>(
+      `${environment.url_ws}/wsBloquearHorasAgenda`,
+      { bloquearHoras }
+    );
 
   sendDataInstructor(modo: string, instructor: Instructor, id?: number) {
     const data: { modo: string; instructor: Instructor; id: number } = id

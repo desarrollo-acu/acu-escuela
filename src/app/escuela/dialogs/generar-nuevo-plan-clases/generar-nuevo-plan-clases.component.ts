@@ -89,9 +89,8 @@ export class GenerarNuevoPlanClasesComponent implements OnInit {
     const tomorrow = new Date();
     tomorrow.setDate(today.getDate() + 1);
 
-
     this.form = this.formBuilder.group({
-      fecha: [ tomorrow , MyValidators.fechaAnteriorOIgualAHoy],
+      fecha: [tomorrow, MyValidators.fechaAnteriorOIgualAHoy],
       cursoId: [TipCurId],
       cursoNombre: [TipCurNom],
       numeroClase: [numeroClases],
@@ -119,16 +118,16 @@ export class GenerarNuevoPlanClasesComponent implements OnInit {
     this.escInsNom.disable();
   }
 
-      getInscripcion() {
-        const { EscAluCurId, AluId, TipCurId } = this.inscripcion;
-        const fecha = moment(this.fecha.value).toISOString();
-        this.inscripcionService
-          .obtenerInscripcionById(EscAluCurId, AluId, TipCurId, fecha)
-          .subscribe((inscripcion) => {
-            this.inscripcion = inscripcion;
-            this.numeroClase.setValue( this.inscripcion.numeroClases );
-          });
-      }
+  getInscripcion() {
+    const { EscAluCurId, AluId, TipCurId } = this.inscripcion;
+    const fecha = moment(this.fecha.value).toISOString();
+    this.inscripcionService
+      .obtenerInscripcionById(EscAluCurId, AluId, TipCurId, fecha)
+      .subscribe((inscripcion) => {
+        this.inscripcion = inscripcion;
+        this.numeroClase.setValue(this.inscripcion.numeroClases);
+      });
+  }
 
   generarPlanClases(event: Event) {
     event.preventDefault();

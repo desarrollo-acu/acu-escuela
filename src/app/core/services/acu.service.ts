@@ -295,4 +295,6 @@ export class AcuService {
 
   getTituloApp = () => this.http.get(`${environment.url_ws}/wsGetTituloApp`);
 
+  sincronizarAgendas = () => this.http.post(`${environment.url_ws}/wsSincronizarAgendas`, {});
+
 }

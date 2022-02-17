@@ -5,22 +5,36 @@ import {
   HttpEvent,
   HttpInterceptor,
   HttpResponse,
-  HttpHeaders
+  HttpHeaders,
+  HttpErrorResponse
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { map, catchError, tap, finalize } from 'rxjs/operators';
 import { AutenticacionService } from '../core/services/autenticacion.service';
+import { HttpStatusCode } from '../core/model/enum/http-status-code.enum';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable()
 export class CargandoInterceptor implements HttpInterceptor {
 
+  statusCodes: HttpStatusCode[] = [
+    HttpStatusCode.Ok,
+    HttpStatusCode.Created,
+    HttpStatusCode.NoContent,
+  ];
+
+  errorStatusCodes: HttpStatusCode[] = [
+    HttpStatusCode.Unauthorized,
+    HttpStatusCode.Forbidden,
+  ];
 
   @BlockUI() blockUI: NgBlockUI;
   constructor(
     private router: Router,
-    private authService: AutenticacionService
+    private authService: AutenticacionService,
+    private toast: MatSnackBar
   ) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
@@ -46,9 +60,11 @@ export class CargandoInterceptor implements HttpInterceptor {
         }
         return event;
       }),
-      catchError((err) => {
-        if (err.status === 401) {
+      catchError((err: HttpErrorResponse) => {
+        if (this.errorStatusCodes.includes(err.status)) {
           this.router.navigate(['/login']);
+        }else {
+          this.toast.open("Ocurrió un error", "Avisar a informatica");
         }
 
         console.log(err);

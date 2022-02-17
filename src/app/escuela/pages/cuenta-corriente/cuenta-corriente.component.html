@@ -1,8 +1,6 @@
 <div class="row margin-abm">
   <div class="col-xs-offset-1 col-xs-10">
     <div class="box">
-
-
       <mat-card>
         <form [formGroup]="form">
           <mat-card-content>
@@ -120,11 +118,9 @@
 
             <section id="Movimientos" *ngIf="dataSource">
               <div class="mat-elevation-z8">
-                <table mat-table [dataSource]="dataSource" >
+                <table mat-table [dataSource]="dataSource">
                   <ng-container matColumnDef="fecha">
-                    <th mat-header-cell *matHeaderCellDef>
-                      Fecha
-                    </th>
+                    <th mat-header-cell *matHeaderCellDef>Fecha</th>
                     <td
                       mat-cell
                       *matCellDef="let row"
@@ -140,9 +136,7 @@
                   </ng-container>
 
                   <ng-container matColumnDef="hora">
-                    <th mat-header-cell *matHeaderCellDef>
-                      Hora
-                    </th>
+                    <th mat-header-cell *matHeaderCellDef>Hora</th>
                     <td
                       mat-cell
                       *matCellDef="let row"
@@ -158,9 +152,7 @@
                   </ng-container>
 
                   <ng-container matColumnDef="detalles">
-                    <th mat-header-cell *matHeaderCellDef>
-                      Detalles
-                    </th>
+                    <th mat-header-cell *matHeaderCellDef>Detalles</th>
                     <td
                       mat-cell
                       *matCellDef="let row"
@@ -176,9 +168,7 @@
                   </ng-container>
 
                   <ng-container matColumnDef="debe">
-                    <th mat-header-cell *matHeaderCellDef>
-                      Debe
-                    </th>
+                    <th mat-header-cell *matHeaderCellDef>Debe</th>
                     <td
                       mat-cell
                       *matCellDef="let row"
@@ -194,9 +184,7 @@
                   </ng-container>
 
                   <ng-container matColumnDef="haber">
-                    <th mat-header-cell *matHeaderCellDef>
-                      Haber
-                    </th>
+                    <th mat-header-cell *matHeaderCellDef>Haber</th>
                     <td
                       mat-cell
                       *matCellDef="let row"
@@ -212,9 +200,7 @@
                   </ng-container>
 
                   <ng-container matColumnDef="factura">
-                    <th mat-header-cell *matHeaderCellDef>
-                      Factura
-                    </th>
+                    <th mat-header-cell *matHeaderCellDef>Factura</th>
                     <td
                       mat-cell
                       *matCellDef="let row"
@@ -229,26 +215,36 @@
                     </td>
                   </ng-container>
 
+                  <ng-container matColumnDef="estado">
+                    <th mat-header-cell *matHeaderCellDef>estado</th>
+                    <td
+                      mat-cell
+                      *matCellDef="let row"
+                      [ngStyle]="{
+                        color:
+                          row.ctaCteMovTpo === 'D' && !row.anulado
+                            ? 'red'
+                            : 'blue'
+                      }"
+                    >
+                      {{ getNameFromCuentaCorrienteEstadoEnum(row.ctaCteEst) }}
+                    </td>
+                  </ng-container>
+
                   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                   <tr
                     mat-row
                     *matRowDef="let row; columns: displayedColumns"
                   ></tr>
-
                 </table>
-
               </div>
-
             </section>
 
             <mat-divider></mat-divider>
 
             <section id="Totales">
-
-
               <div class="row">
                 <div class="col-xs-4">
-
                   <mat-form-field class="full-width">
                     <input
                       matInput
@@ -256,10 +252,8 @@
                       formControlName="totalDebitos"
                     />
                   </mat-form-field>
-
                 </div>
                 <div class="col-xs-4">
-
                   <mat-form-field class="full-width">
                     <input
                       matInput
@@ -267,10 +261,8 @@
                       formControlName="totalHaberes"
                     />
                   </mat-form-field>
-
                 </div>
                 <div class="col-xs-4">
-
                   <mat-form-field class="full-width">
                     <input
                       matInput
@@ -287,4 +279,3 @@
     </div>
   </div>
 </div>
-

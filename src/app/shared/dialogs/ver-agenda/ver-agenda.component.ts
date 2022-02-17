@@ -1,6 +1,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {
+  MatDialogRef,
+  MatDialog,
+  MAT_DIALOG_DATA,
+} from '@angular/material/dialog';
 import { AgendaClase } from '@core/model/agenda-clase.model';
 import { Alumno } from '@core/model/alumno.model';
 import { Instructor } from '@core/model/instructor.model';
@@ -24,7 +28,7 @@ import { AgendaInstructorComponent } from '../../../escuela/components/agenda-in
 @Component({
   selector: 'app-ver-agenda',
   templateUrl: './ver-agenda.component.html',
-  styleUrls: ['./ver-agenda.component.scss']
+  styleUrls: ['./ver-agenda.component.scss'],
 })
 export class VerAgendaComponent implements OnInit {
   form: FormGroup;
@@ -42,7 +46,6 @@ export class VerAgendaComponent implements OnInit {
   alumno: Alumno = {};
   esAgCuAviso: number;
   avisar: string;
-
 
   get fecha() {
     return this.form.get('fecha');
@@ -63,6 +66,15 @@ export class VerAgendaComponent implements OnInit {
   get alumnoNumero() {
     return this.form.get('alumnoNumero');
   }
+
+  get alumnoTelefono() {
+    return this.form.get('alumnoTelefono');
+  }
+
+  get alumnoCelular() {
+    return this.form.get('alumnoCelular');
+  }
+
   get instructorAsignado() {
     return this.form.get('instructorAsignado');
   }
@@ -113,10 +125,11 @@ export class VerAgendaComponent implements OnInit {
     return this.form.get('usuarioAltaNombre');
   }
 
-
   constructor(
     private formBuilder: FormBuilder,
-    public dialogRef: MatDialogRef<AgendaMovilComponent | AgendaInstructorComponent>,
+    public dialogRef: MatDialogRef<
+      AgendaMovilComponent | AgendaInstructorComponent
+    >,
     private acuService: AcuService,
     private cursoService: CursoService,
     private alumnoService: AlumnoService,
@@ -124,7 +137,6 @@ export class VerAgendaComponent implements OnInit {
     public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-
     this.agendaClase = this.data.agendaClase;
     const day = Number(
       this.agendaClase.FechaClase.substring(
@@ -151,7 +163,6 @@ export class VerAgendaComponent implements OnInit {
     this.deshabilitarCampos();
   }
   ngOnInit() {
-
     // toISOString, es el formato que leyo bien la api.
     localStorage.setItem('fechaClase', this.fechaClase.toISOString());
     const horaStr = this.agendaClase.Hora * 100;
@@ -164,7 +175,6 @@ export class VerAgendaComponent implements OnInit {
   }
 
   private buildForm() {
-
     if (this.agendaClase) {
       this.form = this.formBuilder.group({
         fecha: [this.fechaClase],
@@ -180,6 +190,8 @@ export class VerAgendaComponent implements OnInit {
           ], // async validators
         ],
         alumnoNombre: [this.agendaClase.AluNomApe],
+        alumnoTelefono: [this.agendaClase.AluTelefono],
+        alumnoCelular: [this.agendaClase.AluCelular],
         cursoId: [this.agendaClase.TipCurId, [Validators.required]],
         cursoNombre: [this.agendaClase.TipCurNom],
         tipoClase: [this.agendaClase.EsAgCuTipCla],
@@ -221,6 +233,8 @@ export class VerAgendaComponent implements OnInit {
           ], // async validators
         ],
         alumnoNombre: ['', [Validators.required]],
+        alumnoTelefono: [''],
+        alumnoCelular: [''],
 
         cursoId: ['', [Validators.required]],
         cursoNombre: [''],
@@ -254,6 +268,8 @@ export class VerAgendaComponent implements OnInit {
 
     // Campos deshabilitados del alumno
     this.alumnoNombre.disable();
+    this.alumnoTelefono.disable();
+    this.alumnoCelular.disable();
 
     // Campos deshabilitados del curso
 
@@ -299,11 +315,17 @@ export class VerAgendaComponent implements OnInit {
     });
   }
 
+  seleccionarAlumno = () =>
+    this.alumnoService
+      .obtenerAlumnos(5, 1, '')
+      .subscribe((res: any) =>
+        this.openDialogAlumnos(res.alumnos, res.cantidad)
+      );
 
-
-  seleccionarAlumno = () => this.alumnoService.obtenerAlumnos(5, 1, '').subscribe((res: any) => this.openDialogAlumnos(res.alumnos, res.cantidad));
-
-  seleccionarCurso = () => this.cursoService.getCursos().subscribe((res: any) => this.openDialogCursos(res));
+  seleccionarCurso = () =>
+    this.cursoService
+      .getCursos()
+      .subscribe((res: any) => this.openDialogCursos(res));
 
   private openDialogCursos(cursos) {
     const cursosDialogRef = this.dialog.open(SeleccionarCursoComponent, {
@@ -322,30 +344,24 @@ export class VerAgendaComponent implements OnInit {
     });
   }
 
-
   private openDialogAlumnos(alumnos, cantidad) {
-
     const alumnosDialogRef = this.dialog.open(SeleccionarAlumnoComponent, {
       height: 'auto',
       width: '700px',
       data: {
         alumnos,
-        cantidad
+        cantidad,
       },
     });
 
-
     alumnosDialogRef.afterClosed().subscribe((alumno: Alumno) => {
-
       this.alumno = alumno;
       this.form.patchValue({
         alumnoNombre: alumno.AluNomComp,
         alumnoNumero: alumno.AluNro,
       });
     });
-
   }
-
 
   avisoAlumno() {
     this.avisar = 'Avisar';
@@ -359,33 +375,9 @@ export class VerAgendaComponent implements OnInit {
   guardarClase(event: Event) {
     event.preventDefault();
 
-
     if (this.form.invalid) {
       return;
     }
-
-
-
-    const agendaClase: AgendaClase = {
-      FechaClase: this.agendaClase.FechaClase,
-      Hora: this.agendaClase.Hora,
-      EscMovCod: this.agendaClase.EscMovCod,
-      Modo: this.agendaClase.Modo,
-      EsAgCuInsId: this.instructorId.value,
-      AluId: this.alumno.AluId,
-      TipCurId: this.cursoId.value,
-      EscAluCurId: this.agendaClase.EscAluCurId,
-      EsAgCuDet: this.detalle.value,
-      EsAgCuTipCla: this.tipoClase.value,
-      EsAgCuObs: this.observaciones.value,
-      EsAgCuNroCla: this.numeroClase.value,
-      EsAgCuEst: this.estadoClase.value,
-      EsAgCuClaAdiSN: this.claseAdicional.value,
-      EsAgCuDetAviso: this.aviso.value,
-      EsAgCuDetAvisoOld: this.agendaClase.EsAgCuDetAvisoOld,
-
-      UsrId: localStorage.getItem('UsrId'),
-    };
 
     this.acuService
       .guardarAgendaClase(this.agendaClase)
@@ -393,10 +385,9 @@ export class VerAgendaComponent implements OnInit {
   }
 
   obtenerCurso() {
-    const cursoId = this.cursoId.value
+    const cursoId = this.cursoId.value;
     if (cursoId !== '') {
       this.cursoService.getCurso(cursoId).subscribe((res: any) => {
-
         if (res.TipCurId === '0') {
           Swal.fire({
             icon: 'warning',
@@ -420,6 +411,4 @@ export class VerAgendaComponent implements OnInit {
       cursoNombre: result.TipCurNom,
     });
   }
-
-
 }

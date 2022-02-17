@@ -90,6 +90,7 @@ export class InscripcionService {
         escCurIni: inscripcion.escCurIni,
         escCurFchIns: inscripcion.escCurFchIns,
         sede: inscripcion.sede,
+        sedeFacturacion: inscripcion.sedeFacturacion,
         irABuscarAlAlumno: inscripcion.irABuscarAlAlumno,
         condicionesCurso: inscripcion.condicionesCurso,
         reglamentoEscuela: inscripcion.reglamentoEscuela,

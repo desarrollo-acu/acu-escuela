@@ -6,6 +6,7 @@ import { Alumno } from '../model/alumno.model';
 import { CuentaCorriente } from '../model/cuenta-corriente.model';
 import { AlumnoByCI } from '../model/alumno-by-ci.interface';
 import { ObtenerAlumnos } from '../model/obtener-alumnos.interface';
+import { Inscripcion } from '@core/model/inscripcion.model';
 
 @Injectable({
   providedIn: 'root',
@@ -110,4 +111,6 @@ export class AlumnoService {
   getCuentaCorriente = (alumnoNumero: number) => this.http.get<CuentaCorriente[]>(`${environment.url_ws}/wsGetCuentaCorriente?alumnoNumero=${alumnoNumero}`);
 
   tieneFacturaPendienteAnteriorAHoy = (aluId: number) => this.http.get<{tieneFacturaPendienteAnteriorAHoy: boolean}>(`${environment.url_ws}/tieneFacturaPendienteAnteriorAHoy?&aluId=${aluId}`)
+
+  obtenerDisponibilidadPorAlumno = (aluId: number) => this.http.get<Inscripcion>(`${environment.url_ws}/wsGetDisponibilidadAlumno?AluId=${aluId}`)
 }

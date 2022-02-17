@@ -104,15 +104,21 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
     };
     for (const h of this.horaMovilPlano) {
       if (h.Hora === hora.Hora && h.EscInsId === instructor.EscInsId) {
-        // bloqueada
-        if (h.EsAgCuEst === 'B') {
-          cell.value = 'BLOQUEADA';
-        } else {
-          // tslint:disable-next-line: triple-equals
-          cell.value =
-            h.AluId != 0
-              ? `${h.AluNro} ${h.AluApe1}  ${h.TipCurId}`
-              : `${h.TipCurId} ${h.TipCurNom}`;
+        switch (h.EsAgCuEst) {
+          case 'B':
+            cell.value = 'BLOQUEADA';
+            break;
+          case 'I':
+            cell.value = 'AUSENCIA INSTRUCTOR';
+            break;
+
+          default:
+            // tslint:disable-next-line: triple-equals
+            cell.value =
+              h.AluId != 0
+                ? `${h.AluNro} ${h.AluApe1}  ${h.TipCurId}`
+                : `${h.TipCurId} ${h.TipCurNom}`;
+            break;
         }
         cell.class = h.claseCelda;
         cell.existe = true;
@@ -153,6 +159,7 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
       data: {
         // tslint:disable-next-line: triple-equals
         verOpciones: lugar && lugar.AluId != 0,
+        fechaClase: this.fechaClase,
       },
     });
 
@@ -371,7 +378,11 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
       });
   }
 
-  generarClaseAdicional(instructor: string, hora: number, esClaseAdicional = true) {
+  generarClaseAdicional(
+    instructor: string,
+    hora: number,
+    esClaseAdicional = true
+  ) {
     this.getClaseAgendaAndOpenDialog(
       instructor,
       hora,
@@ -640,6 +651,8 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
       width: '700px',
     });
 
-    return fechaDialogRef.afterClosed().subscribe(() => this.getAgenda(this.fecha));
+    return fechaDialogRef
+      .afterClosed()
+      .subscribe(() => this.getAgenda(this.fecha));
   };
 }

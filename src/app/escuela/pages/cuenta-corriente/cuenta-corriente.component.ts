@@ -6,9 +6,8 @@ import { SeleccionarAlumnoComponent } from '@escuela/components/modals/seleccion
 import { AlumnoService } from '../../../core/services/alumno.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { CuentaCorriente } from '../../../core/model/cuenta-corriente.model';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
 import { mensajeWarning } from '@utils/sweet-alert';
+import { CuentaCorrienteEstado } from '@core/model/enum/cuenta-corriente-estado.enum';
 
 @Component({
   selector: 'app-cuenta-corriente',
@@ -16,6 +15,7 @@ import { mensajeWarning } from '@utils/sweet-alert';
   styleUrls: ['./cuenta-corriente.component.scss'],
 })
 export class CuentaCorrienteComponent implements OnInit {
+  cuentaCorrienteEstado = CuentaCorrienteEstado;
   form: FormGroup;
 
   displayedColumns: string[] = [
@@ -25,23 +25,46 @@ export class CuentaCorrienteComponent implements OnInit {
     'debe',
     'haber',
     'factura',
+    'estado',
   ];
   dataSource = new MatTableDataSource<CuentaCorriente>();
 
-
-
-  get alumnoCI(){ return this.form.get('alumnoCI');}
-  get alumnoNumero(){ return this.form.get('alumnoNumero');}
-  get alumnoNombre(){ return this.form.get('alumnoNombre');}
-  get alumnoTelefono(){ return this.form.get('alumnoTelefono');}
-  get alumnoCelular(){ return this.form.get('alumnoCelular');}
-  get socioId(){ return this.form.get('socioId');}
-  get socioNombreApellido(){ return this.form.get('socioNombreApellido');}
-  get socioUltimoPago(){ return this.form.get('socioUltimoPago');}
-  get alumnoParentesco(){ return this.form.get('alumnoParentesco');}
-  get totalDebitos(){ return this.form.get('totalDebitos');}
-  get totalHaberes(){ return this.form.get('totalHaberes');}
-  get totalSaldo(){ return this.form.get('totalSaldo');}
+  get alumnoCI() {
+    return this.form.get('alumnoCI');
+  }
+  get alumnoNumero() {
+    return this.form.get('alumnoNumero');
+  }
+  get alumnoNombre() {
+    return this.form.get('alumnoNombre');
+  }
+  get alumnoTelefono() {
+    return this.form.get('alumnoTelefono');
+  }
+  get alumnoCelular() {
+    return this.form.get('alumnoCelular');
+  }
+  get socioId() {
+    return this.form.get('socioId');
+  }
+  get socioNombreApellido() {
+    return this.form.get('socioNombreApellido');
+  }
+  get socioUltimoPago() {
+    return this.form.get('socioUltimoPago');
+  }
+  get alumnoParentesco() {
+    return this.form.get('alumnoParentesco');
+  }
+  get totalDebitos() {
+    return this.form.get('totalDebitos');
+  }
+  get totalHaberes() {
+    return this.form.get('totalHaberes');
+  }
+  get totalSaldo() {
+    return this.form.get('totalSaldo');
+  }
 
   constructor(
     private fb: FormBuilder,
@@ -52,7 +75,6 @@ export class CuentaCorrienteComponent implements OnInit {
   ngOnInit(): void {
     this.buildForm();
   }
-
 
   buildForm() {
     this.form = this.fb.group({
@@ -86,7 +108,6 @@ export class CuentaCorrienteComponent implements OnInit {
     this.totalDebitos.disable();
     this.totalHaberes.disable();
     this.totalSaldo.disable();
-
   }
 
   seleccionarAlumno() {
@@ -95,23 +116,21 @@ export class CuentaCorrienteComponent implements OnInit {
     });
   }
 
-  obtenerAlumno(){
-
+  obtenerAlumno() {
     let timeout = null;
 
     clearTimeout(timeout);
     timeout = setTimeout(() => {
-
-    this.alumnoService
-    .obtenerAlumnoByCI(this.alumnoCI.value)
-    .subscribe(( { alumnos } ) =>
-      alumnos.length === 0
-        ? mensajeWarning(
-            'Atención',
-            `El alumno con cédula ${this.alumnoCI.value} no existe en el sistema.`
-          ).then()
-        : this.addInfoAlumnoAlForm( alumnos[0] )
-    );
+      this.alumnoService
+        .obtenerAlumnoByCI(this.alumnoCI.value)
+        .subscribe(({ alumnos }) =>
+          alumnos.length === 0
+            ? mensajeWarning(
+                'Atención',
+                `El alumno con cédula ${this.alumnoCI.value} no existe en el sistema.`
+              ).then()
+            : this.addInfoAlumnoAlForm(alumnos[0])
+        );
     }, 1000);
   }
 
@@ -136,7 +155,6 @@ export class CuentaCorrienteComponent implements OnInit {
     this.alumnoService
       .getCuentaCorriente(alumno.AluNro)
       .subscribe((cuentaCorriente) => {
-
         let totalDebitos = 0;
         let totalHaberes = 0;
         let totalSaldo = 0;
@@ -145,16 +163,19 @@ export class CuentaCorrienteComponent implements OnInit {
           cuentaCorriente.map((item) => {
             totalDebitos += +item.debe;
             totalHaberes += +item.haber;
-            totalSaldo  += (item.haber - item.debe);
-            return {
-            ...item,
-            factura: item.facturaNumero,
-            fecha: item.fecha,
-            hora: `${new Date(item.hora).getHours()}:${new Date(item.hora).getMinutes()}`,
-          };
-        })
-        );
+            totalSaldo += item.haber - item.debe;
 
+            return {
+              ...item,
+              factura: item.facturaNumero,
+              fecha: item.fecha,
+              hora: `${new Date(item.hora).getHours()}:${new Date(
+                item.hora
+              ).getMinutes()}`,
+              ctaCteEst: item.ctaCteEst,
+            };
+          })
+        );
 
         this.form.patchValue({
           alumnoNumero: alumno.AluNro,
@@ -164,12 +185,23 @@ export class CuentaCorrienteComponent implements OnInit {
           alumnoCelular: alumno.AluTel2,
           socioId: alumno.SocId,
           socioNombreApellido: alumno.SocNombre,
-          socioUltimoPago: `${alumno.SocMesPgo}-${alumno.SocAnoPgo}` ,
+          socioUltimoPago: `${alumno.SocMesPgo}-${alumno.SocAnoPgo}`,
           alumnoParentesco: alumno.AluPar,
           totalDebitos,
           totalHaberes,
-          totalSaldo
+          totalSaldo,
         });
       });
+  }
+
+  getNameFromCuentaCorrienteEstadoEnum(estado: CuentaCorrienteEstado) {
+    switch (estado) {
+      case CuentaCorrienteEstado.PAGA:
+        return 'PAGA';
+      case CuentaCorrienteEstado.PENDIENTE:
+        return 'PENDIENTE';
+      case CuentaCorrienteEstado.ANULADA:
+        return 'ANULADA';
+    }
   }
 }

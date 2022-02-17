@@ -15,54 +15,56 @@ import { generateEstadosSiNo } from '../../../utils/utils-functions';
 @Component({
   selector: 'app-gestion-instructor',
   templateUrl: './gestion-instructor.component.html',
-  styleUrls: ['./gestion-instructor.component.scss']
+  styleUrls: ['./gestion-instructor.component.scss'],
 })
 export class GestionInstructorComponent implements OnInit {
-
-  displayedColumns: string[] = ['actions', 'EscInsId', 'EscInsNom', 'EscInsTel', 'EscInsAct'];
+  displayedColumns: string[] = [
+    'actions',
+    'EscInsId',
+    'EscInsNom',
+    'EscInsTel',
+    'EscInsAct',
+  ];
   dataSource: MatTableDataSource<Instructor>;
   verInstructor: boolean;
-  filtro: string;
   estados = [];
   instructores: Instructor[];
   form: FormGroup;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
-
   pageSize = environment.pageSize;
 
-  constructor(
-
-    private fb: FormBuilder,
-    private instructorService: InstructorService,
-    private router: Router) {
-
-
+  get escInsAct() {
+    return this.form.get('escInsAct');
   }
 
+  constructor(
+    private fb: FormBuilder,
+    private instructorService: InstructorService,
+    private router: Router
+  ) {}
+
   ngOnInit() {
-
-
     this.buildForm();
     this.getInstructores('S');
     this.estados = generateEstadosSiNo();
-
   }
 
   buildForm() {
-
     this.form = this.fb.group({
       escInsAct: ['S'],
     });
   }
+
   verActivos(event: MatSelectChange) {
-
     const filterValue = event.value;
-    const instructores = (filterValue === '-')
-      ? this.instructores
-      : this.instructores.filter(instructor => instructor.EscInsAct === filterValue);
-
+    const instructores =
+      filterValue === '-'
+        ? this.instructores
+        : this.instructores.filter(
+            (instructor) => instructor.EscInsAct === filterValue
+          );
 
     this.dataSource = new MatTableDataSource(instructores);
 
@@ -82,60 +84,59 @@ export class GestionInstructorComponent implements OnInit {
   abmInstructor(modo: string, instructor: Instructor) {
     switch (modo) {
       case 'INS':
-
         this.instructorService.sendDataInstructor(modo, instructor, 0);
         this.router.navigate(['/escuela/abm-instructor']);
         // });
         break;
       case 'UPD':
-
         this.instructorService.sendDataInstructor(modo, instructor);
         this.router.navigate(['/escuela/abm-instructor']);
         break;
       case 'DLT':
         confirmacionUsuario(
           'Confirmación de Usuario',
-          `Está seguro que desea eliminar el instructor: ${instructor.EscInsNom}`)
-          .then((confirm) => {
-            if (confirm.isConfirmed) {
-              this.instructorService.gestionInstructor(modo, instructor).subscribe((res: any) => {
-
-                mensajeConfirmacion('Ok', res.Instructor.ErrorMessage).then(() => this.getInstructores(this.filtro));
-
+          `Está seguro que desea eliminar el instructor: ${instructor.EscInsNom}`
+        ).then((confirm) => {
+          if (confirm.isConfirmed) {
+            this.instructorService
+              .gestionInstructor(modo, instructor)
+              .subscribe((res: any) => {
+                mensajeConfirmacion('Ok', res.Instructor.ErrorMessage).then(
+                  () => this.getInstructores(this.escInsAct.value)
+                );
               });
-            }
-          });
+          }
+        });
 
         break;
 
       default:
         break;
     }
-
   }
 
-
   getInstructores(EscInsAct?: string) {
-
     this.verInstructor = false;
-    this.instructorService.getInstructores()
+    this.instructorService
+      .getInstructores()
       .subscribe((instructores: Instructor[]) => {
-
-
         this.verInstructor = true;
         // Assign the data to the data source for the table to render
         this.instructores = instructores;
-        const auxInstructores = (EscInsAct === '-')
-          ? this.instructores.filter(instructor => (instructor.EscInsAct === 'S' || instructor.EscInsAct === 'N'))
-          : this.instructores.filter(instructor => instructor.EscInsAct === EscInsAct);
+        const auxInstructores =
+          EscInsAct === '-'
+            ? this.instructores.filter(
+                (instructor) =>
+                  instructor.EscInsAct === 'S' || instructor.EscInsAct === 'N'
+              )
+            : this.instructores.filter(
+                (instructor) => instructor.EscInsAct === EscInsAct
+              );
 
         this.dataSource = new MatTableDataSource(auxInstructores);
 
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       });
-
   }
-
 }
-

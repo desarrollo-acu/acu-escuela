@@ -11,6 +11,8 @@ export interface AgendaClase {
   EsAgCuInsNom?: string;
   AluId?: number;
   AluNro?: number;
+  AluTelefono?: number;
+  AluCelular?: number;
   AluNomApe?: string;
   TipCurId?: number;
   TipCurNom?: string;
