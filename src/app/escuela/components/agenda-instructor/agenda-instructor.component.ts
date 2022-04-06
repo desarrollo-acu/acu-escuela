@@ -34,8 +34,6 @@ import { BloquearHorasComponent } from '../../dialogs/bloquear-horas/bloquear-ho
 })
 export class AgendaInstructorComponent implements OnInit, OnDestroy {
   porcentajeGlobal: number = 0;
-
-  animal: string;
   name: string;
   sabadoODomingo: number;
   verAgenda: boolean;

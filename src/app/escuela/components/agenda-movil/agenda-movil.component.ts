@@ -28,7 +28,6 @@ import { IngresarClaveAccionesComponent } from '../../dialogs/ingresar-clave-acc
   styleUrls: ['./agenda-movil.component.scss'],
 })
 export class AgendaMovilComponent implements OnInit, OnDestroy {
-  animal: string;
   name: string;
   sabadoODomingo: number;
   verAgenda: boolean;
@@ -57,7 +56,6 @@ export class AgendaMovilComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.acuService.cleanStorageAgenda();
-    //throw new Error('Method not implemented.');
   }
 
   ngOnInit() {
