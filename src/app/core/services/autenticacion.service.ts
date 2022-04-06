@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
 import { Router } from '@angular/router';
-
+interface ValidarClaveAcciones {
+  claveValida: boolean
+}
 @Injectable({
   providedIn: 'root'
 })
@@ -16,8 +18,6 @@ export class AutenticacionService {
   getUserId = () => localStorage.getItem('usrId');
 
   iniciarSesion(UsrId: string, Pass: string) {
-    console.log('User: ', UsrId);
-    console.log('Pass: ', Pass);
 
     return this.http.post(`${environment.url_ws}/wsAutenticacionUsuario`, {
       tipo: 'inicio-escuela',
@@ -34,11 +34,10 @@ export class AutenticacionService {
       usrId
     });
 
-
   }
 
 
-  logout = () => this.router.navigate(['/']).then( () => localStorage.clear());
+  logout = () => this.router.navigate(['/login']).then( () => localStorage.clear());
 
   cambiarContrasenia(usrId: string, usrNuevaPass: string) {
 
@@ -48,8 +47,9 @@ export class AutenticacionService {
       usrPass: usrNuevaPass
     });
 
-
   }
+
+  verificarClaveAcciones = ( password: string ) => this.http.post<ValidarClaveAcciones>(`${environment.url_ws}/wsVerificarClaveAcciones`, { password })
 
 
 }

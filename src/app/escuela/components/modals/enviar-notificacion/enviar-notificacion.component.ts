@@ -10,6 +10,7 @@ import { AlumnoService } from '@core/services/alumno.service';
 import { CursoService } from '@core/services/curso.service';
 import { SeleccionarAlumnoComponent } from '../seleccionar-alumno/seleccionar-alumno.component';
 import { confirmacionUsuario, mensajeConfirmacion, errorMensaje } from '../../../../utils/sweet-alert';
+import { AutenticacionService } from '../../../../core/services/autenticacion.service';
 
 @Component({
   selector: 'app-enviar-notificacion',
@@ -28,6 +29,7 @@ export class EnviarNotificacionComponent implements OnInit {
     public dialogRef: MatDialogRef<any>,
     private alumnoService: AlumnoService,
     private acuService: AcuService,
+    private authService: AutenticacionService,
     private cursoService: CursoService,
     public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: any
@@ -75,13 +77,8 @@ export class EnviarNotificacionComponent implements OnInit {
   }
 
   seleccionarAlumno() {
-    this.alumnoService.obtenerAlumnos(5, 1, '').subscribe((res: any) => {
-      console.log('res: ', res);
-      console.log('res.Cantidad: ', res.Cantidad);
-      console.log('res.Alumnos: ', res.Alumnos);
-
-      this.openDialogAlumnos(res.Alumnos, res.Cantidad);
-    });
+    this.alumnoService.obtenerAlumnos(5, 1, '')
+    .subscribe((res: any) =>  this.openDialogAlumnos(res.alumnos, res.cantidad));
   }
 
   private openDialogAlumnos(alumnos, cantidad) {
@@ -95,7 +92,6 @@ export class EnviarNotificacionComponent implements OnInit {
     });
 
     alumnosDialogRef.afterClosed().subscribe((alumno) => {
-      console.log(alumno);
 
       if (alumno) {
         this.form.patchValue({
@@ -109,7 +105,6 @@ export class EnviarNotificacionComponent implements OnInit {
   }
 
   enviarNotificacion(event: Event) {
-    console.log(event);
 
     if(this.tipoNotificacion.value.length <= 0){
       errorMensaje('Error', 'Debe seleccionar al menos un tipo de notificación.').then();
@@ -128,7 +123,6 @@ export class EnviarNotificacionComponent implements OnInit {
         return;
       }
 
-      console.log(this.form.value);
       this.acuService.enviarNotificacion(this.form.value).subscribe( res =>
         mensajeConfirmacion('Excelente!', `Se notificó al alumno ${ this.alumnoNombre.value}, exitosamente!`).then( () => this.dialogRef.close())
       );

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { AcuService } from '../../../core/services/acu.service';
-import { SeleccionarItemCursoComponent } from '../modals/seleccionar-item-curso/seleccionar-item-curso.component';
+import { SeleccionarItemCursoComponent } from '../../components/modals/seleccionar-item-curso/seleccionar-item-curso.component';
 import { ItemCurso } from '@core/model/item-curso.model';
 import { ReportesService } from '../../../core/services/reportes.service';
 import { openSamePDF } from '../../../utils/utils-functions';
@@ -88,7 +88,6 @@ export class FacturacionPorItemComponent implements OnInit {
 
 
     const {fechaDesde, fechaHasta, itemDesde, itemHasta,} = this.form.value;
-    console.log(this.form.value);
 
     this.reportesService.facturacionPorItem(itemDesde, itemHasta, fechaDesde, fechaHasta).subscribe((pdf) => openSamePDF(pdf, 'FacturacionPorItem'));
 

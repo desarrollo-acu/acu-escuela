@@ -11,8 +11,7 @@ export function alumnoYaAsignadoValidator(alumnoService: AlumnoService): AsyncVa
     return alumnoService.alumnoYaAsignado(control.value).pipe(
       map(
         (res: any) => {
-          console.log('res: ', res);
-          console.log('res.yaAsignado: ', res.yaAsignado);
+
           // tslint:disable-next-line: object-literal-key-quotes
           return res.yaAsignado ? { 'alumnoYaAsignado': true } : null;
         })

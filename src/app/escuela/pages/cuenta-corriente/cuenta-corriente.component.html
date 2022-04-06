@@ -1,0 +1,281 @@
+<div class="row margin-abm">
+  <div class="col-xs-offset-1 col-xs-10">
+    <div class="box">
+      <mat-card>
+        <form [formGroup]="form">
+          <mat-card-content>
+            <section id="DatosDelAlumno">
+              <h3><strong> Datos del alumno </strong></h3>
+              <div class="row">
+                <div class="col-xs-4">
+                  <mat-form-field class="full-width">
+                    <input
+                      matInput
+                      placeholder="Cédula de Identidad"
+                      type="number"
+                      formControlName="alumnoCI"
+                      (keyup)="obtenerAlumno()"
+                    />
+
+                    <button
+                      mat-icon-button
+                      matSuffix
+                      [attr.aria-label]="'Hide password'"
+                      (click)="seleccionarAlumno()"
+                    >
+                      <mat-icon> search </mat-icon>
+                    </button>
+                  </mat-form-field>
+                </div>
+                <div class="col">
+                  <mat-form-field class="full-width">
+                    <input
+                      matInput
+                      placeholder="Nombre del Alumno"
+                      formControlName="alumnoNombre"
+                    />
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-xs-4">
+                  <mat-form-field class="full-width">
+                    <input
+                      matInput
+                      placeholder="Número del Alumno"
+                      formControlName="alumnoNumero"
+                    />
+                  </mat-form-field>
+                </div>
+                <div class="col">
+                  <mat-form-field class="full-width">
+                    <input
+                      matInput
+                      placeholder="Télefono"
+                      formControlName="alumnoTelefono"
+                    />
+                  </mat-form-field>
+                </div>
+                <div class="col">
+                  <mat-form-field class="full-width">
+                    <input
+                      matInput
+                      placeholder="Celular"
+                      formControlName="alumnoCelular"
+                    />
+                  </mat-form-field>
+                </div>
+              </div>
+            </section>
+
+            <mat-divider></mat-divider>
+
+            <section id="DatosDelSocioPresentador">
+              <h3><strong> Datos del Socio Presentador </strong></h3>
+
+              <div class="row">
+                <div class="col-xs-2">
+                  <mat-form-field class="full-width">
+                    <input
+                      matInput
+                      placeholder="Socio Id"
+                      formControlName="socioId"
+                    />
+                  </mat-form-field>
+                </div>
+                <div class="col-xs-4">
+                  <mat-form-field class="full-width">
+                    <input
+                      matInput
+                      placeholder="Nombres y Apellidos"
+                      formControlName="socioNombreApellido"
+                    />
+                  </mat-form-field>
+                </div>
+                <div class="col-xs-2">
+                  <mat-form-field class="full-width">
+                    <input
+                      matInput
+                      placeholder="Ultimo Pago"
+                      formControlName="socioUltimoPago"
+                    />
+                  </mat-form-field>
+                </div>
+                <div class="col-xs-4">
+                  <mat-form-field class="full-width">
+                    <input
+                      matInput
+                      placeholder="Parentesco"
+                      formControlName="alumnoParentesco"
+                    />
+                  </mat-form-field>
+                </div>
+              </div>
+            </section>
+
+            <mat-divider></mat-divider>
+
+            <section id="Movimientos" *ngIf="dataSource">
+              <div class="mat-elevation-z8">
+                <table mat-table [dataSource]="dataSource">
+                  <ng-container matColumnDef="fecha">
+                    <th mat-header-cell *matHeaderCellDef>Fecha</th>
+                    <td
+                      mat-cell
+                      *matCellDef="let row"
+                      [ngStyle]="{
+                        color:
+                          row.ctaCteMovTpo === 'D' && !row.anulado
+                            ? 'red'
+                            : 'blue'
+                      }"
+                    >
+                      {{ row.fecha }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="hora">
+                    <th mat-header-cell *matHeaderCellDef>Hora</th>
+                    <td
+                      mat-cell
+                      *matCellDef="let row"
+                      [ngStyle]="{
+                        color:
+                          row.ctaCteMovTpo === 'D' && !row.anulado
+                            ? 'red'
+                            : 'blue'
+                      }"
+                    >
+                      {{ row.hora }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="detalles">
+                    <th mat-header-cell *matHeaderCellDef>Detalles</th>
+                    <td
+                      mat-cell
+                      *matCellDef="let row"
+                      [ngStyle]="{
+                        color:
+                          row.ctaCteMovTpo === 'D' && !row.anulado
+                            ? 'red'
+                            : 'blue'
+                      }"
+                    >
+                      {{ row.detalles }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="debe">
+                    <th mat-header-cell *matHeaderCellDef>Debe</th>
+                    <td
+                      mat-cell
+                      *matCellDef="let row"
+                      [ngStyle]="{
+                        color:
+                          row.ctaCteMovTpo === 'D' && !row.anulado
+                            ? 'red'
+                            : 'blue'
+                      }"
+                    >
+                      {{ row.debe }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="haber">
+                    <th mat-header-cell *matHeaderCellDef>Haber</th>
+                    <td
+                      mat-cell
+                      *matCellDef="let row"
+                      [ngStyle]="{
+                        color:
+                          row.ctaCteMovTpo === 'D' && !row.anulado
+                            ? 'red'
+                            : 'blue'
+                      }"
+                    >
+                      {{ row.haber }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="factura">
+                    <th mat-header-cell *matHeaderCellDef>Factura</th>
+                    <td
+                      mat-cell
+                      *matCellDef="let row"
+                      [ngStyle]="{
+                        color:
+                          row.ctaCteMovTpo === 'D' && !row.anulado
+                            ? 'red'
+                            : 'blue'
+                      }"
+                    >
+                      {{ row.factura }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="estado">
+                    <th mat-header-cell *matHeaderCellDef>estado</th>
+                    <td
+                      mat-cell
+                      *matCellDef="let row"
+                      [ngStyle]="{
+                        color:
+                          row.ctaCteMovTpo === 'D' && !row.anulado
+                            ? 'red'
+                            : 'blue'
+                      }"
+                    >
+                      {{ getNameFromCuentaCorrienteEstadoEnum(row.ctaCteEst) }}
+                    </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr
+                    mat-row
+                    *matRowDef="let row; columns: displayedColumns"
+                  ></tr>
+                </table>
+              </div>
+            </section>
+
+            <mat-divider></mat-divider>
+
+            <section id="Totales">
+              <div class="row">
+                <div class="col-xs-4">
+                  <mat-form-field class="full-width">
+                    <input
+                      matInput
+                      placeholder="Debitos"
+                      formControlName="totalDebitos"
+                    />
+                  </mat-form-field>
+                </div>
+                <div class="col-xs-4">
+                  <mat-form-field class="full-width">
+                    <input
+                      matInput
+                      placeholder="Haberes"
+                      formControlName="totalHaberes"
+                    />
+                  </mat-form-field>
+                </div>
+                <div class="col-xs-4">
+                  <mat-form-field class="full-width">
+                    <input
+                      matInput
+                      placeholder="SALDO"
+                      formControlName="totalSaldo"
+                    />
+                  </mat-form-field>
+                </div>
+              </div>
+            </section>
+          </mat-card-content>
+        </form>
+      </mat-card>
+    </div>
+  </div>
+</div>

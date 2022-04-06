@@ -5,7 +5,7 @@
         <button mat-icon-button (click)="drawer.toggle()">
       <mat-icon>menu</mat-icon>
     </button>
-        <h1 class="example-app-name">ACU Web! </h1>
+        <h1 class="example-app-name">{{ titleApp }}</h1>
         <h1 class="title">{{title}}</h1>
 
         <button type="button" mat-button (click)="logout()">
@@ -37,8 +37,10 @@
           alumnos</a>
                 <a mat-list-item routerLink="/escuela/gestion-examen" (click)="changeTitle('/escuela/gestion-examen')">Gestionar
           examenes</a>
+                <a mat-list-item routerLink="/escuela/cuenta-corriente" (click)="changeTitle('/escuela/cuenta-corriente')">Cuenta Corriente</a>
                 <a mat-list-item routerLink="/escuela/reportes" (click)="changeTitle('/escuela/reportes')">Reportes</a>
-                <a mat-list-item (click)="enviarNotificacion()">Enviar Notificación</a>
+                <a mat-list-item routerLink="/escuela/formularios" (click)="changeTitle('/escuela/formularios')">Formularios</a>
+                <a mat-list-item routerLink="/escuela/notificaciones" (click)="changeTitle('/escuela/notificaciones')">Notificaciones</a>
 
                 <a mat-list-item (click)="cambiarContrasenia()">Cambiar Contraseña</a>
 

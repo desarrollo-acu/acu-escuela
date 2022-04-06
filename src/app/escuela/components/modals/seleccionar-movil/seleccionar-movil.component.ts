@@ -28,9 +28,7 @@ export class SeleccionarMovilComponent implements OnInit {
     public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    console.log('seleccionar-movil: ', data);
     const moviles = this.data.moviles;
-    console.log('cursos: ', moviles);
 
     // Assign the data to the data source for the table to render
     this.dataSource = new MatTableDataSource(moviles);

@@ -3,6 +3,10 @@ import { environment } from '@environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
 import { Alumno } from '../model/alumno.model';
+import { CuentaCorriente } from '../model/cuenta-corriente.model';
+import { AlumnoByCI } from '../model/alumno-by-ci.interface';
+import { ObtenerAlumnos } from '../model/obtener-alumnos.interface';
+import { Inscripcion } from '@core/model/inscripcion.model';
 
 @Injectable({
   providedIn: 'root',
@@ -89,7 +93,7 @@ export class AlumnoService {
       `${environment.url_ws}/wsGetAlumnos?PageSize=${pageSize}&PageNumber=${pageNumber}&Filtro=${filtro}`
     );
 
-  obtenerAlumnoByCI = ( ci: number ) => this.http.get( `${environment.url_ws}/wsGetAlumnoByCI?CI=${ci}`);
+  obtenerAlumnoByCI = ( ci: number ) => this.http.get<any>( `${environment.url_ws}/wsGetAlumnoByCI?CI=${ci}`);
 
   gestionAlumno(mode: string, alumno: Alumno) {
     return this.http.post(`${environment.url_ws}/wsGestionAlumno`, {
@@ -103,4 +107,10 @@ export class AlumnoService {
   getAlumnoNumero() {
     return this.http.get(`${environment.url_ws}/wsGetUltimoNumeroAlumno`);
   }
+
+  getCuentaCorriente = (alumnoNumero: number) => this.http.get<CuentaCorriente[]>(`${environment.url_ws}/wsGetCuentaCorriente?alumnoNumero=${alumnoNumero}`);
+
+  tieneFacturaPendienteAnteriorAHoy = (aluId: number) => this.http.get<{tieneFacturaPendienteAnteriorAHoy: boolean}>(`${environment.url_ws}/tieneFacturaPendienteAnteriorAHoy?&aluId=${aluId}`)
+
+  obtenerDisponibilidadPorAlumno = (aluId: number) => this.http.get<Inscripcion>(`${environment.url_ws}/wsGetDisponibilidadAlumno?AluId=${aluId}`)
 }

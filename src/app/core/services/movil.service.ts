@@ -5,34 +5,38 @@ import { BehaviorSubject } from 'rxjs';
 import { Movil } from '../model/movil.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class MovilService {
-
-
   // esto va al movilService
-  private movilDataSource = new BehaviorSubject({ modo: 'INS', movil: {}, id: 0 });
+  private movilDataSource = new BehaviorSubject({
+    modo: 'INS',
+    movil: {},
+    id: 0,
+  });
   movilCurrentData = this.movilDataSource.asObservable();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-  gestionMovil(mode: string, movil: Movil) {
-    return this.http.post(`${environment.url_ws}/wsGestionMovil`, {
+  gestionMovil = (mode: string, movil: Movil) =>
+    this.http.post(`${environment.url_ws}/wsGestionMovil`, {
       Movil: {
         Mode: mode,
-        Movil: movil
-      }
+        Movil: movil,
+      },
     });
-  }
 
-  getMoviles() {
-    return this.http.get(`${environment.url_ws}/wsGetMoviles`);
-  }
+  getMoviles = () => this.http.get(`${environment.url_ws}/wsGetMoviles`);
+
+  getMovilesDisponiblesPorFechaHora = (fecha, hora) =>
+    this.http.get<Movil[]>(
+      `${environment.url_ws}/wsGetMovilesDisponiblesPorFechaHora?fecha=${fecha}&hora=${hora}`
+    );
 
   sendDataMovil(modo: string, movil: Movil, id?: number) {
-
-    const data: { modo: string, movil: Movil, id: number } = (id) ? { modo, movil, id } : { modo, movil, id: 0 };
+    const data: { modo: string; movil: Movil; id: number } = id
+      ? { modo, movil, id }
+      : { modo, movil, id: 0 };
     this.movilDataSource.next(data);
-
   }
 }

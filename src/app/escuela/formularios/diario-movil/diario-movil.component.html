@@ -1,0 +1,9 @@
+
+<app-gestion-custom
+  *ngIf="formularios"
+  [dataInput]="formularios"
+  [columns]="columnas"
+  [actionsHeader]="actionsHeader"
+  (updatedDataInput)="changeData($event)"
+>
+</app-gestion-custom>

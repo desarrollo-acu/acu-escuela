@@ -18,8 +18,6 @@ export class SeleccionarInscripcionComponent   {
     public dialogRef: MatDialogRef<any>,
     public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: any) {
-      console.log('data::: ', data);
-      console.log('data.inscripciones::: ', data.inscripciones);
 
       this.inscripciones = data.inscripciones;
     }
@@ -27,7 +25,6 @@ export class SeleccionarInscripcionComponent   {
 
     onSeleccionar(data: SeleccionarRow) {
       if (data.selected) {
-        console.log('data.ExtraData:: ', data.extraData );
         this.dialogRef.close(data.extraData);
 
       } else {

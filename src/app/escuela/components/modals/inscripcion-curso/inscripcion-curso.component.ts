@@ -1,16 +1,10 @@
 import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  FormControl,
-  FormGroupDirective,
-  NgForm,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   MatDialogRef,
   MAT_DIALOG_DATA,
   MatDialog,
+  throwMatDialogContentAlreadyAttachedError,
 } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
@@ -24,7 +18,6 @@ import { AltaAlumnoComponent } from '../alta-alumno/alta-alumno.component';
 import { FacturaRutComponent } from '../factura-rut/factura-rut.component';
 import { SeleccionarItemsFacturarComponent } from '../seleccionar-items-facturar/seleccionar-items-facturar.component';
 import { AgendaMovilComponent } from '../../agenda-movil/agenda-movil.component';
-import { AcuService } from 'src/app/core/services/acu.service';
 import { ResponseFacturaRUT } from 'src/app/core/model/responseFacturaRUT.model';
 import { ValidateFechaPosterior } from 'src/app/utils/custom-validator';
 import { MyValidators } from 'src/app/utils/validators';
@@ -33,21 +26,21 @@ import { ClasesEstimadasComponent } from '../clases-estimadas/clases-estimadas.c
 import { mensajeConfirmacion } from '@utils/sweet-alert';
 
 import { Alumno } from '@core/model/alumno.model';
-import { AlumnoYaAsignadoValidatorDirective } from '@utils/validators/alumno-ya-asignado.directive';
-import { formatCI } from '@utils/utils-functions';
+import {
+  generateHorasLibres,
+  getDisponibilidadFromInscripcion,
+} from '@utils/utils-functions';
 import { InscripcionService } from '@core/services/inscripcion.service';
 import { CursoService } from '@core/services/curso.service';
 import { AlumnoService } from '@core/services/alumno.service';
 import { InstructorService } from '@core/services/instructor.service';
-import {
-  confirmacionUsuario,
-  mensajeWarning,
-} from '../../../../utils/sweet-alert';
+import { mensajeWarning } from '../../../../utils/sweet-alert';
 import { Prefactura } from '../../../../core/model/prefactura.model';
-import { openSamePDF } from '../../../../utils/utils-functions';
+import { openSamePDF, generateSedes } from '../../../../utils/utils-functions';
 import { Subscription } from 'rxjs';
-import { NullTemplateVisitor } from '@angular/compiler';
 import { ClaseEstimada } from '@core/model/clase-estimada.model';
+import { ReportesService } from '@core/services/reportes.service';
+import { MyValidatorsService } from '../../../../utils/my-validators.service';
 
 @Component({
   selector: 'app-inscripcion-curso',
@@ -65,15 +58,7 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
   instructorAsignado = '';
   cursoNombre: string;
   hoy = new Date();
-  toppings = new FormControl();
-  toppingList: string[] = [
-    'Extra cheese',
-    'Mushroom',
-    'Onion',
-    'Pepperoni',
-    'Sausage',
-    'Tomato',
-  ];
+  verLimiteClases = false;
   horasLibres = [];
   sedes = [];
 
@@ -92,18 +77,15 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
   constructor(
     private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<AgendaMovilComponent>,
-    private acuService: AcuService,
+    private reportesService: ReportesService,
     private inscripcionService: InscripcionService,
     private instructorService: InstructorService,
     private cursoService: CursoService,
     private alumnoService: AlumnoService,
+    private myValidatorsService: MyValidatorsService,
     public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    console.log(
-      'Estoy en el constructor de agenda-curso, la res es: ',
-      this.data
-    );
     this.inscripcionCurso = this.data.inscripcionCurso;
 
     // tslint:disable-next-line: max-line-length
@@ -119,8 +101,9 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
     this.fechaClase.setDate(day);
     this.fechaClase.setMonth(month - 1);
     this.fechaClase.setFullYear(year);
-    this.generateHorasLibres();
-    this.generateSedes();
+    this.horasLibres = generateHorasLibres();
+
+    this.sedes = [...generateSedes()];
     this.buildForm();
     this.deshabilitarCampos();
   }
@@ -145,41 +128,34 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
   private buildForm() {
     this.form = this.formBuilder.group(
       {
-        fechaClase: [this.fechaClase, [MyValidators.fechaPosteriorAHoy]],
+        fechaClase: [this.fechaClase, [Validators.required]],
         cursoId: [
           '',
           [Validators.required], // sync validators
-          [
-            // existeAlumnoValidator(this.acuService),
-            // alumnoYaAsignadoValidator(this.acuService),
-            // alumnoTieneExcepcionValidator(this.acuService)
-          ], // async validators
         ],
         cursoNombre: [''],
         cursoClasesPracticas: [''],
         cursoClasesTeoricas: [''],
         cursoExamenPractico: [''],
         cursoExamenTeorico: [''],
-        fechaInicioEstimada: ['', Validators.required],
+        fechaInicioEstimada: [
+          '',
+          [Validators.required, MyValidators.fechaAnteriorOIgualAHoy],
+        ],
         escCurTe1: [''],
         escCurTe2: [''],
         escCurTe3: [''],
         escCurIni: [''],
-        alumnoNumero: [
-          '',
-          [Validators.required], // sync validators
-          // [
-          //   existeAlumnoValidator(this.acuService),
-          //   alumnoYaAsignadoValidator(this.acuService),
-          //   alumnoTieneExcepcionValidator(this.acuService)
-          // ] // async validators
-        ],
+        alumnoNumero: ['', ,],
         alumnoNombre: [''],
-        alumnoCI: [null],
+        alumnoCI: [null, [Validators.required]],
         alumnoTelefono: [''],
         alumnoCelular: [''],
-        sede: [''],
+        sede: [null, Validators.required],
+        sedeFacturacion: [null, Validators.required],
         irABuscarAlAlumno: [false],
+        limitarClases: [false],
+        limiteClases: [0],
 
         documentosEntregadosYFirmados: [false],
         reglamentoEscuela: [false],
@@ -217,14 +193,12 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
     this.fechaClaseFiled.disable();
 
     // Campos deshabilitados del alumno
-    // this.alumnoCIField.disable();
     this.alumnoNumeroField.disable();
     this.alumnoTelefonoField.disable();
     this.alumnoNombreField.disable();
     this.alumnoCelularField.disable();
 
     // Campos deshabilitados del curso
-
     this.cursoNombreField.disable();
     this.cursoClasesPracticasField.disable();
     this.cursoClasesTeoricasField.disable();
@@ -311,7 +285,7 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
 
   seleccionarAlumno() {
     this.alumnoService.obtenerAlumnos(5, 1, '').subscribe((res: any) => {
-      this.openDialogAlumnos(res.Alumnos, res.Cantidad);
+      this.openDialogAlumnos(res.alumnos, res.cantidad);
     });
   }
 
@@ -374,12 +348,18 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
     }
 
     if (this.form.valid) {
-      this.inscripcionCurso.disponibilidadLunes = this.disponibilidadLunesField.value;
-      this.inscripcionCurso.disponibilidadMartes = this.disponibilidadMartesField.value;
-      this.inscripcionCurso.disponibilidadMiercoles = this.disponibilidadMiercolesField.value;
-      this.inscripcionCurso.disponibilidadJueves = this.disponibilidadJuevesField.value;
-      this.inscripcionCurso.disponibilidadViernes = this.disponibilidadViernesField.value;
-      this.inscripcionCurso.disponibilidadSabado = this.disponibilidadSabadoField.value;
+      this.inscripcionCurso.disponibilidadLunes =
+        this.disponibilidadLunesField.value;
+      this.inscripcionCurso.disponibilidadMartes =
+        this.disponibilidadMartesField.value;
+      this.inscripcionCurso.disponibilidadMiercoles =
+        this.disponibilidadMiercolesField.value;
+      this.inscripcionCurso.disponibilidadJueves =
+        this.disponibilidadJuevesField.value;
+      this.inscripcionCurso.disponibilidadViernes =
+        this.disponibilidadViernesField.value;
+      this.inscripcionCurso.disponibilidadSabado =
+        this.disponibilidadSabadoField.value;
     }
 
     if (
@@ -399,18 +379,28 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
   }
 
   clasesEstimadas() {
-    this.inscripcionCurso.disponibilidadLunes = this.disponibilidadLunesField.value;
-    this.inscripcionCurso.disponibilidadMartes = this.disponibilidadMartesField.value;
-    this.inscripcionCurso.disponibilidadMiercoles = this.disponibilidadMiercolesField.value;
-    this.inscripcionCurso.disponibilidadJueves = this.disponibilidadJuevesField.value;
-    this.inscripcionCurso.disponibilidadViernes = this.disponibilidadViernesField.value;
-    this.inscripcionCurso.disponibilidadSabado = this.disponibilidadSabadoField.value;
+    this.inscripcionCurso.disponibilidadLunes =
+      this.disponibilidadLunesField.value;
+    this.inscripcionCurso.disponibilidadMartes =
+      this.disponibilidadMartesField.value;
+    this.inscripcionCurso.disponibilidadMiercoles =
+      this.disponibilidadMiercolesField.value;
+    this.inscripcionCurso.disponibilidadJueves =
+      this.disponibilidadJuevesField.value;
+    this.inscripcionCurso.disponibilidadViernes =
+      this.disponibilidadViernesField.value;
+    this.inscripcionCurso.disponibilidadSabado =
+      this.disponibilidadSabadoField.value;
 
     this.inscripcionCurso.escCurTe1 = this.escCurTe1Field.value;
     this.inscripcionCurso.escCurTe2 = this.escCurTe2Field.value;
     this.inscripcionCurso.escCurTe3 = this.escCurTe3Field.value;
-    this.inscripcionCurso.fechaClaseEstimada = this.fechaInicioEstimadaField.value;
+    this.inscripcionCurso.fechaClaseEstimada =
+      this.fechaInicioEstimadaField.value;
     this.inscripcionCurso.TipCurId = this.cursoIdField.value;
+
+    this.inscripcionCurso.limitarClases = this.limitarClases.value;
+    this.inscripcionCurso.limiteClases = this.limiteClases.value;
 
     this.instructorService
       .getClasesEstimadas(this.inscripcionCurso)
@@ -430,22 +420,19 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
           .afterClosed()
           .subscribe(
             (result: { continuar: boolean; claseEstimada: ClaseEstimada }) => {
-              console.log('clasesEstimadas afterClosed result:: ', result);
-
               this.salir(result);
 
               if (!result.continuar) {
                 return;
               }
 
-              this.acuService
+              this.reportesService
                 .getPDFPlanDeClases(result.claseEstimada)
                 .subscribe((pdf) => {
                   openSamePDF(pdf, 'PlanDeClases');
                 });
 
               this.inscripcionCurso.ClasesEstimadas = result.claseEstimada;
-                console.log('openDialogFacturaRUT: ');
 
               this.openDialogFacturaRUT();
             }
@@ -454,33 +441,26 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
   }
 
   private openDialogFacturaRUT() {
-
-    console.log('openDialogFacturaRUT: 1');
     const facturaRUTDialogRef = this.dialog.open(FacturaRutComponent, {
       height: 'auto',
       width: '700px',
     });
 
-    console.log('openDialogFacturaRUT:2');
     facturaRUTDialogRef
       .afterClosed()
       .subscribe(
         (result: { continuar: boolean; factura: ResponseFacturaRUT }) => {
           this.salir(result);
 
-          console.log('openDialogFacturaRUT:3');
           if (!(result && result.continuar)) {
             this.clasesEstimadas();
             return;
           } else {
-            console.log('openDialogFacturaRUT:4');
             this.inscripcionCurso.facturaEstadoPendiente = false;
             if (result.factura) {
-              console.log('openDialogFacturaRUT:5');
               this.inscripcionCurso.FacturaRut = result.factura;
 
               if (result.factura.generaFactura) {
-                console.log('openDialogFacturaRUT:6');
                 this.inscripcionCurso.facturaEstadoPendiente = true;
                 this.cursoService
                   .getItemsPorCurso(this.inscripcionCurso.TipCurId)
@@ -512,7 +492,6 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
       UsrId: this.inscripcionCurso.UsrId,
     };
 
-    console.log('openDialogFacturaRUT:7');
     const seleccionarItemsFactura = this.dialog.open(
       SeleccionarItemsFacturarComponent,
       {
@@ -528,18 +507,14 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
       }
     );
 
-    console.log('openDialogFacturaRUT:8');
     seleccionarItemsFactura
       .afterClosed()
       .subscribe((result: { continuar: boolean; itemFacturar: any }) => {
-        console.log('openDialogFacturaRUT:9');
         this.salir(result);
         if (!(result || result.continuar)) {
           this.openDialogFacturaRUT();
           return;
         } else {
-
-          console.log('openDialogFacturaRUT:10');
           this.inscripcionCurso.facturaEstadoPendiente = true;
           if (result && result.itemFacturar) {
             this.inscripcionCurso.SeleccionarItemsFactura = {
@@ -582,20 +557,40 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
     return this.fechaPagoLicenciaField.setValue('');
   }
 
-  addInfoAlumnoAlForm(result: Alumno) {
+  async addInfoAlumnoAlForm(result: Alumno) {
     this.inscripcionCurso.AluId = result.AluId;
+    const { AluId, AluNomComp } = result;
+    this.myValidatorsService.alumnoTieneFacturasPendientes(
+      AluId,
+      AluNomComp,
+      this.alumnoCIField
+    );
 
-    const ci =
-      typeof result.AluCI === 'string' ? result.AluCI : result.AluCI.toString();
-    const dv =
-      typeof result.AluDV === 'string' ? result.AluDV : result.AluDV.toString();
+    const inscripcion = await this.alumnoService
+      .obtenerDisponibilidadPorAlumno(AluId)
+      .toPromise();
+
+    const {
+      disponibilidadLunes,
+      disponibilidadMartes,
+      disponibilidadMiercoles,
+      disponibilidadJueves,
+      disponibilidadViernes,
+      disponibilidadSabado,
+    } = getDisponibilidadFromInscripcion(inscripcion);
 
     this.form.patchValue({
       alumnoNumero: result.AluNro,
       alumnoNombre: result.AluNomComp,
-      alumnoCI: result.AluCI, //formatCI(ci, dv),
+      alumnoCI: result.AluCI,
       alumnoTelefono: result.AluTel1,
       alumnoCelular: result.AluTel2,
+      disponibilidadLunes,
+      disponibilidadMartes,
+      disponibilidadMiercoles,
+      disponibilidadJueves,
+      disponibilidadViernes,
+      disponibilidadSabado,
     });
   }
 
@@ -607,23 +602,25 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
     this.inscripcionCurso.escCurTe3 = this.escCurTe3Field.value;
 
     this.inscripcionCurso.sede = this.sedeField.value;
+    this.inscripcionCurso.sedeFacturacion = this.sedeFacturacion.value;
     this.inscripcionCurso.irABuscarAlAlumno = this.irABuscarAlAlumnoField.value;
 
     this.inscripcionCurso.condicionesCurso = this.condicionesCursoField.value;
     this.inscripcionCurso.reglamentoEscuela = this.reglamentoEscuelaField.value;
-    this.inscripcionCurso.documentosEntregadosYFirmados = this.documentosEntregadosYFirmadosField.value;
+    this.inscripcionCurso.documentosEntregadosYFirmados =
+      this.documentosEntregadosYFirmadosField.value;
     this.inscripcionCurso.eLearning = this.eLearningField.value;
 
     this.inscripcionCurso.examenMedico = this.examenMedicoField.value;
-    this.inscripcionCurso.licenciaCedulaIdentidad = this.licenciaCedulaIdentidadField.value;
+    this.inscripcionCurso.licenciaCedulaIdentidad =
+      this.licenciaCedulaIdentidadField.value;
     this.inscripcionCurso.pagoDeLicencia = this.pagoDeLicenciaField.value;
 
     this.inscripcionCurso.fechaExamenMedico = this.fechaExamenMedicoField.value;
-    this.inscripcionCurso.fechaLicCedulaIdentidad = this.fechaLicCedulaIdentidadField.value;
+    this.inscripcionCurso.fechaLicCedulaIdentidad =
+      this.fechaLicCedulaIdentidadField.value;
     this.inscripcionCurso.fechaPagoLicencia = this.fechaPagoLicenciaField.value;
 
-
-    console.log('openDialogFacturaRUT:11');
     this.inscripcionService
       .generarInscripcion(this.inscripcionCurso)
       .subscribe((res: any) => {
@@ -634,11 +631,17 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
   }
 
   private salir(result) {
-    console.log('salir result: ', result);
-
     if (result && result.salir) {
       this.dialogRef.close();
     }
+  }
+
+  get limitarClases() {
+    return this.form.get('limitarClases');
+  }
+
+  get limiteClases() {
+    return this.form.get('limiteClases');
   }
 
   get fechaClaseFiled() {
@@ -736,6 +739,14 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
     return this.form.get('cursoExamenTeorico');
   }
 
+  get sede() {
+    return this.form.get('sede');
+  }
+
+  get sedeFacturacion() {
+    return this.form.get('sedeFacturacion');
+  }
+
   get escCurTe1Field() {
     return this.form.get('escCurTe1');
   }
@@ -772,35 +783,5 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
 
   get disponibilidadSabadoField() {
     return this.form.get('disponibilidadSabado');
-  }
-
-  generateSedes() {
-    const sede1 = {
-      id: 1,
-      value: 'Colonia y Yi',
-      description: 'Colonia y Yi',
-    };
-    this.sedes.push(sede1);
-
-    const sede2 = {
-      id: 2,
-      value: 'BASE-CARRASCO',
-      description: 'BASE CARRASCO',
-    };
-    this.sedes.push(sede2);
-  }
-
-  generateHorasLibres() {
-    for (let i = 6; i < 20; i++) {
-      const horaIni = i;
-      const horaFin = i + 1;
-      const o = {
-        value: `${horaIni * 100}-${horaFin * 100}`,
-        description: `${horaIni}:00 - ${horaFin}:00`,
-        horaIni: `${horaIni * 100}`,
-        horaFin: `${horaFin * 100}`,
-      };
-      this.horasLibres.push(o);
-    }
   }
 }

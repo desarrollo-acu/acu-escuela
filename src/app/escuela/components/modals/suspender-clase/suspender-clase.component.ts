@@ -15,8 +15,9 @@ import {
   ClaseEstimadaDetalle,
 } from '@core/model/clase-estimada.model';
 import { InstructorHorasLibresComponent } from '../instructor-horas-libres/instructor-horas-libres.component';
-import { confirmacionUsuario, mensajeConfirmacion } from '@utils/sweet-alert';
-import { generateHorasLibres } from '@utils/utils-functions';
+import { confirmacionUsuario, errorMensaje, mensajeConfirmacion } from '@utils/sweet-alert';
+import { generateHorasLibres, getDisponibilidadFromInscripcion } from '@utils/utils-functions';
+import { IngresarClaveAccionesComponent } from '@escuela/dialogs/ingresar-clave-acciones/ingresar-clave-acciones.component';
 
 @Component({
   selector: 'app-suspender-clase',
@@ -50,7 +51,6 @@ export class SuspenderClaseComponent implements OnInit {
     this.esSuspender = this.data.esSuspender;
     this.titulo = this.data.esSuspender ? 'Suspender Clase' : 'Clase Doble';
 
-    console.log('this.agendaClase : ', this.agendaClase);
     const day = Number(
       this.agendaClase.FechaClase.substring(
         this.agendaClase.FechaClase.length - 2,
@@ -69,7 +69,7 @@ export class SuspenderClaseComponent implements OnInit {
       this.agendaClase.EsAgCuInsNom
     }`;
     this.movil = this.agendaClase.EscMovCod;
-    console.log('data: ', this.data);
+
 
     this.horasLibres = generateHorasLibres();
     this.buildForm();
@@ -82,7 +82,16 @@ export class SuspenderClaseComponent implements OnInit {
       this.agendaClase.Hora < 10
         ? `0${this.agendaClase.Hora}`
         : this.agendaClase.Hora;
-    console.log(hora);
+    console.log(this.agendaClase);
+
+    const {
+      disponibilidadLunes,
+      disponibilidadMartes,
+      disponibilidadMiercoles,
+      disponibilidadJueves,
+      disponibilidadViernes,
+      disponibilidadSabado,
+    } = getDisponibilidadFromInscripcion(this.agendaClase.inscripcion);
 
     this.form = this.formBuilder.group({
       fechaClase: [this.fechaClase],
@@ -97,14 +106,15 @@ export class SuspenderClaseComponent implements OnInit {
       escInsNom: [this.agendaClase.EsAgCuInsNom],
       alumnoNumero: [this.agendaClase.AluNro],
       alumnoNombre: [this.agendaClase.AluNomApe],
-      disponibilidadLunes: [this.data.agendaClase.disponibilidadLunes],
-      disponibilidadMartes: [this.data.agendaClase.disponibilidadMartes],
-      disponibilidadMiercoles: [this.data.agendaClase.disponibilidadMiercoles],
-      disponibilidadJueves: [this.data.agendaClase.disponibilidadJueves],
-      disponibilidadViernes: [this.data.agendaClase.disponibilidadViernes],
-      disponibilidadSabado: [this.data.agendaClase.disponibilidadSabado],
-      observaciones: [this.agendaClase.EsAgCuObs, Validators.required],
+      disponibilidadLunes: [disponibilidadLunes],
+      disponibilidadMartes: [disponibilidadMartes],
+      disponibilidadMiercoles: [disponibilidadMiercoles],
+      disponibilidadJueves: [disponibilidadJueves],
+      disponibilidadViernes: [disponibilidadViernes],
+      disponibilidadSabado: [disponibilidadSabado],
+      observaciones: [, Validators.required],
     });
+
 
     this.cursoId.disable();
     this.hora.disable();
@@ -125,10 +135,31 @@ export class SuspenderClaseComponent implements OnInit {
   suspenderClase(event: Event) {
     event.preventDefault();
 
-    console.log('form.value: ', this.form.value);
     if (this.form.invalid) {
       return;
     }
+
+    if( this.estadoClase.value === 'U'){
+      const dialogRef = this.dialog.open( IngresarClaveAccionesComponent, {
+        height: 'auto',
+        width: 'auto',
+      });
+
+      dialogRef.afterClosed().subscribe(({claveValida}) => {
+        if(claveValida){
+          this.iniciarSuspenderClase();
+        }else{
+          errorMensaje('Error','La clave ingresada no es correcta. Comuniquese con el supervisor o administrador.').then()
+        }
+      });
+    } else{
+      this.iniciarSuspenderClase();
+    }
+
+
+  }
+
+  iniciarSuspenderClase(){
 
     confirmacionUsuario(
       'Confirmación de Usuario',
@@ -146,23 +177,17 @@ export class SuspenderClaseComponent implements OnInit {
 
         // Si es distinta a suspendida con cobro, se puede reagendar.
         if (this.estadoClase.value !== 'S') {
-          console.log('agendaClase: ', this.agendaClase);
+
           // Si no es suspender, entonces es una clase doble.
           const cantidad = this.esSuspender ? 1 : 2;
           this.instructorService
             .getDisponibilidadInstructor(this.agendaClase, cantidad)
             .subscribe((res: { ClasesEstimadas: ClaseEstimada[] }) => {
-              console.log('res.ClasesEstimadas: ', res.ClasesEstimadas);
               const arrayPlano: {
                 instructorCodigo?: string;
                 instructorNombre?: string;
                 detalle?: ClaseEstimadaDetalle[];
               } = {};
-              console.log(
-                'res.ClasesEstimadas.length: ',
-                res.ClasesEstimadas.length
-              );
-              console.log('res.ClasesEstimadas[1]: ', res.ClasesEstimadas[1]);
               arrayPlano.instructorCodigo = res.ClasesEstimadas[1].EscInsId;
               arrayPlano.instructorNombre = res.ClasesEstimadas[1].EscInsNom;
               arrayPlano.detalle = [];
@@ -170,7 +195,6 @@ export class SuspenderClaseComponent implements OnInit {
                 arrayPlano.detalle.push(...clase.Detalle);
               });
 
-              console.log('arrayPlano: ', arrayPlano);
 
               const clasesEstimadasDialogRef = this.dialog.open(
                 InstructorHorasLibresComponent,
@@ -185,13 +209,7 @@ export class SuspenderClaseComponent implements OnInit {
 
               clasesEstimadasDialogRef
                 .afterClosed()
-                .subscribe((nuevaClase: any) => {
-                  console.log('1.response: ' + nuevaClase);
-                  console.log('2.response: ' + JSON.stringify(nuevaClase));
-                  console.log(`2. response ${nuevaClase}`);
-
-                  this.finalizarSuspenderClase(nuevaClase);
-                });
+                .subscribe((nuevaClase?: any) => (nuevaClase) && this.finalizarSuspenderClase(nuevaClase));
             });
         } else {
           this.finalizarSuspenderClase();
@@ -207,7 +225,6 @@ export class SuspenderClaseComponent implements OnInit {
 
     suscription.subscribe(
       (res: { errorCode: number; errorMensaje: string }) => {
-        console.log('res: ', res);
         mensajeConfirmacion('Excelente!', res.errorMensaje);
         this.dialogRef.close();
       }

@@ -66,7 +66,7 @@ export class AltaAlumnoComponent {
           [existeAlumnoByCiValidator(this.alumnoService)],
         ],
         aluDV: ['', Validators.required],
-        aluFchNac: ['', Validators.required],
+        aluFchNac: [''],
         aluTel1: [''],
         aluTel2: ['', Validators.required],
         aluDepId: ['', Validators.required],
@@ -98,6 +98,8 @@ export class AltaAlumnoComponent {
 
   guardarAlumno(event: Event) {
     event.preventDefault();
+    console.log(this.alumnoForm.valid);
+
 
     if (this.alumnoForm.valid) {
       const alumno: Alumno = {
@@ -160,7 +162,6 @@ export class AltaAlumnoComponent {
 
   obtenerSocio() {
     this.acuService.getSocio(this.socIdField.value).subscribe((result: any) => {
-      console.log('result: ', result);
 
       if (result) {
         this.socio = result;

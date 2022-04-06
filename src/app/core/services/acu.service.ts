@@ -14,11 +14,15 @@ import { ClaseEstimada } from '../model/clase-estimada.model';
 import { Suspenderclase } from '../model/suspender-clase.model';
 import { map } from 'rxjs/operators';
 import { EnvioNotificacion } from '../model/envio-notificacion.model';
+import { AutenticacionService } from './autenticacion.service';
 
 export interface LiberarParameters {
   fechaClase: Date;
   horaClase: number;
   movil: number;
+  escInsId?: string;
+  usrId?: string;
+  esMovil?: boolean;
 }
 
 export interface DuplicarDiaParameters {
@@ -44,15 +48,12 @@ export class AcuService {
     }),
   };
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private authService: AutenticacionService) {}
 
   getTablaAgenda() {
     return this.http
       .post(`${environment.url_ws}/wsObtenerTablaAgenda`, {}, this.httpOptions)
       .subscribe((res: any) => {
-        console.log('res: ', res);
-        console.log('res.TablaAgenda', res.TablaAgenda);
-
         // return response.json();
       });
   }
@@ -158,7 +159,6 @@ export class AcuService {
     );
   }
 
-
   copiarMoverInstructorClase(params: CopiarMoverParameters) {
     return this.http.post(
       `${environment.url_ws}/wsCopiarMoverInstructorClase`,
@@ -182,6 +182,7 @@ export class AcuService {
     );
   }
 
+
   liberarClase(params: LiberarParameters) {
     return this.http.post(
       `${environment.url_ws}/wsLiberarClase`,
@@ -189,6 +190,9 @@ export class AcuService {
         FchClase: params.fechaClase,
         HorClase: params.horaClase,
         Movil: params.movil,
+        EscInsId: params.escInsId,
+        usrId: params.usrId,
+        esMovil: params.esMovil,
       },
       this.httpOptions
     );
@@ -222,7 +226,6 @@ export class AcuService {
 
   getEscuelaEstados() {
     return this.http.get(`${environment.url_ws}/wsGetEscuelaEstados`);
-    // return this.http.post(`${environment.url_ws}/wsObtenerCursos`, {});
   }
 
   getDepartamentos() {
@@ -250,7 +253,6 @@ export class AcuService {
     if (filtro) {
       url += `&Filtro=${filtro}`;
     }
-    console.log('url: ', url);
 
     return this.http.get(url);
   }
@@ -259,7 +261,6 @@ export class AcuService {
     return this.http.get(
       `${environment.url_ws}/wsGetCuotasSociales?SocId=${socId}`
     );
-    // return this.http.get(`${environment.url_ws}/wsGetFacturasPendientes?PageSize=${cantidad}&PageNumber=${page}&SocId=${socId}`);
   }
 
   facturarCuotasSociales(cuotasSociales: CuotaSocial) {
@@ -268,21 +269,6 @@ export class AcuService {
     });
   }
 
-  getPDFPlanDeClases(planDeClase: ClaseEstimada) {
-    const headers = new HttpHeaders();
-    headers.set('Aceppt', 'application/pdf;');
-
-    return this.http.post(
-      `${environment.url_ws}/wsPDFPlanDeClases`,
-      {
-        PlanDeClase: planDeClase,
-      },
-      {
-        headers,
-        responseType: 'blob' as 'json',
-      }
-    );
-  }
 
   cleanStorageAgenda() {
     localStorage.removeItem('copiarMoverParameters');
@@ -301,82 +287,14 @@ export class AcuService {
 
   enviarNotificacion(envioNotificacion: EnvioNotificacion) {
     return this.http.post(`${environment.url_ws}/wsEnvioNotificacion`, {
-      envioNotificacion,
+      envioNotificacion: {...envioNotificacion, usrId: this.authService.getUserId()},
     });
   }
-  // test ws
 
-  testWsLogicsat() {
-    const headers = new HttpHeaders();
+  obtenerNotificaciones = () => this.http.get<EnvioNotificacion[]>(`${environment.url_ws}/obtenerNotificaciones`);
 
-    headers.set('Access-Control-Allow-Origin', '*');
-    headers.set('Access-Control-Allow-Methods', 'GET, POST');
-    headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    return this.http.post(
-      `http://api.logicsat.com/logicsat/rest/WSGetServicios`,
-      `
-    {
-    "WSAutorizacion": {
-        "Guid": "0a9ee8b9-8cf8-4e95-933c-35194d2f0559",
-        "Usuario": "api@acu.com",
-        "Password": "apiacu2020"
-    },
-    "WSSDTFiltroServicio": {
-        "Id": "",
-        "SuperiorId": "0",
-        "IdExterno": "",
-        "NroServicio": "",
-        "NroAsistencia": "",
-        "Estado": "",
-        "FechaLlamadaInicial": "15-09-2020 00:00:00",
-        "FechaLlamadaFinal": "16-09-2020 23:59:00",
-        "Procedencia": "",
-        "Prestador": "",
-        "Movil": "",
-        "Operador": "",
-        "Telefonista": "",
-        "Prestacion": "",
-        "Causa": "",
-        "SubCausa": "",
-        "Motivo": "",
-        "Pais": "",
-        "Departamento": "",
-        "Ciudad": "",
-        "Zona": "",
-        "NroTracking": ""
-    }
-}
-    `,
-      { headers }
-    );
-  }
-}
+  getTituloApp = () => this.http.get(`${environment.url_ws}/wsGetTituloApp`);
 
-function xml2json(xml) {
-  try {
-    let obj = {};
-    if (xml.children.length > 0) {
-      for (let i = 0; i < xml.children.length; i++) {
-        const item = xml.children.item(i);
-        const nodeName = item.nodeName;
+  sincronizarAgendas = () => this.http.post(`${environment.url_ws}/wsSincronizarAgendas`, {});
 
-        if (typeof obj[nodeName] === 'undefined') {
-          obj[nodeName] = xml2json(item);
-        } else {
-          if (typeof obj[nodeName].push === 'undefined') {
-            const old = obj[nodeName];
-
-            obj[nodeName] = [];
-            obj[nodeName].push(old);
-          }
-          obj[nodeName].push(xml2json(item));
-        }
-      }
-    } else {
-      obj = xml.textContent;
-    }
-    return obj;
-  } catch (e) {
-    console.log(e.message);
-  }
 }

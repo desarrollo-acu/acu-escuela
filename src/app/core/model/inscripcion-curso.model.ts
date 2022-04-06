@@ -1,3 +1,4 @@
+import { Sede } from './enum/sede.enum';
 export interface InscripcionCurso {
   TrnMode?: string;
   FechaClase?: string;
@@ -41,8 +42,10 @@ export interface InscripcionCurso {
   facturaEstadoPendiente?: boolean;
   ClasesEstimadas?: any; // Luego se debe agregar la estructura
 
-  sede?: string;
+  sede?: Sede;
   irABuscarAlAlumno?: boolean;
+  limitarClases?: boolean;
+  limiteClases?: number;
   escCurIni?: Date;
   escCurFchIns?: Date;
 
@@ -60,4 +63,5 @@ export interface InscripcionCurso {
   fechaExamenMedico?: Date;
 
   UsrId?: string;
+  sedeFacturacion?: Sede;
 }

@@ -3,6 +3,7 @@ import { AbstractControl, ValidatorFn, AsyncValidatorFn, ValidationErrors } from
 import { AlumnoService } from '@core/services/alumno.service';
 
 import { FormGroup } from '@angular/forms';
+import { errorMensaje } from './sweet-alert';
 
 export class MyValidators {
 
@@ -15,7 +16,7 @@ export class MyValidators {
 
   static isPriceValid(control: AbstractControl) {
     const value = control.value;
-    console.log(value);
+
     if (value > 10000) {
       return { price_invalid: true };
     }
@@ -25,7 +26,7 @@ export class MyValidators {
 
   static isPorcentajeValid(control: AbstractControl) {
     const value = control.value;
-    console.log(value);
+
     if (value < 0 || value > 100) {
       return { porcentaje_invalid: true };
     }
@@ -34,9 +35,7 @@ export class MyValidators {
 
   static isRUTValid(control: AbstractControl) {
     const value = control.value;
-    console.log(value);
 
-    const isValid = validarRUC(value);
     if (!validarRUC(value)) {
       return { rut_invalid: true };
     }
@@ -44,9 +43,8 @@ export class MyValidators {
   }
 
   static fechaPosteriorAHoy(control: AbstractControl) {
-    const value = control.value;
-    const hoy = new Date();
-    console.log(value);
+
+    const { value, hoy } = MyValidators.getFechasWithHoursZeros(control);
 
     if (value > hoy) {
       return { fecha_invalid: true };
@@ -55,15 +53,8 @@ export class MyValidators {
   }
 
   static fechaAnteriorAHoy(control: AbstractControl) {
-    const value = new Date(control.value);
-    const hoy = new Date();
-    hoy.setHours(0, 0, 0, 0);
-    value.setHours(0, 0, 0, 0);
-    console.log('fechaAnteriorAHoy');
-    console.log(' value: ', value);
-    console.log(' hoy: ', hoy);
-    console.log(' value < hoy: ', value < hoy);
 
+    const { value, hoy } = MyValidators.getFechasWithHoursZeros(control);
 
     if (value < hoy) {
       return { fecha_invalid: true };
@@ -71,10 +62,28 @@ export class MyValidators {
     return null;
   }
 
+  static fechaAnteriorOIgualAHoy(control: AbstractControl) {
+    const { value, hoy } = MyValidators.getFechasWithHoursZeros(control);
+
+    if (value <= hoy) {
+      return { fecha_invalid: true };
+    }
+    return null;
+  }
+
+  private static getFechasWithHoursZeros = ( control: AbstractControl ) => {
+
+    const value = new Date(control.value);
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+    value.setHours(0, 0, 0, 0);
+
+    return { value, hoy}
+  };
+
   static alumnoYaAsignado(control: AbstractControl, existe: boolean) {
     const value = control.value;
-    console.log('value: ', value);
-    console.log(value);
+
     if (false) {
       return { alumno_invalid: true };
     }
@@ -94,10 +103,10 @@ export class MyValidators {
 
 
 
+
   isAlumnoValido(control: AbstractControl, existe: boolean) {
     const value = control.value;
-    console.log('value: ', value);
-    console.log(value);
+
     this.existeAlumno(value);
 
     if (value > 10000 || !existe) {

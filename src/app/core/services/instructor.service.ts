@@ -5,12 +5,12 @@ import { BehaviorSubject } from 'rxjs';
 import { Instructor } from '../model/instructor.model';
 import { AgendaClase } from '../model/agenda-clase.model';
 import { InscripcionCurso } from '../model/inscripcion-curso.model';
+import { BloquearHoras } from '../model/bloquear-horas.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class InstructorService {
-  // esto va al instructorService
   private instructorDataSource = new BehaviorSubject({
     modo: 'INS',
     instructor: {},
@@ -20,30 +20,20 @@ export class InstructorService {
 
   constructor(private http: HttpClient) {}
 
-  licenciaInstructor(insId: string) {
-    const fechaClaseStr = localStorage.getItem('fechaClase');
-    console.log('fechastr: ', fechaClaseStr);
-    const fechaClase = Date.parse(fechaClaseStr);
-    console.log('fechaClase: ', fechaClase);
-    return this.http.post(`${environment.url_ws}/wsLicenciaInstructor`, {
+  licenciaInstructor = (insId: string) =>
+    this.http.post(`${environment.url_ws}/wsLicenciaInstructor`, {
       NroInstructor: insId,
-      FchClase: fechaClaseStr,
+      FchClase: localStorage.getItem('fechaClase'),
     });
-  }
 
   instructorYaAsignado(insId: string) {
     const fechaClaseStr = localStorage.getItem('fechaClase').substring(0, 10);
     const horaClaseStr = localStorage.getItem('horaClase');
     const movilCodStr = localStorage.getItem('movilCod');
 
-    const fechaClase = Date.parse(fechaClaseStr);
     const horaClase = parseInt(horaClaseStr, 10);
     const movilCod = parseInt(movilCodStr, 10);
-    console.log('insId: ', insId);
-    console.log('fechaClaseStr: ', fechaClaseStr);
-    console.log('horaClase: ', horaClase);
-    console.log('movilCod: ', movilCod);
-    console.log('fechaClase: ', fechaClase);
+
     return this.http.post(`${environment.url_ws}/wsInstructorYaAsignado`, {
       NroInstructor: insId,
       FchClase: fechaClaseStr,
@@ -52,64 +42,49 @@ export class InstructorService {
     });
   }
 
-  getDisponibilidadInstructor(clase: AgendaClase, cantidad: number) {
-    console.log('clase: ', clase);
-    return this.http.post(
-      `${environment.url_ws}/obtenerDisponibilidadPorInstructor`,
-      {
-        AgendaClase: clase,
-        countClasesEstimar: cantidad,
-      }
-    );
-  }
-  getDisponibilidadInstructoresPorCantidad(inscripcion: InscripcionCurso, cantidad: number) {
+  getDisponibilidadInstructor = (clase: AgendaClase, cantidad: number) =>
+    this.http.post(`${environment.url_ws}/obtenerDisponibilidadPorInstructor`, {
+      AgendaClase: clase,
+      countClasesEstimar: cantidad,
+    });
 
-    return this.http.post(
+  getDisponibilidadInstructoresPorCantidad = (
+    inscripcion: InscripcionCurso,
+    cantidad: number
+  ) =>
+    this.http.post(
       `${environment.url_ws}/obtenerDisponibilidadInstructorPorCantidad`,
       {
         inscripcion,
         countClasesEstimar: cantidad,
       }
     );
-  }
 
-  gestionInstructor(mode: string, instructor: Instructor) {
-    return this.http.post(`${environment.url_ws}/wsGestionInstructor`, {
+  gestionInstructor = (mode: string, instructor: Instructor) =>
+    this.http.post(`${environment.url_ws}/wsGestionInstructor`, {
       Instructor: {
         Mode: mode,
         Instructor: instructor,
+        usrId: localStorage.getItem('usrId'),
       },
     });
-  }
 
-  getInstructores() {
-    // return this.http.post(`${environment.url_ws}/wsObtenerInstructores`, {});
-    return this.http.get(`${environment.url_ws}/wsGetInstructores`);
-  }
+  getInstructores = () =>
+    this.http.get(`${environment.url_ws}/wsGetInstructores`);
 
-  getClasesEstimadas(inscripcion: InscripcionCurso) {
-    console.log('inscripción: ', inscripcion);
-    return this.http.post(
-      `${environment.url_ws}/obtenerDisponibilidadInstructor`,
-      {
-        GenerarInscripcion: {
-          FacturaRUT: inscripcion.FacturaRut,
-          SeleccionarItemsFactura: inscripcion.SeleccionarItemsFactura,
-          AluId: inscripcion.AluId,
-          TipCurId: inscripcion.TipCurId,
-          TipCurNom: inscripcion.TipCurNom,
-          EscCurDet: inscripcion.EscAgeInsObservaciones,
-          disponibilidadLunes: inscripcion.disponibilidadLunes,
-          disponibilidadMartes: inscripcion.disponibilidadMartes,
-          disponibilidadMiercoles: inscripcion.disponibilidadMiercoles,
-          disponibilidadJueves: inscripcion.disponibilidadJueves,
-          disponibilidadViernes: inscripcion.disponibilidadViernes,
-          disponibilidadSabado: inscripcion.disponibilidadSabado,
-          fechaClaseEstimada: inscripcion.fechaClaseEstimada,
-        },
-      }
+  getInstructoresActivos = () =>
+    this.http.get(`${environment.url_ws}/wsGetInstructoresActivos`);
+
+  getClasesEstimadas = (inscripcion: InscripcionCurso) =>
+    this.http.post(`${environment.url_ws}/obtenerDisponibilidadInstructor`, {
+      GenerarInscripcion: inscripcion,
+    });
+
+  bloquearHoras = (bloquearHoras: BloquearHoras) =>
+    this.http.post<{ mensajes: string[] }>(
+      `${environment.url_ws}/wsBloquearHorasAgenda`,
+      { bloquearHoras }
     );
-  }
 
   sendDataInstructor(modo: string, instructor: Instructor, id?: number) {
     const data: { modo: string; instructor: Instructor; id: number } = id

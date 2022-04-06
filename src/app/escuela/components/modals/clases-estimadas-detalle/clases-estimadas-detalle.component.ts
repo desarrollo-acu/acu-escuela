@@ -34,7 +34,6 @@ export class ClasesEstimadasDetalleComponent implements OnInit {
     public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: any) {
 
-    console.log('this.data.detalle: ', this.data.detalle);
 
     // Assign the data to the data source for the table to render
     this.dataSource = new MatTableDataSource(this.data.detalle);

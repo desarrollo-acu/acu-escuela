@@ -16,71 +16,18 @@ import { GenerarExamenComponent } from '../modals/generar-examen/generar-examen.
 import { isMoment, Moment } from 'moment';
 import { VerAgendaComponent } from '@shared/dialogs/ver-agenda/ver-agenda.component';
 import { GenerarClaseAdicionalComponent } from '../../dialogs/generar-clase-adicional/generar-clase-adicional.component';
+import { AgendaElement, Cell, DataAgenda } from '@core/model/interfaces';
+import { mensajeConfirmacion, errorMensaje } from '@utils/sweet-alert';
+import { confirmacionUsuario } from '../../../utils/sweet-alert';
+import { AutenticacionService } from '@core/services/autenticacion.service';
+import { IngresarClaveAccionesComponent } from '../../dialogs/ingresar-clave-acciones/ingresar-clave-acciones.component';
 
-export interface AgendaElement {
-  Movil: string;
-  Hora0: string;
-  Hora1: string;
-  Hora2: string;
-  Hora3: string;
-  Hora4: string;
-  Hora5: string;
-  Hora6: string;
-  Hora7: string;
-  Hora8: string;
-  Hora9: string;
-  Hora10: string;
-  Hora11: string;
-  Hora12: string;
-  Hora13: string;
-  Hora14: string;
-  Hora15: string;
-  Hora16: string;
-  Hora17: string;
-  Hora18: string;
-  Hora19: string;
-  Hora20: string;
-  Hora21: string;
-  Hora22: string;
-  Hora23: string;
-  Hora24: string;
-}
-export interface DataAgenda {
-  Hora: number;
-  MovCod: number;
-  Valor: string;
-  Disponible: boolean;
-  AluId: number;
-  AluApe1: string;
-  EsAgCuInsId: string;
-  EsAgCuInsNom: string;
-  EsAgCuInsNomCorto: string;
-  TipCurId: number;
-  HoraCoche: string;
-  AluNro: number;
-  InsEst: string;
-  TipCurEst: string;
-  EscCurEst: string;
-  EsAgCuEst: string;
-  EsAgCuAviso: number;
-  MovilEstado: string;
-  Situacion: string;
-  HorasNoDisponibles: string;
-  claseCelda: string;
-}
-
-export interface Cell {
-  value: string;
-  class: string;
-  existe: boolean;
-}
 @Component({
   selector: 'app-agenda-movil',
   templateUrl: './agenda-movil.component.html',
   styleUrls: ['./agenda-movil.component.scss'],
 })
 export class AgendaMovilComponent implements OnInit, OnDestroy {
-  animal: string;
   name: string;
   sabadoODomingo: number;
   verAgenda: boolean;
@@ -100,6 +47,7 @@ export class AgendaMovilComponent implements OnInit, OnDestroy {
 
   constructor(
     private acuService: AcuService,
+    private autenticacionService: AutenticacionService,
     private instructorService: InstructorService,
     public dialog: MatDialog,
     // tslint:disable-next-line: variable-name
@@ -107,9 +55,7 @@ export class AgendaMovilComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnDestroy(): void {
-    console.log('Agenda-movil ngOnDestroy');
     this.acuService.cleanStorageAgenda();
-    //throw new Error('Method not implemented.');
   }
 
   ngOnInit() {
@@ -160,11 +106,9 @@ export class AgendaMovilComponent implements OnInit, OnDestroy {
   }
 
   showAlert(movil: number, hora: number, existe: boolean): void {
-    const text = `Movil: ${movil} ; Hora: ${hora} ; Existe:  ${existe}`;
-
     const celda = document.getElementById(`${movil}${hora}`);
     celda.getAttribute('class');
-    console.log(text);
+
     localStorage.setItem('fechaClase', this.fechaClase);
     localStorage.setItem('fecha', JSON.stringify(this.fecha));
     localStorage.setItem('movil', movil.toString());
@@ -188,18 +132,19 @@ export class AgendaMovilComponent implements OnInit, OnDestroy {
         return h;
       }
     });
-    console.log('lugar: ', lugar);
+
     const t = this._bottomSheet.open(SeleccionarAccionAgendaComponent, {
       data: {
         // tslint:disable-next-line: triple-equals
         verOpciones: lugar && lugar.AluId != 0,
+        fechaClase: this.fechaClase
       },
     });
 
-    t.afterDismissed().subscribe((seleccionoOpcion) => {
-      console.log('fin open sheet: ', seleccionoOpcion);
+    t.afterDismissed().subscribe(({ seleccionoOpcion }) => {
       if (seleccionoOpcion) {
         const abrirAgenda = localStorage.getItem('abrirAgenda');
+
         switch (abrirAgenda) {
           case 'movil':
             this.acuService
@@ -282,10 +227,7 @@ export class AgendaMovilComponent implements OnInit, OnDestroy {
               localStorage.removeItem('refreshLiberaAgenda');
               celda.removeAttribute('class');
               celda.innerHTML = textOld;
-              arrayClass.forEach((element) => {
-                console.log('class: ', element);
-                celda.classList.add(element);
-              });
+              arrayClass.forEach((element) => celda.classList.add(element));
             }
             break;
         }
@@ -297,7 +239,6 @@ export class AgendaMovilComponent implements OnInit, OnDestroy {
     this.acuService
       .getClaseAgenda(this.fechaClase, hora, movil)
       .subscribe((res: any) => {
-
         const dialogRef = this.dialog.open(GenerarClaseAdicionalComponent, {
           data: {
             agendaClase: res.AgendaClase,
@@ -316,7 +257,6 @@ export class AgendaMovilComponent implements OnInit, OnDestroy {
     this.acuService
       .getClaseAgenda(this.fechaClase, hora, movil)
       .subscribe((res: any) => {
-
         const dialogRef = this.dialog.open(GenerarExamenComponent, {
           data: {
             agendaClase: res.AgendaClase,
@@ -335,7 +275,6 @@ export class AgendaMovilComponent implements OnInit, OnDestroy {
     this.acuService
       .getClaseAgenda(this.fechaClase, hora, movil)
       .subscribe((res: any) => {
-
         const dialogRef = this.dialog.open(SuspenderClaseComponent, {
           data: {
             agendaClase: res.AgendaClase,
@@ -351,7 +290,6 @@ export class AgendaMovilComponent implements OnInit, OnDestroy {
       });
   }
 
-
   getPorcentaje(hora: number) {
     const item = this.horas.find((h) => h.Hora === hora);
 
@@ -359,7 +297,7 @@ export class AgendaMovilComponent implements OnInit, OnDestroy {
   }
 
   liberarDia() {
-    this.confirmacionUsuario(
+    confirmacionUsuario(
       'Confirmación de Usuario',
       'ATENCIÓN: Se procederá a liberar las clases, elimnando los registros actuales. ¿Confirma el proceso?'
     ).then((result) => {
@@ -370,7 +308,7 @@ export class AgendaMovilComponent implements OnInit, OnDestroy {
   }
 
   moverDia() {
-    this.confirmacionUsuario(
+    confirmacionUsuario(
       'Confirmación de Usuario',
       `ATENCIÓN: Se procederá a mover las clases, eliminando los registros actuales.
     ¿Confirma el proceso?`
@@ -382,7 +320,7 @@ export class AgendaMovilComponent implements OnInit, OnDestroy {
   }
 
   duplicarDia() {
-    this.confirmacionUsuario(
+    confirmacionUsuario(
       'Confirmación de Usuario',
       `ATENCIÓN: Se procederá a duplicar las clases, haciendo una copia los registros actuales a una nueva fecha.
     ¿Confirma el proceso?`
@@ -391,42 +329,6 @@ export class AgendaMovilComponent implements OnInit, OnDestroy {
         this.accionGeneralDia('duplicar');
       }
     });
-  }
-
-  test() {
-    const inscripcionCurso: InscripcionCurso = {
-      AluId: -8342,
-      TipCurId: 1,
-      disponibilidadLunes: ['600-700', '700-800', '800-900', '900-1000'],
-      disponibilidadMiercoles: ['800-900', '900-1000'],
-      disponibilidadViernes: ['800-900', '900-1000'],
-      fechaClaseEstimada: new Date(),
-    };
-    this.instructorService
-      .getClasesEstimadas(inscripcionCurso)
-      .subscribe((clasesEstimadas) => {
-        console.log('clasesEstimadas: ', clasesEstimadas);
-
-        const clasesEstimadasDialogRef = this.dialog.open(
-          ClasesEstimadasComponent,
-          {
-            height: 'auto',
-            width: '700px',
-            data: {
-              clasesEstimadas,
-            },
-          }
-        );
-
-        clasesEstimadasDialogRef.afterClosed().subscribe((result: any) => {
-          // this.alumno = result;
-          console.log('1.response: ' + result);
-          console.log('2.response: ' + JSON.stringify(result));
-          console.log(`2. response ${result}`);
-
-          inscripcionCurso.ClasesEstimadas = result;
-        });
-      });
   }
 
   inscripcion() {
@@ -447,7 +349,6 @@ export class AgendaMovilComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-
       this.animal = result;
       this.getAgenda(this.fecha);
     });
@@ -466,25 +367,17 @@ export class AgendaMovilComponent implements OnInit, OnDestroy {
       // acuservice.liberarDiaAgenda
       this.acuService
         .liberarDiaAgenda(fechaSeleccionada)
-        .subscribe((response: any) => {
-
-          this.getAgenda(fechaSeleccionada);
-
-          this.mensajeConfirmacion(
-            'Confirmado!',
-            'Se libero el día, correctamente.'
-          ).then((res2) => {
-            if (res2.dismiss === Swal.DismissReason.timer) {
-              console.log('Cierro  con el timer');
-            }
-          });
-        });
+        .subscribe(({ mensaje }: any) =>
+          this.obtenerAgendaYConfirmarUsuario(
+            'Se libero el día, correctamente.',
+            fechaSeleccionada
+          )
+        );
     } else {
-      this.confirmacionUsuario(
+      confirmacionUsuario(
         'Confirmación de Usuario',
         `ATENCIÓN: Desea marcar las clases para avisar al alumno?`
       ).then((result2) => {
-        console.log('Resultado:: ', result2);
         let EsAgCuAviso = 0;
         if (result2.value) {
           EsAgCuAviso = 1;
@@ -498,19 +391,9 @@ export class AgendaMovilComponent implements OnInit, OnDestroy {
                 fechaNueva: fechaSeleccionada,
                 EsAgCuAviso,
               })
-              .subscribe((response: any) => {
-                console.log('duplicarDiaAgenda: ', response);
-
-                this.getAgenda(this.fecha);
-
-                this.mensajeConfirmacion('Confirmado!', response.mensaje).then(
-                  (res2) => {
-                    if (res2.dismiss === Swal.DismissReason.timer) {
-                      console.log('Cierro  con el timer');
-                    }
-                  }
-                );
-              });
+              .subscribe(({ mensaje }: any) =>
+                this.obtenerAgendaYConfirmarUsuario(mensaje)
+              );
 
             break;
           case 'mover':
@@ -520,19 +403,9 @@ export class AgendaMovilComponent implements OnInit, OnDestroy {
                 fechaNueva: fechaSeleccionada,
                 EsAgCuAviso,
               })
-              .subscribe((response: any) => {
-                console.log('moverDiaAgenda: ', response);
-
-                this.getAgenda(this.fecha);
-
-                this.mensajeConfirmacion('Confirmado!', response.mensaje).then(
-                  (res2) => {
-                    if (res2.dismiss === Swal.DismissReason.timer) {
-                      console.log('Cierro  con el timer');
-                    }
-                  }
-                );
-              });
+              .subscribe(({ mensaje }: any) =>
+                this.obtenerAgendaYConfirmarUsuario(mensaje)
+              );
 
             break;
 
@@ -543,28 +416,13 @@ export class AgendaMovilComponent implements OnInit, OnDestroy {
     }
   }
 
-  mensajeConfirmacion(title, text) {
-    return Swal.fire({
-      title,
-      text,
-      icon: 'success',
-      timer: 5000,
-      showConfirmButton: false,
-      onClose: () => {
-        console.log('Cieerro antes de timer');
-      },
-    });
-  }
+  obtenerAgendaYConfirmarUsuario(mensaje: string, fecha?: Date) {
+    if (!fecha) {
+      fecha = this.fecha;
+    }
+    this.getAgenda(fecha);
 
-  confirmacionUsuario(title, text) {
-    return Swal.fire({
-      title,
-      text,
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Confirmar',
-      cancelButtonText: 'Cancelar',
-    });
+    mensajeConfirmacion('Confirmado!', mensaje);
   }
 
   seleccionarFecha() {
@@ -603,8 +461,6 @@ export class AgendaMovilComponent implements OnInit, OnDestroy {
     this.acuService
       .getAgendaPorFecha(strFecha, 'movil')
       .subscribe((res: any) => {
-        console.log('Agendaa: ', res);
-
         this.agenda = res.TablaAgenda;
         this.moviles = res.TablaAgenda.Moviles;
         this.horas = res.TablaAgenda.Horas;
@@ -614,26 +470,26 @@ export class AgendaMovilComponent implements OnInit, OnDestroy {
         this.agendaDataSource = this.makeDataSource(this.horas, this.moviles);
 
         this.agendaDisplayedColumns = ['Movil'];
-        this.agendaDisplayedColumns = this.agendaDisplayedColumns.concat( this.columns );
-        this.agendaDisplayedColumns = this.agendaDisplayedColumns.concat([ 'MovilPorcentaje' ]);
+        this.agendaDisplayedColumns = this.agendaDisplayedColumns.concat(
+          this.columns
+        );
+        this.agendaDisplayedColumns = this.agendaDisplayedColumns.concat([
+          'MovilPorcentaje',
+        ]);
         this.verAgenda = true;
       });
   }
 
   formatDateToString(fechaParm: Date | Moment): string {
-    console.log('fecha: ', fechaParm);
     let auxFecha: Date;
     if (isMoment(fechaParm)) {
       auxFecha = fechaParm.toDate();
     } else if (fechaParm instanceof Date) {
       auxFecha = fechaParm;
     }
-    console.log('auxFecha: ', auxFecha);
     const fecha = auxFecha;
     this.fecha = auxFecha;
-    console.log('fecha: ', fecha);
     const day = fecha.getDate();
-    console.log('day: ', day);
     const month = fecha.getMonth() + 1;
     const year = fecha.getFullYear();
 
@@ -654,4 +510,9 @@ export class AgendaMovilComponent implements OnInit, OnDestroy {
     }
     return `${strYear}-${strMonth}-${strDay}`;
   }
+
+  sincronizarAgendas = () =>
+    this.acuService
+      .sincronizarAgendas()
+      .subscribe(() => this.getAgenda(this.fecha));
 }

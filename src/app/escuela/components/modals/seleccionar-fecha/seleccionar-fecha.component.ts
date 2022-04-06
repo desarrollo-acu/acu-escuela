@@ -23,11 +23,9 @@ export class SeleccionarFechaComponent {
   constructor(
     public dialogRef: MatDialogRef<AgendarClaseComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData) {
-    console.log('data selecionar-fecha: ', data);
     this.fecha = data.fecha;
     this.invalidFechaAnterior = data.invalidFechaAnterior;
 
-    console.log('invalidFechaAnterior selecionar-fecha: ', this.invalidFechaAnterior);
   }
 
 

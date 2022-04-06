@@ -1,264 +1,321 @@
 <form [formGroup]="form" (ngSubmit)="suspenderClase($event)">
+  <mat-toolbar color="primary">
+    <h2 mat-dialog-title>{{ titulo }}</h2>
+  </mat-toolbar>
 
-    <mat-toolbar color="primary">
-        <h2 mat-dialog-title> {{titulo}} </h2>
-    </mat-toolbar>
-
-
-    <mat-dialog-content class="mat-typography">
-        <div class="row">
-            <div class="col">
-                <div class="box">
-
-                    <mat-form-field class="full-width">
-
-                        <input matInput [matDatepicker]="picker" placeholder="Fecha" [value]="fechaClase" disabled>
-                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                        <mat-datepicker #picker></mat-datepicker>
-                    </mat-form-field>
-
-                </div>
-            </div>
-            <div class="col">
-                <div class="box">
-
-                    <mat-form-field class="full-width">
-                        <input matInput type="time" placeholder="Hora" formControlName="hora" disabled>
-                    </mat-form-field>
-
-                </div>
-            </div>
-            <div class="col">
-                <div class="box">
-                    <mat-form-field class="full-width">
-                        <input matInput placeholder="Número de Movil" [value]="movil" disabled>
-                        <!-- formControlName="movil" -->
-                    </mat-form-field>
-                </div>
-            </div>
+  <mat-dialog-content class="mat-typography">
+    <div class="row">
+      <div class="col">
+        <div class="box">
+          <mat-form-field class="full-width">
+            <input
+              matInput
+              [matDatepicker]="picker"
+              placeholder="Fecha"
+              [value]="fechaClase"
+              disabled
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="picker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
         </div>
-        <div class="row">
-            <div class="col-xs-4">
-                <div class="box">
-                    <mat-form-field class="full-width">
-                        <input matInput placeholder="Número del alumno" [(ngModel)]="agendaClase.AluNro" formControlName="alumnoNumero">
-                    </mat-form-field>
-                </div>
-            </div>
-            <div class="col">
-                <div class="box">
-                    <mat-form-field class="full-width">
-                        <input matInput placeholder="Nombre del alumno" [(ngModel)]="agendaClase.AluNomApe" formControlName="alumnoNombre">
-
-                    </mat-form-field>
-                </div>
-            </div>
+      </div>
+      <div class="col">
+        <div class="box">
+          <mat-form-field class="full-width">
+            <input
+              matInput
+              type="time"
+              placeholder="Hora"
+              formControlName="hora"
+              disabled
+            />
+          </mat-form-field>
         </div>
-        <div class="row">
-            <div class="col-xs-4">
-                <div class="box">
-                    <mat-form-field class="full-width">
-
-                        <input matInput placeholder="Código del curso" formControlName="cursoId">
-
-                    </mat-form-field>
-                </div>
-            </div>
-            <div class="col-xs">
-                <div class="box">
-                    <mat-form-field class="full-width">
-
-                        <input matInput placeholder="Nombre del curso" formControlName="cursoNombre">
-
-                    </mat-form-field>
-                </div>
-            </div>
+      </div>
+      <div class="col">
+        <div class="box">
+          <mat-form-field class="full-width">
+            <input
+              matInput
+              placeholder="Número de Movil"
+              [value]="movil"
+              disabled
+            />
+            <!-- formControlName="movil" -->
+          </mat-form-field>
         </div>
-
-        <div class="row">
-            <div class="col-xs-4">
-                <div class="box">
-                    <mat-form-field class="full-width">
-                        <input matInput placeholder="Código del Instructor" formControlName="escInsId">
-                    </mat-form-field>
-
-                </div>
-            </div>
-            <div class="col">
-                <div class="box">
-                    <mat-form-field class="full-width">
-                        <input matInput placeholder="Nombre del Instructor" formControlName="escInsNom">
-                    </mat-form-field>
-                </div>
-            </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-4">
+        <div class="box">
+          <mat-form-field class="full-width">
+            <input
+              matInput
+              placeholder="Número del alumno"
+              [(ngModel)]="agendaClase.AluNro"
+              formControlName="alumnoNumero"
+            />
+          </mat-form-field>
         </div>
-        <div class="row">
-            <div class="col">
-                <div class="box">
-                    <mat-form-field class="full-width">
-                        <mat-select placeholder="Tipo Clase" formControlName="tipoClase">
-                            <mat-option></mat-option>
-                            <mat-option value="P"> Práctica </mat-option>
-                            <mat-option value="E">Examen</mat-option>
-                            <mat-option value="T">Teórico</mat-option>
-                            <mat-option value="S">Simulador</mat-option>
-                            <mat-option value="V">Evaluación</mat-option>
-                            <mat-option value="I">Teórico Instr.</mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-            </div>
-            <div class="col">
-                <div class="box">
-                    <mat-form-field class="full-width">
-                        <input matInput placeholder="Nº de Clase Práctica" formControlName="numeroClase">
-                    </mat-form-field>
-                </div>
-            </div>
-
-
-            <div class="col">
-                <div class="box">
-                    <mat-form-field class="full-width">
-                        <mat-select [(value)]="agendaClase.EsAgCuClaAdiSN" placeholder="Es clase adicional?" formControlName="claseAdicional">
-                            <mat-option value="S">Si</mat-option>
-                            <mat-option value="N">No</mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-            </div>
-
-            <div class="col">
-                <div class="box">
-                    <mat-form-field class="full-width">
-                        <mat-select placeholder="Estado de la Clase" formControlName="estadoClase">
-                            <!-- <mat-option>-</mat-option> -->
-                            <mat-option value="A">Asignada</mat-option>
-                            <mat-option value="S">Suspendida Con Cobro</mat-option>
-                            <mat-option value="U">Suspendida Sin Cobro</mat-option>
-                            <mat-option value="D">Clase Doble</mat-option>
-                        </mat-select>
-
-
-                    </mat-form-field>
-                </div>
-            </div>
-
+      </div>
+      <div class="col">
+        <div class="box">
+          <mat-form-field class="full-width">
+            <input
+              matInput
+              placeholder="Nombre del alumno"
+              [(ngModel)]="agendaClase.AluNomApe"
+              formControlName="alumnoNombre"
+            />
+          </mat-form-field>
         </div>
-        <div class="row">
-            <div class="col">
-                <div class="box">
-                    <mat-form-field class="full-width">
-
-                        <!-- <textarea matInput></textarea> cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="2"
-                        cdkAutosizeMaxRows="5" -->
-                        <textarea matInput placeholder="Observaciones" formControlName="observaciones" required></textarea>
-                        <mat-error *ngIf="observaciones.hasError('required')">
-                            Las obvservaciones de la suspensión de clase son <strong>requeridas</strong>
-                        </mat-error>
-                    </mat-form-field>
-                </div>
-            </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-4">
+        <div class="box">
+          <mat-form-field class="full-width">
+            <input
+              matInput
+              placeholder="Código del curso"
+              formControlName="cursoId"
+            />
+          </mat-form-field>
         </div>
-
-
-
-
-        <mat-divider></mat-divider>
-
-        <h3>Disponibilidad del alumno</h3>
-        <div class="row">
-            <div class="col">
-                <div class="box">
-                    <!-- <div class="row"> -->
-                    <h4>Lunes</h4>
-                    <mat-form-field>
-                        <mat-label>Turnos libres</mat-label>
-                        <mat-select multiple formControlName="disponibilidadLunes">
-                            <mat-option *ngFor="let hora of horasLibres" [value]="hora.value">{{hora.description}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                    <!-- </div> -->
-                </div>
-            </div>
-            <div class="col">
-                <div class="box">
-                    <!-- <div class="row"> -->
-                    <h4>Martes</h4>
-                    <mat-form-field>
-                        <mat-label>Turnos libres</mat-label>
-                        <mat-select multiple formControlName="disponibilidadMartes">
-                            <mat-option *ngFor="let hora of horasLibres" [value]="hora.value">{{hora.description}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-            </div>
-            <div class="col">
-                <div class="box">
-                    <!-- <div class="row"> -->
-                    <h4>Miercoles</h4>
-                    <mat-form-field>
-                        <mat-label>Turnos libres</mat-label>
-                        <mat-select multiple formControlName="disponibilidadMiercoles">
-                            <mat-option *ngFor="let hora of horasLibres" [value]="hora.value">{{hora.description}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-            </div>
-
+      </div>
+      <div class="col-xs">
+        <div class="box">
+          <mat-form-field class="full-width">
+            <input
+              matInput
+              placeholder="Nombre del curso"
+              formControlName="cursoNombre"
+            />
+          </mat-form-field>
         </div>
-        <div class="row">
-            <div class="col">
-                <div class="box">
-                    <!-- <div class="row"> -->
-                    <h4>Jueves</h4>
-                    <mat-form-field>
-                        <mat-label>Turnos libres</mat-label>
-                        <mat-select multiple formControlName="disponibilidadJueves">
-                            <mat-option *ngFor="let hora of horasLibres" [value]="hora.value">{{hora.description}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-            </div>
-            <div class="col">
-                <div class="box">
-                    <!-- <div class="row"> -->
-                    <h4>Viernes</h4>
-                    <mat-form-field>
-                        <mat-label>Turnos libres</mat-label>
-                        <mat-select multiple formControlName="disponibilidadViernes">
-                            <mat-option *ngFor="let hora of horasLibres" [value]="hora.value">{{hora.description}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-            </div>
-            <div class="col">
-                <div class="box">
-                    <!-- <div class="row"> -->
-                    <h4>Sabado</h4>
-                    <mat-form-field>
-                        <mat-label>Turnos libres</mat-label>
-                        <mat-select multiple formControlName="disponibilidadSabado">
-                            <mat-option *ngFor="let hora of horasLibres" [value]="hora.value">{{hora.description}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-            </div>
+      </div>
+    </div>
 
+    <div class="row">
+      <div class="col-xs-4">
+        <div class="box">
+          <mat-form-field class="full-width">
+            <input
+              matInput
+              placeholder="Código del Instructor"
+              formControlName="escInsId"
+            />
+          </mat-form-field>
         </div>
+      </div>
+      <div class="col">
+        <div class="box">
+          <mat-form-field class="full-width">
+            <input
+              matInput
+              placeholder="Nombre del Instructor"
+              formControlName="escInsNom"
+            />
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="box">
+          <mat-form-field class="full-width">
+            <mat-select placeholder="Tipo Clase" formControlName="tipoClase">
+              <mat-option></mat-option>
+              <mat-option value="P"> Práctica </mat-option>
+              <mat-option value="E">Examen</mat-option>
+              <mat-option value="T">Teórico</mat-option>
+              <mat-option value="S">Simulador</mat-option>
+              <mat-option value="V">Evaluación</mat-option>
+              <mat-option value="I">Teórico Instr.</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col">
+        <div class="box">
+          <mat-form-field class="full-width">
+            <input
+              matInput
+              placeholder="Nº de Clase Práctica"
+              formControlName="numeroClase"
+            />
+          </mat-form-field>
+        </div>
+      </div>
 
-    </mat-dialog-content>
+      <div class="col">
+        <div class="box">
+          <mat-form-field class="full-width">
+            <mat-select
+              [(value)]="agendaClase.EsAgCuClaAdiSN"
+              placeholder="Es clase adicional?"
+              formControlName="claseAdicional"
+            >
+              <mat-option value="S">Si</mat-option>
+              <mat-option value="N">No</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
 
-    <mat-dialog-actions align="end">
+      <div class="col">
+        <div class="box">
+          <mat-form-field class="full-width">
+            <mat-select
+              placeholder="Estado de la Clase"
+              formControlName="estadoClase"
+            >
+              <!-- <mat-option>-</mat-option> -->
+              <!-- <mat-option value="A">Asignada</mat-option> -->
+              <ng-container
+                *ngIf="esSuspender; then suspenderClases; else claseDobles"
+              ></ng-container>
+              <ng-template #suspenderClases>
+                <mat-option value="S">Suspendida Con Cobro</mat-option>
+                <mat-option value="U">Suspendida Sin Cobro</mat-option>
+              </ng-template>
+              <ng-template #claseDobles>
+                <mat-option value="D">Clase Doble</mat-option>
+              </ng-template>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="box">
+          <mat-form-field class="full-width">
+            <textarea
+              matInput
+              placeholder="Observaciones"
+              formControlName="observaciones"
+              required
+            ></textarea>
+            <mat-error *ngIf="observaciones.hasError('required')">
+              Las obvservaciones de la suspensión de clase son
+              <strong>requeridas</strong>
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
 
-        <button mat-raised-button type="button" (click)="suspenderClase($event)" cdkFocusInitial [disabled]="form.invalid" color="primary"> {{ (esSuspender) ? 'Suspender Clase' : 'Generar Clase doble'}}
-        </button>
-        <button mat-button mat-dialog-close (click)="onNoClick()">Cancelar</button>
-    </mat-dialog-actions>
+    <mat-divider></mat-divider>
+
+    <h3>Disponibilidad del alumno</h3>
+    <div class="row">
+      <div class="col">
+        <div class="box">
+          <!-- <div class="row"> -->
+          <h4>Lunes</h4>
+          <mat-form-field>
+            <mat-label>Turnos libres</mat-label>
+            <mat-select multiple formControlName="disponibilidadLunes">
+              <mat-option *ngFor="let hora of horasLibres" [value]="hora.value"
+                >{{ hora.description }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <!-- </div> -->
+        </div>
+      </div>
+      <div class="col">
+        <div class="box">
+          <!-- <div class="row"> -->
+          <h4>Martes</h4>
+          <mat-form-field>
+            <mat-label>Turnos libres</mat-label>
+            <mat-select multiple formControlName="disponibilidadMartes">
+              <mat-option *ngFor="let hora of horasLibres" [value]="hora.value"
+                >{{ hora.description }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col">
+        <div class="box">
+          <!-- <div class="row"> -->
+          <h4>Miercoles</h4>
+          <mat-form-field>
+            <mat-label>Turnos libres</mat-label>
+            <mat-select multiple formControlName="disponibilidadMiercoles">
+              <mat-option *ngFor="let hora of horasLibres" [value]="hora.value"
+                >{{ hora.description }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="box">
+          <!-- <div class="row"> -->
+          <h4>Jueves</h4>
+          <mat-form-field>
+            <mat-label>Turnos libres</mat-label>
+            <mat-select multiple formControlName="disponibilidadJueves">
+              <mat-option *ngFor="let hora of horasLibres" [value]="hora.value"
+                >{{ hora.description }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col">
+        <div class="box">
+          <!-- <div class="row"> -->
+          <h4>Viernes</h4>
+          <mat-form-field>
+            <mat-label>Turnos libres</mat-label>
+            <mat-select multiple formControlName="disponibilidadViernes">
+              <mat-option *ngFor="let hora of horasLibres" [value]="hora.value"
+                >{{ hora.description }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col">
+        <div class="box">
+          <!-- <div class="row"> -->
+          <h4>Sabado</h4>
+          <mat-form-field>
+            <mat-label>Turnos libres</mat-label>
+            <mat-select multiple formControlName="disponibilidadSabado">
+              <mat-option *ngFor="let hora of horasLibres" [value]="hora.value"
+                >{{ hora.description }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button
+      mat-raised-button
+      type="button"
+      (click)="suspenderClase($event)"
+      cdkFocusInitial
+      [disabled]="form.invalid"
+      color="primary"
+    >
+      {{ esSuspender ? "Suspender Clase" : "Generar Clase doble" }}
+    </button>
+    <button mat-button mat-dialog-close (click)="onNoClick()">Cancelar</button>
+  </mat-dialog-actions>
 </form>

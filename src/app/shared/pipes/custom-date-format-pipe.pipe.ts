@@ -7,12 +7,7 @@ import { DatePipe } from '@angular/common';
 export class CustomDateFormatPipePipe implements PipeTransform {
 
   transform(value: unknown, ...args: unknown[]): unknown {
-    const datePipe = new DatePipe('es-UY');
-
-    console.log('1) value>> ', value);
-    value = datePipe.transform(value, 'dd/mm/yyyy');
-    console.log('2) value>> ', value);
-    return value;
+    return new DatePipe('es-UY').transform(value, 'dd/mm/yyyy');;
   }
 
 }

@@ -17,32 +17,28 @@ export function mensajeConfirmacion(title, text) {
         text,
         icon: 'success',
         timer: 5000,
-        showConfirmButton: false,
-        onClose: () => {
-            console.log('Cieerro antes de timer');
-        }
+        showConfirmButton: false
     });
 }
-export function mensajeWarning(title, text) {
+export function mensajeWarning(title, text, timer = 5000, html = null) {
     return Swal.fire({
         title,
         text,
         icon: 'warning',
-        timer: 5000,
+        timer,
         showConfirmButton: false,
-        confirmButtonText: 'Confirmar'
+        confirmButtonText: 'Confirmar',
+        html
     });
 }
 
-export function errorMensaje(title, text) {
+export function errorMensaje(title, text, timer=5000) {
     return Swal.fire({
         title,
         text,
         icon: 'error',
-        timer: 5000,
+        timer,
         showConfirmButton: false,
-        onClose: () => {
-        }
     });
 
 }
@@ -65,8 +61,6 @@ export function customMensaje(
         showConfirmButton,
         confirmButtonText,
         cancelButtonText,
-        onClose: () => {
-        }
     });
 
 }

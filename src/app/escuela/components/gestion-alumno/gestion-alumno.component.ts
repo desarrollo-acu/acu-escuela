@@ -9,7 +9,7 @@ import { confirmacionUsuario, mensajeConfirmacion } from '@utils/sweet-alert';
 import { MatDialog } from '@angular/material/dialog';
 import { InscripcionesAlumnoComponent } from '../modals/inscripciones-alumno/inscripciones-alumno.component';
 import { AgendaClase } from '../../../core/model/agenda-clase.model';
-import { environment } from '../../../../environments/environment.prod';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-gestion-alumno',
@@ -44,11 +44,9 @@ export class GestionAlumnoComponent implements OnInit {
     private router: Router,
     private dialog: MatDialog
   ) {
-    console.log('constructor gestion-alumno');
   }
 
   ngOnInit() {
-    console.log('ngoninit gestion-alumno');
     const event = this.ejecutoEvent(null);
 
     // Get the input box
@@ -77,14 +75,12 @@ export class GestionAlumnoComponent implements OnInit {
         this.alumnoService
           .getAlumnoNumero()
           .subscribe((res: { numero: number }) => {
-            console.log('res: ', res);
 
             this.alumnoService.sendDataAlumno(modo, alumno, res.numero);
             this.router.navigate(['/escuela/abm-alumno']);
           });
         break;
       case 'UPD':
-        console.log('UPD: ');
 
         this.alumnoService.sendDataAlumno(modo, alumno);
         this.router.navigate(['/escuela/abm-alumno']);
@@ -98,7 +94,6 @@ export class GestionAlumnoComponent implements OnInit {
             this.alumnoService
               .gestionAlumno(modo, alumno)
               .subscribe((res: any) => {
-                console.log('res eli:', res);
 
                 mensajeConfirmacion('Ok', res.Alumno.ErrorMessage).then(
                   (res2) => {
@@ -114,7 +109,6 @@ export class GestionAlumnoComponent implements OnInit {
         this.alumnoService
           .getDisponibilidadAlumno(alumno.AluId)
           .subscribe((res: { Disponibilidades: AgendaClase[] }) => {
-            console.log('res: ', res);
 
             const inscripcionesDialogRef = this.dialog.open(
               InscripcionesAlumnoComponent,
@@ -128,12 +122,6 @@ export class GestionAlumnoComponent implements OnInit {
               }
             );
 
-            inscripcionesDialogRef.afterClosed().subscribe((result) => {
-              console.log('result: ', result);
-
-              if (result) {
-              }
-            });
           });
         break;
 
@@ -150,8 +138,7 @@ export class GestionAlumnoComponent implements OnInit {
     this.alumnoService
       .obtenerAlumnos(pageSize, pageNumber, filtro)
       .subscribe((res: any) => {
-        console.log('getAlumnos : ', res);
-        this.length = res.Cantidad;
+        this.length = res.cantidad;
         this.actualizarDatasource(res, pageSize, pageNumber - 1);
       });
   }
@@ -159,10 +146,8 @@ export class GestionAlumnoComponent implements OnInit {
   ejecutoEvent(pageEvento: PageEvent) {
     this.pageEvent = pageEvento;
     const filter = this.filtro ? this.filtro : '';
-    console.log(`ejecuto Event: ${pageEvento}`);
 
     if (pageEvento) {
-      console.log(` 1) ejecuto Event: ${pageEvento}`);
       let index = pageEvento.pageIndex;
       this.pageSize = pageEvento.pageSize;
       index += 1;
@@ -173,21 +158,20 @@ export class GestionAlumnoComponent implements OnInit {
 
       this.getAlumnos(pageEvento.pageSize, index, filter);
     } else {
-      console.log(` 2) ejecuto Event: ${pageEvento}`);
       this.getAlumnos(this.pageSize, 1, '');
     }
     return pageEvento;
   }
 
   actualizarDatasource(data, size?, index?) {
-    this.dataSource = data.Alumnos;
+    this.dataSource = data.alumnos;
     this.verAlumnos = true;
 
     if (size) {
       this.pageSize = size;
     }
 
-    this.length = data.Cantidad;
+    this.length = data.cantidad;
 
     if (index) {
       this.pageIndex = index;

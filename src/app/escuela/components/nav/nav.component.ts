@@ -11,6 +11,7 @@ import { formatDateToString } from '@utils/utils-functions';
 import { EnviarNotificacionComponent } from '../modals/enviar-notificacion/enviar-notificacion.component';
 import { AutenticacionService } from '../../../core/services/autenticacion.service';
 import { CambiarContraseniaComponent } from '../../dialogs/cambiar-contrasenia/cambiar-contrasenia.component';
+import { AcuService } from '../../../core/services/acu.service';
 
 @Component({
   selector: 'app-nav',
@@ -41,11 +42,12 @@ export class NavComponent implements OnDestroy {
 
   private mobileQueryListener: () => void;
 
+  titleApp: string;
   title: string;
 
   constructor(
-
     private auth: AutenticacionService,
+    private acuService: AcuService,
     private breakpointObserver: BreakpointObserver,
     changeDetectorRef: ChangeDetectorRef,
     media: MediaMatcher,
@@ -57,8 +59,10 @@ export class NavComponent implements OnDestroy {
     // tslint:disable-next-line: deprecation
     this.mobileQuery.addListener(this.mobileQueryListener);
 
-    console.log('url: ', this.router.url);
     this.changeTitle(this.router.url);
+    this.acuService
+      .getTituloApp()
+      .subscribe(({ titulo }: any) => (this.titleApp = titulo));
   }
 
   ngOnDestroy(): void {
@@ -86,7 +90,6 @@ export class NavComponent implements OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log('cierro y recargo la agenda, result: ', result);
       if (result) {
         // Ir a gestionar inscripciones.
         this.changeTitle('/escuela/gestion-inscripcion');
@@ -95,23 +98,15 @@ export class NavComponent implements OnDestroy {
     });
   }
 
-  cambiarContrasenia(){
-
+  cambiarContrasenia() {
     const dialogRef = this.dialog.open(CambiarContraseniaComponent, {
-      width:'500'
+      width: '500',
     });
 
     dialogRef.afterClosed().subscribe();
-
   }
 
   logout = () => this.auth.logout();
-
-  enviarNotificacion() {
-    const dialogRef = this.dialog.open(EnviarNotificacionComponent);
-
-    dialogRef.afterClosed().subscribe();
-  }
 
   changeTitle(title: string) {
     switch (title) {
@@ -149,6 +144,19 @@ export class NavComponent implements OnDestroy {
         break;
       case '/escuela/reportes':
         this.title = 'Reportes';
+        break;
+      case '/escuela/gestion-examen':
+      case '/escuela/escuela/abm-examen':
+        this.title = 'Gestión de examenes';
+        break;
+      case '/escuela/formularios':
+        this.title = 'Formularios';
+        break;
+      case '/escuela/notificaciones':
+        this.title = 'Notificaciones';
+        break;
+      case '/escuela/cuenta-corriente':
+        this.title = 'Trabajar con Cuentas Corrientes';
         break;
 
       default:

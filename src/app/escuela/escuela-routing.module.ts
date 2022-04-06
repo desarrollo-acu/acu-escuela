@@ -19,6 +19,10 @@ import { TestComponent } from './components/test/test.component';
 import { GestionExamenComponent } from './pages/gestion-examen/gestion-examen.component';
 import { AbmExamenComponent } from './pages/abm-examen/abm-examen.component';
 import { ReportesComponent } from './pages/reportes/reportes.component';
+import { AutenticacionGuard } from '../core/guards/autenticacion.guard';
+import { CuentaCorrienteComponent } from './pages/cuenta-corriente/cuenta-corriente.component';
+import { GestionFormulariosComponent } from './pages/gestion-formularios/gestion-formularios.component';
+import { GestionNotificacionesComponent } from './pages/gestion-notificaciones/gestion-notificaciones.component';
 
 const routes: Routes = [
   {
@@ -27,7 +31,7 @@ const routes: Routes = [
     children: [
       {
         path: 'agenda-movil',
-        component: AgendaMovilComponent,
+        component: AgendaMovilComponent
       },
       {
         path: 'agenda-instructor',
@@ -97,7 +101,20 @@ const routes: Routes = [
         path: 'reportes',
         component: ReportesComponent,
       },
+      {
+        path: 'formularios',
+        component: GestionFormulariosComponent,
+      },
+      {
+        path: 'notificaciones',
+        component: GestionNotificacionesComponent,
+      },
+      {
+        path: 'cuenta-corriente',
+        component: CuentaCorrienteComponent,
+      },
     ],
+    canActivateChild: [ AutenticacionGuard ]
   },
 ];
 

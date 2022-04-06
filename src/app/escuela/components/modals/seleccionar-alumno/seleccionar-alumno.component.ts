@@ -51,9 +51,6 @@ export class SeleccionarAlumnoComponent implements OnInit { // , AfterViewInit, 
     private alumnoService: AlumnoService,
     @Inject(MAT_DIALOG_DATA) public data: any) {
 
-    // this.alumnos = this.data.alumnos;
-    console.log('1) this.data: ', this.data);
-    console.log('2) cantidad: ', this.data.cantidad);
 
     this.dataSource = this.data.alumnos;
     this.pageSize = environment.pageSize;
@@ -86,21 +83,13 @@ export class SeleccionarAlumnoComponent implements OnInit { // , AfterViewInit, 
       clearTimeout(timeout);
 
       // Make a new timeout set to go off in 1000ms (1 second)
-      timeout = setTimeout(() => {
-
-        console.log('3) Input Value:', this.filtro);
-        console.log('3) Input this.pageSize:', this.pageSize);
-
-        this.getAlumnos(this.pageSize, 1, this.filtro);
-      }, 500);
+      timeout = setTimeout(() => this.getAlumnos(this.pageSize, 1, this.filtro), 500);
     });
   }
 
 
 
   getAlumnos(pageSize, pageNumber, filtro) {
-    console.log('4) filtro: ', filtro);
-    console.log('4) pageSize: ', pageSize);
 
 
     if (pageNumber === 0) {
@@ -109,11 +98,8 @@ export class SeleccionarAlumnoComponent implements OnInit { // , AfterViewInit, 
 
     this.alumnoService.obtenerAlumnos(pageSize, pageNumber, filtro)
       .subscribe((res: any) => {
-        console.log('res: ', res);
-        console.log('5) filtro: ', filtro);
-        // this.pageEvent.length = res.Cantidad;
 
-        this.length = res.Cantidad;
+        this.length = res.cantidad;
         this.actualizarDatasource(res, pageSize, pageNumber - 1);
 
 
@@ -124,7 +110,6 @@ export class SeleccionarAlumnoComponent implements OnInit { // , AfterViewInit, 
     this.pageEvent = pageEvento;
     const filter = (this.filtro) ? this.filtro : '';
 
-    console.log('ejecutoEvent, pageEvento: ', pageEvento);
     if (pageEvento) {
       let index = pageEvento.pageIndex;
       this.pageSize = pageEvento.pageSize;
@@ -133,7 +118,6 @@ export class SeleccionarAlumnoComponent implements OnInit { // , AfterViewInit, 
       if (pageEvento.previousPageIndex > pageEvento.pageIndex) {
         index -= 1;
       }
-      console.log('index: ', index);
 
       this.getAlumnos(pageEvento.pageSize, index, filter);
 
@@ -144,22 +128,16 @@ export class SeleccionarAlumnoComponent implements OnInit { // , AfterViewInit, 
 
   actualizarDatasource(data, size?, index?) {
 
-    this.dataSource = data.Alumnos;
-    // this.pageIndex =  pageIndex;
+    this.dataSource = data.alumnos;
     if (size) {
       this.pageSize = size;
     }
-    console.log('cantidad: ', data.Cantidad);
 
-    this.length = data.Cantidad;
-    console.log('this.length: ', this.length);
-
-    // this.dataSource = new MatTableDataSource(data);
+    this.length = data.cantidad;
     if (index) {
       this.pageIndex = index;
     }
     this.dataSource.paginator = this.paginator;
-    // this.dataSource.paginator.length = cantidad;
     this.dataSource.sort = this.sort;
   }
 

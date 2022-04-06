@@ -1,4 +1,5 @@
 import { AgendaClase } from './agenda-clase.model';
+import { Sede } from './enum/sede.enum';
 
 
 export interface GenerarClaseAdicional {
@@ -12,5 +13,7 @@ export interface GenerarClaseAdicional {
   escAluCurId?: number;
   claseAnterior?: AgendaClase;
   usrId?: string;
+  sedeFacturacion?: Sede;
+  sede?: Sede;
 
 }

@@ -9,6 +9,7 @@ import { MatSelectChange } from '@angular/material/select';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Movil } from '@core/model/movil.model';
 import { environment } from '@environments/environment';
+import { generateEstadosActivoDeshabilitado } from '@utils/utils-functions';
 
 @Component({
   selector: 'app-gestion-movil',
@@ -38,7 +39,7 @@ export class GestionMovilComponent implements OnInit {
   ngOnInit() {
     this.buildForm();
     this.getMoviles('A');
-    this.generateEstados();
+    this.estados = generateEstadosActivoDeshabilitado();
   }
 
   applyFilter(event: Event) {
@@ -69,12 +70,10 @@ export class GestionMovilComponent implements OnInit {
             this.movilService
               .gestionMovil(modo, movil)
               .subscribe((res: any) => {
-                console.log('res eli:', res);
+
 
                 mensajeConfirmacion('Ok', res.Movil.ErrorMessage).then(
-                  (res2) => {
-                    this.getMoviles(this.filtro);
-                  }
+                  () => this.getMoviles(this.filtro)
                 );
               });
           }
@@ -90,7 +89,6 @@ export class GestionMovilComponent implements OnInit {
   getMoviles(EscVehEst?: string) {
     this.verMovil = false;
     this.movilService.getMoviles().subscribe((moviles: Movil[]) => {
-      console.log('moviles: ', moviles);
 
       this.verMovil = true;
       const auxMoviles =
@@ -111,36 +109,9 @@ export class GestionMovilComponent implements OnInit {
     });
   }
   verActivos(event: MatSelectChange) {
-    console.log('event: ', event);
 
     const filterValue = event.value;
-    console.log('filterValue: ', filterValue);
     this.getMoviles(filterValue);
   }
 
-  generateEstados() {
-    const estado0 = {
-      id: 0,
-      value: '-',
-      description: 'Todos',
-    };
-
-    this.estados.push(estado0);
-
-    const estado1 = {
-      id: 1,
-      value: 'A',
-      description: 'Activo',
-    };
-    this.estados.push(estado1);
-
-    const estado2 = {
-      id: 2,
-      value: 'D',
-      description: 'Deshabilitado',
-    };
-    this.estados.push(estado2);
-
-    console.log('estados: ', this.estados);
-  }
 }

@@ -6,7 +6,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { confirmacionUsuario } from '@utils/sweet-alert';
 import { Actions } from '../../../core/model/actions.model';
 import { EliminarRow } from '../../../core/model/eliminiar-row.interface';
-import { environment } from '../../../../environments/environment.prod';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-gestion-custom',
@@ -30,6 +30,8 @@ export class GestionCustomComponent implements OnInit {
   @Output() eliminar: EventEmitter<EliminarRow> = new EventEmitter();
 
   @Output() callback: EventEmitter<any> = new EventEmitter();
+
+  @Output() updatedDataInput: EventEmitter<any[]> = new EventEmitter();
 
   tooltipEditar: string;
   tooltipEliminar: string;
@@ -109,6 +111,8 @@ export class GestionCustomComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+
+    this.updatedDataInput.emit( this.dataSource.filteredData );
   }
 
   getActionsHeaderDefault = (): Actions[] => [

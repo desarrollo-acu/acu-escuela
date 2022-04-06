@@ -55,7 +55,6 @@ export class SeleccionarItemsFacturarComponent implements OnInit {
     public inscripcionService: InscripcionService,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    console.log('this.data: ', this.data);
 
     this.filtro = this.data.filtro;
     this.prefactura = this.data.prefactura;
@@ -116,7 +115,6 @@ export class SeleccionarItemsFacturarComponent implements OnInit {
         'Cancelar factura',
         'Se cancelará el proceso de facturación. ¿Confirma continuar?'
       ).then((confirma) => {
-        console.log('confirma selectr item: ', confirma);
 
         if (confirma.isConfirmed) {
           this.dialogRef.close();
@@ -128,7 +126,6 @@ export class SeleccionarItemsFacturarComponent implements OnInit {
   }
 
   verPrefactura(item: any) {
-    console.log('item: ', item);
     this.prefactura.Lineas = [];
     this.prefactura.Lineas.push({ ItemCod: item.EscItemCod });
     this.inscripcionService

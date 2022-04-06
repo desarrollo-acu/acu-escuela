@@ -1,0 +1,33 @@
+<form [formGroup]="form">
+  <mat-toolbar color="primary">
+    <h2 mat-dialog-title>Ingresar contraseña para realizar accion </h2>
+  </mat-toolbar>
+
+  <mat-dialog-content class="mat-typography">
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="box">
+            <mat-form-field class="full-width">
+
+                <input matInput [type]="hide ? 'password' : 'text'" placeholder="Contraseña" formControlName="password" >
+                <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+        <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+      </button>
+
+      <mat-error *ngIf="password.hasError('required')  && password.dirty && password.errors">
+        La contraseña es <strong> requerida </strong>, comuniquese con el administrador.
+    </mat-error>
+            </mat-form-field>
+
+
+        </div>
+    </div>
+    </div>
+  </mat-dialog-content>
+
+
+
+  <mat-dialog-actions align="end">
+    <button mat-raised-button color="primary" style=" padding: 5px 20px; margin-top: 5px;" (click)="ingresarClave()" [disabled]="form.invalid">Ingresar contraseña <mat-icon> send</mat-icon> </button>
+</mat-dialog-actions>
+</form>

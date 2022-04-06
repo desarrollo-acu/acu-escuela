@@ -12,8 +12,7 @@ export function alumnoTieneExcepcionValidator(alumnoService: AlumnoService): Asy
     return alumnoService.alumnoTieneExcepcion(control.value).pipe(
       map(
         (res: any) => {
-          console.log('AlumnoTieneExcepclion.res: ', res);
-          console.log('AlumnoTieneExcepclion.res.tieneExcepcion: ', res.tieneExcepcion);
+
           // tslint:disable-next-line: object-literal-key-quotes
           return res.tieneExcepcion ? { 'alumnoTieneExcepcion': true } : null;
         })
