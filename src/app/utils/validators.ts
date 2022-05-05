@@ -5,6 +5,8 @@ import { AlumnoService } from '@core/services/alumno.service';
 import { FormGroup } from '@angular/forms';
 import { errorMensaje } from './sweet-alert';
 
+import * as moment from 'moment';
+
 export class MyValidators {
 
   existeAlumno;
@@ -111,6 +113,19 @@ export class MyValidators {
 
     if (value > 10000 || !existe) {
       return { alumno_invalid: true };
+    }
+    return null;
+  }
+
+  //Si la fecha de realizado el examen médico tiene más de 30 días de realizado... 
+  static EsMayorA30Dias(control:AbstractControl){
+    const { value, hoy } = MyValidators.getFechasWithHoursZeros(control);
+    var fechaHoy= moment(new Date(hoy));
+    let fechaIngresada= moment(new Date(value));
+    var diferenciaDias = fechaHoy.diff(fechaIngresada,"days");
+    if (diferenciaDias > 30) {
+      
+      return { fecha_invalid: true };
     }
     return null;
   }

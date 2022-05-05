@@ -42,6 +42,8 @@ import { ClaseEstimada } from '@core/model/clase-estimada.model';
 import { ReportesService } from '@core/services/reportes.service';
 import { MyValidatorsService } from '../../../../utils/my-validators.service';
 
+
+
 @Component({
   selector: 'app-inscripcion-curso',
   templateUrl: './inscripcion-curso.component.html',
@@ -163,12 +165,12 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
         eLearning: [false],
 
         examenMedico: [false],
-        licenciaCedulaIdentidad: [false],
-        pagoDeLicencia: [false],
+        //licenciaCedulaIdentidad: [false],
+        //pagoDeLicencia: [false],
 
         fechaLicCedulaIdentidad: [''],
         fechaPagoLicencia: [''],
-        fechaExamenMedico: [''],
+        fechaExamenMedico: ['',MyValidators.EsMayorA30Dias],
 
         disponibilidadLunes: [''],
         disponibilidadMartes: [''],
@@ -533,13 +535,13 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
       });
   }
 
-  changeLicenciaCedulaIdentidad(event: MatCheckboxChange) {
-    if (event.checked) {
-      return this.fechaLicCedulaIdentidadField.setValue(new Date());
-    }
+  // changeLicenciaCedulaIdentidad(event: MatCheckboxChange) {
+  //   if (event.checked) {
+  //     return this.fechaLicCedulaIdentidadField.setValue(new Date());
+  //   }
 
-    return this.fechaLicCedulaIdentidadField.setValue('');
-  }
+  //   return this.fechaLicCedulaIdentidadField.setValue('');
+  // }
 
   changeExamenMedico(event: MatCheckboxChange) {
     if (event.checked) {
@@ -549,13 +551,13 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
     return this.fechaExamenMedicoField.setValue('');
   }
 
-  changePagoLicencia(event: MatCheckboxChange) {
-    if (event.checked) {
-      return this.fechaPagoLicenciaField.setValue(new Date());
-    }
+  // changePagoLicencia(event: MatCheckboxChange) {
+  //   if (event.checked) {
+  //     return this.fechaPagoLicenciaField.setValue(new Date());
+  //   }
 
-    return this.fechaPagoLicenciaField.setValue('');
-  }
+  //   return this.fechaPagoLicenciaField.setValue('');
+  // }
 
   async addInfoAlumnoAlForm(result: Alumno) {
     this.inscripcionCurso.AluId = result.AluId;
@@ -612,9 +614,10 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
     this.inscripcionCurso.eLearning = this.eLearningField.value;
 
     this.inscripcionCurso.examenMedico = this.examenMedicoField.value;
-    this.inscripcionCurso.licenciaCedulaIdentidad =
-      this.licenciaCedulaIdentidadField.value;
-    this.inscripcionCurso.pagoDeLicencia = this.pagoDeLicenciaField.value;
+    // this.inscripcionCurso.licenciaCedulaIdentidad=  this.licenciaCedulaIdentidadField.value;
+    this.inscripcionCurso.licenciaCedulaIdentidad =this.examenMedicoField.value;
+    //this.inscripcionCurso.pagoDeLicencia = this.pagoDeLicenciaField.value;
+    this.inscripcionCurso.pagoDeLicencia =this.examenMedicoField.value;
 
     this.inscripcionCurso.fechaExamenMedico = this.fechaExamenMedicoField.value;
     this.inscripcionCurso.fechaLicCedulaIdentidad =
@@ -630,6 +633,11 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
       });
   }
 
+  fechaExamenChecked(){
+    var value= this.form.get('examenMedico').value;
+    if(value)
+      return  value
+  }
   private salir(result) {
     if (result && result.salir) {
       this.dialogRef.close();
@@ -715,13 +723,13 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
     return this.form.get('examenMedico');
   }
 
-  get licenciaCedulaIdentidadField() {
-    return this.form.get('licenciaCedulaIdentidad');
-  }
+  // get licenciaCedulaIdentidadField() {
+  //   return this.form.get('licenciaCedulaIdentidad');
+  // }
 
-  get pagoDeLicenciaField() {
-    return this.form.get('pagoDeLicencia');
-  }
+  // get pagoDeLicenciaField() {
+  //   return this.form.get('pagoDeLicencia');
+  // }
 
   get fechaLicCedulaIdentidadField() {
     return this.form.get('fechaLicCedulaIdentidad');
@@ -784,4 +792,5 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
   get disponibilidadSabadoField() {
     return this.form.get('disponibilidadSabado');
   }
+
 }
