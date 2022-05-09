@@ -38,6 +38,7 @@ export class CargandoInterceptor implements HttpInterceptor {
   ) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
+    
     const req = request.clone({
       setHeaders: {
         'Cache-Control': 'no-cache',
@@ -55,12 +56,13 @@ export class CargandoInterceptor implements HttpInterceptor {
             this.authService.logout();
           }
 
-
+            
 
         }
         return event;
       }),
       catchError((err: HttpErrorResponse) => {
+
         if (this.errorStatusCodes.includes(err.status)) {
           this.router.navigate(['/login']);
         }else {

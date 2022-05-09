@@ -86,6 +86,7 @@ import { ResultadoExamenPracticoComponent } from './formularios/resultado-examen
 import { GestionNotificacionesComponent } from './pages/gestion-notificaciones/gestion-notificaciones.component';
 import { AlumnosPendientesDePagoComponent } from './reports/alumnos-pendientes-de-pago/alumnos-pendientes-de-pago.component';
 import { FacturasPorAlumnoComponent } from './reports/facturas-por-alumno/facturas-por-alumno.component';
+import { ExamenMedicoComponent } from './components/modals/examen-medico/examen-medico.component';
 
 
 registerLocaleData(localeEsUy, 'es-UY');
@@ -154,6 +155,7 @@ registerLocaleData(localeEs, 'es');
     GestionNotificacionesComponent,
     AlumnosPendientesDePagoComponent,
     FacturasPorAlumnoComponent,
+    ExamenMedicoComponent,
 
   ],
   imports: [
@@ -168,6 +170,7 @@ registerLocaleData(localeEs, 'es');
     MatPaginatorModule,
     MatSortModule,
   ],
+  entryComponents:[ExamenMedicoComponent],
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: 'es-UY' },
 

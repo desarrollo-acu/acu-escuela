@@ -281,7 +281,7 @@ export class GenerarExamenComponent implements OnInit {
       if (alumno) {
         this.aluId = alumno.AluId;
         const { AluId, AluNomComp } = alumno;
-        this.myValidatorsService.alumnoTieneFacturasPendientes(AluId, AluNomComp, this.alumnoNumero);
+        //this.myValidatorsService.alumnoTieneFacturasPendientes(AluId, AluNomComp, this.alumnoNumero);
         this.obtenerInscripcion();
         this.form.patchValue({
           alumnoNumero: alumno.AluNro,

@@ -1,3 +1,4 @@
+import { ExamenMedicoComponent } from './../examen-medico/examen-medico.component';
 import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
@@ -48,6 +49,20 @@ export class InscripcionesAlumnoComponent implements OnInit {
   verDisponibilidad(inscripcion: AgendaClase) {
 
     const disponibilidadDialogRef = this.dialog.open(DisponibilidadAlumnoComponent, {
+      height: 'auto',
+      width: '700px',
+      data: {
+        inscripcion,
+      }
+    });
+
+  }
+
+  ingresarExamen(inscripcion: AgendaClase) {
+    
+    localStorage.setItem('inscripcionDatos', JSON.stringify(inscripcion));
+    
+    const disponibilidadDialogRef = this.dialog.open(ExamenMedicoComponent, {
       height: 'auto',
       width: '700px',
       data: {

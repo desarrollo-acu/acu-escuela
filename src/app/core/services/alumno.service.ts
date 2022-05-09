@@ -104,6 +104,15 @@ export class AlumnoService {
     });
   }
 
+  ingresarExamenMedico(aluId:number,tipCurId:number,escAluCurId:number,escAluCurFechaExamenMedico:string) {
+    return this.http.post(`${environment.url_ws}/wsIngresarExamenMedico`, {
+      AluId:aluId,
+      TipCurId:tipCurId,
+      EscAluCurId:escAluCurId,
+      EscAluCurFechaExamenMedico:escAluCurFechaExamenMedico
+    });
+  }
+
   getAlumnoNumero() {
     return this.http.get(`${environment.url_ws}/wsGetUltimoNumeroAlumno`);
   }
@@ -113,4 +122,5 @@ export class AlumnoService {
   tieneFacturaPendienteAnteriorAHoy = (aluId: number) => this.http.get<{tieneFacturaPendienteAnteriorAHoy: boolean}>(`${environment.url_ws}/tieneFacturaPendienteAnteriorAHoy?&aluId=${aluId}`)
 
   obtenerDisponibilidadPorAlumno = (aluId: number) => this.http.get<Inscripcion>(`${environment.url_ws}/wsGetDisponibilidadAlumno?AluId=${aluId}`)
+  
 }

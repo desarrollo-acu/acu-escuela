@@ -48,11 +48,21 @@
                     <button mat-mini-fab color="primary" (click)="verDisponibilidad(row)" matTooltip="Disponibilidad del alumno">
                         <mat-icon> search</mat-icon>
                     </button>
+                    <button
+                        mat-mini-fab
+                        matTooltip="Ingresar examen médico"
+                        matTooltipClass="tooltip-green"
+                        class="tooltip-green"
+                        (click)="ingresarExamen(row)"
+                        >
+                        <mat-icon>edit</mat-icon>
+                    </button>
+
                     <!-- (click)="verPDF(row)"  -->
                     <button mat-mini-fab (click)="verPlanDeClases(row)" matTooltip="Descargar PDF de Plan de Clases">
                         <mat-icon> insert_drive_file</mat-icon>
                     </button>
-
+                    
 
                 </td>
             </ng-container>
