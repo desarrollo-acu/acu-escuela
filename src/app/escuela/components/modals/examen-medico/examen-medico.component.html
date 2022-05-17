@@ -6,11 +6,26 @@
   
     <mat-dialog-content class="mat-typography" style="margin-left: 5px; margin-top: 20px;">
   
+      <div class="row">
+        <div class="col">
+            <div class="box">
+                <h3>Fecha de examen médico actual</h3>
+                <mat-form-field class="full-width">
+                  <input
+                    matInput
+                    formControlName="fechaExamenMedicoActual"
+                  />
+                </mat-form-field>
+            </div>
+        </div>
+    </div>
         <div class="row">
             <div class="col">
                 <div class="box">
                     <h3>Documentación para gestión de Permiso de Circulación</h3>
-                    <mat-checkbox color="primary" (change)="changeExamenMedico($event)">
+                    <mat-checkbox color="primary" (change)="changeExamenMedico($event)"
+                    formControlName="examenMedico"
+                    >
                         Examen médico | Cédula de Identidad | Pago de Licencia
                         
                     </mat-checkbox>
@@ -20,7 +35,7 @@
         <div class="row">
             <div class="col-md-6">
               <div class="box">
-                <mat-form-field class="full-width" >
+                <mat-form-field class="full-width" *ngIf="fechaExamenChecked()">
                   <input 
                     matInput
                     [matDatepicker]="pickerExamenMedico"

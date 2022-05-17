@@ -1,3 +1,4 @@
+import { ClaseEstimadaDetalleParaSuspension } from './../../../../core/model/clase-estimada.model';
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
@@ -15,8 +16,15 @@ import {
   ClaseEstimadaDetalle,
 } from '@core/model/clase-estimada.model';
 import { InstructorHorasLibresComponent } from '../instructor-horas-libres/instructor-horas-libres.component';
-import { confirmacionUsuario, errorMensaje, mensajeConfirmacion } from '@utils/sweet-alert';
-import { generateHorasLibres, getDisponibilidadFromInscripcion } from '@utils/utils-functions';
+import {
+  confirmacionUsuario,
+  errorMensaje,
+  mensajeConfirmacion,
+} from '@utils/sweet-alert';
+import {
+  generateHorasLibres,
+  getDisponibilidadFromInscripcion,
+} from '@utils/utils-functions';
 import { IngresarClaveAccionesComponent } from '@escuela/dialogs/ingresar-clave-acciones/ingresar-clave-acciones.component';
 
 @Component({
@@ -70,7 +78,6 @@ export class SuspenderClaseComponent implements OnInit {
     }`;
     this.movil = this.agendaClase.EscMovCod;
 
-
     this.horasLibres = generateHorasLibres();
     this.buildForm();
   }
@@ -82,7 +89,6 @@ export class SuspenderClaseComponent implements OnInit {
       this.agendaClase.Hora < 10
         ? `0${this.agendaClase.Hora}`
         : this.agendaClase.Hora;
-    console.log(this.agendaClase);
 
     const {
       disponibilidadLunes,
@@ -115,7 +121,6 @@ export class SuspenderClaseComponent implements OnInit {
       observaciones: [, Validators.required],
     });
 
-
     this.cursoId.disable();
     this.hora.disable();
     this.cursoNombre.disable();
@@ -139,28 +144,28 @@ export class SuspenderClaseComponent implements OnInit {
       return;
     }
 
-    if( this.estadoClase.value === 'U'){
-      const dialogRef = this.dialog.open( IngresarClaveAccionesComponent, {
+    if (this.estadoClase.value === 'U') {
+      const dialogRef = this.dialog.open(IngresarClaveAccionesComponent, {
         height: 'auto',
         width: 'auto',
       });
 
-      dialogRef.afterClosed().subscribe(({claveValida}) => {
-        if(claveValida){
+      dialogRef.afterClosed().subscribe(({ claveValida }) => {
+        if (claveValida) {
           this.iniciarSuspenderClase();
-        }else{
-          errorMensaje('Error','La clave ingresada no es correcta. Comuniquese con el supervisor o administrador.').then()
+        } else {
+          errorMensaje(
+            'Error',
+            'La clave ingresada no es correcta. Comuniquese con el supervisor o administrador.'
+          ).then();
         }
       });
-    } else{
+    } else {
       this.iniciarSuspenderClase();
     }
-
-
   }
 
-  iniciarSuspenderClase(){
-
+  iniciarSuspenderClase() {
     confirmacionUsuario(
       'Confirmación de Usuario',
       '¿Confirma la suspensión de la clase seleccionada?'
@@ -168,25 +173,27 @@ export class SuspenderClaseComponent implements OnInit {
       if (confirm.isConfirmed) {
         this.agendaClase.disponibilidadLunes = this.disponibilidadLunes.value;
         this.agendaClase.disponibilidadMartes = this.disponibilidadMartes.value;
-        this.agendaClase.disponibilidadMiercoles = this.disponibilidadMiercoles.value;
+        this.agendaClase.disponibilidadMiercoles =
+          this.disponibilidadMiercoles.value;
         this.agendaClase.disponibilidadJueves = this.disponibilidadJueves.value;
-        this.agendaClase.disponibilidadViernes = this.disponibilidadViernes.value;
+        this.agendaClase.disponibilidadViernes =
+          this.disponibilidadViernes.value;
         this.agendaClase.disponibilidadSabado = this.disponibilidadSabado.value;
         this.agendaClase.EsAgCuEst = this.estadoClase.value;
         this.agendaClase.EsAgCuObs = this.observaciones.value;
 
         // Si es distinta a suspendida con cobro, se puede reagendar.
         if (this.estadoClase.value !== 'S') {
-
           // Si no es suspender, entonces es una clase doble.
           const cantidad = this.esSuspender ? 1 : 2;
           this.instructorService
             .getDisponibilidadInstructor(this.agendaClase, cantidad)
             .subscribe((res: { ClasesEstimadas: ClaseEstimada[] }) => {
+              console.log(res);
               const arrayPlano: {
                 instructorCodigo?: string;
                 instructorNombre?: string;
-                detalle?: ClaseEstimadaDetalle[];
+                detalle?: ClaseEstimadaDetalleParaSuspension[];
               } = {};
               arrayPlano.instructorCodigo = res.ClasesEstimadas[1].EscInsId;
               arrayPlano.instructorNombre = res.ClasesEstimadas[1].EscInsNom;
@@ -195,7 +202,6 @@ export class SuspenderClaseComponent implements OnInit {
                 arrayPlano.detalle.push(...clase.Detalle);
               });
 
-
               const clasesEstimadasDialogRef = this.dialog.open(
                 InstructorHorasLibresComponent,
                 {
@@ -203,13 +209,17 @@ export class SuspenderClaseComponent implements OnInit {
                   width: '700px',
                   data: {
                     clasesEstimadas: arrayPlano,
+                    alumId: this.agendaClase.AluId,
                   },
                 }
               );
 
               clasesEstimadasDialogRef
                 .afterClosed()
-                .subscribe((nuevaClase?: any) => (nuevaClase) && this.finalizarSuspenderClase(nuevaClase));
+                .subscribe(
+                  (nuevaClase?: any) =>
+                    nuevaClase && this.finalizarSuspenderClase(nuevaClase)
+                );
             });
         } else {
           this.finalizarSuspenderClase();
@@ -234,7 +244,6 @@ export class SuspenderClaseComponent implements OnInit {
   onNoClick(): void {
     this.dialogRef.close();
   }
-
 
   get cursoId() {
     return this.form.get('cursoId');

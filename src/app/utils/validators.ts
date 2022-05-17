@@ -1,4 +1,9 @@
-import { AbstractControl, ValidatorFn, AsyncValidatorFn, ValidationErrors } from '@angular/forms';
+import {
+  AbstractControl,
+  ValidatorFn,
+  AsyncValidatorFn,
+  ValidationErrors,
+} from '@angular/forms';
 
 import { AlumnoService } from '@core/services/alumno.service';
 
@@ -8,13 +13,11 @@ import { errorMensaje } from './sweet-alert';
 import * as moment from 'moment';
 
 export class MyValidators {
-
   existeAlumno;
 
   constructor(private alumnoService: AlumnoService) {
-    this.existeAlumno = aluNro => this.alumnoService.existeAlumno(aluNro);
+    this.existeAlumno = (aluNro) => this.alumnoService.existeAlumno(aluNro);
   }
-
 
   static isPriceValid(control: AbstractControl) {
     const value = control.value;
@@ -24,7 +27,6 @@ export class MyValidators {
     }
     return null;
   }
-
 
   static isPorcentajeValid(control: AbstractControl) {
     const value = control.value;
@@ -45,7 +47,6 @@ export class MyValidators {
   }
 
   static fechaPosteriorAHoy(control: AbstractControl) {
-
     const { value, hoy } = MyValidators.getFechasWithHoursZeros(control);
 
     if (value > hoy) {
@@ -55,7 +56,6 @@ export class MyValidators {
   }
 
   static fechaAnteriorAHoy(control: AbstractControl) {
-
     const { value, hoy } = MyValidators.getFechasWithHoursZeros(control);
 
     if (value < hoy) {
@@ -73,14 +73,13 @@ export class MyValidators {
     return null;
   }
 
-  private static getFechasWithHoursZeros = ( control: AbstractControl ) => {
-
+  private static getFechasWithHoursZeros = (control: AbstractControl) => {
     const value = new Date(control.value);
     const hoy = new Date();
     hoy.setHours(0, 0, 0, 0);
     value.setHours(0, 0, 0, 0);
 
-    return { value, hoy}
+    return { value, hoy };
   };
 
   static alumnoYaAsignado(control: AbstractControl, existe: boolean) {
@@ -101,11 +100,6 @@ export class MyValidators {
     return null;
   }
 
-
-
-
-
-
   isAlumnoValido(control: AbstractControl, existe: boolean) {
     const value = control.value;
 
@@ -117,22 +111,33 @@ export class MyValidators {
     return null;
   }
 
-  //Si la fecha de realizado el examen médico tiene más de 30 días de realizado... 
-  static EsMayorA30Dias(control:AbstractControl){
+  //Si la fecha de realizado el examen médico tiene más de 30 días de realizado...
+  static EsMayorA30Dias(control: AbstractControl) {
     const { value, hoy } = MyValidators.getFechasWithHoursZeros(control);
-    var fechaHoy= moment(new Date(hoy));
-    let fechaIngresada= moment(new Date(value));
-    var diferenciaDias = fechaHoy.diff(fechaIngresada,"days");
+    const fechaHoy = moment(new Date(hoy));
+    const fechaIngresada = moment(new Date(value));
+    var diferenciaDias = fechaHoy.diff(fechaIngresada, 'days');
     if (diferenciaDias > 30) {
-      
       return { fecha_invalid: true };
     }
     return null;
   }
 
+  //Si un ckeckbox es checked=true...
+  static EsChecked(control: AbstractControl) {
+    const { value } = control;
+    if (!value) {
+      return { examen_invalid: true };
+    }
+    return null;
+  }
+
+  //Fecha x días anterior...
+  static FechaXDiasAnteriorAHoy(x) {
+    const fechaAnterior = moment().subtract(x, 'days').format('MM/DD/yyyy');
+    return fechaAnterior;
+  }
 }
-
-
 
 function validarRUC(RUC: number): boolean {
   // -------------------------------
@@ -172,7 +177,6 @@ function validarRUC(RUC: number): boolean {
   // ---------------------
   RUCst = RUCst.substring(0, 11);
 
-
   let Suma = Number.parseInt(RUCst.substring(0, 1), 0) * 4;
   Suma += Number.parseInt(RUCst.substring(1, 1), 0) * 3;
   Suma += Number.parseInt(RUCst.substring(2, 1), 0) * 2;
@@ -191,7 +195,6 @@ function validarRUC(RUC: number): boolean {
   if (ChkDigOk === 11) {
     ChkDigOk = 0;
   } else {
-
     // RUC Inválido
     // -------------
     if (ChkDigOk === 10) {
@@ -200,11 +203,12 @@ function validarRUC(RUC: number): boolean {
   }
 
   // let RUCOk = false;
-  if ((ChkDigOk === ChkDigOri) &&
-    (RUCst.substring(0, 2) >= '01') &&
-    (RUCst.substring(0, 2) <= '21') &&
-    (RUCst.substring(2, 6) >= '000001') &&
-    (RUCst.substring(2, 6) <= '999999')
+  if (
+    ChkDigOk === ChkDigOri &&
+    RUCst.substring(0, 2) >= '01' &&
+    RUCst.substring(0, 2) <= '21' &&
+    RUCst.substring(2, 6) >= '000001' &&
+    RUCst.substring(2, 6) <= '999999'
   ) {
     return true; // RUCOk = 'S';
   }
@@ -212,24 +216,21 @@ function validarRUC(RUC: number): boolean {
 }
 
 export class FuncionesAuxiliares {
-
-  constructor(private alumnoService: AlumnoService) { }
+  constructor(private alumnoService: AlumnoService) {}
 
   public existeAlumno(aluNro: number) {
     return this.alumnoService.existeAlumno(aluNro);
   }
-
 }
 
-
-
 // custom validator to check that two fields match
-export function validateFechaAnterior(controlName: string, matchingControlName: string) {
+export function validateFechaAnterior(
+  controlName: string,
+  matchingControlName: string
+) {
   return (formGroup: FormGroup) => {
-
     const fecha1 = formGroup.controls[controlName];
     const fecha2 = formGroup.controls[matchingControlName];
-
 
     if (fecha2.errors && !fecha2.errors.mustMatch) {
       // return if another validator has already found an error on the matchingControl
@@ -244,6 +245,3 @@ export function validateFechaAnterior(controlName: string, matchingControlName: 
     }
   };
 }
-
-
-

@@ -42,8 +42,6 @@ import { ClaseEstimada } from '@core/model/clase-estimada.model';
 import { ReportesService } from '@core/services/reportes.service';
 import { MyValidatorsService } from '../../../../utils/my-validators.service';
 
-
-
 @Component({
   selector: 'app-inscripcion-curso',
   templateUrl: './inscripcion-curso.component.html',
@@ -170,7 +168,7 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
 
         fechaLicCedulaIdentidad: [''],
         fechaPagoLicencia: [''],
-        fechaExamenMedico: ['',MyValidators.EsMayorA30Dias],
+        fechaExamenMedico: ['', MyValidators.EsMayorA30Dias],
 
         disponibilidadLunes: [''],
         disponibilidadMartes: [''],
@@ -614,10 +612,10 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
     this.inscripcionCurso.eLearning = this.eLearningField.value;
 
     this.inscripcionCurso.examenMedico = this.examenMedicoField.value;
-    // this.inscripcionCurso.licenciaCedulaIdentidad=  this.licenciaCedulaIdentidadField.value;
-    this.inscripcionCurso.licenciaCedulaIdentidad =this.examenMedicoField.value;
-    //this.inscripcionCurso.pagoDeLicencia = this.pagoDeLicenciaField.value;
-    this.inscripcionCurso.pagoDeLicencia =this.examenMedicoField.value;
+    this.inscripcionCurso.licenciaCedulaIdentidad =
+      this.examenMedicoField.value;
+
+    this.inscripcionCurso.pagoDeLicencia = this.examenMedicoField.value;
 
     this.inscripcionCurso.fechaExamenMedico = this.fechaExamenMedicoField.value;
     this.inscripcionCurso.fechaLicCedulaIdentidad =
@@ -633,10 +631,9 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
       });
   }
 
-  fechaExamenChecked(){
-    var value= this.form.get('examenMedico').value;
-    if(value)
-      return  value
+  fechaExamenChecked() {
+    const value = this.fechaExamenMedicoField;
+    if (value) return value;
   }
   private salir(result) {
     if (result && result.salir) {
@@ -723,14 +720,6 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
     return this.form.get('examenMedico');
   }
 
-  // get licenciaCedulaIdentidadField() {
-  //   return this.form.get('licenciaCedulaIdentidad');
-  // }
-
-  // get pagoDeLicenciaField() {
-  //   return this.form.get('pagoDeLicencia');
-  // }
-
   get fechaLicCedulaIdentidadField() {
     return this.form.get('fechaLicCedulaIdentidad');
   }
@@ -792,5 +781,4 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
   get disponibilidadSabadoField() {
     return this.form.get('disponibilidadSabado');
   }
-
 }
