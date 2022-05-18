@@ -69,7 +69,7 @@ export class ExamenMedicoComponent implements OnInit, OnDestroy {
         .subscribe((res: any) => {
           mensajeConfirmacion('Confirmado!', res.errorMessage).then((res2) => {
             this.dialogRef.close();
-            this.router.navigate(['/escuela/gestion-alumno']);
+            this.router.navigate(['/escuela/gestion-inscripcion']);
           });
         });
     }

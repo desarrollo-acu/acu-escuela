@@ -17,8 +17,8 @@ import { GestionCustomComponent } from './components/gestion-custom/gestion-cust
 import { VerAgendaComponent } from './dialogs/ver-agenda/ver-agenda.component';
 import { HorasArrayToStringPipe } from './pipes/horas-array-to-string.pipe';
 import { BooleanToSpanishPipe } from './pipes/boolean-to-spanish.pipe';
-
-
+import { DiaDeLaSemanaPipe } from './pipes/dia-de-la-semana.pipe';
+import { DatetimeToStringPipe } from './pipes/datetime-to-string.pipe';
 
 @NgModule({
   declarations: [
@@ -35,14 +35,11 @@ import { BooleanToSpanishPipe } from './pipes/boolean-to-spanish.pipe';
     GestionCustomComponent,
     VerAgendaComponent,
     HorasArrayToStringPipe,
-    BooleanToSpanishPipe
+    BooleanToSpanishPipe,
+    DiaDeLaSemanaPipe,
+    DatetimeToStringPipe,
   ],
-  imports: [
-    CommonModule,
-    RouterModule,
-    MaterialModule,
-    ReactiveFormsModule
-  ],
+  imports: [CommonModule, RouterModule, MaterialModule, ReactiveFormsModule],
   exports: [
     ValueIPipe,
     DaySpanishPipe,
@@ -55,8 +52,9 @@ import { BooleanToSpanishPipe } from './pipes/boolean-to-spanish.pipe';
     SeleccionarCustomComponent,
     GestionCustomComponent,
     HorasArrayToStringPipe,
-    BooleanToSpanishPipe
-
+    BooleanToSpanishPipe,
+    DiaDeLaSemanaPipe,
+    DatetimeToStringPipe,
   ],
 })
-export class SharedModule { }
+export class SharedModule {}

@@ -35,6 +35,7 @@ export class InstructorHorasLibresComponent implements OnInit {
   displayedColumns: string[] = [
     'actions',
     'Fecha',
+    'DiaFecha',
     'HoraInicio',
     'HoraFin',
     'DiaAsignado',

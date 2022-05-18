@@ -11,6 +11,7 @@ import { GenerarNuevoPlanClasesComponent } from '../../dialogs/generar-nuevo-pla
 import { AcuService } from '../../../core/services/acu.service';
 import { environment } from '@environments/environment';
 import { AutenticacionService } from '@core/services/autenticacion.service';
+import { ExamenMedicoComponent } from '../modals/examen-medico/examen-medico.component';
 
 @Component({
   selector: 'app-gestion-inscripcion',
@@ -69,6 +70,17 @@ export class GestionInscripcionComponent implements OnInit {
       timeout = setTimeout(() => {
         this.getInscripciones(this.pageSize, 1, this.filtro);
       }, 500);
+    });
+  }
+
+  ingresarExamen(inscripcion: Inscripcion) {
+    localStorage.setItem('inscripcionDatos', JSON.stringify(inscripcion));
+    const disponibilidadDialogRef = this.dialog.open(ExamenMedicoComponent, {
+      height: 'auto',
+      width: '700px',
+      data: {
+        inscripcion,
+      },
     });
   }
 
