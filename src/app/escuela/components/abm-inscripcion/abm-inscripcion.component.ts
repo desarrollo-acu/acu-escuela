@@ -114,7 +114,6 @@ export class AbmInscripcionComponent implements OnInit {
     this.disponibilidadSabado.setValue(disponibilidadSabado);
     this.observaciones.setValue(this.inscripcion.EscAluCurObs);
     const date = moment(this.inscripcion.EscAluCurFechaExamenMedico);
-    console.log(date);
     if (date.isValid()) {
       this.fechaExamenMedicoActualField.setValue(
         moment(date).format('DD/MM/yyyy')

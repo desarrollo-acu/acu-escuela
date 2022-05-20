@@ -1,13 +1,5 @@
-import { filter } from 'rxjs/operators';
 import { ClaseEstimadaDetalleParaSuspension } from './../../../../core/model/clase-estimada.model';
-import {
-  Component,
-  OnInit,
-  ViewChild,
-  Inject,
-  AfterViewInit,
-  AfterViewChecked,
-} from '@angular/core';
+import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 
@@ -17,14 +9,11 @@ import {
   MAT_DIALOG_DATA,
   MatDialog,
 } from '@angular/material/dialog';
-import { AcuService } from '@core/services/acu.service';
+
 import { InscripcionCursoComponent } from '../inscripcion-curso/inscripcion-curso.component';
-import { ClasesEstimadasDetalleComponent } from '../clases-estimadas-detalle/clases-estimadas-detalle.component';
-import {
-  ClaseEstimada,
-  ClaseEstimadaDetalle,
-} from '@core/model/clase-estimada.model';
+
 import { AlumnoService } from '@core/services/alumno.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-instructor-horas-libres',
@@ -56,7 +45,6 @@ export class InstructorHorasLibresComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.detalle = this.data.clasesEstimadas.detalle;
-    //this.detalle[0].diaYaAsignado=true;
 
     this.alumno = this.data.alumno ? this.data.alumno : '';
 
@@ -70,7 +58,8 @@ export class InstructorHorasLibresComponent implements OnInit {
       next: (response: any) => {
         this.fechaDiaAsignado(
           response.ClasesEstimadas.Detalle,
-          this.data.clasesEstimadas.detalle
+          this.data.clasesEstimadas.detalle,
+          response.FechaExamen
         );
         this.dataSource = new MatTableDataSource(this.detalle);
         this.dataSource.paginator = this.paginator;
@@ -80,8 +69,6 @@ export class InstructorHorasLibresComponent implements OnInit {
         console.log('error');
       },
     });
-    // Assign the data to the data source for the table to render
-    //this.dataSource = new MatTableDataSource(this.data.clasesEstimadas.detalle);
   }
 
   ngOnInit() {}
@@ -94,7 +81,11 @@ export class InstructorHorasLibresComponent implements OnInit {
     }
   }
 
-  fechaDiaAsignado(data1, data2) {
+  //Recibos las fechas disponibles del alumno, las fechas que el alumno tiene agendada clases,
+  //y la fecha del examen. Cuando exista una coincidencia de fecha cargo en true diaUaAsignado
+  //este campo me permite indicar en la tabla aquel día disponible que ya tenga una clase.
+  //La fecha del examen me indica hasta que rango de fechas mostrar (menor a la fecha de examen)
+  fechaDiaAsignado(data1, data2, data3) {
     for (let i = 0; i < data1.length; i++) {
       for (let x = 0; x < data2.length; x++) {
         if (data1[i].Fecha === data2[x].Fecha) {
@@ -102,8 +93,22 @@ export class InstructorHorasLibresComponent implements OnInit {
         }
       }
     }
+    const date = moment(data3);
+    if (date.isValid()) {
+      //Filtro las fechas posteriores al día del examen.
+      this.detalle = this.detalle.filter((e) => {
+        if (this.filtrarFechaIgualOAnterior(date, e.Fecha)) return e;
+      });
+    }
   }
 
+  filtrarFechaIgualOAnterior(date1, date2) {
+    date1 = moment(date1);
+    date2 = moment(date2);
+
+    if (date1.isSameOrAfter(date2)) return true;
+    else return false;
+  }
   onNoClick(): void {
     this.dialogRef.close();
   }

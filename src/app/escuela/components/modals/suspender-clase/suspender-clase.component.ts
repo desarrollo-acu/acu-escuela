@@ -189,7 +189,6 @@ export class SuspenderClaseComponent implements OnInit {
           this.instructorService
             .getDisponibilidadInstructor(this.agendaClase, cantidad)
             .subscribe((res: { ClasesEstimadas: ClaseEstimada[] }) => {
-              console.log(res);
               const arrayPlano: {
                 instructorCodigo?: string;
                 instructorNombre?: string;
@@ -210,6 +209,8 @@ export class SuspenderClaseComponent implements OnInit {
                   data: {
                     clasesEstimadas: arrayPlano,
                     alumId: this.agendaClase.AluId,
+                    tipCurId: this.agendaClase.TipCurId,
+                    escAluCurId: this.agendaClase.EscAluCurId,
                   },
                 }
               );

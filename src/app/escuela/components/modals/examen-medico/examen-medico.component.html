@@ -1,77 +1,82 @@
-
 <form [formGroup]="form">
-    <mat-toolbar color="primary">
-      <h2 mat-dialog-title>Ingresar Examen Médico</h2>
-    </mat-toolbar>
-  
-    <mat-dialog-content class="mat-typography" style="margin-left: 5px; margin-top: 20px;">
-  
-      <div class="row">
-        <div class="col">
-            <div class="box">
-                <h3>Fecha de examen médico actual</h3>
-                <mat-form-field class="full-width">
-                  <input
-                    matInput
-                    formControlName="fechaExamenMedicoActual"
-                  />
-                </mat-form-field>
-            </div>
-        </div>
-    </div>
-        <div class="row">
-            <div class="col">
-                <div class="box">
-                    <h3>Documentación para gestión de Permiso de Circulación</h3>
-                    <mat-checkbox color="primary" (change)="changeExamenMedico($event)"
-                    formControlName="examenMedico"
-                    >
-                        Examen médico | Cédula de Identidad | Pago de Licencia
-                        
-                    </mat-checkbox>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-              <div class="box">
-                <mat-form-field class="full-width" *ngIf="fechaExamenChecked()">
-                  <input 
-                    matInput
-                    [matDatepicker]="pickerExamenMedico"
-                    placeholder="Fecha de entrega de examen médico "
-                    formControlName="fechaExamenMedico"
-                    
-                  />
-                  <mat-datepicker-toggle matSuffix [for]="pickerExamenMedico">
-                  </mat-datepicker-toggle>
-                  <mat-datepicker #pickerExamenMedico></mat-datepicker>
-                  <mat-error *ngIf="
-                    form.get('fechaExamenMedico')?.touched && 
-                    form.get('fechaExamenMedico').errors"
-                  >
-                  Supera los 30 días de plazo permitidos
-                </mat-error>
-                </mat-form-field>
-              </div>
-            </div>
-          </div>
+  <mat-toolbar color="primary">
+    <h2 mat-dialog-title>Ingresar Examen Médico</h2>
+  </mat-toolbar>
 
-  
-    </mat-dialog-content>
-  
-    <mat-dialog-actions align="end">
-      <button
-        mat-raised-button
-        type="button"
-        cdkFocusInitial
-        (click)="ingresarExamenMedico($event)"
-        [disabled]="form.invalid"
-        color="primary"
-      >
-        Ingresar
-      </button>
-      <button mat-button mat-dialog-close >Cancelar</button>
-    </mat-dialog-actions>
-  </form>
-  
+  <mat-dialog-content
+    class="mat-typography"
+    style="margin-left: 5px; margin-top: 20px"
+  >
+    <div class="row">
+      <div class="col">
+        <div class="box">
+          <h3>Fecha de examen médico actual</h3>
+          <mat-form-field class="full-width">
+            <input matInput formControlName="fechaExamenMedicoActual" />
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="box">
+          <h3>Documentación para gestión de Permiso de Circulación</h3>
+          <mat-checkbox
+            color="primary"
+            (change)="changeExamenMedico($event)"
+            formControlName="examenMedico"
+          >
+            Examen médico | Cédula de Identidad | Pago de Licencia
+          </mat-checkbox>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="box">
+          <mat-form-field class="full-width" *ngIf="fechaExamenChecked()">
+            <input
+              matInput
+              [matDatepicker]="pickerExamenMedico"
+              placeholder="Fecha de entrega de examen médico "
+              formControlName="fechaExamenMedico"
+            />
+            <mat-datepicker-toggle matSuffix [for]="pickerExamenMedico">
+            </mat-datepicker-toggle>
+            <mat-datepicker #pickerExamenMedico></mat-datepicker>
+            <mat-error
+              *ngIf="
+                form.get('fechaExamenMedico')?.touched &&
+                form.get('fechaExamenMedico').errors?.EsMayorA30DiasRet
+              "
+            >
+              Supera los 30 días de plazo permitidos
+            </mat-error>
+            <mat-error
+              *ngIf="
+                form.get('fechaExamenMedico')?.touched &&
+                form.get('fechaExamenMedico').errors?.fechaPosteriorAHoyRet
+              "
+            >
+              No puede ser posterior a la fecha de hoy
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button
+      mat-raised-button
+      type="button"
+      cdkFocusInitial
+      (click)="ingresarExamenMedico($event)"
+      [disabled]="form.invalid"
+      color="primary"
+    >
+      Ingresar
+    </button>
+    <button mat-button mat-dialog-close>Cancelar</button>
+  </mat-dialog-actions>
+</form>

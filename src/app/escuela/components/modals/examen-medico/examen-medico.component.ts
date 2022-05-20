@@ -40,7 +40,10 @@ export class ExamenMedicoComponent implements OnInit, OnDestroy {
       examenMedico: [false, MyValidators.EsChecked],
       fechaLicCedulaIdentidad: [''],
       fechaPagoLicencia: [''],
-      fechaExamenMedico: ['', MyValidators.EsMayorA30Dias],
+      fechaExamenMedico: [
+        '',
+        [MyValidators.EsMayorA30Dias, MyValidators.fechaPosteriorAHoy],
+      ],
       fechaExamenMedicoActual: [''],
     });
   }
