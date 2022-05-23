@@ -1,14 +1,8 @@
-import {
-  AbstractControl,
-  ValidatorFn,
-  AsyncValidatorFn,
-  ValidationErrors,
-} from '@angular/forms';
+import { AbstractControl } from '@angular/forms';
 
 import { AlumnoService } from '@core/services/alumno.service';
 
 import { FormGroup } from '@angular/forms';
-import { errorMensaje } from './sweet-alert';
 
 import * as moment from 'moment';
 
@@ -130,12 +124,6 @@ export class MyValidators {
       return { examen_invalid: true };
     }
     return null;
-  }
-
-  //Fecha x días anterior...
-  static FechaXDiasAnteriorAHoy(x) {
-    const fechaAnterior = moment().subtract(x, 'days').format('MM/DD/yyyy');
-    return fechaAnterior;
   }
 }
 

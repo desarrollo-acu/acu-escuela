@@ -5,21 +5,16 @@ import {
 } from '@angular/material/bottom-sheet';
 import { MatDialog } from '@angular/material/dialog';
 
-import Swal from 'sweetalert2';
-import {
-  AcuService,
-  LiberarParameters,
-} from 'src/app/core/services/acu.service';
-import { CopiarMoverParameters } from 'src/app/core/model/copiarMoverParameters.model';
-import { AutenticacionService } from '../../../../core/services/autenticacion.service';
+import { AcuService } from 'src/app/core/services/acu.service';
+
 import {
   confirmacionUsuario,
   errorMensaje,
 } from '../../../../utils/sweet-alert';
-import { SeleccionarMovilComponent } from '../seleccionar-movil/seleccionar-movil.component';
-import { MovilService } from '@core/services/movil.service';
+
 import * as moment from 'moment';
-import { MyValidators } from 'src/app/utils/validators';
+
+import { FechaXDiasAnteriorAHoy } from '@utils/utils-functions';
 @Component({
   selector: 'app-seleccionar-accion-agenda',
   templateUrl: './seleccionar-accion-agenda.component.html',
@@ -32,14 +27,11 @@ export class SeleccionarAccionAgendaComponent {
   fechaClase: Date;
   usuarioConPermiso: boolean = false;
   fechaAnteriorMaxima;
-  private usuarioConPermisoNombre: string = 'JBARRUTIA';
+  private usuarioConPermisoNombre: string = 'JBARRUTIA'; //Solo este usuario podra mover y suspender clases de hasta 3 días pasados.
 
   constructor(
-    // tslint:disable-next-line: variable-name
     private _bottomSheetRef: MatBottomSheetRef<SeleccionarAccionAgendaComponent>,
     private acuService: AcuService,
-    private movilService: MovilService,
-    private auth: AutenticacionService,
     public dialog: MatDialog,
 
     @Inject(MAT_BOTTOM_SHEET_DATA) public data: any
@@ -47,13 +39,12 @@ export class SeleccionarAccionAgendaComponent {
     this.fechaClase = moment(this.data.fechaClase).toDate();
 
     if (localStorage.getItem('usrId') === this.usuarioConPermisoNombre)
-      //Solo este usuario podra mover y suspender clases de hasta 3 días pasados.
       this.usuarioConPermiso = true;
 
     this.verOpciones = this.data.verOpciones;
     this.pegar = JSON.parse(localStorage.getItem('pegar-clase'));
 
-    this.fechaAnteriorMaxima = new Date(MyValidators.FechaXDiasAnteriorAHoy(3)); // La fecha de 3 días para atras.
+    this.fechaAnteriorMaxima = new Date(FechaXDiasAnteriorAHoy(3)); // La fecha de 3 días para atras.
   }
 
   openLink(event: MouseEvent, key: string): void {
