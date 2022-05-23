@@ -7,6 +7,7 @@ import { CuentaCorriente } from '../model/cuenta-corriente.model';
 import { AlumnoByCI } from '../model/alumno-by-ci.interface';
 import { ObtenerAlumnos } from '../model/obtener-alumnos.interface';
 import { Inscripcion } from '@core/model/inscripcion.model';
+import { AlumnoResponse } from '../model/alumno-response.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -89,7 +90,7 @@ export class AlumnoService {
     return this.http.post(`${environment.url_ws}/wsObtenerAlumnos`, {});
   }
 
-  obtenerAlumnos = (pageSize: number, pageNumber: number, filtro: string)  =>  this.http.get(
+  obtenerAlumnos = (pageSize: number, pageNumber: number, filtro: string)  =>  this.http.get<AlumnoResponse>(
       `${environment.url_ws}/wsGetAlumnos?PageSize=${pageSize}&PageNumber=${pageNumber}&Filtro=${filtro}`
     );
 

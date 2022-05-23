@@ -156,9 +156,6 @@ export class AgendaMovilComponent implements OnInit, OnDestroy {
                   },
                 });
 
-                dialogRef.afterClosed().subscribe((result) => {
-                  this.animal = result;
-                });
               });
             break;
 
@@ -245,11 +242,7 @@ export class AgendaMovilComponent implements OnInit, OnDestroy {
           },
         });
 
-        dialogRef.afterClosed().subscribe((result) => {
-          this.animal = result;
-
-          this.getAgenda(this.fecha);
-        });
+        dialogRef.afterClosed().subscribe(() => this.getAgenda(this.fecha));
       });
   }
 
@@ -263,11 +256,7 @@ export class AgendaMovilComponent implements OnInit, OnDestroy {
           },
         });
 
-        dialogRef.afterClosed().subscribe((result) => {
-          this.animal = result;
-
-          this.getAgenda(this.fecha);
-        });
+        dialogRef.afterClosed().subscribe(() => this.getAgenda(this.fecha));
       });
   }
 
@@ -282,11 +271,7 @@ export class AgendaMovilComponent implements OnInit, OnDestroy {
           },
         });
 
-        dialogRef.afterClosed().subscribe((result) => {
-          this.animal = result;
-
-          this.getAgenda(this.fecha);
-        });
+        dialogRef.afterClosed().subscribe(() => this.getAgenda(this.fecha));
       });
   }
 
@@ -348,10 +333,7 @@ export class AgendaMovilComponent implements OnInit, OnDestroy {
       },
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      this.animal = result;
-      this.getAgenda(this.fecha);
-    });
+    dialogRef.afterClosed().subscribe(() => this.getAgenda(this.fecha));
   }
 
   accionGeneralDia(accion: string) {
