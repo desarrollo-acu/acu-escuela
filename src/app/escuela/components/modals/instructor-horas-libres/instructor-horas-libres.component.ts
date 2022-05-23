@@ -1,4 +1,7 @@
-import { ClaseEstimadaDetalleParaSuspension } from './../../../../core/model/clase-estimada.model';
+import {
+  ClaseEstimada,
+  ClaseEstimadaDetalle,
+} from './../../../../core/model/clase-estimada.model';
 import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -29,10 +32,10 @@ export class InstructorHorasLibresComponent implements OnInit {
     'HoraFin',
     'DiaAsignado',
   ];
-  dataSource: MatTableDataSource<ClaseEstimadaDetalleParaSuspension>;
+  dataSource: MatTableDataSource<ClaseEstimadaDetalle>;
 
   alumno: string;
-  detalle: ClaseEstimadaDetalleParaSuspension[];
+  detalle: ClaseEstimadaDetalle[];
   titulo: string;
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;

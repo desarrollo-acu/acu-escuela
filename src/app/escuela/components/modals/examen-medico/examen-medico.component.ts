@@ -1,22 +1,13 @@
-import { InscripcionesAlumnoComponent } from './../inscripciones-alumno/inscripciones-alumno.component';
 import { AlumnoService } from '@core/services/alumno.service';
-import {
-  Component,
-  OnInit,
-  OnDestroy,
-  ViewChild,
-  ElementRef,
-  Renderer2,
-} from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatCheckboxChange } from '@angular/material/checkbox';
-import { InscripcionService } from '@core/services/inscripcion.service';
 import * as moment from 'moment';
-import { isMoment, Moment } from 'moment';
 import { MyValidators } from 'src/app/utils/validators';
 import { mensajeConfirmacion } from '@utils/sweet-alert';
 import { Router } from '@angular/router';
 import { MatDialogRef } from '@angular/material/dialog';
+import { formatDateToString } from '@utils/utils-functions';
 @Component({
   selector: 'app-examen-medico',
   templateUrl: './examen-medico.component.html',
@@ -26,7 +17,6 @@ export class ExamenMedicoComponent implements OnInit, OnDestroy {
   form: FormGroup;
 
   constructor(
-    private renderer: Renderer2,
     public dialogRef: MatDialogRef<ExamenMedicoComponent>,
     private router: Router,
     private formBuilder: FormBuilder,
@@ -60,8 +50,8 @@ export class ExamenMedicoComponent implements OnInit, OnDestroy {
     let inscripcion = JSON.parse(localStorage.getItem('inscripcionDatos'));
 
     if (inscripcion) {
-      var fecha = new Date(this.fechaExamenString);
-      const strFecha = this.formatDateToString(fecha);
+      const fecha = new Date(this.fechaExamenString);
+      const strFecha = formatDateToString(fecha);
       this.inscripcionService
         .ingresarExamenMedico(
           inscripcion.AluId,
@@ -76,36 +66,6 @@ export class ExamenMedicoComponent implements OnInit, OnDestroy {
           });
         });
     }
-  }
-
-  formatDateToString(fechaParm: Date | Moment): string {
-    let auxFecha: Date;
-    if (isMoment(fechaParm)) {
-      auxFecha = fechaParm.toDate();
-    } else if (fechaParm instanceof Date) {
-      auxFecha = fechaParm;
-    }
-    const fecha = auxFecha;
-    const day = fecha.getDate();
-    const month = fecha.getMonth() + 1;
-    const year = fecha.getFullYear();
-
-    let strDay;
-    let strMonth;
-    const strYear = year.toString();
-
-    if (day < 10) {
-      strDay = '0' + day.toString();
-    } else {
-      strDay = day.toString();
-    }
-
-    if (month < 10) {
-      strMonth = '0' + month.toString();
-    } else {
-      strMonth = month.toString();
-    }
-    return `${strYear}-${strMonth}-${strDay}`;
   }
 
   get fechaExamenMedicoField() {
@@ -133,7 +93,7 @@ export class ExamenMedicoComponent implements OnInit, OnDestroy {
           inscripcion.EscAluCurId
         )
         .subscribe((res: any) => {
-          var date = moment(res.EscAluCurFechaExamenMedico);
+          const date = moment(res.EscAluCurFechaExamenMedico);
           if (date.isValid()) {
             this.fechaExamenMedicoActualField.setValue(
               moment(date).format('DD/MM/yyyy')
@@ -153,7 +113,6 @@ export class ExamenMedicoComponent implements OnInit, OnDestroy {
   }
 
   fechaExamenChecked() {
-    var value = this.fechaExamenMedicoField.value;
-    if (value) return value;
+    return this.fechaExamenMedicoField?.value;
   }
 }

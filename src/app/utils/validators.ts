@@ -116,7 +116,7 @@ export class MyValidators {
     const { value, hoy } = MyValidators.getFechasWithHoursZeros(control);
     const fechaHoy = moment(new Date(hoy));
     const fechaIngresada = moment(new Date(value));
-    var diferenciaDias = fechaHoy.diff(fechaIngresada, 'days');
+    const diferenciaDias = fechaHoy.diff(fechaIngresada, 'days');
     if (diferenciaDias > 30) {
       return { EsMayorA30DiasRet: { fecha_invalid: true } };
     }

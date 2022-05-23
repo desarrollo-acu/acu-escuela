@@ -56,7 +56,7 @@ export class AbmInscripcionComponent implements OnInit {
             this.setValuesForm(inscripcion);
             console.log(inscripcion);
           }
-        ); /// .currentMessage.subscribe(message => this.message = message)
+        );
     }
   }
 

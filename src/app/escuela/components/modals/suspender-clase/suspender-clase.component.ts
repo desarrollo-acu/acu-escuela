@@ -1,4 +1,3 @@
-import { ClaseEstimadaDetalleParaSuspension } from './../../../../core/model/clase-estimada.model';
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
@@ -192,7 +191,7 @@ export class SuspenderClaseComponent implements OnInit {
               const arrayPlano: {
                 instructorCodigo?: string;
                 instructorNombre?: string;
-                detalle?: ClaseEstimadaDetalleParaSuspension[];
+                detalle?: ClaseEstimadaDetalle[];
               } = {};
               arrayPlano.instructorCodigo = res.ClasesEstimadas[1].EscInsId;
               arrayPlano.instructorNombre = res.ClasesEstimadas[1].EscInsNom;

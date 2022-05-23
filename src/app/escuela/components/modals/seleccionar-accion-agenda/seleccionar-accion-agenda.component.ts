@@ -32,6 +32,7 @@ export class SeleccionarAccionAgendaComponent {
   fechaClase: Date;
   usuarioConPermiso: boolean = false;
   fechaAnteriorMaxima;
+  private usuarioConPermisoNombre: string = 'JBARRUTIA';
 
   constructor(
     // tslint:disable-next-line: variable-name
@@ -45,7 +46,7 @@ export class SeleccionarAccionAgendaComponent {
   ) {
     this.fechaClase = moment(this.data.fechaClase).toDate();
 
-    if (localStorage.getItem('usrId') === 'JBARRUTIA')
+    if (localStorage.getItem('usrId') === this.usuarioConPermisoNombre)
       //Solo este usuario podra mover y suspender clases de hasta 3 días pasados.
       this.usuarioConPermiso = true;
 
