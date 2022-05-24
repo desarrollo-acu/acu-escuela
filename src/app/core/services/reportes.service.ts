@@ -87,4 +87,17 @@ export class ReportesService {
     this.http.post(`${environment.url_ws}/reporteFacturasPorAlumno`, {
       aluId,
     });
+
+  expedientesProximos_A_Vencer(fechaDesde, fechaHasta, alumnoId) {
+    console.log(alumnoId);
+
+    return this.http.post(
+      `${environment.url_ws}/reporteExpedientesProximosVencer`,
+      {
+        fechaDesde,
+        fechaHasta,
+        AluId: alumnoId,
+      }
+    );
+  }
 }

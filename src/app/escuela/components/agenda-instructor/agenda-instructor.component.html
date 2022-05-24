@@ -99,7 +99,7 @@
       <td mat-cell class="cell" *matCellDef="let element">
         {{ element.Instructor }}
       </td>
-      <td mat-footer-cell *matFooterCellDef>Porcentaje</td>
+      <td mat-footer-cell *matFooterCellDef>PorcentajeUno</td>
     </ng-container>
 
     <ng-container matColumnDef="0">
@@ -128,7 +128,7 @@
       >
         {{ element.Hora1 }}
       </td>
-      <td mat-footer-cell *matFooterCellDef>{{ getPorcentaje(1) }} %</td>
+      <td mat-footer-cell *matFooterCellDef>{{ getPorcentaje(1) }} </td>
       >
     </ng-container>
 
@@ -216,9 +216,9 @@
         (click)="showAlert(element.Instructor, 7, element.existe7)"
         [id]="element.Instructor + '7'"
       >
-        {{ element.Hora7 }}
+        {{ element.Hora7 }} 
       </td>
-      <td mat-footer-cell *matFooterCellDef>{{ getPorcentaje(7) }} %</td>
+      <td mat-footer-cell *matFooterCellDef>{{ getPorcentaje(7)}} %</td>
       >
     </ng-container>
 

@@ -221,6 +221,37 @@
                 </div>
               </div>
 
+              <div class="row">
+                <div class="col">
+                  <div class="box">
+                    <h3>Fecha de examen médico</h3>
+
+                    <mat-form-field class="full-width">
+                      <input
+                        matInput
+                        [matDatepicker]="pickerExamenMedicoActual"
+                        placeholder="Fecha De Examen Medico Actual"
+                        formControlName="fechaExamenMedicoActual"
+                      />
+                      <mat-datepicker-toggle
+                        matSuffix
+                        [for]="pickerExamenMedicoActual"
+                      >
+                      </mat-datepicker-toggle>
+                      <mat-datepicker
+                        #pickerExamenMedicoActual
+                      ></mat-datepicker>
+                    </mat-form-field>
+
+                    <mat-error
+                      *ngIf="fechaExamenMedicoActualField.value === null"
+                    >
+                      No tiene fecha de examen médico ingresada previamente.
+                    </mat-error>
+                  </div>
+                </div>
+              </div>
+
               <mat-divider></mat-divider>
               <div class="row-inter">
                 <h3>Clases Teóricas</h3>

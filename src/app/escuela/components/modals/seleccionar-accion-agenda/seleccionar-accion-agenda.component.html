@@ -35,6 +35,24 @@
         </a>
       </ng-container>
     </ng-container>
+
+    <ng-container
+      *ngIf="
+        fechaClase < today &&
+        fechaClase >= fechaAnteriorMaxima &&
+        usuarioConPermiso
+      "
+    >
+      <ng-container *ngIf="verOpciones">
+        <a mat-list-item (click)="openLink($event, 'suspender-clase')">
+          <span mat-line>Suspender Clase</span>
+        </a>
+
+        <a mat-list-item (click)="openLink($event, 'mover-clase')">
+          <span mat-line>Mover Clase</span>
+        </a>
+      </ng-container>
+    </ng-container>
   </div>
   <div *ngIf="pegar">
     <a mat-list-item (click)="openLink($event, 'pegar-clase')" *ngIf="pegar">

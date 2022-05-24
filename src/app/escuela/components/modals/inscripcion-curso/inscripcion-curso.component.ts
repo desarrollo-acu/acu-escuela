@@ -4,7 +4,6 @@ import {
   MatDialogRef,
   MAT_DIALOG_DATA,
   MatDialog,
-  throwMatDialogContentAlreadyAttachedError,
 } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
@@ -163,12 +162,10 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
         eLearning: [false],
 
         examenMedico: [false],
-        licenciaCedulaIdentidad: [false],
-        pagoDeLicencia: [false],
 
         fechaLicCedulaIdentidad: [''],
         fechaPagoLicencia: [''],
-        fechaExamenMedico: [''],
+        fechaExamenMedico: ['', MyValidators.EsMayorA30Dias],
 
         disponibilidadLunes: [''],
         disponibilidadMartes: [''],
@@ -533,28 +530,12 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
       });
   }
 
-  changeLicenciaCedulaIdentidad(event: MatCheckboxChange) {
-    if (event.checked) {
-      return this.fechaLicCedulaIdentidadField.setValue(new Date());
-    }
-
-    return this.fechaLicCedulaIdentidadField.setValue('');
-  }
-
   changeExamenMedico(event: MatCheckboxChange) {
     if (event.checked) {
       return this.fechaExamenMedicoField.setValue(new Date());
     }
 
     return this.fechaExamenMedicoField.setValue('');
-  }
-
-  changePagoLicencia(event: MatCheckboxChange) {
-    if (event.checked) {
-      return this.fechaPagoLicenciaField.setValue(new Date());
-    }
-
-    return this.fechaPagoLicenciaField.setValue('');
   }
 
   async addInfoAlumnoAlForm(result: Alumno) {
@@ -612,9 +593,11 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
     this.inscripcionCurso.eLearning = this.eLearningField.value;
 
     this.inscripcionCurso.examenMedico = this.examenMedicoField.value;
+    //TODO: Revisar si despues tenemos que eliminarlo.
     this.inscripcionCurso.licenciaCedulaIdentidad =
-      this.licenciaCedulaIdentidadField.value;
-    this.inscripcionCurso.pagoDeLicencia = this.pagoDeLicenciaField.value;
+      this.examenMedicoField.value;
+
+    this.inscripcionCurso.pagoDeLicencia = this.examenMedicoField.value;
 
     this.inscripcionCurso.fechaExamenMedico = this.fechaExamenMedicoField.value;
     this.inscripcionCurso.fechaLicCedulaIdentidad =
@@ -631,7 +614,7 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
   }
 
   private salir(result) {
-    if (result && result.salir) {
+    if (result?.salir) {
       this.dialogRef.close();
     }
   }
@@ -713,14 +696,6 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
 
   get examenMedicoField() {
     return this.form.get('examenMedico');
-  }
-
-  get licenciaCedulaIdentidadField() {
-    return this.form.get('licenciaCedulaIdentidad');
-  }
-
-  get pagoDeLicenciaField() {
-    return this.form.get('pagoDeLicencia');
   }
 
   get fechaLicCedulaIdentidadField() {
