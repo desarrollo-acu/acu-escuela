@@ -88,13 +88,15 @@ export class ReportesService {
       aluId,
     });
 
-  expedientesProximos_A_Vencer(fechaDesdeP, fechaHastaP, alumnoIdP) {
+  expedientesProximos_A_Vencer(fechaDesde, fechaHasta, alumnoId) {
+    console.log(alumnoId);
+
     return this.http.post(
       `${environment.url_ws}/reporteExpedientesProximosVencer`,
       {
-        fechaDesde: fechaDesdeP,
-        fechaHasta: fechaHastaP,
-        AluId: alumnoIdP,
+        fechaDesde,
+        fechaHasta,
+        AluId: alumnoId,
       }
     );
   }

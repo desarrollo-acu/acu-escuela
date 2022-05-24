@@ -64,7 +64,9 @@ export class InstructorHorasLibresComponent implements OnInit {
           this.data.clasesEstimadas.detalle,
           response.FechaExamen
         );
+
         this.dataSource = new MatTableDataSource(this.detalle);
+
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       },
@@ -88,29 +90,35 @@ export class InstructorHorasLibresComponent implements OnInit {
   //y la fecha del examen. Cuando exista una coincidencia de fecha cargo en true diaUaAsignado
   //este campo me permite indicar en la tabla aquel día disponible que ya tenga una clase.
   //La fecha del examen me indica hasta que rango de fechas mostrar (menor a la fecha de examen)
-  fechaDiaAsignado(data1, data2, data3) {
-    for (let i = 0; i < data1.length; i++) {
-      for (let x = 0; x < data2.length; x++) {
-        if (data1[i].Fecha === data2[x].Fecha) {
+  fechaDiaAsignado(
+    fechasConClaseAlumno,
+    fechasDisponiblesInstructor,
+    fechaExamenAlumno
+  ) {
+    for (let i = 0; i < fechasConClaseAlumno.length; i++) {
+      for (let x = 0; x < fechasDisponiblesInstructor.length; x++) {
+        if (
+          moment(fechasConClaseAlumno[i].Fecha).isSame(
+            moment(fechasDisponiblesInstructor[x].Fecha)
+          )
+        ) {
           this.detalle[x].diaYaAsignado = true;
         }
       }
     }
-    const date = moment(data3);
-    if (date.isValid()) {
-      //Filtro las fechas posteriores al día del examen.
-      this.detalle = this.detalle.filter((e) => {
-        if (this.filtrarFechaIgualOAnterior(date, e.Fecha)) return e;
-      });
+    const fechaExamenAlumnoMoment = moment(fechaExamenAlumno);
+    if (fechaExamenAlumnoMoment.isValid()) {
+      //Filtro las fechas anteriores al día del examen.
+      this.detalle = this.detalle.filter((e) =>
+        this.filtrarFechaIgualOAnterior(fechaExamenAlumnoMoment, e.Fecha)
+      );
     }
   }
 
-  filtrarFechaIgualOAnterior(date1, date2) {
-    date1 = moment(date1);
-    date2 = moment(date2);
-
-    if (date1.isSameOrAfter(date2)) return true;
-    else return false;
+  filtrarFechaIgualOAnterior(fechaExamenAlumno, fechaDisponibleInstructor) {
+    fechaExamenAlumno = moment(fechaExamenAlumno);
+    fechaDisponibleInstructor = moment(fechaDisponibleInstructor);
+    return fechaExamenAlumno.isSameOrAfter(fechaDisponibleInstructor);
   }
   onNoClick(): void {
     this.dialogRef.close();

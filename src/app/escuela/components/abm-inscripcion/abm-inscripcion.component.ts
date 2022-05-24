@@ -113,14 +113,12 @@ export class AbmInscripcionComponent implements OnInit {
     this.disponibilidadViernes.setValue(disponibilidadViernes);
     this.disponibilidadSabado.setValue(disponibilidadSabado);
     this.observaciones.setValue(this.inscripcion.EscAluCurObs);
+
+    this.fechaExamenMedicoActualField.setValue(null);
     const date = moment(this.inscripcion.EscAluCurFechaExamenMedico);
     if (date.isValid()) {
       this.fechaExamenMedicoActualField.setValue(
-        moment(date).format('DD/MM/yyyy')
-      );
-    } else {
-      this.fechaExamenMedicoActualField.setValue(
-        'No tiene fecha de examen médico ingresada previamente.'
+        this.inscripcion.EscAluCurFechaExamenMedico
       );
     }
   }
@@ -164,7 +162,7 @@ export class AbmInscripcionComponent implements OnInit {
       disponibilidadViernes: [''],
       disponibilidadSabado: [''],
       observaciones: [''],
-      fechaExamenMedicoActual: [''],
+      fechaExamenMedicoActual: [null],
     });
   }
 

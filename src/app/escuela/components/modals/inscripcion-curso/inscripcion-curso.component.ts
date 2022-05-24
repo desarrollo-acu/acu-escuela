@@ -593,6 +593,7 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
     this.inscripcionCurso.eLearning = this.eLearningField.value;
 
     this.inscripcionCurso.examenMedico = this.examenMedicoField.value;
+    //TODO: Revisar si despues tenemos que eliminarlo.
     this.inscripcionCurso.licenciaCedulaIdentidad =
       this.examenMedicoField.value;
 
@@ -612,12 +613,8 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
       });
   }
 
-  fechaExamenChecked() {
-    const value = this.fechaExamenMedicoField;
-    if (value) return value;
-  }
   private salir(result) {
-    if (result && result.salir) {
+    if (result?.salir) {
       this.dialogRef.close();
     }
   }

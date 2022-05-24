@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { Alumno } from '@core/model/alumno.model';
 import { AlumnoService } from '@core/services/alumno.service';
 import { ReportesService } from '@core/services/reportes.service';
 import { SeleccionarAlumnoComponent } from '@escuela/components/modals/seleccionar-alumno/seleccionar-alumno.component';
@@ -13,6 +14,7 @@ import { downloadFileFromBase64 } from '@utils/utils-functions';
 })
 export class ExpedientesProximosVencerComponent implements OnInit {
   form: FormGroup;
+  alumnoId: number;
 
   constructor(
     private reportesService: ReportesService,
@@ -22,7 +24,7 @@ export class ExpedientesProximosVencerComponent implements OnInit {
   ) {
     this.buildForm();
 
-    this.form.controls.alumnoId.disable();
+    this.form.controls.alumno.disable();
   }
 
   ngOnInit(): void {}
@@ -31,15 +33,16 @@ export class ExpedientesProximosVencerComponent implements OnInit {
     this.form = this.fb.group({
       fechaDesde: ['', Validators.required],
       fechaHasta: ['', Validators.required],
-      alumnoId: ['0'],
+      alumno: [''],
     });
   }
 
   generarReporte(e: Event) {
     e.preventDefault();
-    const { fechaDesde, fechaHasta, alumnoId } = this.form.getRawValue();
+    const { fechaDesde, fechaHasta } = this.form.value; //getRawValue();
+
     this.reportesService
-      .expedientesProximos_A_Vencer(fechaDesde, fechaHasta, alumnoId)
+      .expedientesProximos_A_Vencer(fechaDesde, fechaHasta, this.alumnoId)
       .subscribe(({ dataBase64, filename }: any) =>
         downloadFileFromBase64(dataBase64, filename)
       );
@@ -61,9 +64,10 @@ export class ExpedientesProximosVencerComponent implements OnInit {
         cantidad,
       },
     });
-    alumnosDialogRef.afterClosed().subscribe((alumno) => {
+    alumnosDialogRef.afterClosed().subscribe((alumno: Alumno) => {
       if (alumno) {
-        this.form.controls.alumnoId.setValue(alumno.AluId);
+        this.form.controls.alumno.setValue(alumno.AluNomComp);
+        this.alumnoId = alumno.AluId;
       }
     });
   }

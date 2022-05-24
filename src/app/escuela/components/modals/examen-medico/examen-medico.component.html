@@ -47,7 +47,7 @@
             <mat-error
               *ngIf="
                 form.get('fechaExamenMedico')?.touched &&
-                form.get('fechaExamenMedico').errors?.EsMayorA30DiasRet
+                form.get('fechaExamenMedico').hasError('mayor30Dias_invalid')
               "
             >
               Supera los 30 días de plazo permitidos
@@ -55,7 +55,7 @@
             <mat-error
               *ngIf="
                 form.get('fechaExamenMedico')?.touched &&
-                form.get('fechaExamenMedico').errors?.fechaPosteriorAHoyRet
+                form.get('fechaExamenMedico').hasError('fecha_invalid')
               "
             >
               No puede ser posterior a la fecha de hoy

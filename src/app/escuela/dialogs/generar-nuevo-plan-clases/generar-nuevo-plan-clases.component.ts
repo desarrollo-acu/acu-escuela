@@ -5,15 +5,9 @@ import {
   MatDialog,
   MAT_DIALOG_DATA,
 } from '@angular/material/dialog';
-import { AgendaClase } from '@core/model/agenda-clase.model';
-import {
-  ClaseEstimada,
-  ClaseEstimadaDetalle,
-} from '@core/model/clase-estimada.model';
-import { AcuService } from '@core/services/acu.service';
+import { ClaseEstimada } from '@core/model/clase-estimada.model';
 import { InstructorService } from '@core/services/instructor.service';
-import { AgendaMovilComponent } from '@escuela/components/agenda-movil/agenda-movil.component';
-import { InstructorHorasLibresComponent } from '@escuela/components/modals/instructor-horas-libres/instructor-horas-libres.component';
+
 import { confirmacionUsuario, mensajeConfirmacion } from '@utils/sweet-alert';
 import {
   generateHorasLibres,

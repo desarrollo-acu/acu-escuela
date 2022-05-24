@@ -5,6 +5,6 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class BooleanToSpanishPipe implements PipeTransform {
   transform(value: boolean): string {
-    if (value) return value ? 'Si' : 'No';
+    return value ? 'Si' : 'No';
   }
 }
