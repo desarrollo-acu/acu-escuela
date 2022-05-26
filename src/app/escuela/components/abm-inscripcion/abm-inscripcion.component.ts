@@ -1,7 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { GestionInscripcionComponent } from '../gestion-inscripcion/gestion-inscripcion.component';
 import { Inscripcion } from '@core/model/inscripcion.model';
 import { formatCI } from '@utils/utils-functions';
 import { InscripcionService } from '@core/services/inscripcion.service';

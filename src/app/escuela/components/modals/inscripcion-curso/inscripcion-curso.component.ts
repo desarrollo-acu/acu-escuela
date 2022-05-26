@@ -426,6 +426,7 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
               this.reportesService
                 .getPDFPlanDeClases(result.claseEstimada)
                 .subscribe((pdf) => {
+                  console.log(pdf);
                   openSamePDF(pdf, 'PlanDeClases');
                 });
 
