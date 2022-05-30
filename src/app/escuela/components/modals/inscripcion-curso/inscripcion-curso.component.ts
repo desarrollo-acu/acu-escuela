@@ -175,7 +175,7 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
         disponibilidadViernes: [''],
         disponibilidadSabado: [''],
         observaciones: [''],
-        enviarMail: [false],
+        enviarMail: [true],
       },
       {
         validator: [
