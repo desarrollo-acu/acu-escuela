@@ -67,7 +67,11 @@ export class InscripcionService {
   //wsGuardarNuevoPlanClases
   //wsGenerarClaseAdicional
 
-  generarInscripcion(inscripcion: InscripcionCurso) {
+  generarInscripcion(
+    inscripcion: InscripcionCurso,
+    enviarMail: boolean,
+    emailAlumno: string
+  ) {
     return this.http.post(`${environment.url_ws}/wsGenerarInscripcion`, {
       GenerarInscripcion: {
         FacturaRUT: inscripcion.FacturaRut,
@@ -106,6 +110,8 @@ export class InscripcionService {
         fechaClaseEstimada: inscripcion.fechaClaseEstimada,
         usrId: localStorage.getItem('usrId'),
       },
+      enviarMail,
+      emailAlumno,
     });
   }
 
@@ -174,6 +180,4 @@ export class InscripcionService {
       }
     );
   }
-
-
 }

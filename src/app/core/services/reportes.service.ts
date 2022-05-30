@@ -69,7 +69,6 @@ export class ReportesService {
   getPDFPlanDeClases(planDeClase: ClaseEstimada, path = 'wsPDFPlanDeClases') {
     const headers = new HttpHeaders();
     headers.set('Aceppt', 'application/pdf;');
-    console.log(this.authService.getUserId());
 
     return this.http.post(
       `${environment.url_ws}/${path}`,
@@ -89,8 +88,6 @@ export class ReportesService {
     });
 
   expedientesProximos_A_Vencer(fechaDesde, fechaHasta, alumnoId) {
-    console.log(alumnoId);
-
     return this.http.post(
       `${environment.url_ws}/reporteExpedientesProximosVencer`,
       {

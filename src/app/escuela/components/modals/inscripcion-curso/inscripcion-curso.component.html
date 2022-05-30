@@ -125,6 +125,19 @@
         </div>
       </div>
 
+      <div class="row">
+        <div class="col">
+          <mat-form-field class="full-width">
+            <input
+              matInput
+              placeholder="Mail del Alumno"
+              formControlName="alumnoMail"
+              [errorStateMatcher]="matcher"
+            />
+          </mat-form-field>
+        </div>
+      </div>
+
       <mat-divider></mat-divider>
       <h3>Curso</h3>
       <div class="row">
@@ -441,7 +454,7 @@
           <div class="box">
             <div id="eLearning" style="margin-top: 20px">
               <mat-checkbox formControlName="eLearning" color="primary">
-                E-Learning
+                Teórico
               </mat-checkbox>
             </div>
           </div>
@@ -584,6 +597,23 @@
               La sede de facturación es <strong> requerida </strong>.
             </mat-error>
           </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-4">
+          <div class="box">
+            <div class="row">
+              <div class="col-xs">
+                <div class="box">
+                  <div style="margin-top: 20px">
+                    <mat-checkbox formControlName="enviarMail" color="primary">
+                      Enviar mail?
+                    </mat-checkbox>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
