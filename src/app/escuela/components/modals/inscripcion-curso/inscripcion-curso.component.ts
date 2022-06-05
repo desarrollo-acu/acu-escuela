@@ -150,6 +150,7 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
         alumnoCI: [null, [Validators.required]],
         alumnoTelefono: [''],
         alumnoCelular: [''],
+        alumnoMail: [''],
         sede: [null, Validators.required],
         sedeFacturacion: [null, Validators.required],
         irABuscarAlAlumno: [false],
@@ -174,6 +175,7 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
         disponibilidadViernes: [''],
         disponibilidadSabado: [''],
         observaciones: [''],
+        enviarMail: [true],
       },
       {
         validator: [
@@ -194,6 +196,7 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
     this.alumnoTelefonoField.disable();
     this.alumnoNombreField.disable();
     this.alumnoCelularField.disable();
+    this.alumnoMail.disable();
 
     // Campos deshabilitados del curso
     this.cursoNombreField.disable();
@@ -566,6 +569,7 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
       alumnoCI: result.AluCI,
       alumnoTelefono: result.AluTel1,
       alumnoCelular: result.AluTel2,
+      alumnoMail: result.AluMail,
       disponibilidadLunes,
       disponibilidadMartes,
       disponibilidadMiercoles,
@@ -603,9 +607,12 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
     this.inscripcionCurso.fechaLicCedulaIdentidad =
       this.fechaLicCedulaIdentidadField.value;
     this.inscripcionCurso.fechaPagoLicencia = this.fechaPagoLicenciaField.value;
-
     this.inscripcionService
-      .generarInscripcion(this.inscripcionCurso)
+      .generarInscripcion(
+        this.inscripcionCurso,
+        this.enviarMail.value,
+        this.alumnoMail.value
+      )
       .subscribe((res: any) => {
         this.inscripcionCurso.mensaje = res.errorMensaje;
         mensajeConfirmacion('Excelente!', res.errorMensaje);
@@ -758,5 +765,12 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
 
   get disponibilidadSabadoField() {
     return this.form.get('disponibilidadSabado');
+  }
+
+  get alumnoMail() {
+    return this.form.get('alumnoMail');
+  }
+  get enviarMail() {
+    return this.form.get('enviarMail');
   }
 }
