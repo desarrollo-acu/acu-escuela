@@ -87,7 +87,8 @@ import { GestionNotificacionesComponent } from './pages/gestion-notificaciones/g
 import { AlumnosPendientesDePagoComponent } from './reports/alumnos-pendientes-de-pago/alumnos-pendientes-de-pago.component';
 import { FacturasPorAlumnoComponent } from './reports/facturas-por-alumno/facturas-por-alumno.component';
 import { SuspenderClasesAlumnoComponent } from './dialogs/suspender-clases-alumno/suspender-clases-alumno.component';
-
+import { ExamenMedicoComponent } from './components/modals/examen-medico/examen-medico.component';
+import { ExpedientesProximosVencerComponent } from './reports/expedientes-proximos-vencer/expedientes-proximos-vencer.component';
 
 registerLocaleData(localeEsUy, 'es-UY');
 registerLocaleData(localeEs, 'es');
@@ -156,7 +157,8 @@ registerLocaleData(localeEs, 'es');
     AlumnosPendientesDePagoComponent,
     FacturasPorAlumnoComponent,
     SuspenderClasesAlumnoComponent,
-
+    ExamenMedicoComponent,
+    ExpedientesProximosVencerComponent,
   ],
   imports: [
     CommonModule,

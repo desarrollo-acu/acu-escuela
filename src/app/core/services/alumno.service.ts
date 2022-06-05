@@ -4,16 +4,12 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
 import { Alumno } from '../model/alumno.model';
 import { CuentaCorriente } from '../model/cuenta-corriente.model';
-import { AlumnoByCI } from '../model/alumno-by-ci.interface';
-import { ObtenerAlumnos } from '../model/obtener-alumnos.interface';
 import { Inscripcion } from '@core/model/inscripcion.model';
-import { AlumnoResponse } from '../model/alumno-response.interface';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AlumnoService {
-
   aluId: number;
 
   private alumnoDataSource = new BehaviorSubject({
@@ -38,7 +34,6 @@ export class AlumnoService {
     const fechaClaseStr = localStorage.getItem('fechaClase').substring(0, 10);
     const horaClaseStr = localStorage.getItem('horaClase');
 
-    const fechaClase = Date.parse(fechaClaseStr);
     const horaClase = parseInt(horaClaseStr, 10);
 
     return this.http.post(`${environment.url_ws}/wsAlumnoTieneExcepcion`, {
@@ -65,7 +60,6 @@ export class AlumnoService {
     const horaClaseStr = localStorage.getItem('horaClase');
     const movilCodStr = localStorage.getItem('movilCod');
 
-    const fechaClase = Date.parse(fechaClaseStr);
     const horaClase = parseInt(horaClaseStr, 10);
     const movilCod = parseInt(movilCodStr, 10);
 
@@ -90,11 +84,13 @@ export class AlumnoService {
     return this.http.post(`${environment.url_ws}/wsObtenerAlumnos`, {});
   }
 
-  obtenerAlumnos = (pageSize: number, pageNumber: number, filtro: string)  =>  this.http.get<AlumnoResponse>(
+  obtenerAlumnos = (pageSize: number, pageNumber: number, filtro: string) =>
+    this.http.get(
       `${environment.url_ws}/wsGetAlumnos?PageSize=${pageSize}&PageNumber=${pageNumber}&Filtro=${filtro}`
     );
 
-  obtenerAlumnoByCI = ( ci: number ) => this.http.get<any>( `${environment.url_ws}/wsGetAlumnoByCI?CI=${ci}`);
+  obtenerAlumnoByCI = (ci: number) =>
+    this.http.get<any>(`${environment.url_ws}/wsGetAlumnoByCI?CI=${ci}`);
 
   gestionAlumno(mode: string, alumno: Alumno) {
     return this.http.post(`${environment.url_ws}/wsGestionAlumno`, {
@@ -105,13 +101,50 @@ export class AlumnoService {
     });
   }
 
+  ingresarExamenMedico(
+    aluId: number,
+    tipCurId: number,
+    escAluCurId: number,
+    escAluCurFechaExamenMedico: string
+  ) {
+    return this.http.post(`${environment.url_ws}/wsIngresarExamenMedico`, {
+      AluId: aluId,
+      TipCurId: tipCurId,
+      EscAluCurId: escAluCurId,
+      EscAluCurFechaExamenMedico: escAluCurFechaExamenMedico,
+    });
+  }
+
   getAlumnoNumero() {
     return this.http.get(`${environment.url_ws}/wsGetUltimoNumeroAlumno`);
   }
 
-  getCuentaCorriente = (alumnoNumero: number) => this.http.get<CuentaCorriente[]>(`${environment.url_ws}/wsGetCuentaCorriente?alumnoNumero=${alumnoNumero}`);
+  getCuentaCorriente = (alumnoNumero: number) =>
+    this.http.get<CuentaCorriente[]>(
+      `${environment.url_ws}/wsGetCuentaCorriente?alumnoNumero=${alumnoNumero}`
+    );
 
-  tieneFacturaPendienteAnteriorAHoy = (aluId: number) => this.http.get<{tieneFacturaPendienteAnteriorAHoy: boolean}>(`${environment.url_ws}/tieneFacturaPendienteAnteriorAHoy?&aluId=${aluId}`)
+  tieneFacturaPendienteAnteriorAHoy = (aluId: number) =>
+    this.http.get<{ tieneFacturaPendienteAnteriorAHoy: boolean }>(
+      `${environment.url_ws}/tieneFacturaPendienteAnteriorAHoy?&aluId=${aluId}`
+    );
 
-  obtenerDisponibilidadPorAlumno = (aluId: number) => this.http.get<Inscripcion>(`${environment.url_ws}/wsGetDisponibilidadAlumno?AluId=${aluId}`)
+  obtenerDisponibilidadPorAlumno = (aluId: number) =>
+    this.http.get<Inscripcion>(
+      `${environment.url_ws}/wsGetDisponibilidadAlumno?AluId=${aluId}`
+    );
+
+  getExamenMedico(aluId: number, tipCurId: number, escAluCurId: number) {
+    return this.http.post(`${environment.url_ws}/wsGetExamenMedico`, {
+      AluId: aluId,
+      TipCurId: tipCurId,
+      EscAluCurId: escAluCurId,
+    });
+  }
+
+  getClasesByAlumno(aluId: number) {
+    return this.http.post(`${environment.url_ws}/getClasesByAlumno`, {
+      ALUID: aluId,
+    });
+  }
 }

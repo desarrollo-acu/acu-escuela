@@ -43,6 +43,9 @@ export interface Inscripcion {
   EscAluCurReglamentoEscuela?: boolean;
   EscAluCurELearning?: boolean;
 
+  EscAluCurExamenMedico?: number;
+  EscAluCurFechaExamenMedico?: Date;
+
   Lineas1?: InscripcionLinea1[];
   DisponibilidadAlumno?: InscripcionDisponibilidadAlumno[];
   UsrId?: string;

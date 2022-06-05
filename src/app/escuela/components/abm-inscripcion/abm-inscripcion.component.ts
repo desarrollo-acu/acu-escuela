@@ -1,7 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { GestionInscripcionComponent } from '../gestion-inscripcion/gestion-inscripcion.component';
 import { Inscripcion } from '@core/model/inscripcion.model';
 import { formatCI } from '@utils/utils-functions';
 import { InscripcionService } from '@core/services/inscripcion.service';
@@ -9,16 +7,20 @@ import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { mensajeConfirmacion } from '@utils/sweet-alert';
 import { confirmacionUsuario } from '../../../utils/sweet-alert';
-import { generateHorasLibres, getDisponibilidadFromInscripcion, generateSedes } from '../../../utils/utils-functions';
+import {
+  generateHorasLibres,
+  getDisponibilidadFromInscripcion,
+  generateSedes,
+} from '../../../utils/utils-functions';
+import { MatCheckboxChange } from '@angular/material/checkbox';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-abm-inscripcion',
   templateUrl: './abm-inscripcion.component.html',
-  styleUrls: ['./abm-inscripcion.component.scss']
+  styleUrls: ['./abm-inscripcion.component.scss'],
 })
 export class AbmInscripcionComponent implements OnInit {
-
-
   form: FormGroup;
   inscripcion: Inscripcion;
 
@@ -32,32 +34,31 @@ export class AbmInscripcionComponent implements OnInit {
   constructor(
     private inscripcionService: InscripcionService,
     private formBuilder: FormBuilder,
-    private router: Router) {
-
+    private router: Router
+  ) {
     this.horasLibres = generateHorasLibres();
-    this.sedes = [ ...generateSedes() ];
+    this.sedes = [...generateSedes()];
     this.buildForm();
     this.deshabilitarCampos();
   }
 
   ngOnInit(): void {
-
     if (!this.primeraVez) {
+      this.subscription =
+        this.inscripcionService.inscripcionCurrentData.subscribe(
+          ({ modo, inscripcion }) => {
+            this.primeraVez = true;
 
-      this.subscription = this.inscripcionService.inscripcionCurrentData.subscribe(({ modo, inscripcion }) => {
+            this.mode = modo;
 
-        this.primeraVez = true;
-
-        this.mode = modo;
-
-        this.setValuesForm(inscripcion);
-
-      }); /// .currentMessage.subscribe(message => this.message = message)
+            this.setValuesForm(inscripcion);
+            console.log(inscripcion);
+          }
+        );
     }
   }
 
   private setValuesForm(inscripcion: Inscripcion) {
-
     this.inscripcion = inscripcion;
 
     const {
@@ -67,8 +68,7 @@ export class AbmInscripcionComponent implements OnInit {
       disponibilidadJueves,
       disponibilidadViernes,
       disponibilidadSabado,
-    } = getDisponibilidadFromInscripcion( inscripcion );
-
+    } = getDisponibilidadFromInscripcion(inscripcion);
 
     this.fechaClase.setValue(this.fechaClase);
     this.inscripcionId.setValue(this.inscripcion.EscAluCurId);
@@ -78,19 +78,30 @@ export class AbmInscripcionComponent implements OnInit {
     this.cursoClasesTeoricas.setValue(this.inscripcion.TipCurClaTeo);
     this.cursoExamenPractico.setValue(this.inscripcion.TipCurExaPra);
     this.cursoExamenTeorico.setValue(this.inscripcion.TipCurExaTeo);
-    this.fechaInicioEstimada.setValue(this.inscripcion.EscAluFechaInicioEstimada);
+    this.fechaInicioEstimada.setValue(
+      this.inscripcion.EscAluFechaInicioEstimada
+    );
     this.escCurTe1.setValue(this.inscripcion.ESCCURTE1);
     this.escCurTe2.setValue(this.inscripcion.ESCCURTE2);
     this.escCurTe3.setValue(this.inscripcion.ESCCURTE3);
     this.escCurIni.setValue(this.inscripcion.EscCurIni);
     this.alumnoNumero.setValue(this.inscripcion.AluNro);
     this.alumnoNombre.setValue(this.inscripcion.AluNomComp);
-    this.alumnoCI.setValue(formatCI(this.inscripcion.AluCI.toString(), this.inscripcion.AluDV.toString()));
+    this.alumnoCI.setValue(
+      formatCI(
+        this.inscripcion.AluCI.toString(),
+        this.inscripcion.AluDV.toString()
+      )
+    );
     this.alumnoTelefono.setValue(this.inscripcion.ALUTEL1);
     this.alumnoCelular.setValue(this.inscripcion.ALUTEL2);
     this.sede.setValue(this.inscripcion.EscAluCurSede);
-    this.irABuscarAlAlumno.setValue(this.inscripcion.EscAluCurRecogerEnDomicilio);
-    this.reglamentoEscuela.setValue(this.inscripcion.EscAluCurReglamentoEscuela);
+    this.irABuscarAlAlumno.setValue(
+      this.inscripcion.EscAluCurRecogerEnDomicilio
+    );
+    this.reglamentoEscuela.setValue(
+      this.inscripcion.EscAluCurReglamentoEscuela
+    );
     this.condicionesCurso.setValue(this.inscripcion.EscAluCurCondicionesCurso);
     this.eLearning.setValue(this.inscripcion.EscAluCurELearning);
     this.disponibilidadLunes.setValue(disponibilidadLunes);
@@ -101,19 +112,21 @@ export class AbmInscripcionComponent implements OnInit {
     this.disponibilidadSabado.setValue(disponibilidadSabado);
     this.observaciones.setValue(this.inscripcion.EscAluCurObs);
 
-
+    this.fechaExamenMedicoActualField.setValue(null);
+    const date = moment(this.inscripcion.EscAluCurFechaExamenMedico);
+    if (date.isValid()) {
+      this.fechaExamenMedicoActualField.setValue(
+        this.inscripcion.EscAluCurFechaExamenMedico
+      );
+    }
   }
-
 
   onNoClick(): void {
     // Me voy a la pantalla de gestión y elimino del Servicio
     this.router.navigate(['/escuela/gestion-inscripcion']);
   }
 
-
-
   private buildForm() {
-
     this.form = this.formBuilder.group({
       fechaClase: [''],
       inscripcionId: [''],
@@ -146,15 +159,14 @@ export class AbmInscripcionComponent implements OnInit {
       disponibilidadJueves: [''],
       disponibilidadViernes: [''],
       disponibilidadSabado: [''],
-      observaciones: ['']
+      observaciones: [''],
+      fechaExamenMedicoActual: [null],
     });
-
   }
 
   deshabilitarCampos() {
     // Deshabilitar fecha de inscripicón
     this.fechaClase.disable();
-
 
     // Campos deshabilitados del curso
 
@@ -184,17 +196,12 @@ export class AbmInscripcionComponent implements OnInit {
     this.reglamentoEscuela.disable();
     this.condicionesCurso.disable();
     this.eLearning.disable();
-
+    this.fechaExamenMedicoActualField.disable();
 
     this.observaciones.disable();
-
-
-
-
   }
-  guardarDisponibilidad = (e: Event) =>{
+  guardarDisponibilidad = (e: Event) => {
     e.preventDefault();
-
 
     const inscripcion = {
       AluId: this.inscripcion.AluId,
@@ -206,37 +213,34 @@ export class AbmInscripcionComponent implements OnInit {
       disponibilidadJueves: this.disponibilidadJueves.value,
       disponibilidadViernes: this.disponibilidadViernes.value,
       disponibilidadSabado: this.disponibilidadSabado.value,
-      usrId: localStorage.getItem('usrId')
+      usrId: localStorage.getItem('usrId'),
+    };
 
-
-    }
-
-
-    this.inscripcionService.guardarNuevaDisponibilidad( inscripcion ).subscribe( ({ errorMensaje }) => {
-      mensajeConfirmacion('Excelente!', errorMensaje).then( () => this.router.navigate(['/escuela/gestion-inscripcion']) );
-
-    } );
-
-
-  }
+    this.inscripcionService
+      .guardarNuevaDisponibilidad(inscripcion)
+      .subscribe(({ errorMensaje }) => {
+        mensajeConfirmacion('Excelente!', errorMensaje).then(() =>
+          this.router.navigate(['/escuela/gestion-inscripcion'])
+        );
+      });
+  };
 
   limpiarDisponibilidades = () => {
+    confirmacionUsuario(
+      'Confirmación de usuario',
+      'Está seguro que desea limpiar todas las disponibilidades?'
+    ).then(({ isConfirmed }) => {
+      if (isConfirmed) {
+        this.disponibilidadLunes.setValue([]);
+        this.disponibilidadMartes.setValue([]);
+        this.disponibilidadMiercoles.setValue([]);
+        this.disponibilidadJueves.setValue([]);
+        this.disponibilidadViernes.setValue([]);
+        this.disponibilidadSabado.setValue([]);
+      }
+    });
+  };
 
-    confirmacionUsuario('Confirmación de usuario','Está seguro que desea limpiar todas las disponibilidades?')
-      .then( ({isConfirmed}) => {
-        if( isConfirmed ){
-          this.disponibilidadLunes.setValue([]);
-          this.disponibilidadMartes.setValue([]);
-          this.disponibilidadMiercoles.setValue([]);
-          this.disponibilidadJueves.setValue([]);
-          this.disponibilidadViernes.setValue([]);
-          this.disponibilidadSabado.setValue([]);
-
-        }
-      })
-
-
-  }
   get observaciones() {
     return this.form.get('observaciones');
   }
@@ -296,7 +300,6 @@ export class AbmInscripcionComponent implements OnInit {
     return this.form.get('cursoExamenPractico');
   }
 
-
   get documentosEntregadosYFirmados() {
     return this.form.get('documentosEntregadosYFirmados');
   }
@@ -317,12 +320,9 @@ export class AbmInscripcionComponent implements OnInit {
     return this.form.get('cursoExamenTeorico');
   }
 
-
   get escCurTe1() {
     return this.form.get('escCurTe1');
   }
-
-
 
   get escCurTe2() {
     return this.form.get('escCurTe2');
@@ -358,6 +358,7 @@ export class AbmInscripcionComponent implements OnInit {
     return this.form.get('disponibilidadSabado');
   }
 
-
-
+  get fechaExamenMedicoActualField() {
+    return this.form.get('fechaExamenMedicoActual');
+  }
 }

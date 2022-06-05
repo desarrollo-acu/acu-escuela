@@ -137,7 +137,7 @@ export class AgendaMovilComponent implements OnInit, OnDestroy {
       data: {
         // tslint:disable-next-line: triple-equals
         verOpciones: lugar && lugar.AluId != 0,
-        fechaClase: this.fechaClase
+        fechaClase: this.fechaClase,
       },
     });
 
@@ -150,7 +150,7 @@ export class AgendaMovilComponent implements OnInit, OnDestroy {
             this.acuService
               .getClaseAgenda(this.fechaClase, hora, movil)
               .subscribe((res: any) => {
-                const dialogRef = this.dialog.open(VerAgendaComponent, {
+                this.dialog.open(VerAgendaComponent, {
                   data: {
                     agendaClase: res.AgendaClase,
                   },

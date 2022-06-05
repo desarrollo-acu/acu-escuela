@@ -13,10 +13,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CoreModule } from './core/core.module';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
-
-import { MatNativeDateModule, MAT_DATE_LOCALE, DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
-
-
+import {
+  MatNativeDateModule,
+  MAT_DATE_LOCALE,
+  DateAdapter,
+  MAT_DATE_FORMATS,
+} from '@angular/material/core';
 
 import * as localeEsUy from '@angular/common/locales/global/es-UY';
 import { registerLocaleData } from '@angular/common';
@@ -31,7 +33,7 @@ import { CargandoInterceptor } from './interceptos/cargando.interceptor';
   declarations: [
     AppComponent,
     LayoutComponent,
-    ExisteAlumnoByCiValidatorDirective
+    ExisteAlumnoByCiValidatorDirective,
   ],
   imports: [
     BrowserModule,
@@ -50,18 +52,17 @@ import { CargandoInterceptor } from './interceptos/cargando.interceptor';
       delayStop: 200,
       message: 'Cargando',
     }),
-    SharedModule
+    SharedModule,
   ],
 
   providers: [
-
     {
       provide: HTTP_INTERCEPTORS,
       useClass: CargandoInterceptor,
       multi: true,
     },
-    { provide: LOCALE_ID, useValue: 'es' }
+    { provide: LOCALE_ID, useValue: 'es' },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
