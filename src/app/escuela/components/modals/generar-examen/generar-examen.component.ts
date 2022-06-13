@@ -279,13 +279,13 @@ export class GenerarExamenComponent implements OnInit {
 
     alumnosDialogRef.afterClosed().subscribe((alumno) => {
       if (alumno) {
-        this.aluId = alumno.AluId;
-        const { AluId, AluNomComp } = alumno;
-        this.myValidatorsService.alumnoTieneFacturasPendientes(AluId, AluNomComp, this.alumnoNumero);
+        const { AluId, AluNomComp, AluNro } = alumno;
+        this.aluId = AluId;
+        //TODO: Se elimina a petición de Rosina (dejo comentado porque puede volver a cambiar) -> this.myValidatorsService.alumnoTieneFacturasPendientes(AluId, AluNomComp, this.alumnoNumero);
         this.obtenerInscripcion();
         this.form.patchValue({
-          alumnoNumero: alumno.AluNro,
-          alumnoNombre: alumno.AluNomComp,
+          alumnoNumero: AluNro,
+          alumnoNombre: AluNomComp,
         });
       }
     });
@@ -334,7 +334,7 @@ export class GenerarExamenComponent implements OnInit {
         this.form.patchValue({
           escInsId: inscripcion.EscInsId,
           escInsNom: inscripcion.EscInsNom,
-          movil: inscripcion.EscMovCod
+          movil: inscripcion.EscMovCod,
         });
       });
   }

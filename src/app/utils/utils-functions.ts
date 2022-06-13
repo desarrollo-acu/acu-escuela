@@ -1,4 +1,5 @@
 import { Inscripcion } from '@core/model/inscripcion.model';
+import * as moment from 'moment';
 import { Moment } from 'moment';
 import { Meses } from '../core/model/meses.enum';
 
@@ -373,6 +374,12 @@ export function generateEstadosActivoDeshabilitado(): any[] {
   return estados;
 }
 
+//Fecha x días anterior...
+export function FechaXDiasAnteriorAHoy(x) {
+  const fechaAnterior = moment().subtract(x, 'days').format('MM/DD/yyyy');
+  return fechaAnterior;
+}
+
 export const generateSedes = () => {
   const sedes = [];
 
@@ -396,3 +403,10 @@ export const generateSedes = () => {
 
   return sedes;
 };
+
+export const getTomorrow = () => {
+  const today = new Date();
+  const tomorrow = new Date();
+  tomorrow.setDate(today.getDate() + 1);
+  return tomorrow;
+}

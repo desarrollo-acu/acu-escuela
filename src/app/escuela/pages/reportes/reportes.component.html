@@ -16,9 +16,7 @@
         >
           Cantidad Clases por alumno y por mes
         </mat-button-toggle>
-        <mat-button-toggle
-          (click)="tipo = 'alumnos-pendientes-de-pago'"
-        >
+        <mat-button-toggle (click)="tipo = 'alumnos-pendientes-de-pago'">
           Alumnos pendientes de pago
         </mat-button-toggle>
         <mat-button-toggle (click)="tipo = 'plan-clases-extendido'">
@@ -26,6 +24,9 @@
         </mat-button-toggle>
         <mat-button-toggle (click)="tipo = 'facturas-por-alumno'">
           Facturas por alumno
+        </mat-button-toggle>
+        <mat-button-toggle (click)="tipo = 'expedientes-proximos-vencer'">
+          Expedientes Próximos a Vencer
         </mat-button-toggle>
       </mat-button-toggle-group>
     </div>
@@ -56,6 +57,9 @@
         </div>
         <div *ngSwitchCase="'facturas-por-alumno'">
           <app-facturas-por-alumno></app-facturas-por-alumno>
+        </div>
+        <div *ngSwitchCase="'expedientes-proximos-vencer'">
+          <app-expedientes-proximos-vencer></app-expedientes-proximos-vencer>
         </div>
         <div *ngSwitchDefault>
           <div class="row" style="margin-top: 20px">

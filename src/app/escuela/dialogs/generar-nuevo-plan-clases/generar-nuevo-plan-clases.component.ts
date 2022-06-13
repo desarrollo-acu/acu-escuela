@@ -5,15 +5,9 @@ import {
   MatDialog,
   MAT_DIALOG_DATA,
 } from '@angular/material/dialog';
-import { AgendaClase } from '@core/model/agenda-clase.model';
-import {
-  ClaseEstimada,
-  ClaseEstimadaDetalle,
-} from '@core/model/clase-estimada.model';
-import { AcuService } from '@core/services/acu.service';
+import { ClaseEstimada } from '@core/model/clase-estimada.model';
 import { InstructorService } from '@core/services/instructor.service';
-import { AgendaMovilComponent } from '@escuela/components/agenda-movil/agenda-movil.component';
-import { InstructorHorasLibresComponent } from '@escuela/components/modals/instructor-horas-libres/instructor-horas-libres.component';
+
 import { confirmacionUsuario, mensajeConfirmacion } from '@utils/sweet-alert';
 import {
   generateHorasLibres,
@@ -39,7 +33,6 @@ export class GenerarNuevoPlanClasesComponent implements OnInit {
   horasLibres = [];
 
   selected = ' ';
-  // hora: Date = new Date();
   fechaClase: Date = new Date();
   movil: number;
   instructorAsignado = '';
@@ -47,6 +40,7 @@ export class GenerarNuevoPlanClasesComponent implements OnInit {
   hoy = new Date();
   titulo: string;
   inscripcion: Inscripcion;
+  cantidadClases?: number;
   verLimiteClases = false;
 
   constructor(
@@ -56,9 +50,11 @@ export class GenerarNuevoPlanClasesComponent implements OnInit {
     private instructorService: InstructorService,
     private inscripcionService: InscripcionService,
     public dialog: MatDialog,
-    @Inject(MAT_DIALOG_DATA) public data: { inscripcion: Inscripcion }
+    @Inject(MAT_DIALOG_DATA) public data: { inscripcion: Inscripcion, cantidadClases?: number }
   ) {
-    this.inscripcion = this.data.inscripcion;
+    const { inscripcion, cantidadClases } = this.data;
+    this.inscripcion = inscripcion;
+    this.cantidadClases = cantidadClases;
 
     this.horasLibres = generateHorasLibres();
     this.buildForm();
@@ -141,8 +137,7 @@ export class GenerarNuevoPlanClasesComponent implements OnInit {
       '¿Confirma la generación del nuevo plan de clases ?'
     ).then((confirm) => {
       if (confirm.isConfirmed) {
-        const cantidad =
-          this.inscripcion.TipCurClaPra - this.inscripcion.numeroClases;
+        const cantidad = this.cantidadClases ?? this.inscripcion.TipCurClaPra - this.inscripcion.numeroClases;
         const inscripcion = {
           AluId: this.inscripcion.AluId,
           TipCurId: this.cursoId.value,
@@ -200,7 +195,7 @@ export class GenerarNuevoPlanClasesComponent implements OnInit {
                     .subscribe(
                       (res: { errorCode: number; errorMensaje: string }) => {
                         mensajeConfirmacion('Excelente!', res.errorMensaje);
-                        this.dialogRef.close();
+                        this.dialogRef.close(true);
                       }
                     );
                 }

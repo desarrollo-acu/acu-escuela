@@ -5,48 +5,46 @@ import {
 } from '@angular/material/bottom-sheet';
 import { MatDialog } from '@angular/material/dialog';
 
-import Swal from 'sweetalert2';
-import {
-  AcuService,
-  LiberarParameters,
-} from 'src/app/core/services/acu.service';
-import { CopiarMoverParameters } from 'src/app/core/model/copiarMoverParameters.model';
-import { AutenticacionService } from '../../../../core/services/autenticacion.service';
+import { AcuService } from 'src/app/core/services/acu.service';
+
 import {
   confirmacionUsuario,
   errorMensaje,
 } from '../../../../utils/sweet-alert';
-import { SeleccionarMovilComponent } from '../seleccionar-movil/seleccionar-movil.component';
-import { MovilService } from '@core/services/movil.service';
+
 import * as moment from 'moment';
 
+import { FechaXDiasAnteriorAHoy } from '@utils/utils-functions';
 @Component({
   selector: 'app-seleccionar-accion-agenda',
   templateUrl: './seleccionar-accion-agenda.component.html',
   styleUrls: ['./seleccionar-accion-agenda.component.scss'],
 })
 export class SeleccionarAccionAgendaComponent {
-  today = new Date(moment().toDate().setHours(0,0,0,0));
+  today = new Date(moment().toDate().setHours(0, 0, 0, 0));
   pegar: boolean;
   verOpciones: boolean;
   fechaClase: Date;
+  usuarioConPermiso: boolean = false;
+  fechaAnteriorMaxima;
+  private usuarioConPermisoNombre: string = 'JBARRUTIA'; //Solo este usuario podra mover y suspender clases de hasta 3 días pasados.
 
   constructor(
-    // tslint:disable-next-line: variable-name
     private _bottomSheetRef: MatBottomSheetRef<SeleccionarAccionAgendaComponent>,
     private acuService: AcuService,
-    private movilService: MovilService,
-    private auth: AutenticacionService,
     public dialog: MatDialog,
+
     @Inject(MAT_BOTTOM_SHEET_DATA) public data: any
   ) {
     this.fechaClase = moment(this.data.fechaClase).toDate();
-    console.log(this.fechaClase);
-    console.log(this.today);
-    console.log(this.data.verOpciones);
+
+    if (localStorage.getItem('usrId') === this.usuarioConPermisoNombre)
+      this.usuarioConPermiso = true;
 
     this.verOpciones = this.data.verOpciones;
     this.pegar = JSON.parse(localStorage.getItem('pegar-clase'));
+
+    this.fechaAnteriorMaxima = new Date(FechaXDiasAnteriorAHoy(3)); // La fecha de 3 días para atras.
   }
 
   openLink(event: MouseEvent, key: string): void {
@@ -70,7 +68,10 @@ export class SeleccionarAccionAgendaComponent {
         break;
 
       case 'evaluacion-practica':
-        localStorage.setItem('abrirAgenda', `evaluacion-practica-${tipoAgenda}`);
+        localStorage.setItem(
+          'abrirAgenda',
+          `evaluacion-practica-${tipoAgenda}`
+        );
         break;
 
       case 'suspender-clase':
@@ -107,7 +108,7 @@ export class SeleccionarAccionAgendaComponent {
         );
 
         if (existe) {
-          errorMensaje('Oops...','Ese turno ya esta ocupado, elegí otro!');
+          errorMensaje('Oops...', 'Ese turno ya esta ocupado, elegí otro!');
         } else {
           continuar = false;
           if (oldParameters.fechaOld > mainParameters.fecha) {
@@ -140,15 +141,18 @@ export class SeleccionarAccionAgendaComponent {
     }
   }
 
-  copiarMoverClase(oldParameters, mainParameters, event){
-    localStorage.setItem('abrirAgenda','copiar-mover-clase');
+  copiarMoverClase(oldParameters, mainParameters, event) {
+    localStorage.setItem('abrirAgenda', 'copiar-mover-clase');
     this.setPegarStorage();
-    this.cerrarBottomSheet(true, event, {oldParameters, mainParameters, event});
+    this.cerrarBottomSheet(true, event, {
+      oldParameters,
+      mainParameters,
+      event,
+    });
   }
 
   cerrarBottomSheet(correcto?: boolean, event?: Event, params?) {
-
-    this._bottomSheetRef.dismiss({seleccionoOpcion: correcto, params});
+    this._bottomSheetRef.dismiss({ seleccionoOpcion: correcto, params });
     event.preventDefault();
   }
 
@@ -156,5 +160,4 @@ export class SeleccionarAccionAgendaComponent {
     this.pegar = !this.pegar;
     localStorage.setItem('pegar-clase', this.pegar.toString());
   }
-
 }
