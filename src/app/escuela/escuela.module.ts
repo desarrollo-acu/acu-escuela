@@ -89,6 +89,7 @@ import { FacturasPorAlumnoComponent } from './reports/facturas-por-alumno/factur
 import { SuspenderClasesAlumnoComponent } from './dialogs/suspender-clases-alumno/suspender-clases-alumno.component';
 import { ExamenMedicoComponent } from './components/modals/examen-medico/examen-medico.component';
 import { ExpedientesProximosVencerComponent } from './reports/expedientes-proximos-vencer/expedientes-proximos-vencer.component';
+import { ReanudarClasesSuspendidasComponent } from './dialogs/reanudar-clases-suspendidas/reanudar-clases-suspendidas.component';
 
 registerLocaleData(localeEsUy, 'es-UY');
 registerLocaleData(localeEs, 'es');
@@ -159,6 +160,7 @@ registerLocaleData(localeEs, 'es');
     SuspenderClasesAlumnoComponent,
     ExamenMedicoComponent,
     ExpedientesProximosVencerComponent,
+    ReanudarClasesSuspendidasComponent,
   ],
   imports: [
     CommonModule,

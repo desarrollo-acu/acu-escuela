@@ -33,7 +33,6 @@ export class GenerarNuevoPlanClasesComponent implements OnInit {
   horasLibres = [];
 
   selected = ' ';
-  // hora: Date = new Date();
   fechaClase: Date = new Date();
   movil: number;
   instructorAsignado = '';
@@ -41,6 +40,7 @@ export class GenerarNuevoPlanClasesComponent implements OnInit {
   hoy = new Date();
   titulo: string;
   inscripcion: Inscripcion;
+  cantidadClases?: number;
   verLimiteClases = false;
 
   constructor(
@@ -50,9 +50,11 @@ export class GenerarNuevoPlanClasesComponent implements OnInit {
     private instructorService: InstructorService,
     private inscripcionService: InscripcionService,
     public dialog: MatDialog,
-    @Inject(MAT_DIALOG_DATA) public data: { inscripcion: Inscripcion }
+    @Inject(MAT_DIALOG_DATA) public data: { inscripcion: Inscripcion, cantidadClases?: number }
   ) {
-    this.inscripcion = this.data.inscripcion;
+    const { inscripcion, cantidadClases } = this.data;
+    this.inscripcion = inscripcion;
+    this.cantidadClases = cantidadClases;
 
     this.horasLibres = generateHorasLibres();
     this.buildForm();
@@ -135,8 +137,7 @@ export class GenerarNuevoPlanClasesComponent implements OnInit {
       '¿Confirma la generación del nuevo plan de clases ?'
     ).then((confirm) => {
       if (confirm.isConfirmed) {
-        const cantidad =
-          this.inscripcion.TipCurClaPra - this.inscripcion.numeroClases;
+        const cantidad = this.cantidadClases ?? this.inscripcion.TipCurClaPra - this.inscripcion.numeroClases;
         const inscripcion = {
           AluId: this.inscripcion.AluId,
           TipCurId: this.cursoId.value,
@@ -194,7 +195,7 @@ export class GenerarNuevoPlanClasesComponent implements OnInit {
                     .subscribe(
                       (res: { errorCode: number; errorMensaje: string }) => {
                         mensajeConfirmacion('Excelente!', res.errorMensaje);
-                        this.dialogRef.close();
+                        this.dialogRef.close(true);
                       }
                     );
                 }

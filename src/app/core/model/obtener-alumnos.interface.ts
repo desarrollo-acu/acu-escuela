@@ -5,8 +5,8 @@ export interface ObtenerAlumnos {
 }
 
 export interface Alumno {
-  AluId:            string;
-  AluNro:           string;
+  AluId:            number;
+  AluNro:           number;
   AluNom:           string;
   AluApe1:          string;
   AluNomComp:       string;
@@ -18,7 +18,7 @@ export interface Alumno {
   AluTel2:          string;
   AluMail:          string;
   AluPar:           string;
-  SocId:            string;
+  SocId:            number;
   AluConTel:        string;
   AluConNom:        string;
   AluConPar:        string;

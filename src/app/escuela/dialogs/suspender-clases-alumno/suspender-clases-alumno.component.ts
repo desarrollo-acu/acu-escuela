@@ -6,6 +6,8 @@ import { GestionAlumnoComponent } from '@escuela/components/gestion-alumno/gesti
 import { confirmacionUsuario } from '@utils/sweet-alert';
 import { Alumno } from '../../../core/model/obtener-alumnos.interface';
 import { getTomorrow } from '../../../utils/utils-functions';
+import { AutenticacionService } from '@core/services/autenticacion.service';
+import { mensajeConfirmacion, errorMensaje } from '../../../utils/sweet-alert';
 
 @Component({
   selector: 'app-suspender-clases-alumno',
@@ -30,12 +32,12 @@ export class SuspenderClasesAlumnoComponent implements OnInit {
   }
   constructor(
     private alumnoService: AlumnoService,
+    private autenticacionService: AutenticacionService,
     private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<GestionAlumnoComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.alumno = data.alumno;
-    console.log(data.alumno);
   }
 
   ngOnInit(): void {
@@ -63,9 +65,28 @@ export class SuspenderClasesAlumnoComponent implements OnInit {
 
     const { isConfirmed } = await confirmacionUsuario(
       'Confirmación de Usuario',
-      '¿Confirma la generación del nuevo plan de clases ?'
+      `¿Confirma la suspensión de las clases futuras del alumno ${this.alumnoNombre.value}?`
     );
     if (isConfirmed) {
+      const { AluId: aluId } = this.alumno;
+      const { fecha, motivo } = this.form.getRawValue();
+
+      this.alumnoService
+        .crearClasesAlumnoSuspension({
+          aluId,
+          fecha,
+          motivo,
+          usrId: this.autenticacionService.getUserId(),
+        })
+        .subscribe(({ errorCode, errorMessage }) =>
+          errorCode === 0
+            ? mensajeConfirmacion('Excelente', errorMessage).then(() =>
+                this.dialogRef.close()
+              )
+            : errorMensaje('Error', errorMessage).then(() =>
+                this.dialogRef.close()
+              )
+        );
     }
   }
 

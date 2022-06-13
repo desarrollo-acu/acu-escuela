@@ -5,6 +5,10 @@ import { BehaviorSubject } from 'rxjs';
 import { Alumno } from '../model/alumno.model';
 import { CuentaCorriente } from '../model/cuenta-corriente.model';
 import { Inscripcion } from '@core/model/inscripcion.model';
+import { AlumnoResponse } from '../model/alumno-response.interface';
+import { AlumnoSuspension } from '../model/alumno-suspension.interface';
+import { ResponseSDTCustom } from '../model/response-sdt-custom.model';
+import { ClaseSuspendida } from '../model/clase-suspendida-alumno.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -85,7 +89,7 @@ export class AlumnoService {
   }
 
   obtenerAlumnos = (pageSize: number, pageNumber: number, filtro: string) =>
-    this.http.get(
+    this.http.get<AlumnoResponse>(
       `${environment.url_ws}/wsGetAlumnos?PageSize=${pageSize}&PageNumber=${pageNumber}&Filtro=${filtro}`
     );
 
@@ -147,4 +151,24 @@ export class AlumnoService {
       ALUID: aluId,
     });
   }
+
+  crearClasesAlumnoSuspension = (alumnoSuspension: AlumnoSuspension) =>
+    this.http.post<ResponseSDTCustom>(
+      `${environment.url_ws}/crearClasesAlumnoSuspension`,
+      {
+        alumnoSuspension,
+      }
+    );
+
+  getClasesSuspendidasByAlumno = (aluId: number) =>
+    this.http.get<ClaseSuspendida[]>(
+      `${environment.url_ws}/getClasesSuspendidasPorAlumno?aluId=${aluId}`
+    );
+
+  setClasesRestauradas = (aluId: number, fecha: Date, tipCurId: number) =>
+    this.http.post<boolean>(`${environment.url_ws}/setClasesRestauradas`, {
+      aluId,
+      fecha,
+      tipCurId,
+    });
 }

@@ -12,6 +12,7 @@ import { AgendaClase } from '../../../core/model/agenda-clase.model';
 import { environment } from '../../../../environments/environment';
 import { Subscription } from 'rxjs';
 import { SuspenderClasesAlumnoComponent } from '@escuela/dialogs/suspender-clases-alumno/suspender-clases-alumno.component';
+import { ReanudarClasesSuspendidasComponent } from '../../dialogs/reanudar-clases-suspendidas/reanudar-clases-suspendidas.component';
 
 @Component({
   selector: 'app-gestion-alumno',
@@ -204,4 +205,23 @@ export class GestionAlumnoComponent implements OnInit, OnDestroy {
       }
     )
   }
+
+  reanudarClasesSuspendidas(alumno: Alumno) {
+    this.alumnoService.getClasesSuspendidasByAlumno(alumno.AluId).subscribe( clasesSuspendidas => {
+      console.log(clasesSuspendidas);
+
+      this.dialog.open(
+        ReanudarClasesSuspendidasComponent,
+        {
+          height: 'auto',
+          width: '700px',
+          data: {
+            alumno,
+            clasesSuspendidas
+          },
+        }
+      )
+    })
+  }
+
 }
