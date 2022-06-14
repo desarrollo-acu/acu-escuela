@@ -15,12 +15,10 @@ export class CopiarMoverClaseInstructorService {
     private acuService: AcuService,
     private movilService: MovilService,
     private auth: AutenticacionService,
-    public dialog: MatDialog,
+    public dialog: MatDialog
   ) {}
 
   copiarMoverClase(oldParameters, mainParameters) {
-    console.log({ mainParameters });
-
     const params: CopiarMoverParameters = {
       accion: oldParameters.accion,
       fechaClaseOld: oldParameters.fechaOld,
@@ -86,13 +84,11 @@ export class CopiarMoverClaseInstructorService {
               );
 
               movilesDialogRef.afterClosed().subscribe((movil) => {
-                console.log(movil);
-
                 if (movil) {
-                  this.copiarMoverClase(
-                    oldParameters,
-                    { ...mainParameters, movil: movil.MovCod }
-                  );
+                  this.copiarMoverClase(oldParameters, {
+                    ...mainParameters,
+                    movil: movil.MovCod,
+                  });
                 } else {
                   localStorage.setItem('abrirAgenda', `pegar-clase-ok`);
                   this.salirCopiarMoverClase(oldParameters);
@@ -112,6 +108,5 @@ export class CopiarMoverClaseInstructorService {
     localStorage.setItem('classOld', oldParameters.classOld);
     localStorage.setItem('textOld', oldParameters.textOld);
     localStorage.setItem('refreshAgenda', 'true');
-
   }
 }

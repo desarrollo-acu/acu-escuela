@@ -38,13 +38,16 @@ export class SeleccionarAccionAgendaComponent {
   ) {
     this.fechaClase = moment(this.data.fechaClase).toDate();
 
-    if (localStorage.getItem('usrId') === this.usuarioConPermisoNombre)
+    if (
+      localStorage.getItem('usrId').toUpperCase() ===
+      this.usuarioConPermisoNombre
+    )
       this.usuarioConPermiso = true;
 
     this.verOpciones = this.data.verOpciones;
     this.pegar = JSON.parse(localStorage.getItem('pegar-clase'));
-
-    this.fechaAnteriorMaxima = new Date(FechaXDiasAnteriorAHoy(3)); // La fecha de 3 días para atras.
+    //TODO 3 días atras....
+    this.fechaAnteriorMaxima = new Date(FechaXDiasAnteriorAHoy(90)); // La fecha de 3 días para atras.
   }
 
   openLink(event: MouseEvent, key: string): void {

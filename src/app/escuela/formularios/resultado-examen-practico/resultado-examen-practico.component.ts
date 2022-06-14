@@ -8,16 +8,14 @@ import { ResultadoExamenPractico } from '../../../core/model/formularios/resulta
 @Component({
   selector: 'app-resultado-examen-practico',
   templateUrl: './resultado-examen-practico.component.html',
-  styleUrls: ['./resultado-examen-practico.component.scss']
+  styleUrls: ['./resultado-examen-practico.component.scss'],
 })
 export class ResultadoExamenPracticoComponent implements OnInit {
-
   formularios: ResultadoExamenPractico[] = [];
   exportData: ResultadoExamenPractico[] = [];
   columnas = ['instructor', 'alumno', 'resultado'];
 
   exportarExcel = () => {
-    console.log(' exportando ...', this.exportData.map((f) => f.id));
     this.formulariosService
       .getExcelResultadoExamenPractico(this.exportData.map((f) => f.id))
       .subscribe(({ file }: any) =>
@@ -28,19 +26,30 @@ export class ResultadoExamenPracticoComponent implements OnInit {
       );
   };
 
-  actionsHeader: Actions[] = [{
-    title: 'Exportar a excel',
-    callback: this.exportarExcel
-  }];
+  actionsHeader: Actions[] = [
+    {
+      title: 'Exportar a excel',
+      callback: this.exportarExcel,
+    },
+  ];
 
   constructor(private formulariosService: FormulariosService) {}
 
   ngOnInit(): void {
-    this.formulariosService.formularios$.subscribe( ({resultadoExamenPractico}) => {
-      this.formularios = resultadoExamenPractico;
-      this.exportData = resultadoExamenPractico;
-    });
-    this.formulariosService.getResultadoExamenPractico().subscribe( formularios => this.formulariosService.setFormularios( 'resultadoExamenPractico', formularios));
+    this.formulariosService.formularios$.subscribe(
+      ({ resultadoExamenPractico }) => {
+        this.formularios = resultadoExamenPractico;
+        this.exportData = resultadoExamenPractico;
+      }
+    );
+    this.formulariosService
+      .getResultadoExamenPractico()
+      .subscribe((formularios) =>
+        this.formulariosService.setFormularios(
+          'resultadoExamenPractico',
+          formularios
+        )
+      );
   }
 
   changeData(formularios) {

@@ -66,7 +66,13 @@ export class ReportesService {
       fechaHasta,
     });
 
-  getPDFPlanDeClases(planDeClase: ClaseEstimada, path = 'wsPDFPlanDeClases') {
+  getPDFPlanDeClases(
+    planDeClase: ClaseEstimada,
+    escCurTe1?: string,
+    escCurTe2?: string,
+    escCurTe3?: symbol,
+    path?: string
+  ) {
     const headers = new HttpHeaders();
     headers.set('Aceppt', 'application/pdf;');
 
@@ -74,6 +80,9 @@ export class ReportesService {
       `${environment.url_ws}/${path}`,
       {
         PlanDeClase: { ...planDeClase, UsrId: this.authService.getUserId() },
+        escCurTe1,
+        escCurTe2,
+        escCurTe3,
       },
       {
         headers,

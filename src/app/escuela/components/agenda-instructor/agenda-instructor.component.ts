@@ -162,8 +162,6 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
     });
 
     t.afterDismissed().subscribe(({ seleccionoOpcion, params }) => {
-      console.log({ seleccionoOpcion, params });
-
       if (seleccionoOpcion) {
         const abrirAgenda = localStorage.getItem('abrirAgenda');
 
@@ -262,7 +260,6 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
   }
 
   copiarMoverClase(oldParameters, mainParameters) {
-    console.log({ mainParameters });
     // if( mainParameters.instructor !== oldParameters.escInsIdOld){
     //   return errorMensaje('Error', 'No es posible mover la clase de un instructor hacia otro instructor distinto.')
     // }
@@ -328,8 +325,6 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
               );
 
               movilesDialogRef.afterClosed().subscribe((movil) => {
-                console.log(movil);
-
                 if (movil) {
                   this.copiarMoverClase(oldParameters, {
                     ...mainParameters,

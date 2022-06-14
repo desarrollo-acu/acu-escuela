@@ -1,4 +1,13 @@
-import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges, ViewChild } from '@angular/core';
+import { Examen } from './../../../core/model/examen.model';
+import {
+  Component,
+  OnInit,
+  Input,
+  Output,
+  EventEmitter,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -11,7 +20,7 @@ import { environment } from '../../../../environments/environment';
 @Component({
   selector: 'app-gestion-custom',
   templateUrl: './gestion-custom.component.html',
-  styleUrls: ['./gestion-custom.component.scss']
+  styleUrls: ['./gestion-custom.component.scss'],
 })
 export class GestionCustomComponent implements OnInit {
   dataSource: MatTableDataSource<any>;
@@ -38,7 +47,6 @@ export class GestionCustomComponent implements OnInit {
 
   // Test paginator
   pageSize = environment.pageSize;
-
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -112,7 +120,7 @@ export class GestionCustomComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
 
-    this.updatedDataInput.emit( this.dataSource.filteredData );
+    this.updatedDataInput.emit(this.dataSource.filteredData);
   }
 
   getActionsHeaderDefault = (): Actions[] => [
@@ -185,8 +193,9 @@ export class GestionCustomComponent implements OnInit {
   }
 
   styleObject(action: Actions): Object {
-
-    const style: { backgroundColor?, color?, borderRadius? } = { color: '#fff' };
+    const style: { backgroundColor?; color?; borderRadius? } = {
+      color: '#fff',
+    };
     style.backgroundColor = action.backgroundColor;
     style.color = action.color;
     return style;

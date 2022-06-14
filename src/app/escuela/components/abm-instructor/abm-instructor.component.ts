@@ -297,8 +297,7 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
     item?: InstructorItem,
     horario?: InstructorHorario
   ) {
-    console.log(confirma, item);
-
+    console.log(item);
     if (confirma) {
       if (item) {
         this.preABMItem(item);
@@ -379,7 +378,6 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
         break;
 
       case 'UPD':
-        console.log(item, this.horasParciales.value);
         this.items = this.items.map((i) => {
           if (i.InsLicIni === item.InsLicIni) {
             const aux: InstructorItem = {
@@ -399,7 +397,6 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
 
           return i;
         });
-        console.log(this.items);
 
         this.actualizarDataSource(this.items, this.horarios);
         break;
@@ -525,8 +522,6 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
         this.addRow('item');
         break;
       case 'UPD':
-        console.log(item);
-
         this.items = this.items.map((i) => {
           if (i.InsLicIni === item.InsLicIni) {
             this.estado = i.EscuelaEstado;
@@ -619,8 +614,6 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
         Items: this.items,
         Horario: this.horarios,
       };
-
-      console.log(instructor);
 
       this.instructorService
         .gestionInstructor(this.mode, instructor)
