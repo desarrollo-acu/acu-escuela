@@ -13,7 +13,7 @@ import { DiarioMovil } from '../../../core/model/formularios/diario-movil.model'
 export class DiarioMovilComponent implements OnInit {
   formularios: DiarioMovil[] = [];
   exportData: DiarioMovil[] = [];
-  columnas = ['movil', 'instructor', 'kilometraje', 'observaciones'];
+  columnas = ['movil', 'instructor', 'kilometraje', 'observaciones', 'fecha'];
 
   exportarExcel = () => {
     this.formulariosService
@@ -21,15 +21,28 @@ export class DiarioMovilComponent implements OnInit {
       .subscribe(({ file }: any) =>
         downloadFileFromBase64(
           file,
-          `diario-movil-${moment().toLocaleString()}.xlsx`
+          `diario-movil-${moment().format('DD-MM-yyyy')}.xlsx`
         )
       );
+  };
+  actualizar = () => {
+    this.formulariosService.getDiarioMovil().subscribe((formularios) => {
+      formularios = formularios.map((form) => {
+        form.fecha = moment(form.fechaCreacion).format('DD/MM/yyyy HH:mm');
+        return form;
+      });
+      this.formulariosService.setFormularios('diarioMovil', formularios);
+    });
   };
 
   actionsHeader: Actions[] = [
     {
       title: 'Exportar a excel',
       callback: this.exportarExcel,
+    },
+    {
+      title: 'Actualizar',
+      callback: this.actualizar,
     },
   ];
   constructor(private formulariosService: FormulariosService) {}
@@ -39,11 +52,13 @@ export class DiarioMovilComponent implements OnInit {
       this.formularios = diarioMovil;
       this.exportData = diarioMovil;
     });
-    this.formulariosService
-      .getDiarioMovil()
-      .subscribe((formularios) =>
-        this.formulariosService.setFormularios('diarioMovil', formularios)
-      );
+    this.formulariosService.getDiarioMovil().subscribe((formularios) => {
+      formularios = formularios.map((form) => {
+        form.fecha = moment(form.fechaCreacion).format('DD/MM/yyyy HH:mm');
+        return form;
+      });
+      this.formulariosService.setFormularios('diarioMovil', formularios);
+    });
   }
 
   changeData(formularios) {

@@ -21,7 +21,17 @@ export class ResultadoExamenPracticoComponent implements OnInit {
       .subscribe(({ file }: any) =>
         downloadFileFromBase64(
           file,
-          `resultado-examen-practico-${moment().toLocaleString()}.xlsx`
+          `resultado-examen-practico-${moment().format('DD/MM/yyyy')}.xlsx`
+        )
+      );
+  };
+  actualizar = () => {
+    this.formulariosService
+      .getResultadoExamenPractico()
+      .subscribe((formularios) =>
+        this.formulariosService.setFormularios(
+          'resultadoExamenPractico',
+          formularios
         )
       );
   };
@@ -30,6 +40,10 @@ export class ResultadoExamenPracticoComponent implements OnInit {
     {
       title: 'Exportar a excel',
       callback: this.exportarExcel,
+    },
+    {
+      title: 'Actualizar',
+      callback: this.actualizar,
     },
   ];
 
