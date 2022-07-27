@@ -2,7 +2,9 @@
   <div class="col-xs-12" style="padding: 0px 30px">
     <div class="box">
       <mat-button-toggle-group>
-        <mat-button-toggle>Agregar Notificacion</mat-button-toggle>
+        <mat-button-toggle (click)="enviarNotificacion()"
+          >Agregar Notificacion</mat-button-toggle
+        >
         <!-- <mat-button-toggle (click)="getFile()">PDF</mat-button-toggle> -->
       </mat-button-toggle-group>
     </div>
