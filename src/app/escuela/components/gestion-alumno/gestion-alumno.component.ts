@@ -29,7 +29,6 @@ export class GestionAlumnoComponent implements OnInit {
   verAlumnos: boolean;
   filtro: string;
 
-  // Test paginator
   pageEvent: PageEvent;
   pageIndex: number;
   pageSize = environment.pageSize;
@@ -43,8 +42,7 @@ export class GestionAlumnoComponent implements OnInit {
     private alumnoService: AlumnoService,
     private router: Router,
     private dialog: MatDialog
-  ) {
-  }
+  ) {}
 
   ngOnInit() {
     const event = this.ejecutoEvent(null);
@@ -75,13 +73,11 @@ export class GestionAlumnoComponent implements OnInit {
         this.alumnoService
           .getAlumnoNumero()
           .subscribe((res: { numero: number }) => {
-
             this.alumnoService.sendDataAlumno(modo, alumno, res.numero);
             this.router.navigate(['/escuela/abm-alumno']);
           });
         break;
       case 'UPD':
-
         this.alumnoService.sendDataAlumno(modo, alumno);
         this.router.navigate(['/escuela/abm-alumno']);
         break;
@@ -94,7 +90,6 @@ export class GestionAlumnoComponent implements OnInit {
             this.alumnoService
               .gestionAlumno(modo, alumno)
               .subscribe((res: any) => {
-
                 mensajeConfirmacion('Ok', res.Alumno.ErrorMessage).then(
                   (res2) => {
                     this.getAlumnos(this.pageSize, 1, '');
@@ -109,7 +104,6 @@ export class GestionAlumnoComponent implements OnInit {
         this.alumnoService
           .getDisponibilidadAlumno(alumno.AluId)
           .subscribe((res: { Disponibilidades: AgendaClase[] }) => {
-
             const inscripcionesDialogRef = this.dialog.open(
               InscripcionesAlumnoComponent,
               {
@@ -121,7 +115,6 @@ export class GestionAlumnoComponent implements OnInit {
                 },
               }
             );
-
           });
         break;
 

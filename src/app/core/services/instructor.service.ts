@@ -1,3 +1,4 @@
+import { InstructorItem } from './../model/instructor.model';
 import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
 import { HttpClient } from '@angular/common/http';
@@ -67,6 +68,16 @@ export class InstructorService {
         Instructor: instructor,
         usrId: localStorage.getItem('usrId'),
       },
+    });
+
+  EliminarAusenciaInstructorAgenda = (
+    escInsId,
+    itemSDTInstructor: InstructorItem
+  ) =>
+    this.http.post(`${environment.url_ws}/wsEliminarAusenciaInstructorAgenda`, {
+      escInsId,
+      itemSDTInstructor,
+      usrId: localStorage.getItem('usrId'),
     });
 
   getInstructores = () =>

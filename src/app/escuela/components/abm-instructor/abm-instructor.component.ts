@@ -297,8 +297,7 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
     item?: InstructorItem,
     horario?: InstructorHorario
   ) {
-    console.log(confirma, item);
-
+    console.log(item);
     if (confirma) {
       if (item) {
         this.preABMItem(item);
@@ -379,7 +378,6 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
         break;
 
       case 'UPD':
-        console.log(item, this.horasParciales.value);
         this.items = this.items.map((i) => {
           if (i.InsLicIni === item.InsLicIni) {
             const aux: InstructorItem = {
@@ -399,7 +397,6 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
 
           return i;
         });
-        console.log(this.items);
 
         this.actualizarDataSource(this.items, this.horarios);
         break;
@@ -413,7 +410,11 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
             this.items = this.items.filter(
               (i) => i.InsLicIni !== item.InsLicIni
             );
-
+            this.instructorService
+              .EliminarAusenciaInstructorAgenda(this.escInsId.value, item)
+              .subscribe((res: any) => {
+                console.log('ok');
+              });
             this.actualizarDataSource(this.items, this.horarios);
           }
         });
@@ -489,6 +490,7 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
             this.horarios = this.horarios.filter(
               (h) => h.EscInsDia !== horario.EscInsDia
             );
+
             this.actualizarDataSource(this.items, this.horarios);
           }
         });
@@ -525,8 +527,6 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
         this.addRow('item');
         break;
       case 'UPD':
-        console.log(item);
-
         this.items = this.items.map((i) => {
           if (i.InsLicIni === item.InsLicIni) {
             this.estado = i.EscuelaEstado;
@@ -620,8 +620,6 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
         Horario: this.horarios,
       };
 
-      console.log(instructor);
-
       this.instructorService
         .gestionInstructor(this.mode, instructor)
         .subscribe((res: any) => {
@@ -632,6 +630,7 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
             ).then(() => this.router.navigate(['/escuela/gestion-instructor']));
           } else {
             errorMensaje('Error', res.Instructor.ErrorMessage, 10000);
+            this.reloadCurrentRoute();
           }
         });
     }
@@ -735,5 +734,12 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
 
   get escInsMovTa() {
     return this.instructorForm.get('escInsMovTa');
+  }
+
+  reloadCurrentRoute() {
+    let currentUrl = this.router.url;
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this.router.navigate([currentUrl]);
+    });
   }
 }

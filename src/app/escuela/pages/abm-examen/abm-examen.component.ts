@@ -116,7 +116,7 @@ export class AbmExamenComponent implements OnInit {
 
   guardarExamen = (event: Event) => {
     event.preventDefault();
-    console.log(this.form.value);
+
     if (this.form.invalid) {
       return;
     }

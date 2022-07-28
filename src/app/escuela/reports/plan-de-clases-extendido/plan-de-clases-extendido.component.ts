@@ -68,7 +68,13 @@ export class PlanDeClasesExtendidoComponent implements OnInit {
 
   generarReporte(event) {
     this.reportesService
-      .getPDFPlanDeClases({ AluId: this.aluId }, 'wsPDFPlanDeClasesExtendido')
+      .getPDFPlanDeClases(
+        { AluId: this.aluId },
+        null,
+        null,
+        null,
+        'wsPDFPlanDeClasesExtendido'
+      )
       .subscribe((pdf: any) => {
         openSamePDF(pdf, 'PlanDeClasesExtendido');
       });

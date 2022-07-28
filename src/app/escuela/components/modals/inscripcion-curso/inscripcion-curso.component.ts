@@ -4,7 +4,6 @@ import {
   MatDialogRef,
   MAT_DIALOG_DATA,
   MatDialog,
-  throwMatDialogContentAlreadyAttachedError,
 } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
@@ -151,6 +150,7 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
         alumnoCI: [null, [Validators.required]],
         alumnoTelefono: [''],
         alumnoCelular: [''],
+        alumnoMail: [''],
         sede: [null, Validators.required],
         sedeFacturacion: [null, Validators.required],
         irABuscarAlAlumno: [false],
@@ -163,12 +163,10 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
         eLearning: [false],
 
         examenMedico: [false],
-        licenciaCedulaIdentidad: [false],
-        pagoDeLicencia: [false],
 
         fechaLicCedulaIdentidad: [''],
         fechaPagoLicencia: [''],
-        fechaExamenMedico: [''],
+        fechaExamenMedico: ['', MyValidators.EsMayorA30Dias],
 
         disponibilidadLunes: [''],
         disponibilidadMartes: [''],
@@ -177,6 +175,7 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
         disponibilidadViernes: [''],
         disponibilidadSabado: [''],
         observaciones: [''],
+        enviarMail: [true],
       },
       {
         validator: [
@@ -197,6 +196,7 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
     this.alumnoTelefonoField.disable();
     this.alumnoNombreField.disable();
     this.alumnoCelularField.disable();
+    this.alumnoMail.disable();
 
     // Campos deshabilitados del curso
     this.cursoNombreField.disable();
@@ -427,7 +427,13 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
               }
 
               this.reportesService
-                .getPDFPlanDeClases(result.claseEstimada)
+                .getPDFPlanDeClases(
+                  result.claseEstimada,
+                  this.escCurTe1Field.value,
+                  this.escCurTe2Field.value,
+                  this.escCurTe3Field.value,
+                  'wsPDFPlanDeClases'
+                )
                 .subscribe((pdf) => {
                   openSamePDF(pdf, 'PlanDeClases');
                 });
@@ -533,28 +539,12 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
       });
   }
 
-  changeLicenciaCedulaIdentidad(event: MatCheckboxChange) {
-    if (event.checked) {
-      return this.fechaLicCedulaIdentidadField.setValue(new Date());
-    }
-
-    return this.fechaLicCedulaIdentidadField.setValue('');
-  }
-
   changeExamenMedico(event: MatCheckboxChange) {
     if (event.checked) {
       return this.fechaExamenMedicoField.setValue(new Date());
     }
 
     return this.fechaExamenMedicoField.setValue('');
-  }
-
-  changePagoLicencia(event: MatCheckboxChange) {
-    if (event.checked) {
-      return this.fechaPagoLicenciaField.setValue(new Date());
-    }
-
-    return this.fechaPagoLicenciaField.setValue('');
   }
 
   async addInfoAlumnoAlForm(result: Alumno) {
@@ -585,6 +575,7 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
       alumnoCI: result.AluCI,
       alumnoTelefono: result.AluTel1,
       alumnoCelular: result.AluTel2,
+      alumnoMail: result.AluMail,
       disponibilidadLunes,
       disponibilidadMartes,
       disponibilidadMiercoles,
@@ -612,17 +603,22 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
     this.inscripcionCurso.eLearning = this.eLearningField.value;
 
     this.inscripcionCurso.examenMedico = this.examenMedicoField.value;
+    //TODO: Revisar si despues tenemos que eliminarlo.
     this.inscripcionCurso.licenciaCedulaIdentidad =
-      this.licenciaCedulaIdentidadField.value;
-    this.inscripcionCurso.pagoDeLicencia = this.pagoDeLicenciaField.value;
+      this.examenMedicoField.value;
+
+    this.inscripcionCurso.pagoDeLicencia = this.examenMedicoField.value;
 
     this.inscripcionCurso.fechaExamenMedico = this.fechaExamenMedicoField.value;
     this.inscripcionCurso.fechaLicCedulaIdentidad =
       this.fechaLicCedulaIdentidadField.value;
     this.inscripcionCurso.fechaPagoLicencia = this.fechaPagoLicenciaField.value;
-
     this.inscripcionService
-      .generarInscripcion(this.inscripcionCurso)
+      .generarInscripcion(
+        this.inscripcionCurso,
+        this.enviarMail.value,
+        this.alumnoMail.value
+      )
       .subscribe((res: any) => {
         this.inscripcionCurso.mensaje = res.errorMensaje;
         mensajeConfirmacion('Excelente!', res.errorMensaje);
@@ -631,7 +627,7 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
   }
 
   private salir(result) {
-    if (result && result.salir) {
+    if (result?.salir) {
       this.dialogRef.close();
     }
   }
@@ -715,14 +711,6 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
     return this.form.get('examenMedico');
   }
 
-  get licenciaCedulaIdentidadField() {
-    return this.form.get('licenciaCedulaIdentidad');
-  }
-
-  get pagoDeLicenciaField() {
-    return this.form.get('pagoDeLicencia');
-  }
-
   get fechaLicCedulaIdentidadField() {
     return this.form.get('fechaLicCedulaIdentidad');
   }
@@ -783,5 +771,12 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
 
   get disponibilidadSabadoField() {
     return this.form.get('disponibilidadSabado');
+  }
+
+  get alumnoMail() {
+    return this.form.get('alumnoMail');
+  }
+  get enviarMail() {
+    return this.form.get('enviarMail');
   }
 }

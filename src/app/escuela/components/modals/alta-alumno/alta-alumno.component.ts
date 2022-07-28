@@ -53,8 +53,7 @@ export class AltaAlumnoComponent {
     this.buildForm();
   }
 
-  private buildForm(){
-
+  private buildForm() {
     this.alumnoForm = this.fb.group(
       {
         aluNro: [this.data.alumnoNumero],
@@ -98,8 +97,6 @@ export class AltaAlumnoComponent {
 
   guardarAlumno(event: Event) {
     event.preventDefault();
-    console.log(this.alumnoForm.valid);
-
 
     if (this.alumnoForm.valid) {
       const alumno: Alumno = {
@@ -162,7 +159,6 @@ export class AltaAlumnoComponent {
 
   obtenerSocio() {
     this.acuService.getSocio(this.socIdField.value).subscribe((result: any) => {
-
       if (result) {
         this.socio = result;
         const socUltimoPago = `${result.SocMesPgo}/${result.SocAnoPgo}`;

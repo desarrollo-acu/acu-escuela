@@ -7,8 +7,10 @@
             <div class="row start-xs">
               <div class="col-xs">
                 <div class="box">
-                  <mat-button-toggle-group >
-                    <mat-button-toggle (click)="bloquearHoras()" >Bloquear horas de la agenda</mat-button-toggle>
+                  <mat-button-toggle-group>
+                    <mat-button-toggle (click)="bloquearHoras()"
+                      >Bloquear horas de la agenda</mat-button-toggle
+                    >
                   </mat-button-toggle-group>
                 </div>
               </div>
@@ -99,7 +101,7 @@
       <td mat-cell class="cell" *matCellDef="let element">
         {{ element.Instructor }}
       </td>
-      <td mat-footer-cell *matFooterCellDef>Porcentaje</td>
+      <td mat-footer-cell *matFooterCellDef>PorcentajeUno</td>
     </ng-container>
 
     <ng-container matColumnDef="0">
@@ -128,7 +130,7 @@
       >
         {{ element.Hora1 }}
       </td>
-      <td mat-footer-cell *matFooterCellDef>{{ getPorcentaje(1) }} %</td>
+      <td mat-footer-cell *matFooterCellDef>{{ getPorcentaje(1) }}</td>
       >
     </ng-container>
 

@@ -66,15 +66,23 @@ export class ReportesService {
       fechaHasta,
     });
 
-  getPDFPlanDeClases(planDeClase: ClaseEstimada, path = 'wsPDFPlanDeClases') {
+  getPDFPlanDeClases(
+    planDeClase: ClaseEstimada,
+    escCurTe1?: string,
+    escCurTe2?: string,
+    escCurTe3?: symbol,
+    path = 'wsPDFPlanDeClases'
+  ) {
     const headers = new HttpHeaders();
     headers.set('Aceppt', 'application/pdf;');
-    console.log(this.authService.getUserId());
 
     return this.http.post(
       `${environment.url_ws}/${path}`,
       {
         PlanDeClase: { ...planDeClase, UsrId: this.authService.getUserId() },
+        escCurTe1,
+        escCurTe2,
+        escCurTe3,
       },
       {
         headers,
@@ -87,4 +95,15 @@ export class ReportesService {
     this.http.post(`${environment.url_ws}/reporteFacturasPorAlumno`, {
       aluId,
     });
+
+  expedientesProximos_A_Vencer(fechaDesde, fechaHasta, alumnoId) {
+    return this.http.post(
+      `${environment.url_ws}/reporteExpedientesProximosVencer`,
+      {
+        fechaDesde,
+        fechaHasta,
+        AluId: alumnoId,
+      }
+    );
+  }
 }

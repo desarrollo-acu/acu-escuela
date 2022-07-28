@@ -8,12 +8,12 @@ import { EvaluacionAlumno } from '../../../core/model/formularios/evaluacion-alu
 @Component({
   selector: 'app-evaluacion-alumno',
   templateUrl: './evaluacion-alumno.component.html',
-  styleUrls: ['./evaluacion-alumno.component.scss']
+  styleUrls: ['./evaluacion-alumno.component.scss'],
 })
 export class EvaluacionAlumnoComponent implements OnInit {
   formularios: EvaluacionAlumno[] = [];
   exportData: EvaluacionAlumno[] = [];
-  columnas = ['instructor', 'alumno', 'clase' , 'observaciones', 'fecha'];
+  columnas = ['instructor', 'alumno', 'clase', 'observaciones', 'fecha'];
 
   exportarExcel = () => {
     this.formulariosService
@@ -21,9 +21,18 @@ export class EvaluacionAlumnoComponent implements OnInit {
       .subscribe(({ file }: any) =>
         downloadFileFromBase64(
           file,
-          `evaluacion-alumno-${moment().toLocaleString()}.xlsx`
+          `evaluacion-alumno-${moment().format('DD/MM/yyyy')}.xlsx`
         )
       );
+  };
+  actualizar = () => {
+    this.formulariosService.getEvaluacionAlumno().subscribe((formularios) => {
+      formularios = formularios.map((form) => {
+        form.fecha = moment(form.fecha).format('DD/MM/yyyy HH:mm');
+        return form;
+      });
+      this.formulariosService.setFormularios('evaluacionAlumno', formularios);
+    });
   };
 
   actionsHeader: Actions[] = [
@@ -31,21 +40,29 @@ export class EvaluacionAlumnoComponent implements OnInit {
       title: 'Exportar a excel',
       callback: this.exportarExcel,
     },
+    {
+      title: 'Actualizar',
+      callback: this.actualizar,
+    },
   ];
 
   constructor(private formulariosService: FormulariosService) {}
 
   ngOnInit(): void {
-    this.formulariosService.formularios$.subscribe( ({evaluacionAlumno}) => {
+    this.formulariosService.formularios$.subscribe(({ evaluacionAlumno }) => {
       this.formularios = evaluacionAlumno;
       this.exportData = evaluacionAlumno;
     });
-    this.formulariosService.getEvaluacionAlumno().subscribe( formularios => this.formulariosService.setFormularios( 'evaluacionAlumno', formularios));
+    this.formulariosService.getEvaluacionAlumno().subscribe((formularios) => {
+      formularios = formularios.map((form) => {
+        form.fecha = moment(form.fecha).format('DD/MM/yyyy HH:mm');
+        return form;
+      });
+      this.formulariosService.setFormularios('evaluacionAlumno', formularios);
+    });
   }
 
   changeData(formularios) {
     this.exportData = formularios;
   }
-
 }
-
