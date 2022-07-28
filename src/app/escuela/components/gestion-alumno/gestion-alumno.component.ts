@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -10,13 +10,16 @@ import { MatDialog } from '@angular/material/dialog';
 import { InscripcionesAlumnoComponent } from '../modals/inscripciones-alumno/inscripciones-alumno.component';
 import { AgendaClase } from '../../../core/model/agenda-clase.model';
 import { environment } from '../../../../environments/environment';
+import { Subscription } from 'rxjs';
+import { SuspenderClasesAlumnoComponent } from '@escuela/dialogs/suspender-clases-alumno/suspender-clases-alumno.component';
+import { ReanudarClasesSuspendidasComponent } from '../../dialogs/reanudar-clases-suspendidas/reanudar-clases-suspendidas.component';
 
 @Component({
   selector: 'app-gestion-alumno',
   templateUrl: './gestion-alumno.component.html',
   styleUrls: ['./gestion-alumno.component.scss'],
 })
-export class GestionAlumnoComponent implements OnInit {
+export class GestionAlumnoComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = [
     'actions',
     'AluNro',
@@ -26,6 +29,7 @@ export class GestionAlumnoComponent implements OnInit {
   ];
 
   dataSource: MatTableDataSource<Alumno>;
+  alummnos: Alumno[];
   verAlumnos: boolean;
   filtro: string;
 
@@ -38,11 +42,17 @@ export class GestionAlumnoComponent implements OnInit {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
+  subs: Subscription = new Subscription();
+
   constructor(
     private alumnoService: AlumnoService,
     private router: Router,
     private dialog: MatDialog
   ) {}
+  
+  ngOnDestroy(): void {
+    this.subs.unsubscribe();
+  }
 
   ngOnInit() {
     const event = this.ejecutoEvent(null);
@@ -70,12 +80,14 @@ export class GestionAlumnoComponent implements OnInit {
   abmAlumno(modo: string, alumno: Alumno) {
     switch (modo) {
       case 'INS':
-        this.alumnoService
-          .getAlumnoNumero()
-          .subscribe((res: { numero: number }) => {
-            this.alumnoService.sendDataAlumno(modo, alumno, res.numero);
-            this.router.navigate(['/escuela/abm-alumno']);
-          });
+        this.subs.add(
+          this.alumnoService
+            .getAlumnoNumero()
+            .subscribe((res: { numero: number }) => {
+              this.alumnoService.sendDataAlumno(modo, alumno, res.numero);
+              this.router.navigate(['/escuela/abm-alumno']);
+            })
+        );
         break;
       case 'UPD':
         this.alumnoService.sendDataAlumno(modo, alumno);
@@ -87,35 +99,37 @@ export class GestionAlumnoComponent implements OnInit {
           `Está seguro que desea eliminar el alumno: ${alumno.AluNomComp}`
         ).then((res) => {
           if (res.isConfirmed) {
-            this.alumnoService
-              .gestionAlumno(modo, alumno)
-              .subscribe((res: any) => {
-                mensajeConfirmacion('Ok', res.Alumno.ErrorMessage).then(
-                  (res2) => {
-                    this.getAlumnos(this.pageSize, 1, '');
-                  }
-                );
-              });
+
+            this.subs.add(
+              this.alumnoService
+                .gestionAlumno(modo, alumno)
+                .subscribe((res: any) => {
+                  mensajeConfirmacion('Ok', res.Alumno.ErrorMessage).then(
+                    (res2) => this.getAlumnos(this.pageSize, 1, '')
+                  );
+                })
+            );
+
           }
         });
 
         break;
       case 'INSC':
-        this.alumnoService
-          .getDisponibilidadAlumno(alumno.AluId)
-          .subscribe((res: { Disponibilidades: AgendaClase[] }) => {
-            const inscripcionesDialogRef = this.dialog.open(
-              InscripcionesAlumnoComponent,
-              {
-                height: 'auto',
-                width: '700px',
-                data: {
-                  inscripciones: res.Disponibilidades,
-                  alumno: `${alumno.AluNom} ${alumno.AluApe1}`,
-                },
-              }
-            );
-          });
+        this.subs.add(
+          this.alumnoService
+            .getDisponibilidadAlumno(alumno.AluId)
+            .subscribe((res: { Disponibilidades: AgendaClase[] }) => this.dialog.open(
+                InscripcionesAlumnoComponent,
+                {
+                  height: 'auto',
+                  width: '700px',
+                  data: {
+                    inscripciones: res.Disponibilidades,
+                    alumno: `${alumno.AluNom} ${alumno.AluApe1}`,
+                  },
+                }
+              ))
+        );
         break;
 
       default:
@@ -128,12 +142,19 @@ export class GestionAlumnoComponent implements OnInit {
       pageNumber = 1;
     }
     this.verAlumnos = false;
-    this.alumnoService
-      .obtenerAlumnos(pageSize, pageNumber, filtro)
-      .subscribe((res: any) => {
-        this.length = res.cantidad;
-        this.actualizarDatasource(res, pageSize, pageNumber - 1);
-      });
+    this.subs.add(
+      this.alumnoService
+        .obtenerAlumnos(pageSize, pageNumber, filtro)
+        .subscribe(({ cantidad, alumnos }) => {
+          this.length = cantidad;
+          this.alummnos = alumnos;
+          this.actualizarDatasource(
+            { cantidad, alumnos },
+            pageSize,
+            pageNumber - 1
+          );
+        })
+    );
   }
 
   ejecutoEvent(pageEvento: PageEvent) {
@@ -173,4 +194,36 @@ export class GestionAlumnoComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
+
+  suspenderClasesFuturas(alumno: Alumno) {
+    this.dialog.open(
+      SuspenderClasesAlumnoComponent,
+      {
+        height: 'auto',
+        width: '700px',
+        data: {
+          alumno
+        },
+      }
+    )
+  }
+
+  reanudarClasesSuspendidas(alumno: Alumno) {
+    this.alumnoService.getClasesSuspendidasByAlumno(alumno.AluId).subscribe( clasesSuspendidas => {
+      console.log(clasesSuspendidas);
+
+      this.dialog.open(
+        ReanudarClasesSuspendidasComponent,
+        {
+          height: 'auto',
+          width: '700px',
+          data: {
+            alumno,
+            clasesSuspendidas
+          },
+        }
+      )
+    })
+  }
+
 }

@@ -3,7 +3,7 @@
     <div class="box">
       <mat-button-toggle-group
         *ngIf="
-          actionsHeader && actionsHeader[0].title && actionsHeader.length > 0
+          actionsHeader && actionsHeader[0]?.title && actionsHeader.length > 0
         "
       >
         <mat-button-toggle
@@ -83,10 +83,6 @@
               </td>
             </ng-template>
           </ng-container>
-
-          <!-- Actions Column
-          <ng-container matColumnDef="actions">
-          </ng-container> -->
 
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
           <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>

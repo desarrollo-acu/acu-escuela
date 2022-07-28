@@ -25,6 +25,8 @@ export interface Alumno {
     AluEstMotBaj?: string;
     AluEst?: string;
     AluFiltro?: string;
+    tieneClasesSuspendidas?: boolean;
+    tieneClasesPosteriores?: boolean;
 
 }
 

@@ -1,0 +1,89 @@
+<form [formGroup]="form">
+  <mat-toolbar color="primary">
+    <h2 mat-dialog-title>
+      Suspender clases del alumno: {{alumno?.AluNomComp}}
+    </h2>
+  </mat-toolbar>
+
+  <mat-dialog-content class="mat-typography">
+    <div class="row">
+      <div class="col-xs">
+        <div class="box">
+          <mat-form-field class="full-width">
+            <input
+              matInput
+              [matDatepicker]="picker"
+              placeholder="Fecha de suspención"
+              formControlName="fecha"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="picker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-4">
+        <div class="box">
+          <mat-form-field class="full-width">
+            <input
+              matInput
+              placeholder="Número del alumno"
+              formControlName="alumnoNumero"
+            />
+            <mat-error *ngIf="alumnoNumero.hasError('required')">
+              El alumno es <strong>requerido</strong>.
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-xs">
+        <div class="box">
+          <mat-form-field class="full-width">
+            <input
+              matInput
+              placeholder="Nombre del alumno"
+              formControlName="alumnoNombre"
+            />
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="row">
+      <div class="col-xs">
+        <div class="box">
+          <mat-form-field class="full-width">
+            <textarea
+              matInput
+              placeholder="Motivo de la suspensión"
+              formControlName="motivo"
+              cdkAutosizeMinRows="2"
+              cdkAutosizeMaxRows="5"
+            ></textarea>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button
+      mat-raised-button
+      type="button"
+      (click)="suspenderClases($event)"
+      cdkFocusInitial
+      [disabled]="form.invalid"
+      color="primary"
+    >
+      Suspender clases futuras
+    </button>
+    <button mat-button mat-dialog-close (click)="onCancel()">Cancelar</button>
+  </mat-dialog-actions>
+</form>

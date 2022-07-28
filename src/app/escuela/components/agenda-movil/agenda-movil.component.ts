@@ -150,13 +150,12 @@ export class AgendaMovilComponent implements OnInit, OnDestroy {
             this.acuService
               .getClaseAgenda(this.fechaClase, hora, movil)
               .subscribe((res: any) => {
-                const dialogRef = this.dialog.open(VerAgendaComponent, {
+                this.dialog.open(VerAgendaComponent, {
                   data: {
                     agendaClase: res.AgendaClase,
                   },
                 });
 
-                dialogRef.afterClosed().subscribe((result) => {});
               });
             break;
 
@@ -243,9 +242,7 @@ export class AgendaMovilComponent implements OnInit, OnDestroy {
           },
         });
 
-        dialogRef.afterClosed().subscribe((result) => {
-          this.getAgenda(this.fecha);
-        });
+        dialogRef.afterClosed().subscribe(() => this.getAgenda(this.fecha));
       });
   }
 
@@ -259,9 +256,7 @@ export class AgendaMovilComponent implements OnInit, OnDestroy {
           },
         });
 
-        dialogRef.afterClosed().subscribe((result) => {
-          this.getAgenda(this.fecha);
-        });
+        dialogRef.afterClosed().subscribe(() => this.getAgenda(this.fecha));
       });
   }
 
@@ -276,9 +271,7 @@ export class AgendaMovilComponent implements OnInit, OnDestroy {
           },
         });
 
-        dialogRef.afterClosed().subscribe((result) => {
-          this.getAgenda(this.fecha);
-        });
+        dialogRef.afterClosed().subscribe(() => this.getAgenda(this.fecha));
       });
   }
 
@@ -340,9 +333,7 @@ export class AgendaMovilComponent implements OnInit, OnDestroy {
       },
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      this.getAgenda(this.fecha);
-    });
+    dialogRef.afterClosed().subscribe(() => this.getAgenda(this.fecha));
   }
 
   accionGeneralDia(accion: string) {
