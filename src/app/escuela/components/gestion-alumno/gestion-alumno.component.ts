@@ -196,7 +196,7 @@ export class GestionAlumnoComponent implements OnInit, OnDestroy {
   }
 
   suspenderClasesFuturas(alumno: Alumno) {
-    this.dialog.open(
+    const ref = this.dialog.open(
       SuspenderClasesAlumnoComponent,
       {
         height: 'auto',
@@ -206,13 +206,14 @@ export class GestionAlumnoComponent implements OnInit, OnDestroy {
         },
       }
     )
+
+    ref.afterClosed().subscribe( isOk => isOk && this.getAlumnos(this.pageSize, 1, this.filtro))
   }
 
   reanudarClasesSuspendidas(alumno: Alumno) {
     this.alumnoService.getClasesSuspendidasByAlumno(alumno.AluId).subscribe( clasesSuspendidas => {
-      console.log(clasesSuspendidas);
 
-      this.dialog.open(
+      const ref = this.dialog.open(
         ReanudarClasesSuspendidasComponent,
         {
           height: 'auto',
@@ -222,7 +223,8 @@ export class GestionAlumnoComponent implements OnInit, OnDestroy {
             clasesSuspendidas
           },
         }
-      )
+      );
+      ref.afterClosed().subscribe( isOk => isOk && this.getAlumnos(this.pageSize, 1, this.filtro));
     })
   }
 

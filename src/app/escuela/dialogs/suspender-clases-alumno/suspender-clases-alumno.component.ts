@@ -8,6 +8,7 @@ import { Alumno } from '../../../core/model/obtener-alumnos.interface';
 import { getTomorrow } from '../../../utils/utils-functions';
 import { AutenticacionService } from '@core/services/autenticacion.service';
 import { mensajeConfirmacion, errorMensaje } from '../../../utils/sweet-alert';
+import { MyValidators } from '../../../utils/validators';
 
 @Component({
   selector: 'app-suspender-clases-alumno',
@@ -20,6 +21,12 @@ export class SuspenderClasesAlumnoComponent implements OnInit {
 
   get fecha() {
     return this.form.get('fecha');
+  }
+  get fechaDesde() {
+    return this.form.get('fechaDesde');
+  }
+  get fechaHasta() {
+    return this.form.get('fechaHasta');
   }
   get motivo() {
     return this.form.get('motivo');
@@ -47,6 +54,8 @@ export class SuspenderClasesAlumnoComponent implements OnInit {
   private buildForm() {
     this.form = this.formBuilder.group({
       fecha: [getTomorrow()],
+      fechaDesde: [null, [Validators.required, MyValidators.fechaAnteriorOIgualAHoy]],
+      fechaHasta: [null, [Validators.required, MyValidators.fechaAnteriorOIgualAHoy]],
       alumnoNumero: [this.alumno.AluNro, Validators.required],
       alumnoNombre: [this.alumno.AluNomComp],
       motivo: ['', Validators.required],
@@ -69,19 +78,21 @@ export class SuspenderClasesAlumnoComponent implements OnInit {
     );
     if (isConfirmed) {
       const { AluId: aluId } = this.alumno;
-      const { fecha, motivo } = this.form.getRawValue();
+      const { fecha, motivo, fechaDesde, fechaHasta } = this.form.getRawValue();
 
       this.alumnoService
         .crearClasesAlumnoSuspension({
           aluId,
           fecha,
+          fechaDesde,
+          fechaHasta,
           motivo,
           usrId: this.autenticacionService.getUserId(),
         })
         .subscribe(({ errorCode, errorMessage }) =>
           errorCode === 0
             ? mensajeConfirmacion('Excelente', errorMessage).then(() =>
-                this.dialogRef.close()
+                this.dialogRef.close(true)
               )
             : errorMensaje('Error', errorMessage).then(() =>
                 this.dialogRef.close()
