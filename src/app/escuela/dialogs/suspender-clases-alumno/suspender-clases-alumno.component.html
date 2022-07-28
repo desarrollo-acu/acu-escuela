@@ -1,7 +1,7 @@
 <form [formGroup]="form">
   <mat-toolbar color="primary">
     <h2 mat-dialog-title>
-      Suspender clases del alumno: {{alumno?.AluNomComp}}
+      Suspender clases del alumno: {{ alumno?.AluNomComp }}
     </h2>
   </mat-toolbar>
 
@@ -23,6 +23,68 @@
             <mat-datepicker #picker></mat-datepicker>
           </mat-form-field>
         </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-6">
+        <mat-form-field class="full-width">
+          <input
+            matInput
+            [matDatepicker]="pickerFechaDesde"
+            placeholder="Fecha inicio de la suspención"
+            formControlName="fechaDesde"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="pickerFechaDesde"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #pickerFechaDesde></mat-datepicker>
+          <mat-error *ngIf="fechaDesde.hasError('required')">
+            Fecha de inicio de la suspención
+            <strong>es requerida.</strong>
+          </mat-error>
+
+          <mat-error
+            *ngIf="
+              fechaDesde.hasError('fecha_invalid') &&
+              fechaDesde.dirty &&
+              fechaDesde.errors
+            "
+          >
+            Fecha de inicio de la suspención tiene que ser
+            <strong>mayor</strong> al dia de hoy.
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-xs">
+        <mat-form-field class="full-width">
+          <input
+            matInput
+            [matDatepicker]="pickerFechaHasta"
+            placeholder="Fecha de fin de la suspención"
+            formControlName="fechaHasta"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="pickerFechaHasta"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #pickerFechaHasta></mat-datepicker>
+          <mat-error *ngIf="fechaHasta.hasError('required')">
+            Fecha de fin de la suspención
+            <strong>es requerida.</strong>
+          </mat-error>
+          <mat-error
+            *ngIf="
+              fechaHasta.hasError('fecha_invalid') &&
+              fechaHasta.dirty &&
+              fechaHasta.errors
+            "
+          >
+            Fecha de fin de la suspención tiene que ser
+            <strong>mayor</strong> al dia de hoy.
+          </mat-error>
+        </mat-form-field>
       </div>
     </div>
 
@@ -54,7 +116,6 @@
       </div>
     </div>
 
-
     <div class="row">
       <div class="col-xs">
         <div class="box">
@@ -70,7 +131,6 @@
         </div>
       </div>
     </div>
-
   </mat-dialog-content>
 
   <mat-dialog-actions align="end">

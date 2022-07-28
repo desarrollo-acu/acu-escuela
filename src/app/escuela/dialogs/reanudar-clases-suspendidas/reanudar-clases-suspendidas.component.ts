@@ -7,16 +7,12 @@ import {
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { AgendaClase } from '@core/model/agenda-clase.model';
 import { Alumno } from '@core/model/alumno.model';
 import { ClaseSuspendida } from '@core/model/clase-suspendida-alumno.interface';
-import { Inscripcion } from '@core/model/inscripcion.model';
 import { AlumnoService } from '@core/services/alumno.service';
 import { InscripcionService } from '@core/services/inscripcion.service';
-import { ReportesService } from '@core/services/reportes.service';
 import { GestionAlumnoComponent } from '@escuela/components/gestion-alumno/gestion-alumno.component';
-import { DisponibilidadAlumnoComponent } from '@escuela/components/modals/disponibilidad-alumno/disponibilidad-alumno.component';
-import { openSamePDF } from '@utils/utils-functions';
+
 import { GenerarNuevoPlanClasesComponent } from '../generar-nuevo-plan-clases/generar-nuevo-plan-clases.component';
 
 interface Data {
@@ -34,6 +30,8 @@ export class ReanudarClasesSuspendidasComponent implements OnInit {
   displayedColumns: string[] = [
     'actions',
     'fecha',
+    'fechaDesde',
+    'fechaHasta',
     'curso',
     'cantidad',
     'usuario',
@@ -93,7 +91,7 @@ export class ReanudarClasesSuspendidasComponent implements OnInit {
     this.alumnoService
       .getClasesSuspendidasByAlumno(aluId)
       .subscribe((clasesSuspendidas) => {
-        if (clasesSuspendidas.length === 0) return this.dialogRef.close();
+        if (clasesSuspendidas.length === 0) return this.dialogRef.close(true);
         this.dataSource = new MatTableDataSource(clasesSuspendidas);
         this.setPaginatorAndSort();
       });
