@@ -33,7 +33,6 @@ export class GestionAlumnoComponent implements OnInit, OnDestroy {
   verAlumnos: boolean;
   filtro: string;
 
-  // Test paginator
   pageEvent: PageEvent;
   pageIndex: number;
   pageSize = environment.pageSize;
@@ -50,6 +49,7 @@ export class GestionAlumnoComponent implements OnInit, OnDestroy {
     private router: Router,
     private dialog: MatDialog
   ) {}
+  
   ngOnDestroy(): void {
     this.subs.unsubscribe();
   }
@@ -99,6 +99,7 @@ export class GestionAlumnoComponent implements OnInit, OnDestroy {
           `Está seguro que desea eliminar el alumno: ${alumno.AluNomComp}`
         ).then((res) => {
           if (res.isConfirmed) {
+
             this.subs.add(
               this.alumnoService
                 .gestionAlumno(modo, alumno)
@@ -108,6 +109,7 @@ export class GestionAlumnoComponent implements OnInit, OnDestroy {
                   );
                 })
             );
+
           }
         });
 

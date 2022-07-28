@@ -377,8 +377,6 @@ export class GenerarClaseAdicionalComponent implements OnInit {
         sede: this.sede.value,
       };
 
-      console.log(generarClaseAdicional);
-
       if (this.esClaseAdicional) {
         this.inscripcionService
           .generarClaseAdicional(generarClaseAdicional)

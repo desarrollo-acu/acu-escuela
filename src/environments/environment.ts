@@ -4,11 +4,10 @@
 
 export const environment = {
   production: false,
-  url_ws: 'http://192.1.0.86/ACUWS_EscuelaConduccionACUProd/rest',
-  apiFormularios: 'http://localhost:5000/api',
-  pageSize: 100
+  url_ws: 'http://192.1.0.86:80/ACUWS_EscuelaConduccionACUProd/rest',
+  apiFormularios: 'http://192.1.33.1/ACU-Formularios-Backend-Prod/api', //'http://192.1.0.86/FormularioTest/api', //http://192.1.33.1/ACU-Formularios-Backend-Prod/api',
+  pageSize: 100,
 };
-
 
 /*
 url_ws: 'http://192.1.0.86/ACUWSv15ACUTesting/rest',

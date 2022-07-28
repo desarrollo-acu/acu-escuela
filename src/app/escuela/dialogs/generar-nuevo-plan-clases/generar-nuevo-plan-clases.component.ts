@@ -185,7 +185,13 @@ export class GenerarNuevoPlanClasesComponent implements OnInit {
                   }
 
                   this.reportesService
-                    .getPDFPlanDeClases(claseEstimada)
+                    .getPDFPlanDeClases(
+                      claseEstimada,
+                      null,
+                      null,
+                      null,
+                      'wsPDFPlanDeClases'
+                    )
                     .subscribe((pdf) => {
                       openSamePDF(pdf, 'PlanDeClases');
                     });
