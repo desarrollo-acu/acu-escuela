@@ -8,7 +8,7 @@ export interface EnvioNotificacion {
   tipoNotificacion?: TipoNotificacion[];
   usrId?: string;
   tipo?: number;
-  fecha?: Date;
+  fecha?: Date | string;
   esAgInsFch?: Date;
   agInsHorIni?: number;
   escInsId?: number;

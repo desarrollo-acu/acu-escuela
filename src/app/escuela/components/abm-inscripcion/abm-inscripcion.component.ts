@@ -52,7 +52,6 @@ export class AbmInscripcionComponent implements OnInit {
             this.mode = modo;
 
             this.setValuesForm(inscripcion);
-            console.log(inscripcion);
           }
         );
     }
