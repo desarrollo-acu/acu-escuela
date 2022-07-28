@@ -1,4 +1,4 @@
-export class Examen{
+export class Examen {
   constructor(
     public ALUID?: number,
     public TIPCURID?: number,
@@ -13,6 +13,6 @@ export class Examen{
     public Curso?: string,
     public Fecha?: Date,
     public Observaciones?: string,
-    public Mode?: string,
-  ){}
+    public Mode?: string
+  ) {}
 }

@@ -50,8 +50,6 @@ export class ClasesEstimadasComponent implements OnInit {
     private reportesService: ReportesService,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-
-
     // Assign the data to the data source for the table to render
     this.dataSource = new MatTableDataSource(
       this.data.clasesEstimadas.ClasesEstimadas
@@ -72,14 +70,14 @@ export class ClasesEstimadasComponent implements OnInit {
   }
 
   verPDF(claseEstimada: ClaseEstimada) {
-
-    this.reportesService.getPDFPlanDeClases(claseEstimada).subscribe((pdf: any) => {
-      openSamePDF(pdf, 'PlanDeClases');
-    });
+    this.reportesService
+      .getPDFPlanDeClases(claseEstimada)
+      .subscribe((pdf: any) => {
+        openSamePDF(pdf, 'PlanDeClases');
+      });
   }
 
   verDetalle(detalle: ClaseEstimadaDetalle[]) {
-
     const clasesEstimadasDialogRef = this.dialog.open(
       ClasesEstimadasDetalleComponent,
       {
@@ -90,21 +88,19 @@ export class ClasesEstimadasComponent implements OnInit {
         },
       }
     );
-
   }
 
   seleccionarEstimacion(claseEstimada: ClaseEstimada) {
     this.dialogRef.close({
       salir: false,
       continuar: true,
-      claseEstimada
+      claseEstimada,
     });
-
   }
 
   onSalir(): void {
     this.dialogRef.close({
-      salir: true
+      salir: true,
     });
   }
 

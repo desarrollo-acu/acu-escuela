@@ -70,7 +70,13 @@ export class InscripcionesAlumnoComponent implements OnInit {
 
   verPlanDeClases(inscripcion: AgendaClase) {
     this.reportesService
-      .getPDFPlanDeClases(inscripcion.planDeClases)
+      .getPDFPlanDeClases(
+        inscripcion.planDeClases,
+        null,
+        null,
+        null,
+        'wsPDFPlanDeClases'
+      )
       .subscribe((pdf) => {
         openSamePDF(pdf, 'PlanDeClases');
       });

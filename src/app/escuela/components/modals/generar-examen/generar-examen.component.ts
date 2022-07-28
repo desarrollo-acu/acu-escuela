@@ -346,7 +346,6 @@ export class GenerarExamenComponent implements OnInit {
     if (this.form.invalid) {
       return;
     }
-    console.log(this.form.invalid);
 
     confirmacionUsuario(
       'Confirmar generación de examen',

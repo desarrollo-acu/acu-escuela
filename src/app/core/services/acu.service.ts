@@ -48,7 +48,10 @@ export class AcuService {
     }),
   };
 
-  constructor(private http: HttpClient, private authService: AutenticacionService) {}
+  constructor(
+    private http: HttpClient,
+    private authService: AutenticacionService
+  ) {}
 
   getTablaAgenda() {
     return this.http
@@ -171,17 +174,15 @@ export class AcuService {
           FchClase: params.fechaClase,
           HorClase: params.horaClase,
           Movil: params.movil,
-          EscInsId : params.escInsId,
-          EscInsIdOld : params.escInsIdOld,
+          EscInsId: params.escInsId,
+          EscInsIdOld: params.escInsIdOld,
           EsMovil: params.esMovil,
           UserId: params.userId,
-
-        }
+        },
       },
       this.httpOptions
     );
   }
-
 
   liberarClase(params: LiberarParameters) {
     return this.http.post(
@@ -269,7 +270,6 @@ export class AcuService {
     });
   }
 
-
   cleanStorageAgenda() {
     localStorage.removeItem('copiarMoverParameters');
     localStorage.removeItem('mainParameters');
@@ -287,14 +287,18 @@ export class AcuService {
 
   enviarNotificacion(envioNotificacion: EnvioNotificacion) {
     return this.http.post(`${environment.url_ws}/wsEnvioNotificacion`, {
-      envioNotificacion: {...envioNotificacion, usrId: this.authService.getUserId()},
+      envioNotificacion: {
+        ...envioNotificacion,
+        usrId: this.authService.getUserId(),
+      },
     });
   }
 
-  obtenerNotificaciones = () => this.http.get<EnvioNotificacion[]>(`${environment.url_ws}/obtenerNotificaciones`);
+  obtenerNotificaciones = () =>
+    this.http.post(`${environment.url_ws}/wsObtenerNotificaciones`, {});
 
   getTituloApp = () => this.http.get(`${environment.url_ws}/wsGetTituloApp`);
 
-  sincronizarAgendas = () => this.http.post(`${environment.url_ws}/wsSincronizarAgendas`, {});
-
+  sincronizarAgendas = () =>
+    this.http.post(`${environment.url_ws}/wsSincronizarAgendas`, {});
 }
