@@ -18,10 +18,10 @@ import { Inscripcion } from '../../../core/model/inscripcion.model';
 import { ClasesEstimadasComponent } from '../../components/modals/clases-estimadas/clases-estimadas.component';
 import { InscripcionService } from '@core/services/inscripcion.service';
 import { GestionInscripcionComponent } from '../../components/gestion-inscripcion/gestion-inscripcion.component';
-import { Moment } from 'moment';
 import * as moment from 'moment';
 import { MyValidators } from '@utils/validators';
 import { ReportesService } from '@core/services/reportes.service';
+import { Curso } from '@core/model/curso.model';
 
 @Component({
   selector: 'app-generar-nuevo-plan-clases',
@@ -33,7 +33,6 @@ export class GenerarNuevoPlanClasesComponent implements OnInit {
   horasLibres = [];
 
   selected = ' ';
-  // hora: Date = new Date();
   fechaClase: Date = new Date();
   movil: number;
   instructorAsignado = '';
@@ -42,6 +41,8 @@ export class GenerarNuevoPlanClasesComponent implements OnInit {
   titulo: string;
   inscripcion: Inscripcion;
   verLimiteClases = false;
+  pdeReagendar = false;
+  cursoModel: Curso;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -50,15 +51,24 @@ export class GenerarNuevoPlanClasesComponent implements OnInit {
     private instructorService: InstructorService,
     private inscripcionService: InscripcionService,
     public dialog: MatDialog,
-    @Inject(MAT_DIALOG_DATA) public data: { inscripcion: Inscripcion }
+    @Inject(MAT_DIALOG_DATA)
+    public data: { inscripcion: Inscripcion; curso: Curso }
   ) {
     this.inscripcion = this.data.inscripcion;
-
+    this.cursoModel = this.data.curso;
     this.horasLibres = generateHorasLibres();
     this.buildForm();
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    if (
+      this.inscripcion.numeroClases >= Number(this.cantClasesDelCurso.value)
+    ) {
+      this.pdeReagendar = false;
+    } else {
+      this.pdeReagendar = true;
+    }
+  }
 
   private buildForm() {
     const {
@@ -82,6 +92,7 @@ export class GenerarNuevoPlanClasesComponent implements OnInit {
     const today = new Date();
     const tomorrow = new Date();
     tomorrow.setDate(today.getDate() + 1);
+    const cantClasesDelCurso = this.cursoModel.TipCurClaPra;
 
     this.form = this.formBuilder.group({
       fecha: [tomorrow, MyValidators.fechaAnteriorOIgualAHoy],
@@ -101,6 +112,7 @@ export class GenerarNuevoPlanClasesComponent implements OnInit {
       observaciones: [null],
       limitarClases: [false],
       limiteClases: [3],
+      cantClasesDelCurso: [cantClasesDelCurso],
     });
 
     this.cursoId.disable();
@@ -110,6 +122,7 @@ export class GenerarNuevoPlanClasesComponent implements OnInit {
     this.numeroClase.disable();
     this.escInsId.disable();
     this.escInsNom.disable();
+    this.cantClasesDelCurso.disable();
   }
 
   getInscripcion() {
@@ -273,5 +286,9 @@ export class GenerarNuevoPlanClasesComponent implements OnInit {
 
   get disponibilidadSabado() {
     return this.form.get('disponibilidadSabado');
+  }
+
+  get cantClasesDelCurso() {
+    return this.form.get('cantClasesDelCurso');
   }
 }

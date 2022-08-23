@@ -1,3 +1,4 @@
+import { Curso } from './../../../core/model/curso.model';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -14,6 +15,7 @@ import { AutenticacionService } from '@core/services/autenticacion.service';
 import { ExamenMedicoComponent } from '../modals/examen-medico/examen-medico.component';
 import { AlumnoService } from '@core/services/alumno.service';
 import * as moment from 'moment';
+import { CursoService } from '@core/services/curso.service';
 
 @Component({
   selector: 'app-gestion-inscripcion',
@@ -48,7 +50,7 @@ export class GestionInscripcionComponent implements OnInit {
     private inscripcionService: InscripcionService,
     private alumnoService: AlumnoService,
     private autenticacionService: AutenticacionService,
-    private acuService: AcuService,
+    private cursoService: CursoService,
     public dialog: MatDialog,
     private router: Router
   ) {}
@@ -171,10 +173,13 @@ export class GestionInscripcionComponent implements OnInit {
     this.inscripcionService
       .obtenerInscripcionById(EscAluCurId, AluId, TipCurId)
       .subscribe((inscripcion) => {
-        const dialogRef = this.dialog.open(GenerarNuevoPlanClasesComponent, {
-          data: {
-            inscripcion,
-          },
+        this.cursoService.getCurso(TipCurId).subscribe((curso: Curso) => {
+          const dialogRef = this.dialog.open(GenerarNuevoPlanClasesComponent, {
+            data: {
+              inscripcion,
+              curso,
+            },
+          });
         });
       });
   }
