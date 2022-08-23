@@ -583,6 +583,8 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
           this.instructores
         );
 
+        // este es un cambio
+
         this.agendaDisplayedColumns = ['Instructor'];
         this.agendaDisplayedColumns = this.agendaDisplayedColumns.concat(
           this.columns
