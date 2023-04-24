@@ -88,6 +88,8 @@ import { AlumnosPendientesDePagoComponent } from './reports/alumnos-pendientes-d
 import { FacturasPorAlumnoComponent } from './reports/facturas-por-alumno/facturas-por-alumno.component';
 import { ExamenMedicoComponent } from './components/modals/examen-medico/examen-medico.component';
 import { ExpedientesProximosVencerComponent } from './reports/expedientes-proximos-vencer/expedientes-proximos-vencer.component';
+import { AgendaInstructorRapidaComponent } from './components/agenda-instructor-rapida/agenda-instructor-rapida.component';
+import { GestionEstadoAlumnoComponent } from './components/gestion-estado-alumno/gestion-estado-alumno.component';
 
 registerLocaleData(localeEsUy, 'es-UY');
 registerLocaleData(localeEs, 'es');
@@ -157,6 +159,8 @@ registerLocaleData(localeEs, 'es');
     FacturasPorAlumnoComponent,
     ExamenMedicoComponent,
     ExpedientesProximosVencerComponent,
+    AgendaInstructorRapidaComponent,
+    GestionEstadoAlumnoComponent,
   ],
   imports: [
     CommonModule,

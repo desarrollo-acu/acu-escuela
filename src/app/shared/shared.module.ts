@@ -19,6 +19,7 @@ import { HorasArrayToStringPipe } from './pipes/horas-array-to-string.pipe';
 import { BooleanToSpanishPipe } from './pipes/boolean-to-spanish.pipe';
 import { DiaDeLaSemanaPipe } from './pipes/dia-de-la-semana.pipe';
 import { DatetimeToStringPipe } from './pipes/datetime-to-string.pipe';
+import { EstadoAlumnoPipe } from './pipes/estado-alumno.pipe';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import { DatetimeToStringPipe } from './pipes/datetime-to-string.pipe';
     BooleanToSpanishPipe,
     DiaDeLaSemanaPipe,
     DatetimeToStringPipe,
+    EstadoAlumnoPipe,
   ],
   imports: [CommonModule, RouterModule, MaterialModule, ReactiveFormsModule],
   exports: [
@@ -55,6 +57,7 @@ import { DatetimeToStringPipe } from './pipes/datetime-to-string.pipe';
     BooleanToSpanishPipe,
     DiaDeLaSemanaPipe,
     DatetimeToStringPipe,
+    EstadoAlumnoPipe,
   ],
 })
 export class SharedModule {}

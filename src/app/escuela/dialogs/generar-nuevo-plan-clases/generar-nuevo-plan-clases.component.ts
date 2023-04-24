@@ -169,7 +169,7 @@ export class GenerarNuevoPlanClasesComponent implements OnInit {
         };
 
         this.instructorService
-          .getDisponibilidadInstructoresPorCantidad(inscripcion, cantidad)
+          .getDisponibilidadInstructoresPorCantidad(inscripcion, null, cantidad)
           .subscribe((clasesEstimadas) => {
             const clasesEstimadasDialogRef = this.dialog.open(
               ClasesEstimadasComponent,
@@ -178,6 +178,8 @@ export class GenerarNuevoPlanClasesComponent implements OnInit {
                 width: '700px',
                 data: {
                   clasesEstimadas,
+                  inscripcion,
+                  cantidad,
                 },
               }
             );

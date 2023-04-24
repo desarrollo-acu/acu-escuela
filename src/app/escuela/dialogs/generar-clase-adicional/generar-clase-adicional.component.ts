@@ -18,7 +18,7 @@ import { AlumnoService } from '@core/services/alumno.service';
 import { CursoService } from '@core/services/curso.service';
 import { InscripcionService } from '@core/services/inscripcion.service';
 import { InstructorService } from '@core/services/instructor.service';
-import { AgendaMovilComponent } from '@escuela/components/agenda-movil/agenda-movil.component';
+
 import { InstructorHorasLibresComponent } from '@escuela/components/modals/instructor-horas-libres/instructor-horas-libres.component';
 import { SeleccionarAlumnoComponent } from '@escuela/components/modals/seleccionar-alumno/seleccionar-alumno.component';
 import { SeleccionarInstructorComponent } from '@escuela/components/modals/seleccionar-instructor/seleccionar-instructor.component';
@@ -36,6 +36,7 @@ import { Movil } from '@core/model/movil.model';
 import { MovilService } from '@core/services/movil.service';
 import { MyValidatorsService } from '@utils/my-validators.service';
 import { generateSedes } from '@utils/utils-functions';
+import { AgendaMovilComponent } from '@escuela/components/agenda-movil/agenda-movil.component';
 
 @Component({
   selector: 'app-generar-clase-adicional',

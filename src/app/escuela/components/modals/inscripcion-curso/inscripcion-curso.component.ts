@@ -412,6 +412,7 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
             width: '700px',
             data: {
               clasesEstimadas,
+              desdeInscripcion: 'desdeInscripcion',
             },
           }
         );

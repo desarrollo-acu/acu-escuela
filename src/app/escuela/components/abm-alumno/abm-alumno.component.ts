@@ -89,6 +89,7 @@ export class AbmAlumnoComponent implements OnInit, OnDestroy {
           this.primeraVez = true;
           this.mode = data.modo;
           this.changeForm(data.modo, data.alumno, data.numero);
+          this.alumnoForm.updateValueAndValidity();
         }
       ); /// .currentMessage.subscribe(message => this.message = message)
     }
@@ -109,6 +110,8 @@ export class AbmAlumnoComponent implements OnInit, OnDestroy {
 
         this.titulo = 'Editar';
         this.setValuesForm(alumno);
+        this.aluCiField.disable();
+        this.aluDVField.disable();
       }
 
       this.alumnoService.aluId = this.aluId;
@@ -160,7 +163,7 @@ export class AbmAlumnoComponent implements OnInit, OnDestroy {
         aluCi: [
           '',
           [Validators.required],
-          [existeAlumnoByCiValidator(this.alumnoService)],
+          //[existeAlumnoByCiValidator(this.alumnoService)],
         ],
         aluDV: ['', Validators.required],
         aluFchNac: ['', Validators.required],

@@ -5,6 +5,9 @@
 export const environment = {
   production: false,
   url_ws: 'http://192.1.0.86:80/ACUWS_EscuelaConduccionACUProd/rest',
+  url_Backend_Charp: 'https://localhost:44380/api',
+  //url_Backend_Charp: 'http://192.1.33.1/BackendEscuelaCsharp/api',
+
   apiFormularios: 'http://192.1.33.1/ACU-Formularios-Backend-Prod/api', //'http://192.1.0.86/FormularioTest/api', //http://192.1.33.1/ACU-Formularios-Backend-Prod/api',
   pageSize: 100,
 };

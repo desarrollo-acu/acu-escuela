@@ -19,11 +19,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Instructor, InstructorItem } from '@core/model/instructor.model';
 import { EscuelaEstado } from '@core/model/escuela-estado.model';
 
-import {
-  DateAdapter,
-  MAT_DATE_FORMATS,
-  MAT_DATE_LOCALE,
-} from '@angular/material/core';
+import { DateAdapter } from '@angular/material/core';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
@@ -37,7 +33,7 @@ import { generateHorasLibres } from '@utils/utils-functions';
 })
 export class AbmInstructorComponent implements OnInit, OnDestroy {
   private subscription: Subscription;
-
+  private listObservers: Array<Subscription> = [];
   instructorForm: FormGroup;
   rows: FormArray;
   itemForm: FormGroup;
@@ -110,11 +106,12 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+    this.listObservers.forEach((sub) => sub.unsubscribe());
   }
 
   ngOnInit(): void {
     if (!this.primeraVez) {
-      this.acuService
+      const $load1 = this.acuService
         .getEscuelaEstados()
         .subscribe((estados: EscuelaEstado[]) => {
           this.estados = estados;
@@ -127,6 +124,7 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
               this.changeForm(data.modo, data.instructor);
             });
         });
+      this.listObservers.push($load1);
     }
   }
 
@@ -147,6 +145,9 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
       escInsSocMed: [''],
       escInsConNom: [''],
       escInsConTel: [''],
+      ESCINSTRBaseCarraco: [''],
+      ESCINSTRBaseYi: [''],
+      ESCINSTRBaseCarOne: [''],
 
       // Item
       insLicIni: [null],
@@ -407,15 +408,20 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
           `Está seguro que desea eliminar el ausentismo con fecha de inicio: ${item.InsLicIni} del Instructor?`
         ).then((confirm) => {
           if (confirm.isConfirmed) {
-            this.items = this.items.filter(
-              (i) => i.InsLicIni !== item.InsLicIni
+            console.log(
+              `escInsId:${this.escInsId.value} item:${item.EscEstDsc}`
             );
-            this.instructorService
+
+            const $load2 = this.instructorService
               .EliminarAusenciaInstructorAgenda(this.escInsId.value, item)
               .subscribe((res: any) => {
-                console.log('ok');
+                this.items = this.items.filter(
+                  (i) => i.InsLicIni !== item.InsLicIni
+                );
               });
             this.actualizarDataSource(this.items, this.horarios);
+            this.listObservers.push($load2);
+            //console.log(item);
           }
         });
 
@@ -615,12 +621,14 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
         EscInsSocMed: this.escInsSocMed.value,
         EscInsConNom: this.escInsConNom.value,
         EscInsConTel: this.escInsConTel.value,
-
+        ESCINSTRBaseCarraco: this.ESCINSTRBaseCarraco.value,
+        ESCINSTRBaseYi: this.ESCINSTRBaseYi.value,
+        ESCINSTRBaseCarOne: this.ESCINSTRBaseCarOne.value,
         Items: this.items,
         Horario: this.horarios,
       };
 
-      this.instructorService
+      const $load3 = this.instructorService
         .gestionInstructor(this.mode, instructor)
         .subscribe((res: any) => {
           if (res.Instructor.ErrorCode === 0) {
@@ -633,6 +641,7 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
             this.reloadCurrentRoute();
           }
         });
+      this.listObservers.push($load3);
     }
   }
 
@@ -646,6 +655,9 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
     this.escInsSocMed.setValue(instructor.EscInsSocMed);
     this.escInsConNom.setValue(instructor.EscInsConNom);
     this.escInsConTel.setValue(instructor.EscInsConTel);
+    this.ESCINSTRBaseCarraco.setValue(instructor.ESCINSTRBaseCarraco);
+    this.ESCINSTRBaseYi.setValue(instructor.ESCINSTRBaseYi);
+    this.ESCINSTRBaseCarOne.setValue(instructor.ESCINSTRBaseCarOne);
   }
 
   get escInsId() {
@@ -734,6 +746,15 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
 
   get escInsMovTa() {
     return this.instructorForm.get('escInsMovTa');
+  }
+  get ESCINSTRBaseCarraco() {
+    return this.instructorForm.get('ESCINSTRBaseCarraco');
+  }
+  get ESCINSTRBaseYi() {
+    return this.instructorForm.get('ESCINSTRBaseYi');
+  }
+  get ESCINSTRBaseCarOne() {
+    return this.instructorForm.get('ESCINSTRBaseCarOne');
   }
 
   reloadCurrentRoute() {

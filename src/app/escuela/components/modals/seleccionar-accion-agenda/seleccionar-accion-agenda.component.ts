@@ -27,8 +27,8 @@ export class SeleccionarAccionAgendaComponent {
   fechaClase: Date;
   usuarioConPermiso: boolean = false;
   fechaAnteriorMaxima;
-  private usuarioConPermisoNombre: string = 'RRUBIO'; //Solo este usuario podra mover y suspender clases de hasta 3 días pasados.
-
+  private usuarioConPermisoNombre: string = 'PARRECHE'; //Solo este usuario podra mover y suspender clases de hasta 3 días pasados.
+  private usuarioConPermisoNombre2: string = 'VMARY';
   constructor(
     private _bottomSheetRef: MatBottomSheetRef<SeleccionarAccionAgendaComponent>,
     private acuService: AcuService,
@@ -40,14 +40,15 @@ export class SeleccionarAccionAgendaComponent {
 
     if (
       localStorage.getItem('usrId').toUpperCase() ===
-      this.usuarioConPermisoNombre
+        this.usuarioConPermisoNombre ||
+      this.usuarioConPermisoNombre2
     )
       this.usuarioConPermiso = true;
 
     this.verOpciones = this.data.verOpciones;
     this.pegar = JSON.parse(localStorage.getItem('pegar-clase'));
     //TODO 3 días atras....
-    this.fechaAnteriorMaxima = new Date(FechaXDiasAnteriorAHoy(7)); // La fecha de 3 días para atras.
+    this.fechaAnteriorMaxima = new Date(FechaXDiasAnteriorAHoy(120)); // La fecha de 3 días para atras.
   }
 
   openLink(event: MouseEvent, key: string): void {

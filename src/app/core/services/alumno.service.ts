@@ -93,6 +93,34 @@ export class AlumnoService {
       `${environment.url_ws}/wsGetAlumnos?PageSize=${pageSize}&PageNumber=${pageNumber}&Filtro=${filtro}`
     );
 
+  obtenerAlumnosBackendCsharp = (
+    pageSize: number,
+    pageNumber: number,
+    filtro: string
+  ) =>
+    this.http.get(
+      `${environment.url_Backend_Charp}/Alumno/GetAlumnosConFiltro?PageSize=${pageSize}&PageNumber=${pageNumber}&Filtro=${filtro}`
+    );
+
+  obtenerAlumnosReprobadosBackendCsharp = (
+    pageSize: number,
+    pageNumber: number,
+    filtro: string
+  ) =>
+    this.http.get(
+      `${environment.url_Backend_Charp}/Alumno/GetAlumnosReprobadosConFiltro?PageSize=${pageSize}&PageNumber=${pageNumber}&Filtro=${filtro}`
+    );
+
+  modificarEstadoAlumno(aluNro: string, estado: string) {
+    var formData: any = new FormData();
+    formData.append('aluNro', aluNro);
+    formData.append('estado', estado);
+    return this.http.post(
+      `${environment.url_Backend_Charp}/Alumno/ModificarEstadoAlumno`,
+      formData
+    );
+  }
+
   obtenerAlumnoByCI = (ci: number) =>
     this.http.get<any>(`${environment.url_ws}/wsGetAlumnoByCI?CI=${ci}`);
 

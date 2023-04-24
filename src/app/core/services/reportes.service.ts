@@ -106,4 +106,6 @@ export class ReportesService {
       }
     );
   }
+  obtenerAlumnosCon10ClasesOmas = () =>
+    this.http.post(`${environment.url_ws}/wsReporteCantClasesPorAlumno`, {});
 }

@@ -1,3 +1,4 @@
+import { AlumnoCsharp } from './../../../core/model/alumnoCsharp.model';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -5,23 +6,24 @@ import { MatTableDataSource } from '@angular/material/table';
 import { AlumnoService } from '@core/services/alumno.service';
 import { Alumno } from '@core/model/alumno.model';
 import { Router } from '@angular/router';
-import { confirmacionUsuario, mensajeConfirmacion } from '@utils/sweet-alert';
 import { MatDialog } from '@angular/material/dialog';
-import { InscripcionesAlumnoComponent } from '../modals/inscripciones-alumno/inscripciones-alumno.component';
-import { AgendaClase } from '../../../core/model/agenda-clase.model';
 import { environment } from '../../../../environments/environment';
+import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-gestion-alumno',
-  templateUrl: './gestion-alumno.component.html',
-  styleUrls: ['./gestion-alumno.component.scss'],
+  selector: 'app-gestion-estado-alumno',
+  templateUrl: './gestion-estado-alumno.component.html',
+  styleUrls: ['./gestion-estado-alumno.component.scss'],
 })
-export class GestionAlumnoComponent implements OnInit {
+export class GestionEstadoAlumnoComponent implements OnInit {
   displayedColumns: string[] = [
-    'actions',
     'AluNro',
-    'AluNomComp',
+    'AluNom',
+    'AluApe',
     'AluCI',
+    'AluTel2',
+    'AluMail',
+    'AluEst',
     'inscripciones',
   ];
 
@@ -67,69 +69,13 @@ export class GestionAlumnoComponent implements OnInit {
     });
   }
 
-  abmAlumno(modo: string, alumno: Alumno) {
-    switch (modo) {
-      case 'INS':
-        this.alumnoService
-          .getAlumnoNumero()
-          .subscribe((res: { numero: number }) => {
-            this.alumnoService.sendDataAlumno(modo, alumno, res.numero);
-            this.router.navigate(['/escuela/abm-alumno']);
-          });
-        break;
-      case 'UPD':
-        this.alumnoService.sendDataAlumno(modo, alumno);
-        this.router.navigate(['/escuela/abm-alumno']);
-        break;
-      case 'DLT':
-        confirmacionUsuario(
-          'Confirmación de Usuario',
-          `Está seguro que desea eliminar el alumno: ${alumno.AluNomComp}`
-        ).then((res) => {
-          if (res.isConfirmed) {
-            this.alumnoService
-              .gestionAlumno(modo, alumno)
-              .subscribe((res: any) => {
-                mensajeConfirmacion('Ok', res.Alumno.ErrorMessage).then(
-                  (res2) => {
-                    this.getAlumnos(this.pageSize, 1, '');
-                  }
-                );
-              });
-          }
-        });
-
-        break;
-      case 'INSC':
-        this.alumnoService
-          .getDisponibilidadAlumno(alumno.AluId)
-          .subscribe((res: { Disponibilidades: AgendaClase[] }) => {
-            const inscripcionesDialogRef = this.dialog.open(
-              InscripcionesAlumnoComponent,
-              {
-                height: 'auto',
-                width: '700px',
-                data: {
-                  inscripciones: res.Disponibilidades,
-                  alumno: `${alumno.AluNom} ${alumno.AluApe1}`,
-                },
-              }
-            );
-          });
-        break;
-
-      default:
-        break;
-    }
-  }
-
   getAlumnos(pageSize, pageNumber, filtro) {
     if (pageNumber === 0) {
       pageNumber = 1;
     }
     this.verAlumnos = false;
     this.alumnoService
-      .obtenerAlumnos(pageSize, pageNumber, filtro)
+      .obtenerAlumnosReprobadosBackendCsharp(pageSize, pageNumber, filtro)
       .subscribe((res: any) => {
         this.length = res.cantidad;
         this.actualizarDatasource(res, pageSize, pageNumber - 1);
@@ -154,6 +100,32 @@ export class GestionAlumnoComponent implements OnInit {
       this.getAlumnos(this.pageSize, 1, '');
     }
     return pageEvento;
+  }
+
+  cambiarEstado(alumno: AlumnoCsharp) {
+    Swal.fire({
+      title: `¿Desea cambiar el estado del alumno ${alumno.alunro} a Inactivo?`,
+      showCancelButton: true,
+      cancelButtonColor: '#d33',
+      cancelButtonText: 'Cancelar',
+      confirmButtonText: 'Si',
+    }).then((result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        this.alumnoService
+          .modificarEstadoAlumno(alumno.alunro.toString(), 'I')
+          .subscribe((res: any) => {
+            Swal.fire({
+              icon: 'success',
+              title: 'El estado fue cambiado',
+              showConfirmButton: false,
+              timer: 1500,
+            }).then((r) => {
+              window.location.reload();
+            });
+          });
+      }
+    });
   }
 
   actualizarDatasource(data, size?, index?) {

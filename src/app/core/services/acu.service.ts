@@ -89,10 +89,11 @@ export class AcuService {
     return this.http.post(`${environment.url_ws}/wsObtenerTablaAgenda`, {});
   }
 
-  getAgendaPorFecha(fecha: any, tipo: string) {
+  getAgendaPorFecha(fecha: any, tipo: string, filtro: string) {
     return this.http.post(`${environment.url_ws}/wsObtenerAgendaPorFecha`, {
       fecha,
       tipo,
+      filtro,
     });
   }
 
@@ -157,6 +158,7 @@ export class AcuService {
         FchClase: params.fechaClase,
         HorClase: params.horaClase,
         Movil: params.movil,
+        escInsId: params.escInsId,
       },
       this.httpOptions
     );

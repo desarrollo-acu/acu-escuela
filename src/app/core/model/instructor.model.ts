@@ -13,10 +13,13 @@ export interface Instructor {
   EscMovCod?: number;
   Items?: InstructorItem[];
   Horario?: InstructorHorario[];
+  ESCINSTRBaseCarraco?: string;
+  ESCINSTRBaseYi?: string;
+  ESCINSTRBaseCarOne?: string;
 }
 
 export interface InstructorItem {
-  InsLicIni?: any; // Date | string;
+  InsLicIni?: Date | string;
   InsLicFin?: Date | string;
   EscuelaEstado?: EscuelaEstado;
   EscEstId?: number;
