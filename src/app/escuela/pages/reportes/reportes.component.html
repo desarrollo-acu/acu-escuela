@@ -40,6 +40,9 @@
         <mat-button-toggle (click)="obtenerAlumnosCon10ClasesOmas()">
           Alumnos con 10 clases o más
         </mat-button-toggle>
+        <mat-button-toggle (click)="tipo = 'clases-hasta-examen'">
+          Clases hasta examen
+        </mat-button-toggle>
       </mat-button-toggle-group>
     </div>
   </div>
@@ -72,6 +75,9 @@
         </div>
         <div *ngSwitchCase="'expedientes-proximos-vencer'">
           <app-expedientes-proximos-vencer></app-expedientes-proximos-vencer>
+        </div>
+        <div *ngSwitchCase="'clases-hasta-examen'">
+          <app-clases-hasta-examen></app-clases-hasta-examen>
         </div>
         <div *ngSwitchDefault>
           <div class="row" style="margin-top: 20px">

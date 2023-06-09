@@ -9,6 +9,8 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { environment } from '../../../../environments/environment';
 import Swal from 'sweetalert2';
+import { downloadFileFromBase64 } from '@utils/utils-functions';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-gestion-estado-alumno',
@@ -23,6 +25,7 @@ export class GestionEstadoAlumnoComponent implements OnInit {
     'AluCI',
     'AluTel2',
     'AluMail',
+    'EscInsId',
     'AluEst',
     'inscripciones',
   ];
@@ -128,6 +131,16 @@ export class GestionEstadoAlumnoComponent implements OnInit {
     });
   }
 
+  getExcel() {
+    this.alumnoService
+      .obtenerExcelAlumnosReprobadosBackendCsharp()
+      .subscribe((file: any) => {
+        downloadFileFromBase64(
+          file,
+          `alumnos-${moment().format('DD-MM-yyyy')}.xlsx`
+        );
+      });
+  }
   actualizarDatasource(data, size?, index?) {
     this.dataSource = data.alumnos;
 

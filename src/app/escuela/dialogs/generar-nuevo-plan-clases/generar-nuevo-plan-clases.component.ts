@@ -169,6 +169,7 @@ export class GenerarNuevoPlanClasesComponent implements OnInit {
         };
 
         this.instructorService
+          //.getDisponibilidadInstructoresPorCantidadCharp(
           .getDisponibilidadInstructoresPorCantidad(inscripcion, null, cantidad)
           .subscribe((clasesEstimadas) => {
             const clasesEstimadasDialogRef = this.dialog.open(

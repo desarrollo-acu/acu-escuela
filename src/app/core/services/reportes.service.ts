@@ -106,6 +106,15 @@ export class ReportesService {
       }
     );
   }
+
+  getExcelClasesHastaExamen = (month: number, year: number) =>
+    this.http.get(
+      `${environment.url_Backend_Charp}/Alumno/GetExcelClasesHastaExamen?month=${month}&year=${year}`,
+      {
+        responseType: 'text',
+      }
+    );
+
   obtenerAlumnosCon10ClasesOmas = () =>
     this.http.post(`${environment.url_ws}/wsReporteCantClasesPorAlumno`, {});
 }

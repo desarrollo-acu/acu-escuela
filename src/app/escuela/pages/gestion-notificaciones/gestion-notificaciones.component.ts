@@ -54,6 +54,8 @@ export class GestionNotificacionesComponent implements OnInit {
     this.acuService
       .obtenerNotificaciones()
       .subscribe((notificaciones: EnvioNotificacion[]) => {
+        console.log(notificaciones);
+
         notificaciones = notificaciones['CollectionSDTEnvioNotificacion'];
         notificaciones = notificaciones.map((n) => {
           n.fecha = moment(n.fecha).format('DD/MM/yyyy hh:mm');

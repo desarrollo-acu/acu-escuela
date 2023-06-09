@@ -293,14 +293,16 @@ export class AgendaInstructorRapidaComponent implements OnInit, OnDestroy {
     } else {
       const load1$ = this.acuService
         .copiarMoverInstructorClase(params)
-        .subscribe((res: any) =>
+        .subscribe((res: any) => {
+          console.log(res);
+
           this.finalizarCopiarMoverClase(
             res,
             oldParameters,
             mainParameters,
             params
-          )
-        );
+          );
+        });
       this.listObservers.push(load1$);
     }
     // params.esMovil

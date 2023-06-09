@@ -110,6 +110,13 @@ export class AlumnoService {
     this.http.get(
       `${environment.url_Backend_Charp}/Alumno/GetAlumnosReprobadosConFiltro?PageSize=${pageSize}&PageNumber=${pageNumber}&Filtro=${filtro}`
     );
+  obtenerExcelAlumnosReprobadosBackendCsharp = () =>
+    this.http.get(
+      `${environment.url_Backend_Charp}/Alumno/GetExcelAlumnosReprobados`,
+      {
+        responseType: 'text',
+      }
+    );
 
   modificarEstadoAlumno(aluNro: string, estado: string) {
     var formData: any = new FormData();

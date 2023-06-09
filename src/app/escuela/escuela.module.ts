@@ -90,6 +90,7 @@ import { ExamenMedicoComponent } from './components/modals/examen-medico/examen-
 import { ExpedientesProximosVencerComponent } from './reports/expedientes-proximos-vencer/expedientes-proximos-vencer.component';
 import { AgendaInstructorRapidaComponent } from './components/agenda-instructor-rapida/agenda-instructor-rapida.component';
 import { GestionEstadoAlumnoComponent } from './components/gestion-estado-alumno/gestion-estado-alumno.component';
+import { ClasesHastaExamenComponent } from './reports/clases-hasta-examen/clases-hasta-examen.component';
 
 registerLocaleData(localeEsUy, 'es-UY');
 registerLocaleData(localeEs, 'es');
@@ -161,6 +162,7 @@ registerLocaleData(localeEs, 'es');
     ExpedientesProximosVencerComponent,
     AgendaInstructorRapidaComponent,
     GestionEstadoAlumnoComponent,
+    ClasesHastaExamenComponent,
   ],
   imports: [
     CommonModule,

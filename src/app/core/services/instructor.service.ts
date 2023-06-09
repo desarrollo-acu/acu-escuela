@@ -63,6 +63,22 @@ export class InstructorService {
       }
     );
 
+  getDisponibilidadInstructoresPorCantidadCharp(
+    inscripcion: InscripcionCurso,
+    paramEscInsId: string,
+    cantidad: number
+  ) {
+    let objeto = {
+      inscripcion: inscripcion,
+      paramEscInsId: paramEscInsId,
+      countClasesEstimar: cantidad,
+    };
+    return this.http.post(
+      `${environment.url_Backend_Charp}/Instructor/ObtenerDisponibilidadInstructorPorCantidad`,
+      objeto
+    );
+  }
+
   gestionInstructor = (mode: string, instructor: Instructor) =>
     this.http.post(`${environment.url_ws}/wsGestionInstructor`, {
       Instructor: {
@@ -86,8 +102,6 @@ export class InstructorService {
     escInsId,
     itemSDTInstructor: InstructorItem
   ) {
-    console.log('testtttt ' + itemSDTInstructor);
-
     let objeto = {
       escInsId: escInsId,
       itemSDTInstructor: itemSDTInstructor,
