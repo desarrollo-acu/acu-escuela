@@ -14,7 +14,7 @@ import { map, catchError, tap, finalize } from 'rxjs/operators';
 import { AutenticacionService } from '../core/services/autenticacion.service';
 import { HttpStatusCode } from '../core/model/enum/http-status-code.enum';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
+import { errorMensaje } from '../utils/sweet-alert';
 @Injectable()
 export class CargandoInterceptor implements HttpInterceptor {
   statusCodes: HttpStatusCode[] = [
@@ -65,7 +65,11 @@ export class CargandoInterceptor implements HttpInterceptor {
         if (this.errorStatusCodes.includes(err.status)) {
           this.router.navigate(['/login']);
         } else {
-          this.toast.open('Ocurrió un error', 'Avisar a informatica');
+          if (err.status == 400) {
+            errorMensaje('Error', err.error).then();
+          } else {
+            this.toast.open('Ocurrió un error', 'Avisar a informatica');
+          }
         }
 
         console.log(err);

@@ -132,7 +132,7 @@ export class EnviarNotificacionComponent implements OnInit {
       }
 
       this.acuService
-        .enviarNotificacion(this.form.value)
+        .enviarNotificacionCsharp(this.form.value)
         .subscribe((res) =>
           mensajeConfirmacion(
             'Excelente!',

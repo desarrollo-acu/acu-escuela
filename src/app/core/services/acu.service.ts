@@ -295,7 +295,13 @@ export class AcuService {
       },
     });
   }
-
+  enviarNotificacionCsharp(envioNotificacion: EnvioNotificacion) {
+    envioNotificacion.usrId = this.authService.getUserId();
+    return this.http.post(
+      `${environment.url_Backend_Charp}/Alumno/EnviarNotificacion`,
+      envioNotificacion
+    );
+  }
   obtenerNotificaciones = () =>
     this.http.post(`${environment.url_ws}/wsObtenerNotificaciones`, {});
 
