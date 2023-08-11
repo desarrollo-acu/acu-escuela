@@ -45,6 +45,7 @@ export class CargandoInterceptor implements HttpInterceptor {
         Pragma: 'no-cache',
       },
     });
+
     this.blockUI.start();
     return next.handle(req).pipe(
       map((event: HttpEvent<any>) => {

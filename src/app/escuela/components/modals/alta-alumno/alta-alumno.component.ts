@@ -98,6 +98,8 @@ export class AltaAlumnoComponent {
   guardarAlumno(event: Event) {
     event.preventDefault();
 
+    const control = this.alumnoForm.get('aluDepId');
+
     if (this.alumnoForm.valid) {
       const alumno: Alumno = {
         AluId: 0,

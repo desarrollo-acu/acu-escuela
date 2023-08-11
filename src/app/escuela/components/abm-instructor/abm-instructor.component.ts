@@ -528,6 +528,7 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
   }
 
   abmItem(modo: string, item: InstructorItem) {
+    console.log('entrando' + item);
     switch (modo) {
       case 'INS':
         this.addRow('item');

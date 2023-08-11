@@ -3,8 +3,6 @@ import { Routes, RouterModule } from '@angular/router';
 import { LayoutComponent } from './layout/layout.component';
 import { AutenticacionGuard } from './core/guards/autenticacion.guard';
 
-
-
 const routes: Routes = [
   {
     path: '',
@@ -17,31 +15,35 @@ const routes: Routes = [
       },
       {
         path: 'home',
-        loadChildren: () => import('./home/home.module').then(m => m.HomeModule)
-      }
-    ]
+        loadChildren: () =>
+          import('./home/home.module').then((m) => m.HomeModule),
+      },
+    ],
   },
   {
     path: 'login',
-    loadChildren: () => import('./login/login.module').then(m => m.LoginModule),
+    loadChildren: () =>
+      import('./login/login.module').then((m) => m.LoginModule),
   },
   {
     path: 'escuela',
-    loadChildren: () => import('./escuela/escuela.module').then(m => m.EscuelaModule),
-    canActivate: [AutenticacionGuard]
+    loadChildren: () =>
+      import('./escuela/escuela.module').then((m) => m.EscuelaModule),
+    //canActivate: [AutenticacionGuard]
   },
   {
     path: 'auth',
-    loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule)
+    loadChildren: () => import('./auth/auth.module').then((m) => m.AuthModule),
   },
   {
     path: '**',
-    loadChildren: () => import('./error/error.module').then(m => m.ErrorModule),
-  }
+    loadChildren: () =>
+      import('./error/error.module').then((m) => m.ErrorModule),
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
