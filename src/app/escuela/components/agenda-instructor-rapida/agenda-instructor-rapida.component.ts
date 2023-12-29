@@ -294,8 +294,6 @@ export class AgendaInstructorRapidaComponent implements OnInit, OnDestroy {
       const load1$ = this.acuService
         .copiarMoverInstructorClase(params)
         .subscribe((res: any) => {
-          console.log(res);
-
           this.finalizarCopiarMoverClase(
             res,
             oldParameters,

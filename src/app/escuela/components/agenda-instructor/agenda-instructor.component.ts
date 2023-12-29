@@ -183,9 +183,9 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
             this.generarExamen(instructor, hora);
             break;
 
-          case 'suspender-instructor':
-            this.suspenderDuplicarClase(instructor, hora, true);
-            break;
+          // case 'suspender-instructor':
+          //   this.suspenderDuplicarClase(instructor, hora, true);
+          //   break;
           case 'duplicar-instructor':
             this.suspenderDuplicarClase(instructor, hora, false);
             break;

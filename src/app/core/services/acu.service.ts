@@ -15,6 +15,7 @@ import { Suspenderclase } from '../model/suspender-clase.model';
 import { map } from 'rxjs/operators';
 import { EnvioNotificacion } from '../model/envio-notificacion.model';
 import { AutenticacionService } from './autenticacion.service';
+import { AltaAgeInst } from '@core/model/AltaAgeInst';
 
 export interface LiberarParameters {
   fechaClase: Date;
@@ -306,7 +307,13 @@ export class AcuService {
     this.http.post(`${environment.url_ws}/wsObtenerNotificaciones`, {});
 
   getTituloApp = () => this.http.get(`${environment.url_ws}/wsGetTituloApp`);
-
+  bajaAgendaInst(ageIns: AltaAgeInst) {
+    return this.http.post(
+      `${environment.url_Backend_Charp}/Instructor/BajaAgendaInst`,
+      ageIns,
+      { responseType: 'text' }
+    );
+  }
   sincronizarAgendas = () =>
     this.http.post(`${environment.url_ws}/wsSincronizarAgendas`, {});
 }

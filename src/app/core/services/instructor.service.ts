@@ -137,4 +137,10 @@ export class InstructorService {
       : { modo, instructor, id: 0 };
     this.instructorDataSource.next(data);
   }
+
+  altaHoraTeorico = (req: any) =>
+    this.http.post(
+      `${environment.url_Backend_Charp}/Instructor/altaHoraTeorico`,
+      req
+    );
 }

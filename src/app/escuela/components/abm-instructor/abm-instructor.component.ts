@@ -298,7 +298,6 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
     item?: InstructorItem,
     horario?: InstructorHorario
   ) {
-    console.log(item);
     if (confirma) {
       if (item) {
         this.preABMItem(item);
@@ -421,7 +420,6 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
               });
             this.actualizarDataSource(this.items, this.horarios);
             this.listObservers.push($load2);
-            //console.log(item);
           }
         });
 
@@ -540,7 +538,6 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
             i.isDelete = false;
             i.modo = modo;
           }
-
           return i;
         });
 
@@ -628,7 +625,6 @@ export class AbmInstructorComponent implements OnInit, OnDestroy {
         Items: this.items,
         Horario: this.horarios,
       };
-
       const $load3 = this.instructorService
         .gestionInstructor(this.mode, instructor)
         .subscribe((res: any) => {
