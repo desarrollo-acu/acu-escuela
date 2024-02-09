@@ -110,6 +110,9 @@ export class AgendaInstructorRapidaComponent implements OnInit, OnDestroy {
           case 'I':
             cell.value = 'AUSENCIA INSTRUCTOR';
             break;
+          case 'T':
+            cell.value = 'TEORICO';
+            break;
 
           default:
             // tslint:disable-next-line: triple-equals

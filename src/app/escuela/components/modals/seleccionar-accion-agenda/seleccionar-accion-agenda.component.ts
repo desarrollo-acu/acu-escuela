@@ -47,13 +47,13 @@ export class SeleccionarAccionAgendaComponent {
     @Inject(MAT_BOTTOM_SHEET_DATA) public data: any
   ) {
     this.fechaClase = moment(this.data.fechaClase).toDate();
-
-    if (
-      this.usuarioConPermisoNombre.includes(
-        localStorage.getItem('usrId').toUpperCase()
-      )
-    ) {
-      this.usuarioConPermiso = true;
+    const usuLocalSt: string = localStorage
+      .getItem('usrId')
+      .toLocaleUpperCase();
+    if (usuLocalSt) {
+      if (this.usuarioConPermisoNombre.includes(usuLocalSt)) {
+        this.usuarioConPermiso = true;
+      }
     }
 
     this.verOpciones = this.data.verOpciones;
