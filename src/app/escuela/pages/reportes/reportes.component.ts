@@ -19,4 +19,12 @@ export class ReportesComponent implements OnInit {
         downloadFileFromBase64(dataBase64, filename);
       });
   }
+
+  getReporteCursoAlumno() {
+    this.reportesService
+      .getReporteCursoAlumno()
+      .subscribe((dataBase64: any) => {
+        downloadFileFromBase64(dataBase64, 'Reporte_Curso_Alumno.xlsx');
+      });
+  }
 }

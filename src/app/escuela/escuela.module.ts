@@ -91,6 +91,7 @@ import { ExpedientesProximosVencerComponent } from './reports/expedientes-proxim
 import { AgendaInstructorRapidaComponent } from './components/agenda-instructor-rapida/agenda-instructor-rapida.component';
 import { GestionEstadoAlumnoComponent } from './components/gestion-estado-alumno/gestion-estado-alumno.component';
 import { ClasesHastaExamenComponent } from './reports/clases-hasta-examen/clases-hasta-examen.component';
+import { CatidadClasesPorInstructorComponent } from './reports/catidad-clases-por-instructor/catidad-clases-por-instructor.component';
 
 registerLocaleData(localeEsUy, 'es-UY');
 registerLocaleData(localeEs, 'es');
@@ -163,6 +164,7 @@ registerLocaleData(localeEs, 'es');
     AgendaInstructorRapidaComponent,
     GestionEstadoAlumnoComponent,
     ClasesHastaExamenComponent,
+    CatidadClasesPorInstructorComponent,
   ],
   imports: [
     CommonModule,

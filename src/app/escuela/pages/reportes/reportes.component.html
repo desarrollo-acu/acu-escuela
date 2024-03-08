@@ -44,6 +44,12 @@
           Clases hasta examen
         </mat-button-toggle>
       </mat-button-toggle-group>
+      <mat-button-toggle (click)="getReporteCursoAlumno()">
+        Cursos Por Alumno
+      </mat-button-toggle>
+      <mat-button-toggle (click)="tipo = 'cantidad-clases-por-instructor'">
+        Cantidad de Clases por Instructor
+      </mat-button-toggle>
     </div>
   </div>
 </div>
@@ -78,6 +84,9 @@
         </div>
         <div *ngSwitchCase="'clases-hasta-examen'">
           <app-clases-hasta-examen></app-clases-hasta-examen>
+        </div>
+        <div *ngSwitchCase="'cantidad-clases-por-instructor'">
+          <app-catidad-clases-por-instructor></app-catidad-clases-por-instructor>
         </div>
         <div *ngSwitchDefault>
           <div class="row" style="margin-top: 20px">
