@@ -149,10 +149,19 @@
                             [matDatepicker]="picker"
                             placeholder="Fecha de Nacimiento"
                             formControlName="aluFchNac"
+                            required
                           />
                           <mat-datepicker-toggle matSuffix [for]="picker">
                           </mat-datepicker-toggle>
                           <mat-datepicker #picker></mat-datepicker>
+
+                          <mat-error
+                          *ngIf="aluDVField.hasError('required')"
+                          >
+                          Dígito Verificador es
+                          <strong>requerido</strong>.
+                          </mat-error>
+
                         </mat-form-field>
                       </div>
                     </div>
