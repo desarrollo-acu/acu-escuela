@@ -2,6 +2,7 @@
   <mat-toolbar color="primary">
     <h2 mat-dialog-title>Generar nuevo plan de clases</h2>
   </mat-toolbar>
+  <p *ngIf="!pdeReagendar" class="errorMsg">No posee clases para reagendar</p>
 
   <mat-dialog-content class="mat-typography">
     <div class="row">
@@ -108,13 +109,24 @@
     </div>
 
     <div class="row">
-      <div class="col">
+      <div class="col-xs-4">
         <div class="box">
           <mat-form-field class="full-width">
             <input
               matInput
               placeholder="Nº de Clases a la fecha"
               formControlName="numeroClase"
+            />
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col">
+        <div class="box">
+          <mat-form-field class="full-width">
+            <input
+              matInput
+              placeholder="Nº de Clases del curso"
+              formControlName="cantClasesDelCurso"
             />
           </mat-form-field>
         </div>
@@ -257,7 +269,7 @@
       mat-raised-button
       type="submit"
       cdkFocusInitial
-      [disabled]="form.invalid"
+      [disabled]="form.invalid || !pdeReagendar"
       color="primary"
     >
       Generar nuevo plan de clases

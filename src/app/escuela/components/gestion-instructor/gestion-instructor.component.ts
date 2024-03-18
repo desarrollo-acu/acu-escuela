@@ -6,7 +6,6 @@ import { InstructorService } from '@core/services/instructor.service';
 import { Router } from '@angular/router';
 import { confirmacionUsuario, mensajeConfirmacion } from '@utils/sweet-alert';
 import { Instructor } from '@core/model/instructor.model';
-import { filter } from 'rxjs/operators';
 import { MatSelectChange } from '@angular/material/select';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { environment } from '@environments/environment';
@@ -120,6 +119,8 @@ export class GestionInstructorComponent implements OnInit {
     this.instructorService
       .getInstructores()
       .subscribe((instructores: Instructor[]) => {
+        console.log(instructores);
+
         this.verInstructor = true;
         // Assign the data to the data source for the table to render
         this.instructores = instructores;

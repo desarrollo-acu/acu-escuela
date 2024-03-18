@@ -11,10 +11,13 @@ import {
   confirmacionUsuario,
   errorMensaje,
 } from '../../../../utils/sweet-alert';
-
+import { AltaAgeInst } from './../../../../core/model/AltaAgeInst';
 import * as moment from 'moment';
 
 import { FechaXDiasAnteriorAHoy } from '@utils/utils-functions';
+import Swal from 'sweetalert2';
+import { AutenticacionService } from '@core/services/autenticacion.service';
+import { InstructorService } from '@core/services/instructor.service';
 @Component({
   selector: 'app-seleccionar-accion-agenda',
   templateUrl: './seleccionar-accion-agenda.component.html',
@@ -27,27 +30,36 @@ export class SeleccionarAccionAgendaComponent {
   fechaClase: Date;
   usuarioConPermiso: boolean = false;
   fechaAnteriorMaxima;
-  private usuarioConPermisoNombre: string = 'RRUBIO'; //Solo este usuario podra mover y suspender clases de hasta 3 días pasados.
+  private usuarioConPermisoNombre: string[] = [
+    'PARRECHE',
+    'VMARI',
+    'RRUBIO',
+    'NBENTOS',
+  ]; //Solo este usuario podra mover y suspender clases de hasta 3 días pasados.
 
   constructor(
     private _bottomSheetRef: MatBottomSheetRef<SeleccionarAccionAgendaComponent>,
     private acuService: AcuService,
     public dialog: MatDialog,
+    private auth: AutenticacionService,
+    private instrService: InstructorService,
 
     @Inject(MAT_BOTTOM_SHEET_DATA) public data: any
   ) {
     this.fechaClase = moment(this.data.fechaClase).toDate();
-
-    if (
-      localStorage.getItem('usrId').toUpperCase() ===
-      this.usuarioConPermisoNombre
-    )
-      this.usuarioConPermiso = true;
+    const usuLocalSt: string = localStorage
+      .getItem('usrId')
+      .toLocaleUpperCase();
+    if (usuLocalSt) {
+      if (this.usuarioConPermisoNombre.includes(usuLocalSt)) {
+        this.usuarioConPermiso = true;
+      }
+    }
 
     this.verOpciones = this.data.verOpciones;
     this.pegar = JSON.parse(localStorage.getItem('pegar-clase'));
     //TODO 3 días atras....
-    this.fechaAnteriorMaxima = new Date(FechaXDiasAnteriorAHoy(7)); // La fecha de 3 días para atras.
+    this.fechaAnteriorMaxima = new Date(FechaXDiasAnteriorAHoy(120)); // La fecha de 3 días para atras.
   }
 
   openLink(event: MouseEvent, key: string): void {
@@ -78,7 +90,83 @@ export class SeleccionarAccionAgendaComponent {
         break;
 
       case 'suspender-clase':
-        localStorage.setItem('abrirAgenda', `suspender-${tipoAgenda}`);
+        //localStorage.setItem('abrirAgenda', `suspender-${tipoAgenda}`);
+        const nroAlumno = mainParameters.text.slice(1, 6);
+        const age: AltaAgeInst = {
+          Aluid: 0,
+          Tipcurid: 0,
+          Inst: mainParameters.instructor,
+          Hora: mainParameters.hora,
+          Usuario: this.auth.getUserId(),
+          Fecha: mainParameters.fecha,
+        };
+        Swal.fire({
+          title: `¿Segur@ que desea liberar la clase del alumno ${nroAlumno} con fecha ${moment(
+            age.Fecha
+          ).format('DD-MM-YYYY')} a la hora ${age.Hora} con el instructor ${
+            age.Inst
+          }?`,
+          showCancelButton: true,
+          cancelButtonColor: '#d33',
+          cancelButtonText: 'Cancelar',
+          confirmButtonText: 'Si',
+        }).then((result) => {
+          /* Read more about isConfirmed, isDenied below */
+          if (result.isConfirmed) {
+            this.acuService.bajaAgendaInst(age).subscribe((resp) => {
+              Swal.fire({
+                title: 'Excelente!',
+                text: resp,
+                icon: 'success',
+                timer: 2000,
+                showConfirmButton: false,
+              }).then(() => {
+                window.location.reload();
+              });
+            });
+          }
+        });
+
+        break;
+
+      case 'teorico-clase':
+        //localStorage.setItem('abrirAgenda', `suspender-${tipoAgenda}`);
+
+        const age2: AltaAgeInst = {
+          Aluid: 0,
+          Tipcurid: 0,
+          Inst: mainParameters.instructor,
+          Hora: mainParameters.hora,
+          Usuario: this.auth.getUserId(),
+          Fecha: mainParameters.fecha,
+        };
+        Swal.fire({
+          title: `¿Segur@ que desea dar alta una clase torica para la fecha ${moment(
+            age2.Fecha
+          ).format('DD-MM-YYYY')} a la hora ${age2.Hora} con el instructor ${
+            age2.Inst
+          }?`,
+          showCancelButton: true,
+          cancelButtonColor: '#d33',
+          cancelButtonText: 'Cancelar',
+          confirmButtonText: 'Si',
+        }).then((result) => {
+          /* Read more about isConfirmed, isDenied below */
+          if (result.isConfirmed) {
+            this.instrService.altaHoraTeorico(age2).subscribe(() => {
+              Swal.fire({
+                title: 'Excelente!',
+                text: 'Alta exitosa',
+                icon: 'success',
+                timer: 2000,
+                showConfirmButton: false,
+              }).then(() => {
+                window.location.reload();
+              });
+            });
+          }
+        });
+
         break;
 
       case 'duplicar-clase':

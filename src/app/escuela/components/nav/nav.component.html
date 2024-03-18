@@ -1,59 +1,121 @@
 <div class="example-container" [class.example-is-mobile]="mobileQuery.matches">
-    <mat-toolbar color="primary" class="example-toolbar">
-
-
-        <button mat-icon-button (click)="drawer.toggle()">
+  <mat-toolbar color="primary" class="example-toolbar">
+    <button mat-icon-button (click)="drawer.toggle()">
       <mat-icon>menu</mat-icon>
     </button>
-        <h1 class="example-app-name">{{ titleApp }}</h1>
-        <h1 class="title">{{title}}</h1>
+    <h1 class="example-app-name">{{ titleApp }}</h1>
+    <h1 class="title">{{ title }}</h1>
 
-        <button type="button" mat-button (click)="logout()">
-          Logout
-          <mat-icon aria-label="Side nav toggle icon"> exit_to_app </mat-icon>
-        </button>
+    <button type="button" mat-button (click)="logout()">
+      Logout
+      <mat-icon aria-label="Side nav toggle icon"> exit_to_app </mat-icon>
+    </button>
+  </mat-toolbar>
 
+  <mat-sidenav-container
+    class="sidenav-container"
+    [style.marginTop.px]="mobileQuery.matches ? 56 : 0"
+  >
+    <mat-sidenav
+      #drawer
+      class="sidenav"
+      [fixedInViewport]="mobileQuery.matches"
+      [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+      [mode]="(isHandset$ | async) ? 'over' : 'side'"
+      [opened]="(isHandset$ | async) === false"
+      fixedTopGap="56"
+    >
+      <mat-toolbar>Menu</mat-toolbar>
+      <mat-nav-list>
+        <a mat-list-item (click)="inscripcion()">Inscripción</a>
+        <a
+          mat-list-item
+          routerLink="/escuela/agenda-instructor"
+          (click)="changeTitle('/escuela/agenda-instructor')"
+          >Agenda por instructor</a
+        >
+        <a
+          mat-list-item
+          routerLink="/escuela/agenda-instructor-rapida"
+          (click)="changeTitle('/escuela/agenda-instructor-rapida')"
+          >Agenda por Instructor Rápida</a
+        >
+        <a
+          mat-list-item
+          routerLink="/escuela/gestion-inscripcion"
+          (click)="changeTitle('/escuela/gestion-inscripcion')"
+          >Gestionar inscripciones</a
+        >
+        <a
+          mat-list-item
+          routerLink="/escuela/gestion-instructor"
+          (click)="changeTitle('/escuela/gestion-instructor')"
+          >Gestionar instructores</a
+        >
+        <a
+          mat-list-item
+          routerLink="/escuela/gestion-curso"
+          (click)="changeTitle('/escuela/gestion-curso')"
+          >Gestionar cursos</a
+        >
+        <a
+          mat-list-item
+          routerLink="/escuela/gestion-movil"
+          (click)="changeTitle('/escuela/gestion-movil')"
+          >Gestionar moviles</a
+        >
+        <a
+          mat-list-item
+          routerLink="/escuela/gestion-alumno"
+          (click)="changeTitle('/escuela/gestion-alumno')"
+          >Gestionar alumnos</a
+        >
+        <a
+          mat-list-item
+          routerLink="/escuela/gestion-estado-alumno"
+          (click)="changeTitle('/escuela/gestion-estado-alumno')"
+          >Gestionar estados alumno</a
+        >
+        <a
+          mat-list-item
+          routerLink="/escuela/gestion-examen"
+          (click)="changeTitle('/escuela/gestion-examen')"
+          >Gestionar examenes</a
+        >
+        <a
+          mat-list-item
+          routerLink="/escuela/cuenta-corriente"
+          (click)="changeTitle('/escuela/cuenta-corriente')"
+          >Cuenta Corriente</a
+        >
+        <a
+          mat-list-item
+          routerLink="/escuela/reportes"
+          (click)="changeTitle('/escuela/reportes')"
+          >Reportes</a
+        >
+        <a
+          mat-list-item
+          routerLink="/escuela/formularios"
+          (click)="changeTitle('/escuela/formularios')"
+          >Formularios</a
+        >
+        <a
+          mat-list-item
+          routerLink="/escuela/notificaciones"
+          (click)="changeTitle('/escuela/notificaciones')"
+          >Notificaciones</a
+        >
 
-    </mat-toolbar>
+        <a mat-list-item (click)="cambiarContrasenia()">Cambiar Contraseña</a>
+      </mat-nav-list>
+    </mat-sidenav>
 
-    <mat-sidenav-container class="sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
-        <mat-sidenav #drawer class="sidenav" [fixedInViewport]="mobileQuery.matches" [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'" [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="(isHandset$ | async) === false" fixedTopGap="56">
-            <mat-toolbar>Menu</mat-toolbar>
-            <mat-nav-list>
-                <a mat-list-item (click)="inscripcion()">Inscripción</a>
-                <a mat-list-item routerLink="/escuela/agenda-movil" (click)="changeTitle('/escuela/agenda-movil')">Agenda por
-          movil</a>
-                <a mat-list-item routerLink="/escuela/agenda-instructor" (click)="changeTitle('/escuela/agenda-instructor')">Agenda por
-          instructor</a>
-                <a mat-list-item routerLink="/escuela/gestion-inscripcion" (click)="changeTitle('/escuela/gestion-inscripcion')">Gestionar
-          inscripciones</a>
-                <a mat-list-item routerLink="/escuela/gestion-instructor" (click)="changeTitle('/escuela/gestion-instructor')">Gestionar
-          instructores</a>
-                <a mat-list-item routerLink="/escuela/gestion-curso" (click)="changeTitle('/escuela/gestion-curso')">Gestionar
-          cursos</a>
-                <a mat-list-item routerLink="/escuela/gestion-movil" (click)="changeTitle('/escuela/gestion-movil')">Gestionar
-          moviles</a>
-                <a mat-list-item routerLink="/escuela/gestion-alumno" (click)="changeTitle('/escuela/gestion-alumno')">Gestionar
-          alumnos</a>
-                <a mat-list-item routerLink="/escuela/gestion-examen" (click)="changeTitle('/escuela/gestion-examen')">Gestionar
-          examenes</a>
-                <a mat-list-item routerLink="/escuela/cuenta-corriente" (click)="changeTitle('/escuela/cuenta-corriente')">Cuenta Corriente</a>
-                <a mat-list-item routerLink="/escuela/reportes" (click)="changeTitle('/escuela/reportes')">Reportes</a>
-                <a mat-list-item routerLink="/escuela/formularios" (click)="changeTitle('/escuela/formularios')">Formularios</a>
-                <a mat-list-item routerLink="/escuela/notificaciones" (click)="changeTitle('/escuela/notificaciones')">Notificaciones</a>
-
-                <a mat-list-item (click)="cambiarContrasenia()">Cambiar Contraseña</a>
-
-            </mat-nav-list>
-        </mat-sidenav>
-
-        <mat-sidenav-content>
-            <router-outlet></router-outlet>
-        </mat-sidenav-content>
-    </mat-sidenav-container>
+    <mat-sidenav-content>
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
 </div>
-
-
 
 <!-- Copyright 2019 Google LLC. All Rights Reserved.
       Use of this source code is governed by an MIT-style license that

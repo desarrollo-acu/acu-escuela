@@ -1,9 +1,9 @@
+import { GestionEstadoAlumnoComponent } from './components/gestion-estado-alumno/gestion-estado-alumno.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { NavComponent } from './components/nav/nav.component';
 import { AgendaInstructorComponent } from './components/agenda-instructor/agenda-instructor.component';
 import { SeleccionarAlumnoComponent } from './components/modals/seleccionar-alumno/seleccionar-alumno.component';
-import { AgendaMovilComponent } from './components/agenda-movil/agenda-movil.component';
 import { AgendarClaseComponent } from './components/modals/agendar-clase/agendar-clase.component';
 import { GestionCursoComponent } from './components/gestion-curso/gestion-curso.component';
 import { GestionInstructorComponent } from './components/gestion-instructor/gestion-instructor.component';
@@ -23,6 +23,7 @@ import { AutenticacionGuard } from '../core/guards/autenticacion.guard';
 import { CuentaCorrienteComponent } from './pages/cuenta-corriente/cuenta-corriente.component';
 import { GestionFormulariosComponent } from './pages/gestion-formularios/gestion-formularios.component';
 import { GestionNotificacionesComponent } from './pages/gestion-notificaciones/gestion-notificaciones.component';
+import { AgendaInstructorRapidaComponent } from './components/agenda-instructor-rapida/agenda-instructor-rapida.component';
 
 const routes: Routes = [
   {
@@ -30,12 +31,12 @@ const routes: Routes = [
     component: NavComponent,
     children: [
       {
-        path: 'agenda-movil',
-        component: AgendaMovilComponent
-      },
-      {
         path: 'agenda-instructor',
         component: AgendaInstructorComponent,
+      },
+      {
+        path: 'agenda-instructor-rapida',
+        component: AgendaInstructorRapidaComponent,
       },
       {
         path: 'gestion-inscripcion',
@@ -113,8 +114,12 @@ const routes: Routes = [
         path: 'cuenta-corriente',
         component: CuentaCorrienteComponent,
       },
+      {
+        path: 'gestion-estado-alumno',
+        component: GestionEstadoAlumnoComponent,
+      },
     ],
-    canActivateChild: [ AutenticacionGuard ]
+    canActivateChild: [AutenticacionGuard],
   },
 ];
 

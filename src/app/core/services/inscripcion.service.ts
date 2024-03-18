@@ -10,6 +10,7 @@ import { GenerarExamen } from '../model/generar-examen.model';
 import { ResponseSDTCustom } from '../model/response-sdt-custom.model';
 import { Examen } from '../model/examen.model';
 import { GenerarClaseAdicional } from '../model/generar-clase-adicional.model';
+import * as moment from 'moment';
 
 @Injectable({
   providedIn: 'root',
@@ -32,26 +33,45 @@ export class InscripcionService {
     this.inscripcionDataSource.next(data);
   }
 
-  generarExamen = (generarExamen: GenerarExamen) =>
-    this.http.post<ResponseSDTCustom>(`${environment.url_ws}/wsGenerarExamen`, {
-      generarExamen,
-    });
+  generarExamen(generarExamen: GenerarExamen) {
+    const currentDate = moment();
+    currentDate.set({ hour: 0, minute: 0, second: 0, millisecond: 0 }).utc();
+    const fechaHoy = currentDate.format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
 
-  generarClaseAdicional = (claseAdicional: GenerarClaseAdicional) =>
-    this.http.post<ResponseSDTCustom>(
+    return this.http.post<ResponseSDTCustom>(
+      `${environment.url_ws}/wsGenerarExamen`,
+      {
+        generarExamen,
+        fechaHoy,
+      }
+    );
+  }
+
+  generarClaseAdicional(claseAdicional: GenerarClaseAdicional) {
+    const currentDate = moment();
+    currentDate.set({ hour: 0, minute: 0, second: 0, millisecond: 0 }).utc();
+    const fechaHoy = currentDate.format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
+    return this.http.post<ResponseSDTCustom>(
       `${environment.url_ws}/wsGenerarClaseAdicional`,
       {
         claseAdicional,
+        fechaHoy,
       }
     );
+  }
 
-  generarEvaluacionPractica = (evaluacionPractica: GenerarClaseAdicional) =>
-    this.http.post<ResponseSDTCustom>(
+  generarEvaluacionPractica(evaluacionPractica: GenerarClaseAdicional) {
+    const currentDate = moment();
+    currentDate.set({ hour: 0, minute: 0, second: 0, millisecond: 0 }).utc();
+    const fechaHoy = currentDate.format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
+    return this.http.post<ResponseSDTCustom>(
       `${environment.url_ws}/wsGenerarEvaluacionPractica`,
       {
         evaluacionPractica,
+        fechaHoy,
       }
     );
+  }
 
   guardarNuevaDisponibilidad = (GenerarInscripcion: InscripcionCurso) =>
     this.http.post<ResponseSDTCustom>(
@@ -72,6 +92,12 @@ export class InscripcionService {
     enviarMail: boolean,
     emailAlumno: string
   ) {
+    // Obtén la fecha y hora actual
+    const currentDate = moment();
+    currentDate.set({ hour: 0, minute: 0, second: 0, millisecond: 0 }).utc();
+    // Formatea la fecha en el formato deseado
+    const fechaHoy = currentDate.format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
+
     return this.http.post(`${environment.url_ws}/wsGenerarInscripcion`, {
       GenerarInscripcion: {
         FacturaRUT: inscripcion.FacturaRut,
@@ -112,6 +138,7 @@ export class InscripcionService {
       },
       enviarMail,
       emailAlumno,
+      fechaHoy,
     });
   }
 

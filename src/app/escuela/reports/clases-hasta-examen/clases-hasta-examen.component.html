@@ -1,0 +1,68 @@
+<div class="row" style="margin-top: 20px">
+  <div class="col-xs-offset-4 col-xs-4">
+    <div class="box">
+      <h1>Cantidad de clases por período</h1>
+    </div>
+  </div>
+
+  <div class="col-xs-offset-3 col-xs-6">
+    <div class="box">
+      <form [formGroup]="form">
+        <mat-card class="example-card">
+          <mat-dialog-content class="mat-typography">
+            <div class="row">
+              <div class="col-xs-12">
+                <mat-form-field class="full-width">
+                  <mat-label>Mes</mat-label>
+                  <mat-select formControlName="mes" required>
+                    <mat-option
+                      *ngFor="let mesValue of meses"
+                      [value]="mesValue"
+                    >
+                      {{ mesValue }}
+                    </mat-option>
+                  </mat-select>
+
+                  <mat-error *ngIf="mes.hasError('required')">
+                    Mes es <strong>requerido</strong>.
+                  </mat-error>
+                </mat-form-field>
+              </div>
+
+              <div class="col-xs-12">
+                <mat-form-field class="full-width">
+                  <mat-label>Año</mat-label>
+                  <mat-select formControlName="anio" required>
+                    <mat-option
+                      *ngFor="let anioValue of anios"
+                      [value]="anioValue"
+                    >
+                      {{ anioValue }}
+                    </mat-option>
+                  </mat-select>
+
+                  <mat-error *ngIf="anio.hasError('required')">
+                    Año es <strong>requerido</strong>.
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+          </mat-dialog-content>
+
+          <mat-dialog-actions align="center">
+            <button
+              mat-raised-button
+              type="button"
+              (click)="generarReporte($event)"
+              cdkFocusInitial
+              [disabled]="form.invalid"
+              color="primary"
+            >
+              Generar Reporte
+            </button>
+          </mat-dialog-actions>
+        </mat-card>
+      </form>
+    </div>
+  </div>
+</div>

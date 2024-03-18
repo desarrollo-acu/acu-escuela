@@ -117,7 +117,9 @@ export class NavComponent implements OnDestroy {
       case '/escuela/agenda-instructor':
         this.title = 'Agenda de instructores';
         break;
-
+      case '/escuela/agenda-instructor-rapida':
+        this.title = 'Agenda de instructores';
+        break;
       case '/escuela/gestion-inscripcion':
       case '/escuela/abm-inscripcion':
         this.title = 'Gestión de inscripciones';
@@ -157,6 +159,9 @@ export class NavComponent implements OnDestroy {
         break;
       case '/escuela/cuenta-corriente':
         this.title = 'Trabajar con Cuentas Corrientes';
+        break;
+      case '/escuela/gestion-estado-alumno':
+        this.title = 'Gestion Estado Alumno';
         break;
 
       default:

@@ -41,8 +41,8 @@
         <table mat-table [dataSource]="dataSource" matSort *ngIf="verAlumnos">
           <!-- Actions Column -->
           <ng-container matColumnDef="actions">
-            <th  mat-header-cell *matHeaderCellDef></th>
-            <td  mat-cell *matCellDef="let row">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let row">
               <button
                 mat-mini-fab
                 matTooltip="Editar alumno"
@@ -62,15 +62,13 @@
               >
                 <mat-icon>delete</mat-icon>
               </button>
-
-
             </td>
           </ng-container>
 
           <!-- Progress Column -->
           <ng-container matColumnDef="AluNro">
-            <th  mat-header-cell *matHeaderCellDef mat-sort-header>Número</th>
-            <td  mat-cell *matCellDef="let row">{{ row.AluNro }}</td>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Número</th>
+            <td mat-cell *matCellDef="let row">{{ row.AluNro }}</td>
           </ng-container>
 
           <!-- Color Column -->
@@ -85,7 +83,7 @@
           <ng-container matColumnDef="AluCI">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>C.I.</th>
             <td mat-cell *matCellDef="let row">
-              {{ row.AluCI | ci: row.AluDV }}
+              {{ row.AluCI | ci : row.AluDV }}
             </td>
           </ng-container>
 
@@ -102,8 +100,6 @@
               >
                 <mat-icon>search</mat-icon>
               </button>
-
-             
             </td>
           </ng-container>
 

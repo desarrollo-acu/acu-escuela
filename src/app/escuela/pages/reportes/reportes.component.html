@@ -33,6 +33,27 @@
   </div>
 </div>
 
+<div class="row center-xs margin-abm">
+  <div class="col">
+    <div class="box">
+      <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
+        <mat-button-toggle (click)="obtenerAlumnosCon10ClasesOmas()">
+          Alumnos con 10 clases o más
+        </mat-button-toggle>
+        <mat-button-toggle (click)="tipo = 'clases-hasta-examen'">
+          Clases hasta examen
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+      <mat-button-toggle (click)="getReporteCursoAlumno()">
+        Cursos Por Alumno
+      </mat-button-toggle>
+      <mat-button-toggle (click)="tipo = 'cantidad-clases-por-instructor'">
+        Cantidad de Clases por Instructor
+      </mat-button-toggle>
+    </div>
+  </div>
+</div>
+
 <div class="row">
   <div class="col-xs-12">
     <div class="box">
@@ -60,6 +81,12 @@
         </div>
         <div *ngSwitchCase="'expedientes-proximos-vencer'">
           <app-expedientes-proximos-vencer></app-expedientes-proximos-vencer>
+        </div>
+        <div *ngSwitchCase="'clases-hasta-examen'">
+          <app-clases-hasta-examen></app-clases-hasta-examen>
+        </div>
+        <div *ngSwitchCase="'cantidad-clases-por-instructor'">
+          <app-catidad-clases-por-instructor></app-catidad-clases-por-instructor>
         </div>
         <div *ngSwitchDefault>
           <div class="row" style="margin-top: 20px">

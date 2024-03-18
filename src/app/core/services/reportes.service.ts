@@ -106,4 +106,31 @@ export class ReportesService {
       }
     );
   }
+
+  getExcelClasesHastaExamen = (month: number, year: number) =>
+    this.http.get(
+      `${environment.url_Backend_Charp}/Alumno/GetExcelClasesHastaExamen?month=${month}&year=${year}`,
+      {
+        responseType: 'text',
+      }
+    );
+
+  getReporteCursoAlumno = () =>
+    this.http.get(
+      `${environment.url_Backend_Charp}/Alumno/GetReporteCursoAlumno`,
+      {
+        responseType: 'text',
+      }
+    );
+
+  obtenerAlumnosCon10ClasesOmas = () =>
+    this.http.post(`${environment.url_ws}/wsReporteCantClasesPorAlumno`, {});
+
+  getReporteClasesPorInstructors = (fechaDesde: string, fechaHasta: string) =>
+    this.http.get(
+      `${environment.url_Backend_Charp}/Instructor/GetReporteClasesPorInstructores?fechaDesde=${fechaDesde}&fechaHasta=${fechaHasta}`,
+      {
+        responseType: 'text',
+      }
+    );
 }

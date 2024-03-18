@@ -27,7 +27,7 @@ export class GestionAlumnoComponent implements OnInit {
 
   dataSource: MatTableDataSource<Alumno>;
   verAlumnos: boolean;
-  filtro: string;
+  filtro: string = '';
 
   pageEvent: PageEvent;
   pageIndex: number;
@@ -158,6 +158,7 @@ export class GestionAlumnoComponent implements OnInit {
 
   actualizarDatasource(data, size?, index?) {
     this.dataSource = data.alumnos;
+
     this.verAlumnos = true;
 
     if (size) {
