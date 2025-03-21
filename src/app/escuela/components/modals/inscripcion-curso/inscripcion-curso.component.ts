@@ -412,6 +412,7 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
             width: '700px',
             data: {
               clasesEstimadas,
+              desdeInscripcion: 'desdeInscripcion',
             },
           }
         );
@@ -432,7 +433,7 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
                   this.escCurTe1Field.value,
                   this.escCurTe2Field.value,
                   this.escCurTe3Field.value,
-                  'wsPDFPlanDeClases'
+                  'wsPDFPlanDeClasesHasta5Clases'
                 )
                 .subscribe((pdf) => {
                   openSamePDF(pdf, 'PlanDeClases');
@@ -550,11 +551,11 @@ export class InscripcionCursoComponent implements OnInit, OnDestroy {
   async addInfoAlumnoAlForm(result: Alumno) {
     this.inscripcionCurso.AluId = result.AluId;
     const { AluId, AluNomComp } = result;
-    this.myValidatorsService.alumnoTieneFacturasPendientes(
-      AluId,
-      AluNomComp,
-      this.alumnoCIField
-    );
+    // this.myValidatorsService.alumnoTieneFacturasPendientes(
+    //   AluId,
+    //   AluNomComp,
+    //   this.alumnoCIField
+    // );
 
     const inscripcion = await this.alumnoService
       .obtenerDisponibilidadPorAlumno(AluId)

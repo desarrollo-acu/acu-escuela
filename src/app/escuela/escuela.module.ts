@@ -88,6 +88,13 @@ import { AlumnosPendientesDePagoComponent } from './reports/alumnos-pendientes-d
 import { FacturasPorAlumnoComponent } from './reports/facturas-por-alumno/facturas-por-alumno.component';
 import { ExamenMedicoComponent } from './components/modals/examen-medico/examen-medico.component';
 import { ExpedientesProximosVencerComponent } from './reports/expedientes-proximos-vencer/expedientes-proximos-vencer.component';
+import { AgendaInstructorRapidaComponent } from './components/agenda-instructor-rapida/agenda-instructor-rapida.component';
+import { GestionEstadoAlumnoComponent } from './components/gestion-estado-alumno/gestion-estado-alumno.component';
+import { ClasesHastaExamenComponent } from './reports/clases-hasta-examen/clases-hasta-examen.component';
+import { CatidadClasesPorInstructorComponent } from './reports/catidad-clases-por-instructor/catidad-clases-por-instructor.component';
+import { SocioComponent } from './components/socio/socio.component';
+import { ListarClasesEntregadasComponent } from './components/listar-clases-entregadas/listar-clases-entregadas.component';
+import { CantidadAlumnosPorInstructorComponent } from './reports/cantidad-alumnos-por-instructor/cantidad-alumnos-por-instructor.component';
 
 registerLocaleData(localeEsUy, 'es-UY');
 registerLocaleData(localeEs, 'es');
@@ -110,6 +117,7 @@ registerLocaleData(localeEs, 'es');
     NavComponent,
     AgendarClaseComponent,
     SeleccionarSocioComponent,
+    SocioComponent,
     ClasesEstimadasComponent,
     ClasesEstimadasDetalleComponent,
     GestionCursoComponent,
@@ -157,6 +165,12 @@ registerLocaleData(localeEs, 'es');
     FacturasPorAlumnoComponent,
     ExamenMedicoComponent,
     ExpedientesProximosVencerComponent,
+    AgendaInstructorRapidaComponent,
+    GestionEstadoAlumnoComponent,
+    ClasesHastaExamenComponent,
+    CatidadClasesPorInstructorComponent,
+    ListarClasesEntregadasComponent,
+    CantidadAlumnosPorInstructorComponent,
   ],
   imports: [
     CommonModule,

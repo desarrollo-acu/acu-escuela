@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
@@ -19,25 +19,26 @@ import {
 
 import { isMoment, Moment } from 'moment';
 import { AgendaElement, DataAgenda, Cell } from '@core/model/interfaces';
-import { IngresarClaveAccionesComponent } from '@escuela/dialogs/ingresar-clave-acciones/ingresar-clave-acciones.component';
 import { errorMensaje } from '@utils/sweet-alert';
 import { MovilService } from '@core/services/movil.service';
 import { AutenticacionService } from '@core/services/autenticacion.service';
 import { CopiarMoverParameters } from '@core/model/copiarMoverParameters.model';
 import { SeleccionarMovilComponent } from '@escuela/components/modals/seleccionar-movil/seleccionar-movil.component';
 import { BloquearHorasComponent } from '../../dialogs/bloquear-horas/bloquear-horas.component';
+import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-agenda-instructor',
-  templateUrl: './agenda-instructor.component.html',
-  styleUrls: ['./agenda-instructor.component.scss'],
+  selector: 'app-agenda-instructor-rapida',
+  templateUrl: './agenda-instructor-rapida.component.html',
+  styleUrls: ['./agenda-instructor-rapida.component.scss'],
 })
-export class AgendaInstructorComponent implements OnInit, OnDestroy {
+export class AgendaInstructorRapidaComponent implements OnInit, OnDestroy {
   porcentajeGlobal: number = 0;
   name: string;
   sabadoODomingo: number;
   verAgenda: boolean;
-
+  instructorSeleccionado: any;
+  instructoresSelect: any[];
   hoy = new Date();
   agendaDisplayedColumns: string[];
   columns: string[] = [];
@@ -48,9 +49,10 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
   fechaClase = '';
   fecha: Date;
   auxFechaClase: Date = new Date();
-
+  sedes: string[] = ['Todas', 'Colonia y Yi', 'Car One', 'Carrasco'];
+  selectedSede: string = '';
   horaMovilPlano: DataAgenda[] = null;
-
+  private listObservers: Array<Subscription> = [];
   constructor(
     private acuService: AcuService,
     private movilService: MovilService,
@@ -60,15 +62,16 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
     private _bottomSheet: MatBottomSheet
   ) {}
 
-  ngOnDestroy(): void {
-    this.acuService.cleanStorageAgenda();
-  }
-
-  ngOnInit() {
+  ngOnInit(): void {
     this.fecha = new Date();
+    this.selectedSede = localStorage.getItem('selectedSede');
+    this.getInstructores();
     this.getAgenda(this.fecha);
   }
-
+  ngOnDestroy(): void {
+    this.acuService.cleanStorageAgenda();
+    this.listObservers.forEach((sub) => sub.unsubscribe());
+  }
   makeDataSource(horas: any[], instructores: any[]) {
     const col: any[] = [];
 
@@ -108,6 +111,9 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
             break;
           case 'I':
             cell.value = 'AUSENCIA INSTRUCTOR';
+            break;
+          case 'T':
+            cell.value = 'TEORICO';
             break;
 
           default:
@@ -162,6 +168,8 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
     });
 
     t.afterDismissed().subscribe(({ seleccionoOpcion, params }) => {
+      const liberadoCancelado = params ? params.liberarCancelado : null;
+
       if (seleccionoOpcion) {
         const abrirAgenda = localStorage.getItem('abrirAgenda');
 
@@ -213,7 +221,7 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
               );
             }
 
-            if (refreshAgenda) {
+            if (refreshAgenda && !liberadoCancelado) {
               const classOld = localStorage.getItem('classOld');
               const textOld = localStorage.getItem('textOld');
 
@@ -260,6 +268,9 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
   }
 
   copiarMoverClase(oldParameters, mainParameters) {
+    // if( mainParameters.instructor !== oldParameters.escInsIdOld){
+    //   return errorMensaje('Error', 'No es posible mover la clase de un instructor hacia otro instructor distinto.')
+    // }
     const params: CopiarMoverParameters = {
       accion: oldParameters.accion,
       fechaClaseOld: oldParameters.fechaOld,
@@ -274,27 +285,52 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
       userId: this.auth.getUserId(),
     };
 
-    params.esMovil
-      ? this.acuService
-          .copiarMoverClase(params)
-          .subscribe((res: any) =>
-            this.finalizarCopiarMoverClase(
-              res,
-              oldParameters,
-              mainParameters,
-              params
-            )
+    if (params.esMovil) {
+      const load1$ = this.acuService
+        .copiarMoverClase(params)
+        .subscribe((res: any) =>
+          this.finalizarCopiarMoverClase(
+            res,
+            oldParameters,
+            mainParameters,
+            params
           )
-      : this.acuService
-          .copiarMoverInstructorClase(params)
-          .subscribe((res: any) =>
-            this.finalizarCopiarMoverClase(
-              res,
-              oldParameters,
-              mainParameters,
-              params
-            )
+        );
+      this.listObservers.push(load1$);
+    } else {
+      const load1$ = this.acuService
+        .copiarMoverInstructorClase(params)
+        .subscribe((res: any) => {
+          this.finalizarCopiarMoverClase(
+            res,
+            oldParameters,
+            mainParameters,
+            params
           );
+        });
+      this.listObservers.push(load1$);
+    }
+    // params.esMovil
+    //   ? this.acuService
+    //       .copiarMoverClase(params)
+    //       .subscribe((res: any) =>
+    //         this.finalizarCopiarMoverClase(
+    //           res,
+    //           oldParameters,
+    //           mainParameters,
+    //           params
+    //         )
+    //       )
+    //   : this.acuService
+    //       .copiarMoverInstructorClase(params)
+    //       .subscribe((res: any) =>
+    //         this.finalizarCopiarMoverClase(
+    //           res,
+    //           oldParameters,
+    //           mainParameters,
+    //           params
+    //         )
+    //       );
   }
 
   finalizarCopiarMoverClase(res, oldParameters, mainParameters, params) {
@@ -302,42 +338,42 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
       mensajeConfirmacion('Excelente!', res.Msg);
       this.getAgenda(this.fecha);
     } else {
-      if (res.elegirOtroMovil) {
-        errorMensaje('Oops...', res.Msg).then(() => {
-          this.movilService
-            .getMovilesDisponiblesPorFechaHora(
-              params.fechaClase,
-              params.horaClase
-            )
-            .subscribe((moviles) => {
-              const movilesDialogRef = this.dialog.open(
-                SeleccionarMovilComponent,
-                {
-                  height: 'auto',
-                  width: '700px',
-                  data: {
-                    moviles,
-                  },
-                }
-              );
+      // if (res.elegirOtroMovil) {
+      //   errorMensaje('Oops...', res.Msg).then(() => {
+      //     this.movilService
+      //       .getMovilesDisponiblesPorFechaHora(
+      //         params.fechaClase,
+      //         params.horaClase
+      //       )
+      //       .subscribe((moviles) => {
+      //         const movilesDialogRef = this.dialog.open(
+      //           SeleccionarMovilComponent,
+      //           {
+      //             height: 'auto',
+      //             width: '700px',
+      //             data: {
+      //               moviles,
+      //             },
+      //           }
+      //         );
 
-              movilesDialogRef.afterClosed().subscribe((movil) => {
-                if (movil) {
-                  this.copiarMoverClase(oldParameters, {
-                    ...mainParameters,
-                    movil: movil.MovCod,
-                  });
-                } else {
-                  this.getAgenda(this.fecha);
-                  this.salirCopiarMoverClase(oldParameters);
-                }
-              });
-            });
-        });
-        return;
-      } else {
-        errorMensaje('Oops...', res.Msg);
-      }
+      //         movilesDialogRef.afterClosed().subscribe((movil) => {
+      //           if (movil) {
+      //             this.copiarMoverClase(oldParameters, {
+      //               ...mainParameters,
+      //               movil: movil.MovCod,
+      //             });
+      //           } else {
+      //             this.getAgenda(this.fecha);
+      //             this.salirCopiarMoverClase(oldParameters);
+      //           }
+      //         });
+      //       });
+      //   });
+      //   return;
+      // } else {
+      errorMensaje('Oops...', res.Msg);
+      // }
     }
     this.salirCopiarMoverClase(oldParameters);
   }
@@ -349,7 +385,7 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
   }
 
   abrirAgenda(instructor: string, hora: number) {
-    this.acuService
+    const load1$ = this.acuService
       .getInstructorAgenda(this.fechaClase, hora, instructor)
       .subscribe((res: any) => {
         const dialogRef = this.dialog.open(VerAgendaComponent, {
@@ -366,6 +402,7 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
               resp?.mensaje && mensajeConfirmacion('Confirmado!', resp?.mensaje)
           );
       });
+    this.listObservers.push(load1$);
   }
 
   generarClaseAdicional(
@@ -406,7 +443,7 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
     esSuspender?: boolean,
     esClaseAdicional?: boolean
   ) {
-    this.acuService
+    const load1$ = this.acuService
       .getInstructorAgenda(this.fechaClase, hora, instructor)
       .subscribe((res: any) => {
         const dialogRef = this.dialog.open(component, {
@@ -424,6 +461,7 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
             this.obtenerAgendaYConfirmarUsuario(resp?.mensaje)
           );
       });
+    this.listObservers.push(load1$);
   }
 
   liberarDia() {
@@ -472,7 +510,7 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
   finAccionGeneralDia(fechaSeleccionada, accion) {
     if (accion === 'liberar') {
       // acuservice.liberarDiaAgenda
-      this.acuService
+      const load1$ = this.acuService
         .liberarDiaAgenda(fechaSeleccionada)
         .subscribe((response: any) => {
           this.getAgenda(fechaSeleccionada);
@@ -482,6 +520,7 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
             'Se libero el día, correctamente.'
           ).then((res2) => {});
         });
+      this.listObservers.push(load1$);
     } else {
       confirmacionUsuario(
         'Confirmación de Usuario',
@@ -494,7 +533,7 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
 
         switch (accion) {
           case 'duplicar':
-            this.acuService
+            const load1$ = this.acuService
               .duplicarDiaAgenda({
                 fechaClase: this.fecha,
                 fechaNueva: fechaSeleccionada,
@@ -503,10 +542,10 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
               .subscribe((resp: any) =>
                 this.obtenerAgendaYConfirmarUsuario(resp?.mensaje)
               );
-
+            this.listObservers.push(load1$);
             break;
           case 'mover':
-            this.acuService
+            const load2$ = this.acuService
               .moverDiaAgenda({
                 fechaClase: this.fecha,
                 fechaNueva: fechaSeleccionada,
@@ -515,7 +554,7 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
               .subscribe((resp: any) =>
                 this.obtenerAgendaYConfirmarUsuario(resp?.mensaje)
               );
-
+            this.listObservers.push(load2$);
             break;
 
           default:
@@ -565,13 +604,17 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
   getAgenda(fecha: Date) {
     this.verAgenda = false;
     const strFecha = this.formatDateToString(fecha);
+    const filtro = this.instructorSeleccionado?.EscInsId
+      ? this.instructorSeleccionado?.EscInsId
+      : 'Todas';
 
-    this.acuService
-      .getAgendaPorFecha(strFecha, 'instructor')
+    const load1$ = this.acuService
+      .getAgendaPorFecha(strFecha, 'rapida', filtro)
       .subscribe((res: any) => {
         this.agenda = res.TablaAgenda;
         this.instructores = res.TablaAgenda.Instructores;
         this.horas = res.TablaAgenda.Horas;
+
         this.fechaClase = res.TablaAgenda.FechaClase;
         this.columns = this.horas.map((item) => item.Hora.toString());
         this.horaMovilPlano = res.TablaAgenda.HoraMovilPlano;
@@ -580,13 +623,15 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
           this.instructores
         );
 
+        // este es un cambio
+
         this.agendaDisplayedColumns = ['Instructor'];
         this.agendaDisplayedColumns = this.agendaDisplayedColumns.concat(
           this.columns
         );
-        this.agendaDisplayedColumns = this.agendaDisplayedColumns.concat([
-          'InstructorPorcentaje',
-        ]);
+        // this.agendaDisplayedColumns = this.agendaDisplayedColumns.concat([
+        //   'InstructorPorcentaje',
+        // ]);
         this.verAgenda = true;
         const cantidadHoras = this.horas.length;
         const cantidadInstructores = this.instructores.length;
@@ -599,8 +644,50 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
               )
             : 0;
       });
+    this.listObservers.push(load1$);
   }
+  getInstructores() {
+    this.acuService
+      .getInstructores()
+      .subscribe((instructores: Instructor[]) => {
+        // Assign the data to the data source for the table to render
+        this.instructoresSelect = instructores;
+        const inst = { EscInsId: 'Todas' };
+        this.instructoresSelect.unshift(inst);
+        this.instructorSeleccionado = 'Todas';
+      });
+  }
+  cambioUsuAsig(e: any) {
+    this.instructorSeleccionado = e.value;
+    this.verAgenda = false;
+    const strFecha = this.formatDateToString(this.fecha);
+    const instId = e.value.EscInsId;
+    //this.estadoSeleccionado = 'Todos';
 
+    const load1$ = this.acuService
+      .getAgendaPorFecha(strFecha, 'rapida', instId)
+      .subscribe((res: any) => {
+        this.agenda = res.TablaAgenda;
+        this.instructores = res.TablaAgenda.Instructores;
+        this.horas = res.TablaAgenda.Horas;
+
+        this.fechaClase = res.TablaAgenda.FechaClase;
+        this.columns = this.horas.map((item) => item.Hora.toString());
+        this.horaMovilPlano = res.TablaAgenda.HoraMovilPlano;
+        this.agendaDataSource = this.makeDataSource(
+          this.horas,
+          this.instructores
+        );
+
+        this.agendaDisplayedColumns = ['Instructor'];
+        this.agendaDisplayedColumns = this.agendaDisplayedColumns.concat(
+          this.columns
+        );
+
+        this.verAgenda = true;
+      });
+    this.listObservers.push(load1$);
+  }
   getPorcentaje = (hora: number) =>
     this.horas.find((h) => h.Hora === hora).HoraPorcentaje;
 
@@ -645,4 +732,10 @@ export class AgendaInstructorComponent implements OnInit, OnDestroy {
       .afterClosed()
       .subscribe(() => this.getAgenda(this.fecha));
   };
+
+  cambiarSede(e: any) {
+    localStorage.setItem('selectedSede', e.value);
+    this.selectedSede = e.value;
+    this.getAgenda(this.fecha);
+  }
 }

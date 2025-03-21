@@ -5,6 +5,7 @@ import { AlumnoService } from '@core/services/alumno.service';
 import { ReportesService } from '@core/services/reportes.service';
 import { SeleccionarAlumnoComponent } from '@escuela/components/modals/seleccionar-alumno/seleccionar-alumno.component';
 import { downloadFileFromBase64, openSamePDF } from '@utils/utils-functions';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-plan-de-clases-extendido',
@@ -66,17 +67,42 @@ export class PlanDeClasesExtendidoComponent implements OnInit {
     });
   }
 
-  generarReporte(event) {
-    this.reportesService
-      .getPDFPlanDeClases(
-        { AluId: this.aluId },
-        null,
-        null,
-        null,
-        'wsPDFPlanDeClasesExtendido'
-      )
-      .subscribe((pdf: any) => {
-        openSamePDF(pdf, 'PlanDeClasesExtendido');
+  generarReporte(event, action: string) {
+    if (action == 'completo') {
+      this.reportesService
+        .getPDFPlanDeClases(
+          { AluId: this.aluId },
+          null,
+          null,
+          null,
+          'wsPDFPlanDeClasesExtendido'
+        )
+        .subscribe((pdf: any) => {
+          openSamePDF(pdf, 'PlanDeClasesExtendido');
+        });
+    } else {
+      Swal.fire({
+        title: 'Generar Registro',
+        text: '¿Se entrega el reporte?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Si',
+        cancelButtonText: 'No',
+      }).then((confirm) => {
+        if (confirm.isConfirmed) {
+          this.reportesService
+            .getPDFPlanDeClasesExtendido5({ AluId: this.aluId }, true)
+            .subscribe((pdf: any) => {
+              openSamePDF(pdf, 'PlanDeClasesExtendido');
+            });
+        } else {
+          this.reportesService
+            .getPDFPlanDeClasesExtendido5({ AluId: this.aluId }, false)
+            .subscribe((pdf: any) => {
+              openSamePDF(pdf, 'PlanDeClasesExtendido');
+            });
+        }
       });
+    }
   }
 }

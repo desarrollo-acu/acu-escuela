@@ -17,7 +17,6 @@ import { SeleccionarAlumnoComponent } from '../seleccionar-alumno/seleccionar-al
 import { SeleccionarInstructorComponent } from '../seleccionar-instructor/seleccionar-instructor.component';
 
 import Swal from 'sweetalert2';
-import { AgendaMovilComponent } from '../../agenda-movil/agenda-movil.component';
 import { existeAlumnoValidator } from '@utils/validators/existe-alumno-validator.directive';
 import { alumnoYaAsignadoValidator } from '@utils/validators/alumno-ya-asignado.directive';
 import { alumnoTieneExcepcionValidator } from '@utils/validators/alumno-tiene-excepecion.directive';
@@ -32,6 +31,7 @@ import { SeleccionarCursoComponent } from '../seleccionar-curso/seleccionar-curs
 import { Alumno } from '@core/model/alumno.model';
 import { AcuService } from '@core/services/acu.service';
 import { Instructor } from '../../../../core/model/instructor.model';
+import { AgendaMovilComponent } from '@escuela/components/agenda-movil/agenda-movil.component';
 
 @Component({
   selector: 'app-agendar-clase',
@@ -65,7 +65,6 @@ export class AgendarClaseComponent implements OnInit {
     public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-
     this.agendaClase = this.data.agendaClase;
     const day = Number(
       this.agendaClase.FechaClase.substring(
@@ -237,13 +236,15 @@ export class AgendarClaseComponent implements OnInit {
   }
 
   seleccionarAlumno() {
-    this.alumnoService.getAlumnos()
-    .subscribe((res: any) => this.openDialogAlumnos(res.Alumnos));
+    this.alumnoService
+      .getAlumnos()
+      .subscribe((res: any) => this.openDialogAlumnos(res.Alumnos));
   }
 
   seleccionarCurso() {
-    this.cursoService.getCursos()
-    .subscribe((res: any) =>  this.openDialogCursos(res));
+    this.cursoService
+      .getCursos()
+      .subscribe((res: any) => this.openDialogCursos(res));
   }
 
   private openDialogCursos(cursos) {
@@ -263,7 +264,6 @@ export class AgendarClaseComponent implements OnInit {
     });
   }
   private openDialogAlumnos(alumnos) {
-
     const alumnosDialogRef = this.dialog.open(SeleccionarAlumnoComponent, {
       height: 'auto',
       width: '700px',
@@ -272,16 +272,13 @@ export class AgendarClaseComponent implements OnInit {
       },
     });
 
-
     alumnosDialogRef.afterClosed().subscribe((alumno: Alumno) => {
-
       this.alumno = alumno;
       this.form.patchValue({
         alumnoNombre: alumno.AluNomComp,
         alumnoNumero: alumno.AluNro,
       });
     });
-
   }
 
   avisoAlumno() {
@@ -297,12 +294,9 @@ export class AgendarClaseComponent implements OnInit {
   guardarClase(event: Event) {
     event.preventDefault();
 
-
     if (this.form.invalid) {
       return;
     }
-
-
 
     const agendaClase: AgendaClase = {
       FechaClase: this.agendaClase.FechaClase,

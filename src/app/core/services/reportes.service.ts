@@ -4,6 +4,7 @@ import { ClaseEstimada } from '@core/model/clase-estimada.model';
 import { environment } from '@environments/environment';
 import { formatDateToString } from '@utils/utils-functions';
 import { AutenticacionService } from './autenticacion.service';
+import Swal from 'sweetalert2';
 
 @Injectable({
   providedIn: 'root',
@@ -71,7 +72,8 @@ export class ReportesService {
     escCurTe1?: string,
     escCurTe2?: string,
     escCurTe3?: symbol,
-    path = 'wsPDFPlanDeClases'
+    //path = 'wsPDFPlanDeClases'
+    path = 'wsPDFPlanDeClasesHasta5Clases'
   ) {
     const headers = new HttpHeaders();
     headers.set('Aceppt', 'application/pdf;');
@@ -83,6 +85,28 @@ export class ReportesService {
         escCurTe1,
         escCurTe2,
         escCurTe3,
+      },
+      {
+        headers,
+        responseType: 'blob' as 'json',
+      }
+    );
+  }
+
+  getPDFPlanDeClasesExtendido5(
+    planDeClase: ClaseEstimada,
+    entregado?: boolean,
+    //path = 'wsPDFPlanDeClases'
+    path = 'wsPDFPlanDeClasesExtendidoHasta5Clases'
+  ) {
+    const headers = new HttpHeaders();
+    headers.set('Aceppt', 'application/pdf;');
+
+    return this.http.post(
+      `${environment.url_ws}/${path}`,
+      {
+        PlanDeClase: { ...planDeClase, UsrId: this.authService.getUserId() },
+        entregado,
       },
       {
         headers,
@@ -106,4 +130,47 @@ export class ReportesService {
       }
     );
   }
+
+  getExcelClasesHastaExamen = (month: number, year: number) =>
+    this.http.get(
+      `${environment.url_Backend_Charp}/Alumno/GetExcelClasesHastaExamen?month=${month}&year=${year}`,
+      {
+        responseType: 'text',
+      }
+    );
+
+  getReporteCursoAlumno = () =>
+    this.http.get(
+      `${environment.url_Backend_Charp}/Alumno/GetReporteCursoAlumno`,
+      {
+        responseType: 'text',
+      }
+    );
+
+  getReporteResultadoExamenes = () =>
+    this.http.get(
+      `${environment.url_Backend_Charp}/ResultadoExamenPractico/ResultadoExamenPractico`,
+      {
+        responseType: 'text',
+      }
+    );
+
+  obtenerAlumnosCon10ClasesOmas = () =>
+    this.http.post(`${environment.url_ws}/wsReporteCantClasesPorAlumno`, {});
+
+  getReporteClasesPorInstructors = (fechaDesde: string, fechaHasta: string) =>
+    this.http.get(
+      `${environment.url_Backend_Charp}/Instructor/GetReporteClasesPorInstructores?fechaDesde=${fechaDesde}&fechaHasta=${fechaHasta}`,
+      {
+        responseType: 'text',
+      }
+    );
+
+  getReporteAlumnosPorInstructor = () =>
+    this.http.get(
+      `${environment.url_Backend_Charp}/Instructor/ReporteAlumnoPorInstructor`,
+      // {
+      //   responseType: 'text',
+      // }
+    );
 }

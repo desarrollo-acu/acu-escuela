@@ -15,6 +15,7 @@ import { Suspenderclase } from '../model/suspender-clase.model';
 import { map } from 'rxjs/operators';
 import { EnvioNotificacion } from '../model/envio-notificacion.model';
 import { AutenticacionService } from './autenticacion.service';
+import { AltaAgeInst } from '@core/model/AltaAgeInst';
 
 export interface LiberarParameters {
   fechaClase: Date;
@@ -72,6 +73,8 @@ export class AcuService {
       this.httpOptions
     );
   }
+  getInstructores = () =>
+    this.http.get(`${environment.url_ws}/wsGetInstructores`);
 
   getInstructorAgenda(fechaClase: string, horaClase: number, EscInsId: string) {
     return this.http.post(
@@ -89,10 +92,11 @@ export class AcuService {
     return this.http.post(`${environment.url_ws}/wsObtenerTablaAgenda`, {});
   }
 
-  getAgendaPorFecha(fecha: any, tipo: string) {
+  getAgendaPorFecha(fecha: any, tipo: string, filtro: string) {
     return this.http.post(`${environment.url_ws}/wsObtenerAgendaPorFecha`, {
       fecha,
       tipo,
+      filtro,
     });
   }
 
@@ -157,6 +161,7 @@ export class AcuService {
         FchClase: params.fechaClase,
         HorClase: params.horaClase,
         Movil: params.movil,
+        escInsId: params.escInsId,
       },
       this.httpOptions
     );
@@ -258,6 +263,12 @@ export class AcuService {
     return this.http.get(url);
   }
 
+  getBuscarSocio(nro: number, tipo: string) {
+    return this.http.get(
+      `${environment.url_Oracle}api/Socio/BuscarSocio?nro=${nro}&tipo=${tipo}`
+    );
+  }
+
   getFacturasPendientes(socId: number) {
     return this.http.get(
       `${environment.url_ws}/wsGetCuotasSociales?SocId=${socId}`
@@ -293,12 +304,24 @@ export class AcuService {
       },
     });
   }
-
+  enviarNotificacionCsharp(envioNotificacion: EnvioNotificacion) {
+    envioNotificacion.usrId = this.authService.getUserId();
+    return this.http.post(
+      `${environment.url_Backend_Charp}/Alumno/EnviarNotificacion`,
+      envioNotificacion
+    );
+  }
   obtenerNotificaciones = () =>
     this.http.post(`${environment.url_ws}/wsObtenerNotificaciones`, {});
 
   getTituloApp = () => this.http.get(`${environment.url_ws}/wsGetTituloApp`);
-
+  bajaAgendaInst(ageIns: AltaAgeInst) {
+    return this.http.post(
+      `${environment.url_Backend_Charp}/Instructor/BajaAgendaInst`,
+      ageIns,
+      { responseType: 'text' }
+    );
+  }
   sincronizarAgendas = () =>
     this.http.post(`${environment.url_ws}/wsSincronizarAgendas`, {});
 }

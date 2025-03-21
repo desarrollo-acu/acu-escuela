@@ -105,7 +105,48 @@
                           <mat-error *ngIf="escInsTel.hasError('required')">
                             Teléfono es <strong>requerido</strong>.
                           </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
 
+                  <div class="row">
+                    <div class="col-xs-4">
+                      <div class="box">
+                        <mat-form-field class="full-width">
+                          <mat-select
+                            formControlName="ESCINSTRBaseCarraco"
+                            placeholder="Trabaja en Carrasco?"
+                          >
+                            <mat-option value="S">Si</mat-option>
+                            <mat-option value="N">No</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xs-4">
+                      <div class="box">
+                        <mat-form-field class="full-width">
+                          <mat-select
+                            formControlName="ESCINSTRBaseYi"
+                            placeholder="Trabaja en Colonia y Yi?"
+                          >
+                            <mat-option value="S">Si</mat-option>
+                            <mat-option value="N">No</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xs-4">
+                      <div class="box">
+                        <mat-form-field class="full-width">
+                          <mat-select
+                            formControlName="ESCINSTRBaseCarOne"
+                            placeholder="Trabaja en Car One?"
+                          >
+                            <mat-option value="S">Si</mat-option>
+                            <mat-option value="N">No</mat-option>
+                          </mat-select>
                         </mat-form-field>
                       </div>
                     </div>
@@ -161,7 +202,6 @@
                             placeholder="Teléfono"
                             formControlName="escInsConTel"
                           />
-
                         </mat-form-field>
                       </div>
                     </div>

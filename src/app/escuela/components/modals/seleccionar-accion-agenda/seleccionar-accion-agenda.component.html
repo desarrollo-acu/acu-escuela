@@ -21,11 +21,19 @@
       >
         <span mat-line>Generar evaluacion práctica</span>
       </a>
-      <ng-container *ngIf="verOpciones">
+      <ng-container *ngIf="usuarioConPermiso">
         <a mat-list-item (click)="openLink($event, 'suspender-clase')">
-          <span mat-line>Suspender Clase</span>
+          <span mat-line>Liberar Clase</span>
         </a>
-
+        <a
+          *ngIf="!verOpciones"
+          mat-list-item
+          (click)="openLink($event, 'teorico-clase')"
+        >
+          <span mat-line>Teorico</span>
+        </a>
+      </ng-container>
+      <ng-container *ngIf="verOpciones">
         <a mat-list-item (click)="openLink($event, 'duplicar-clase')">
           <span mat-line>Generar Clase Doble</span>
         </a>
@@ -44,9 +52,9 @@
       "
     >
       <ng-container *ngIf="verOpciones">
-        <a mat-list-item (click)="openLink($event, 'suspender-clase')">
-          <span mat-line>Suspender Clase</span>
-        </a>
+        <!-- <a mat-list-item (click)="openLink($event, 'suspender-clase')">
+          <span mat-line>Liberar Clase</span>
+        </a> -->
 
         <a mat-list-item (click)="openLink($event, 'mover-clase')">
           <span mat-line>Mover Clase</span>

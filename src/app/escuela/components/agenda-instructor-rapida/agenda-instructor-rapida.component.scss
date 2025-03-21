@@ -1,0 +1,220 @@
+table {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.cell {
+    width: 100px;
+    height: 20px;
+    padding: 5px;
+}
+
+.cell-empty {
+    width: 100px;
+    height: 20px;
+    padding: 5px;
+    border-bottom-color: rgba(0, 0, 0, 0.12);
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-collapse: separate;
+    box-sizing: border-box;
+    color: rgba(0, 0, 0, 0.87);
+    display: table-cell;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    font-size: 14px;
+    text-align: center;
+    vertical-align: middle;
+    -webkit-border-horizontal-spacing: 0px;
+    -webkit-border-vertical-spacing: 0px;
+}
+
+.contenedor {
+    padding: 0px 20px;
+}
+
+.th-agenda {
+    text-align: center !important;
+}
+
+.black {
+    background-color: rgba(0, 0, 0, 0.685);
+    color: white;
+    border-radius: 1px;
+    border: 1px solid rgba(126, 121, 121, 0.801);
+}
+
+td,
+th {
+    text-align: center !important;
+}
+
+td:hover {
+    color: #212529;
+    background-color: rgba(0, 0, 0, 0.075);
+}
+
+td:active {
+    color: #212529;
+    background-color: rgba(52, 10, 99, 0.2);
+}
+
+td:focus {
+    color: #212529;
+    background-color: rgba(240, 0, 0, 0.562);
+}
+
+.example-button-row button,
+.example-button-row a {
+    margin-right: 8px;
+}
+
+mat-toolbar {
+    background-color: transparent;
+}
+
+.width-fixed {
+    max-width: 130px;
+    min-width: 130px;
+}
+
+.borde-fecha {
+    border: 1px solid grey;
+}
+
+.red-white {
+  background-color: rgba(255, 0, 0, 0.836);;
+  color: rgba(255, 255, 255, 0.836);
+  border-radius: 1px;
+  border: 1px solid rgba(126, 121, 121, 0.801);
+}
+
+.black-red {
+    background-color: rgba(60, 60, 60, 0.685);
+    color: rgba(255, 0, 0, 0.836);
+    border-radius: 1px;
+    border: 1px solid rgba(126, 121, 121, 0.801);
+}
+
+.pink-white {
+    background-color:pink;
+    color: rgba(255, 255, 255, 0.836);
+    border-radius: 1px;
+    border: 1px solid rgba(126, 121, 121, 0.801);
+}
+
+.black-white {
+    background-color: rgba(0, 0, 0, 0.685);
+    color: rgba(255, 255, 255, 0.836);
+    border-radius: 1px;
+    border: 1px solid rgba(126, 121, 121, 0.801);
+}
+
+.red-black {
+    background-color: rgba(255, 0, 0, 0.685);
+    color: rgba(0, 0, 0, 0.836);
+    border-radius: 1px;
+    border: 1px solid rgba(126, 121, 121, 0.801);
+}
+
+.orange-black {
+    background-color: rgba(255, 106, 34, 0.685);
+    color: rgba(0, 0, 0, 0.836);
+    border-radius: 1px;
+    border: 1px solid rgba(126, 121, 121, 0.801);
+}
+
+.yellow-black {
+    background-color: rgba(255, 255, 130, 0.685);
+    color: rgba(0, 0, 0, 0.836);
+    border-radius: 1px;
+    border: 1px solid rgba(126, 121, 121, 0.801);
+}
+
+.blue-white {
+    background-color: rgba(0, 0, 255, 0.685);
+    color: rgba(255, 255, 255, 0.836);
+    border-radius: 1px;
+    border: 1px solid rgba(126, 121, 121, 0.801);
+}
+
+
+.green-black {
+    background-color: rgba(128, 128, 0, 0.685);
+    color: rgba(0, 0, 0, 0.836);
+    border-radius: 1px;
+    border: 1px solid rgba(126, 121, 121, 0.801);
+}
+
+.greenLight-black {
+    background-color: rgba(176, 255, 176, 0.685);
+    color: rgba(0, 0, 0, 0.836);
+    border-radius: 1px;
+    border: 1px solid rgba(126, 121, 121, 0.801);
+}
+
+.skyblue-blue {
+    background-color: rgba(191, 236, 238, 0.685);
+    color: rgba(0, 0, 255, 0.836);
+    border-radius: 1px;
+    border: 1px solid rgba(126, 121, 121, 0.801);
+}
+
+
+/* test*/
+
+// .contenedor {
+//   padding: 24px;
+// }
+.full-width {
+    width: 100%;
+    padding-bottom: 10px;
+}
+
+.shipping-card {
+    min-width: 120px;
+    margin: 20px auto;
+}
+
+.mat-radio-button {
+    display: block;
+    margin: 5px 0;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+}
+
+.col {
+    flex: 1;
+    margin-right: 20px;
+}
+
+.col:last-child {
+    margin-right: 0;
+}
+
+.align-right {
+    margin-left: auto !important;
+}
+
+.col button,
+.col a {
+    margin-right: 8px;
+}
+
+.btns-agendar {
+    margin: 20px 0;
+}
+
+mat-divider {
+    margin: 10px 0;
+}
+
+tr.mat-footer-row {
+    font-weight: bold;
+}
+
+.cell-bold {
+    font-weight: bold;
+}

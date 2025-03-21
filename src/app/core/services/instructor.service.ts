@@ -1,7 +1,7 @@
 import { InstructorItem } from './../model/instructor.model';
 import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
 import { Instructor } from '../model/instructor.model';
 import { AgendaClase } from '../model/agenda-clase.model';
@@ -51,15 +51,33 @@ export class InstructorService {
 
   getDisponibilidadInstructoresPorCantidad = (
     inscripcion: InscripcionCurso,
+    paramEscInsId: string,
     cantidad: number
   ) =>
     this.http.post(
       `${environment.url_ws}/obtenerDisponibilidadInstructorPorCantidad`,
       {
         inscripcion,
+        paramEscInsId,
         countClasesEstimar: cantidad,
       }
     );
+
+  getDisponibilidadInstructoresPorCantidadCharp(
+    inscripcion: InscripcionCurso,
+    paramEscInsId: string,
+    cantidad: number
+  ) {
+    let objeto = {
+      inscripcion: inscripcion,
+      paramEscInsId: paramEscInsId,
+      countClasesEstimar: cantidad,
+    };
+    return this.http.post(
+      `${environment.url_Backend_Charp}/Instructor/ObtenerDisponibilidadInstructorPorCantidad`,
+      objeto
+    );
+  }
 
   gestionInstructor = (mode: string, instructor: Instructor) =>
     this.http.post(`${environment.url_ws}/wsGestionInstructor`, {
@@ -70,15 +88,31 @@ export class InstructorService {
       },
     });
 
-  EliminarAusenciaInstructorAgenda = (
+  // EliminarAusenciaInstructorAgenda = (
+  //   escInsId,
+  //   itemSDTInstructor: InstructorItem
+  // ) =>
+  //   this.http.post(`${environment.url_ws}/wsEliminarAusenciaInstructorAgenda`, {
+  //     escInsId,
+  //     itemSDTInstructor,
+  //     usrId: localStorage.getItem('usrId'),
+  //   });
+
+  EliminarAusenciaInstructorAgenda(
     escInsId,
     itemSDTInstructor: InstructorItem
-  ) =>
-    this.http.post(`${environment.url_ws}/wsEliminarAusenciaInstructorAgenda`, {
-      escInsId,
-      itemSDTInstructor,
+  ) {
+    let objeto = {
+      escInsId: escInsId,
+      itemSDTInstructor: itemSDTInstructor,
       usrId: localStorage.getItem('usrId'),
-    });
+    };
+
+    return this.http.post(
+      `${environment.url_Backend_Charp}/Instructor/EliminarAusenciaInstructorAgenda`,
+      objeto
+    );
+  }
 
   getInstructores = () =>
     this.http.get(`${environment.url_ws}/wsGetInstructores`);
@@ -103,4 +137,10 @@ export class InstructorService {
       : { modo, instructor, id: 0 };
     this.instructorDataSource.next(data);
   }
+
+  altaHoraTeorico = (req: any) =>
+    this.http.post(
+      `${environment.url_Backend_Charp}/Instructor/altaHoraTeorico`,
+      req
+    );
 }

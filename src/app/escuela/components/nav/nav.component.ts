@@ -8,7 +8,6 @@ import { Router } from '@angular/router';
 import { InscripcionCursoComponent } from '../modals/inscripcion-curso/inscripcion-curso.component';
 import { MatDialog } from '@angular/material/dialog';
 import { formatDateToString } from '@utils/utils-functions';
-import { EnviarNotificacionComponent } from '../modals/enviar-notificacion/enviar-notificacion.component';
 import { AutenticacionService } from '../../../core/services/autenticacion.service';
 import { CambiarContraseniaComponent } from '../../dialogs/cambiar-contrasenia/cambiar-contrasenia.component';
 import { AcuService } from '../../../core/services/acu.service';
@@ -117,7 +116,9 @@ export class NavComponent implements OnDestroy {
       case '/escuela/agenda-instructor':
         this.title = 'Agenda de instructores';
         break;
-
+      case '/escuela/agenda-instructor-rapida':
+        this.title = 'Agenda de instructores';
+        break;
       case '/escuela/gestion-inscripcion':
       case '/escuela/abm-inscripcion':
         this.title = 'Gestión de inscripciones';
@@ -157,6 +158,12 @@ export class NavComponent implements OnDestroy {
         break;
       case '/escuela/cuenta-corriente':
         this.title = 'Trabajar con Cuentas Corrientes';
+        break;
+      case '/escuela/gestion-estado-alumno':
+        this.title = 'Gestion Estado Alumno';
+        break;
+      case '/escuela/socios':
+        this.title = 'Socios';
         break;
 
       default:

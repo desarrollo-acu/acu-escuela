@@ -450,7 +450,7 @@ export class AgendaMovilComponent implements OnInit, OnDestroy {
     this.verAgenda = false;
     const strFecha = this.formatDateToString(fecha);
     this.acuService
-      .getAgendaPorFecha(strFecha, 'movil')
+      .getAgendaPorFecha(strFecha, 'movil', '')
       .subscribe((res: any) => {
         this.agenda = res.TablaAgenda;
         this.moviles = res.TablaAgenda.Moviles;
